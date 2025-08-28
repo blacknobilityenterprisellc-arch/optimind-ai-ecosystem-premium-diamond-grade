@@ -9,11 +9,11 @@
  * For production, wire this into authentication, DB, storage SDKs, and queue workers.
  */
 import { NextResponse } from 'next/server';
-import { analyzeImage, getAnalysisStats } from '../../services/imageAnalysis';
-import { SecureVault, DevKmsClient } from '../../services/secureVault';
-import { enqueueHumanReview, getReviewStats } from '../../services/humanReview';
+import { analyzeImage, getAnalysisStats } from '../../../services/imageAnalysis';
+import { SecureVault, DevKmsClient } from '../../../services/secureVault';
+import { enqueueHumanReview, getReviewStats } from '../../../services/humanReview';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageUploadRequest } from '../../types/index';
+import { ImageUploadRequest } from '../../../types/index';
 import crypto from 'crypto';
 
 const kms = new DevKmsClient(process.env.PRIVATE_SIGNING_KEY_PEM);

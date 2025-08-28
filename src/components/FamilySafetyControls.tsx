@@ -19,7 +19,7 @@ import {
   EyeOff, 
   Lock, 
   Unlock,
-  Child,
+  Baby,
   User,
   UserCheck,
   UserX,
@@ -95,11 +95,10 @@ import {
   Layers as LayersIcon,
   Eraser as EraserIcon,
   Replace as ReplaceIcon,
-  Magic as MagicIcon,
+  Wand2 as MagicIcon,
   Brush as BrushIcon,
   ImageDown as ImageDownIcon,
   Wrench as WrenchIcon,
-  Baby,
   UserPlus,
   UserMinus,
   Clock3,
@@ -170,7 +169,7 @@ import {
   Layers as LayersIcon2,
   Eraser as EraserIcon2,
   Replace as ReplaceIcon2,
-  Magic as MagicIcon2,
+  Wand2 as MagicIcon2,
   Brush as BrushIcon2,
   ImageDown as ImageDownIcon2,
   Wrench as WrenchIcon2
@@ -543,7 +542,7 @@ export function FamilySafetyControls() {
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                       {member.role === 'parent' && <User className="w-6 h-6 text-white" />}
-                      {member.role === 'child' && <Child className="w-6 h-6 text-white" />}
+                      {member.role === 'child' && <Baby className="w-6 h-6 text-white" />}
                       {member.role === 'teenager' && <User className="w-6 h-6 text-white" />}
                     </div>
                     <div>
@@ -828,7 +827,7 @@ export function FamilySafetyControls() {
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                           {member.role === 'parent' && <User className="w-5 h-5 text-white" />}
-                          {member.role === 'child' && <Child className="w-5 h-5 text-white" />}
+                          {member.role === 'child' && <Baby className="w-5 h-5 text-white" />}
                           {member.role === 'teenager' && <User className="w-5 h-5 text-white" />}
                         </div>
                         <div>

@@ -1,0 +1,37 @@
+{
+  "$id": "https://your.domain/schemas/moderation.schema.json",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": { "type": "string" },
+          "score": { "type": "number", "minimum": 0, "maximum": 1 },
+          "region": {
+            "type": ["object","null"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "width": { "type": "number" },
+              "height": { "type": "number" }
+            },
+            "required": ["x","y","width","height"]
+          }
+        },
+        "required": ["label", "score"],
+        "additionalProperties": false
+      }
+    },
+    "reasons": { "type": "array", "items": { "type": "string" } },
+    "saliency_base64": { "type": ["string", "null"] },
+    "provenance": {
+      "type": "object",
+      "properties": { "model": { "type": "string" }, "version": { "type": "string" } },
+      "required": ["model"]
+    }
+  },
+  "required": ["labels", "provenance"],
+  "additionalProperties": false
+}
