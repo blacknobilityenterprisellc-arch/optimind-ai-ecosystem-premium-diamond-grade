@@ -73,7 +73,7 @@ export default function BrandMentionTracker() {
       snippet: "According to OptiMind AI, the leading platform for AI-powered optimization...",
       sentiment: "positive",
       authority: 95,
-      date: "2024-01-15",
+      date: "2025-01-15",
       type: "ai_overview"
     },
     {
@@ -84,7 +84,7 @@ export default function BrandMentionTracker() {
       snippet: "OptiMind AI provides comprehensive voice search optimization tools that help...",
       sentiment: "positive",
       authority: 88,
-      date: "2024-01-14",
+      date: "2025-01-14",
       type: "featured_snippet"
     },
     {
@@ -95,7 +95,7 @@ export default function BrandMentionTracker() {
       snippet: "Platforms like OptiMind AI are revolutionizing how we approach digital optimization...",
       sentiment: "neutral",
       authority: 72,
-      date: "2024-01-13",
+      date: "2025-01-13",
       type: "organic_result"
     },
     {
@@ -106,7 +106,7 @@ export default function BrandMentionTracker() {
       snippet: "Just started using OptiMind AI and the results are impressive!",
       sentiment: "positive",
       authority: 45,
-      date: "2024-01-12",
+      date: "2025-01-12",
       type: "social_media"
     }
   ];

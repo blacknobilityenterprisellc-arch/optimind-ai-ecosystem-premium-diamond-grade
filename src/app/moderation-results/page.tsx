@@ -48,7 +48,7 @@ const mockResults: ModerationResult[] = [
     confidence: 0.95,
     recommendedAction: 'allow',
     modelsUsed: ['GLM-4.5V', 'GLM-4.5-AIR', 'GLM-4.5'],
-    createdAt: '2024-01-15T10:30:00Z',
+    createdAt: '2025-01-15T10:30:00Z',
     processingTime: 3.2,
     reasons: ['No sensitive content detected', 'All models agree on safe classification']
   },
@@ -61,7 +61,7 @@ const mockResults: ModerationResult[] = [
     confidence: 0.87,
     recommendedAction: 'quarantine',
     modelsUsed: ['GLM-4.5V', 'GLM-4.5-AIR', 'GLM-4.5'],
-    createdAt: '2024-01-15T10:31:00Z',
+    createdAt: '2025-01-15T10:31:00Z',
     processingTime: 4.1,
     reasons: ['Adult content detected by multiple models', 'High confidence in classification']
   },
@@ -74,7 +74,7 @@ const mockResults: ModerationResult[] = [
     confidence: 0.72,
     recommendedAction: 'hold_for_review',
     modelsUsed: ['GLM-4.5V', 'GLM-4.5-AIR'],
-    createdAt: '2024-01-15T10:32:00Z',
+    createdAt: '2025-01-15T10:32:00Z',
     processingTime: 5.8,
     reasons: ['Potential deepfake detected', 'Requires human verification', 'Model disagreement on confidence']
   },
@@ -87,7 +87,7 @@ const mockResults: ModerationResult[] = [
     confidence: 0.91,
     recommendedAction: 'allow',
     modelsUsed: ['GLM-4.5V', 'GLM-4.5'],
-    createdAt: '2024-01-15T10:33:00Z',
+    createdAt: '2025-01-15T10:33:00Z',
     processingTime: 2.9,
     reasons: ['Clear safe content', 'No policy violations detected']
   },
@@ -100,7 +100,7 @@ const mockResults: ModerationResult[] = [
     confidence: 0.93,
     recommendedAction: 'quarantine',
     modelsUsed: ['GLM-4.5V', 'GLM-4.5-AIR', 'GLM-4.5'],
-    createdAt: '2024-01-15T10:34:00Z',
+    createdAt: '2025-01-15T10:34:00Z',
     processingTime: 3.7,
     reasons: ['Violent content detected', 'Immediate action required', 'All models in agreement']
   }

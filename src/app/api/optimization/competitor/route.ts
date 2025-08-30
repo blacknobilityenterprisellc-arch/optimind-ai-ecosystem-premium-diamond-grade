@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
           "title": "content_title",
           "domain": "domain_name",
           "wordCount": 2500,
-          "publishDate": "2024-01-15",
+          "publishDate": "2025-01-15",
           "contentScore": 85,
           "seoScore": 82,
           "readabilityScore": 88,

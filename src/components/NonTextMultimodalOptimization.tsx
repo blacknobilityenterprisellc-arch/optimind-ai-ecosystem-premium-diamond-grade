@@ -88,7 +88,7 @@ export default function NonTextMultimodalOptimization() {
       optimizationScore: 72,
       seoScore: 68,
       accessibilityScore: 45,
-      lastOptimized: "2024-01-10",
+      lastOptimized: "2025-01-10",
       status: 'needs_optimization'
     },
     {
@@ -102,7 +102,7 @@ export default function NonTextMultimodalOptimization() {
       optimizationScore: 85,
       seoScore: 78,
       accessibilityScore: 90,
-      lastOptimized: "2024-02-05",
+      lastOptimized: "2025-02-05",
       status: 'optimized'
     },
     {

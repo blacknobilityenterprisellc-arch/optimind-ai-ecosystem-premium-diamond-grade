@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
           "snippet": "mention snippet",
           "sentiment": "positive|neutral|negative",
           "authority": 85,
-          "date": "2024-01-15",
+          "date": "2025-01-15",
           "type": "ai_overview|featured_snippet|organic_result|social_media"
         }
       ]

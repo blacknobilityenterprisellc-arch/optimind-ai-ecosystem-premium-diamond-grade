@@ -155,7 +155,7 @@ export class PremiumAIServices {
         case 'organization':
           result = {
             categorized: true,
-            suggestedAlbums: ['Vacation 2024', 'Family Photos', 'Nature'],
+            suggestedAlbums: ['Vacation 2025', 'Family Photos', 'Nature'],
             tags: ['landscape', 'sunset', 'mountains'],
             location: 'Unknown'
           };

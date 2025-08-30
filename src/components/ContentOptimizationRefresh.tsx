@@ -89,9 +89,9 @@ export default function ContentOptimizationRefresh() {
   const contentItems: ContentItem[] = [
     {
       id: "1",
-      title: "Voice Search Optimization Guide 2024",
+      title: "Voice Search Optimization Guide 2025",
       url: "/blog/voice-search-optimization",
-      lastUpdated: "2024-01-15",
+      lastUpdated: "2025-01-15",
       freshnessScore: 85,
       performanceScore: 78,
       optimizationScore: 72,
@@ -103,7 +103,7 @@ export default function ContentOptimizationRefresh() {
       id: "2",
       title: "AI Content Creation Best Practices",
       url: "/blog/ai-content-creation",
-      lastUpdated: "2024-02-20",
+      lastUpdated: "2025-02-20",
       freshnessScore: 92,
       performanceScore: 85,
       optimizationScore: 88,
@@ -146,7 +146,7 @@ export default function ContentOptimizationRefresh() {
       contentScore: 82,
       strengths: ["Clear structure", "Actionable tips", "Good examples"],
       weaknesses: ["Outdated information", "Missing recent trends"],
-      opportunities: ["Update statistics", "Add 2024 trends"]
+      opportunities: ["Update statistics", "Add 2025 trends"]
     }
   ];
 
@@ -156,7 +156,7 @@ export default function ContentOptimizationRefresh() {
       contentId: "1",
       type: "update_statistics",
       priority: "high",
-      description: "Update voice search statistics with 2024 data",
+      description: "Update voice search statistics with 2025 data",
       impact: 85,
       effort: 30,
       estimatedTime: "2 hours"
