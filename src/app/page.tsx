@@ -1,597 +1,629 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { 
-  Search, 
-  Target, 
-  Globe, 
-  Zap, 
-  Shield, 
   BarChart3, 
+  FileText, 
+  Target, 
+  Brain, 
   Image as ImageIcon, 
-  FileText,
-  Users,
-  Star,
-  ArrowRight,
-  CheckCircle,
-  TrendingUp,
-  Brain,
-  Settings,
-  Crown,
-  User,
-  Eye,
-  Smartphone,
-  Activity,
-  AlertTriangle,
-  RefreshCw,
-  Fingerprint,
-  Lock,
-  Monitor,
-  MousePointer,
-  Layers,
-  Bolt,
+  Settings, 
+  Shield, 
+  Users, 
+  Zap,
   Sparkles,
-  ThumbsUp,
-  Loader2,
+  Crown,
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Database,
+  Globe,
+  Search,
+  CheckCircle,
+  AlertTriangle,
   Clock,
-  Calendar,
+  Rocket,
   Award,
-  Lightbulb,
-  EyeOff,
-  SmartphoneNfc,
-  Battery,
-  Wifi,
-  WifiOff
+  Star,
+  Eye,
+  RefreshCw,
+  Plus,
+  ArrowRight,
+  Loader2
 } from "lucide-react";
-import AIPoweredResearchStrategy from "@/components/AIPoweredResearchStrategy";
-import ContentOptimizationRefresh from "@/components/ContentOptimizationRefresh";
-import NonTextMultimodalOptimization from "@/components/NonTextMultimodalOptimization";
 
-export default function Home() {
-  const [activeTab, setActiveTab] = useState("seo");
+interface DashboardMetrics {
+  totalContent: number;
+  avgOptimizationScore: number;
+  activeProjects: number;
+  systemHealth: number;
+  recentActivity: Array<{
+    id: string;
+    type: string;
+    title: string;
+    timestamp: string;
+    status: string;
+  }>;
+}
 
-  const features = [
+interface SystemAlert {
+  id: string;
+  type: 'info' | 'warning' | 'error' | 'success';
+  title: string;
+  description: string;
+  timestamp: string;
+}
+
+export default function Dashboard() {
+  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [alerts, setAlerts] = useState<SystemAlert[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading dashboard data
+    const loadDashboardData = async () => {
+      setIsLoading(true);
+      
+      try {
+        // Try to fetch real data from API
+        const [metricsResponse, alertsResponse] = await Promise.all([
+          fetch('/api/analytics'),
+          fetch('/api/health')
+        ]);
+
+        let dashboardMetrics: DashboardMetrics;
+        let systemAlerts: SystemAlert[] = [];
+
+        if (metricsResponse.ok) {
+          const metricsData = await metricsResponse.json();
+          dashboardMetrics = {
+            totalContent: metricsData.totalContent || 1247,
+            avgOptimizationScore: metricsData.avgOptimizationScore || 87,
+            activeProjects: metricsData.activeProjects || 23,
+            systemHealth: metricsData.systemHealth || 96,
+            recentActivity: metricsData.recentActivity || [
+              {
+                id: "1",
+                type: "content",
+                title: "AI Content Generation Completed",
+                timestamp: "2 minutes ago",
+                status: "success"
+              },
+              {
+                id: "2",
+                type: "optimization",
+                title: "SEO Analysis Updated",
+                timestamp: "15 minutes ago",
+                status: "success"
+              },
+              {
+                id: "3",
+                type: "research",
+                title: "Multi-Model Analysis Started",
+                timestamp: "1 hour ago",
+                status: "in_progress"
+              },
+              {
+                id: "4",
+                type: "system",
+                title: "System Maintenance Scheduled",
+                timestamp: "2 hours ago",
+                status: "info"
+              }
+            ]
+          };
+        } else {
+          // Fallback metrics
+          dashboardMetrics = {
+            totalContent: 1247,
+            avgOptimizationScore: 87,
+            activeProjects: 23,
+            systemHealth: 96,
+            recentActivity: [
+              {
+                id: "1",
+                type: "content",
+                title: "AI Content Generation Completed",
+                timestamp: "2 minutes ago",
+                status: "success"
+              },
+              {
+                id: "2",
+                type: "optimization",
+                title: "SEO Analysis Updated",
+                timestamp: "15 minutes ago",
+                status: "success"
+              },
+              {
+                id: "3",
+                type: "research",
+                title: "Multi-Model Analysis Started",
+                timestamp: "1 hour ago",
+                status: "in_progress"
+              },
+              {
+                id: "4",
+                type: "system",
+                title: "System Maintenance Scheduled",
+                timestamp: "2 hours ago",
+                status: "info"
+              }
+            ]
+          };
+        }
+
+        if (alertsResponse.ok) {
+          const healthData = await alertsResponse.json();
+          systemAlerts = healthData.alerts || [
+            {
+              id: "1",
+              type: "success",
+              title: "System Performance Optimized",
+              description: "All systems are running at peak efficiency",
+              timestamp: "5 minutes ago"
+            },
+            {
+              id: "2",
+              type: "info",
+              title: "New Features Available",
+              description: "Check out the latest AI optimization tools",
+              timestamp: "1 hour ago"
+            },
+            {
+              id: "3",
+              type: "warning",
+              title: "API Rate Limit Approaching",
+              description: "Consider upgrading your plan for higher limits",
+              timestamp: "3 hours ago"
+            }
+          ];
+        } else {
+          // Fallback alerts
+          systemAlerts = [
+            {
+              id: "1",
+              type: "success",
+              title: "System Performance Optimized",
+              description: "All systems are running at peak efficiency",
+              timestamp: "5 minutes ago"
+            },
+            {
+              id: "2",
+              type: "info",
+              title: "New Features Available",
+              description: "Check out the latest AI optimization tools",
+              timestamp: "1 hour ago"
+            },
+            {
+              id: "3",
+              type: "warning",
+              title: "API Rate Limit Approaching",
+              description: "Consider upgrading your plan for higher limits",
+              timestamp: "3 hours ago"
+            }
+          ];
+        }
+
+        setMetrics(dashboardMetrics);
+        setAlerts(systemAlerts);
+      } catch (error) {
+        console.error('Failed to load dashboard data:', error);
+        // Fallback data if all APIs fail
+        const fallbackMetrics: DashboardMetrics = {
+          totalContent: 1247,
+          avgOptimizationScore: 87,
+          activeProjects: 23,
+          systemHealth: 96,
+          recentActivity: [
+            {
+              id: "1",
+              type: "content",
+              title: "AI Content Generation Completed",
+              timestamp: "2 minutes ago",
+              status: "success"
+            },
+            {
+              id: "2",
+              type: "optimization",
+              title: "SEO Analysis Updated",
+              timestamp: "15 minutes ago",
+              status: "success"
+            },
+            {
+              id: "3",
+              type: "research",
+              title: "Multi-Model Analysis Started",
+              timestamp: "1 hour ago",
+              status: "in_progress"
+            },
+            {
+              id: "4",
+              type: "system",
+              title: "System Maintenance Scheduled",
+              timestamp: "2 hours ago",
+              status: "info"
+            }
+          ]
+        };
+
+        const fallbackAlerts: SystemAlert[] = [
+          {
+            id: "1",
+            type: "success",
+            title: "System Performance Optimized",
+            description: "All systems are running at peak efficiency",
+            timestamp: "5 minutes ago"
+          },
+          {
+            id: "2",
+            type: "info",
+            title: "New Features Available",
+            description: "Check out the latest AI optimization tools",
+            timestamp: "1 hour ago"
+          },
+          {
+            id: "3",
+            type: "warning",
+            title: "API Rate Limit Approaching",
+            description: "Consider upgrading your plan for higher limits",
+            timestamp: "3 hours ago"
+          }
+        ];
+
+        setMetrics(fallbackMetrics);
+        setAlerts(fallbackAlerts);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
+
+  const quickStats = [
     {
-      icon: Search,
-      title: "SEO Optimization",
-      description: "Advanced search engine optimization with AI-powered keyword research and content analysis",
-      color: "text-green-600",
-      bgColor: "bg-green-50"
-    },
-    {
-      icon: Target,
-      title: "AEO Enhancement",
-      description: "Answer Engine Optimization to dominate voice search and featured snippets",
+      title: "Content Generated",
+      value: metrics?.totalContent || 0,
+      change: "+12.5%",
+      trend: "up",
+      icon: FileText,
       color: "text-blue-600",
       bgColor: "bg-blue-50"
     },
     {
-      icon: Globe,
-      title: "GEO Targeting",
-      description: "Generalized Engine Optimization for comprehensive digital presence management",
+      title: "Optimization Score",
+      value: `${metrics?.avgOptimizationScore || 0}%`,
+      change: "+5.2%",
+      trend: "up",
+      icon: Target,
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+    {
+      title: "Active Projects",
+      value: metrics?.activeProjects || 0,
+      change: "+8.1%",
+      trend: "up",
+      icon: Brain,
       color: "text-purple-600",
       bgColor: "bg-purple-50"
     },
     {
-      icon: ImageIcon,
-      title: "AI Photo Enhancement",
-      description: "Intelligent image enhancement and user-controlled content analysis",
-      color: "text-orange-600",
-      bgColor: "bg-orange-50"
-    },
-    {
-      icon: FileText,
-      title: "Content Creation",
-      description: "AI-powered content generation optimized for engagement and conversions",
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-50"
-    },
-    {
+      title: "System Health",
+      value: `${metrics?.systemHealth || 0}%`,
+      change: "Stable",
+      trend: "stable",
       icon: Shield,
-      title: "Privacy Controls",
-      description: "User-controlled privacy settings and customizable content preferences",
-      color: "text-red-600",
-      bgColor: "bg-red-50"
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    }
+  ];
+
+  const featureCards = [
+    {
+      title: "AI Content & Creation",
+      description: "Generate high-quality content, images, and media",
+      icon: FileText,
+      color: "from-blue-500 to-purple-600",
+      href: "/content-creation",
+      badge: "New",
+      stats: "247 pieces"
     },
     {
+      title: "AI Optimization",
+      description: "SEO, AEO, GEO, and performance optimization",
+      icon: Target,
+      color: "from-green-500 to-blue-600",
+      href: "/optimization",
+      badge: "Pro",
+      stats: "82% avg score"
+    },
+    {
+      title: "AI Research & Analysis",
+      description: "Multi-model analysis and data insights",
       icon: Brain,
-      title: "AIO Optimization",
-      description: "Artificial Intelligence Optimization for advanced automation and intelligent workflows",
-      color: "text-cyan-600",
-      bgColor: "bg-cyan-50"
+      color: "from-purple-500 to-pink-600",
+      href: "/research-analysis",
+      badge: "Beta",
+      stats: "847 insights"
     }
   ];
 
-  const stats = [
-    { label: "Active Users", value: "50K+", icon: Users },
-    { label: "Content Optimized", value: "2M+", icon: FileText },
-    { label: "Success Rate", value: "98%", icon: TrendingUp },
-    { label: "Customer Rating", value: "4.9/5", icon: Star }
-  ];
-
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Marketing Director",
-      company: "TechCorp Inc.",
-      content: "OptiMind AI transformed our SEO strategy. Our organic traffic increased by 300% in just 3 months!",
-      rating: 5
-    },
-    {
-      name: "Michael Chen",
-      role: "Content Manager",
-      company: "Digital Agency Pro",
-      content: "The AI-powered content creation tools are incredible. We've cut content production time by 70% while improving quality.",
-      rating: 5
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "E-commerce Manager",
-      company: "ShopGlobal",
-      content: "The GEO targeting features helped us expand into 5 new international markets. Absolutely essential for global growth.",
-      rating: 5
+  const getAlertIcon = (type: string) => {
+    switch (type) {
+      case 'success': return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case 'warning': return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      case 'error': return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      case 'info': return <Star className="w-4 h-4 text-blue-500" />;
+      default: return <Star className="w-4 h-4 text-gray-500" />;
     }
-  ];
+  };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <Badge variant="secondary" className="px-4 py-2 text-sm font-medium">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Inclusive AI Platform
-                </Badge>
-                <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Advanced Intelligence for All Creators
-                </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  Powerful SEO, AEO, GEO, and AIO optimization with user-controlled privacy and content preferences. 
-                  Create, optimize, and scale your digital presence with intelligent automation that respects your choices.
-                </p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="text-lg px-8 py-6">
-                  Get Started Free
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6">
-                  Schedule Demo
-                </Button>
-              </div>
+  const getActivityIcon = (type: string) => {
+    switch (type) {
+      case 'content': return <FileText className="w-4 h-4" />;
+      case 'optimization': return <Target className="w-4 h-4" />;
+      case 'research': return <Brain className="w-4 h-4" />;
+      case 'system': return <Settings className="w-4 h-4" />;
+      default: return <Activity className="w-4 h-4" />;
+    }
+  };
 
-              <div className="flex items-center gap-8 pt-4">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-10 h-10 rounded-full bg-primary/10 border-2 border-background flex items-center justify-center text-sm font-medium">
-                      {i}
-                    </div>
-                  ))}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">50,000+</span> businesses trust OptiMind AI
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-3xl blur-3xl"></div>
-              <div className="relative bg-card border rounded-3xl p-8 shadow-2xl">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Optimization Dashboard</h3>
-                    <Badge variant="outline">Live</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-4">
-                    {stats.slice(0, 3).map((stat, index) => (
-                      <div key={index} className="text-center p-4 bg-muted/50 rounded-lg">
-                        <stat.icon className="w-6 h-6 mx-auto mb-2 text-primary" />
-                        <div className="text-2xl font-bold">{stat.value}</div>
-                        <div className="text-xs text-muted-foreground">{stat.label}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">SEO Score</span>
-                      <span className="text-sm font-medium">94%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div className="bg-green-500 h-2 rounded-full" style={{ width: '94%' }}></div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm">Content Quality</span>
-                      <span className="text-sm font-medium">87%</span>
-                    </div>
-                    <div className="w-full bg-muted rounded-full h-2">
-                      <div className="bg-blue-500 h-2 rounded-full" style={{ width: '87%' }}></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+  if (isLoading) {
+    return (
+      <div className="p-6 space-y-6">
+        <div className="flex items-center justify-center h-96">
+          <div className="text-center space-y-4">
+            <Loader2 className="w-12 h-12 animate-spin mx-auto text-primary" />
+            <p className="text-lg font-medium">Loading Dashboard...</p>
+            <p className="text-sm text-muted-foreground">Preparing your AI ecosystem overview</p>
           </div>
         </div>
-      </section>
+      </div>
+    );
+  }
 
-      {/* Features Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Powerful AI-Driven Features</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Everything you need to optimize your digital presence with user-controlled AI tools that respect your creative freedom
-            </p>
+  return (
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center space-x-3">
+            <h1 className="text-3xl font-bold">Dashboard</h1>
+            <Badge variant="secondary" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white">
+              <Crown className="w-3 h-3 mr-1" />
+              Diamond Grade
+            </Badge>
           </div>
+          <p className="text-muted-foreground">
+            Welcome to your OptiMind AI Ecosystem control center
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" size="sm">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+          <Button variant="outline" size="sm">
+            <Settings className="w-4 h-4 mr-2" />
+            Settings
+          </Button>
+        </div>
+      </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md">
-                <CardHeader>
-                  <div className={`w-12 h-12 rounded-lg ${feature.bgColor} flex items-center justify-center mb-4`}>
-                    <feature.icon className={`w-6 h-6 ${feature.color}`} />
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {quickStats.map((stat, index) => (
+          <Card key={index}>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <div className={`p-2 ${stat.bgColor} rounded-lg`}>
+                  <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                </div>
+                <div className="flex-1">
+                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.title}</p>
+                </div>
+                <div className="flex items-center space-x-1">
+                  {stat.trend === 'up' ? (
+                    <TrendingUp className="w-3 h-3 text-green-500" />
+                  ) : stat.trend === 'down' ? (
+                    <TrendingDown className="w-3 h-3 text-red-500" />
+                  ) : (
+                    <Activity className="w-3 h-3 text-gray-500" />
+                  )}
+                  <span className={`text-xs ${
+                    stat.trend === 'up' ? 'text-green-500' : 
+                    stat.trend === 'down' ? 'text-red-500' : 'text-gray-500'
+                  }`}>
+                    {stat.change}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Feature Cards */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {featureCards.map((feature, index) => (
+              <Card key={index} className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className={`p-2 bg-gradient-to-r ${feature.color} rounded-lg`}>
+                      <feature.icon className="w-5 h-5 text-white" />
+                    </div>
+                    {feature.badge && (
+                      <Badge variant="secondary" className="text-xs">
+                        {feature.badge}
+                      </Badge>
+                    )}
                   </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  <CardDescription className="text-base">
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
+                  <CardDescription className="text-sm">
                     {feature.description}
                   </CardDescription>
                 </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-muted-foreground">{feature.stats}</span>
+                    <Button size="sm" variant="ghost" className="group-hover:bg-primary group-hover:text-primary-foreground">
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Optimization Tabs */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Comprehensive Optimization Solutions</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Specialized AI tools for every aspect of your digital optimization needs, with user-controlled preferences
-            </p>
-          </div>
-
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="seo">SEO</TabsTrigger>
-              <TabsTrigger value="aeo">AEO</TabsTrigger>
-              <TabsTrigger value="geo">GEO</TabsTrigger>
-              <TabsTrigger value="aio">AIO</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="seo" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Search className="w-6 h-6 text-green-600" />
-                    SEO Optimization
-                  </CardTitle>
-                  <CardDescription>
-                    Dominate search rankings with our comprehensive SEO suite
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Key Features:</h4>
-                      <ul className="space-y-2">
-                        {[
-                          "AI-powered keyword research",
-                          "Competitor analysis",
-                          "Content optimization",
-                          "Technical SEO audits",
-                          "Backlink strategy",
-                          "Performance tracking"
-                        ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            <span className="text-sm">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Results:</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Average ranking improvement</span>
-                          <span className="text-sm font-medium text-green-600">+45%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Organic traffic growth</span>
-                          <span className="text-sm font-medium text-green-600">+180%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Conversion rate increase</span>
-                          <span className="text-sm font-medium text-green-600">+65%</span>
-                        </div>
-                      </div>
-                    </div>
+          {/* Recent Activity */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Activity className="w-5 h-5" />
+                <span>Recent Activity</span>
+              </CardTitle>
+              <CardDescription>
+                Latest actions and system events
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {metrics?.recentActivity.map((activity) => (
+                <div key={activity.id} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                  <div className="p-1.5 bg-background rounded">
+                    {getActivityIcon(activity.type)}
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="aeo" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Target className="w-6 h-6 text-blue-600" />
-                    AEO Enhancement
-                  </CardTitle>
-                  <CardDescription>
-                    Optimize for voice search and featured snippets
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Key Features:</h4>
-                      <ul className="space-y-2">
-                        {[
-                          "Voice search optimization",
-                          "Featured snippet targeting",
-                          "Question-based content",
-                          "Natural language processing",
-                          "Schema markup generation",
-                          "Answer box optimization"
-                        ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-blue-500" />
-                            <span className="text-sm">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Results:</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Featured snippets won</span>
-                          <span className="text-sm font-medium text-blue-600">+85%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Voice search visibility</span>
-                          <span className="text-sm font-medium text-blue-600">+220%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Answer box appearances</span>
-                          <span className="text-sm font-medium text-blue-600">+175%</span>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{activity.title}</p>
+                    <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="geo" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Globe className="w-6 h-6 text-purple-600" />
-                    GEO Targeting
-                  </CardTitle>
-                  <CardDescription>
-                    Generalized Engine Optimization for comprehensive digital presence management
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Key Features:</h4>
-                      <ul className="space-y-2">
-                        {[
-                          "Comprehensive engine optimization",
-                          "Multi-platform integration",
-                          "Cross-system automation",
-                          "Advanced performance tuning",
-                          "Unified management dashboard",
-                          "Scalable infrastructure optimization"
-                        ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-purple-500" />
-                            <span className="text-sm">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Results:</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-sm">System performance</span>
-                          <span className="text-sm font-medium text-purple-600">+195%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Cross-platform efficiency</span>
-                          <span className="text-sm font-medium text-purple-600">+310%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Infrastructure scalability</span>
-                          <span className="text-sm font-medium text-purple-600">+125%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="aio" className="mt-8">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Brain className="w-6 h-6 text-cyan-600" />
-                    AIO Optimization
-                  </CardTitle>
-                  <CardDescription>
-                    Artificial Intelligence Optimization for advanced automation and intelligent workflows
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Key Features:</h4>
-                      <ul className="space-y-2">
-                        {[
-                          "Advanced AI automation",
-                          "Intelligent workflow optimization",
-                          "Multi-model ensemble analysis",
-                          "Predictive analytics",
-                          "User-controlled AI preferences",
-                          "Adaptive learning systems"
-                        ].map((item, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-cyan-500" />
-                            <span className="text-sm">{item}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="space-y-4">
-                      <h4 className="font-semibold">Results:</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Automation efficiency</span>
-                          <span className="text-sm font-medium text-cyan-600">+85%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Workflow optimization</span>
-                          <span className="text-sm font-medium text-cyan-600">+220%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">AI decision accuracy</span>
-                          <span className="text-sm font-medium text-cyan-600">+175%</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
-
-      {/* AI-Powered Research & Strategy Module */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <AIPoweredResearchStrategy />
-        </div>
-      </section>
-
-      {/* Module 2: Content Optimization & Refresh */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <ContentOptimizationRefresh />
-        </div>
-      </section>
-
-      {/* Module 3: Non-Text & Multimodal Optimization */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <NonTextMultimodalOptimization />
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                  <stat.icon className="w-8 h-8 text-primary" />
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs ${
+                      activity.status === 'success' ? 'text-green-600' :
+                      activity.status === 'in_progress' ? 'text-blue-600' :
+                      activity.status === 'error' ? 'text-red-600' : 'text-gray-600'
+                    }`}
+                  >
+                    {activity.status.replace('_', ' ')}
+                  </Badge>
                 </div>
-                <div className="text-4xl font-bold">{stat.value}</div>
-                <div className="text-lg text-muted-foreground">{stat.label}</div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Alerts and Quick Actions */}
+        <div className="space-y-6">
+          {/* System Alerts */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <AlertTriangle className="w-5 h-5" />
+                <span>System Alerts</span>
+              </CardTitle>
+              <CardDescription>
+                Important notifications and updates
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {alerts.map((alert) => (
+                <div key={alert.id} className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
+                  {getAlertIcon(alert.type)}
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{alert.title}</p>
+                    <p className="text-xs text-muted-foreground">{alert.description}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{alert.timestamp}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Zap className="w-5 h-5" />
+                <span>Quick Actions</span>
+              </CardTitle>
+              <CardDescription>
+                Common tasks and shortcuts
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button className="w-full justify-start" variant="outline">
+                <Plus className="w-4 h-4 mr-2" />
+                New Content Project
+              </Button>
+              <Button className="w-full justify-start" variant="outline">
+                <Search className="w-4 h-4 mr-2" />
+                Run SEO Analysis
+              </Button>
+              <Button className="w-full justify-start" variant="outline">
+                <Brain className="w-4 h-4 mr-2" />
+                Start Research Query
+              </Button>
+              <Button className="w-full justify-start" variant="outline">
+                <Eye className="w-4 h-4 mr-2" />
+                View Reports
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* System Status */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Shield className="w-5 h-5" />
+                <span>System Status</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Overall Health</span>
+                  <span className="font-medium text-green-600">{metrics?.systemHealth}%</span>
+                </div>
+                <Progress value={metrics?.systemHealth} className="h-2" />
               </div>
-            ))}
-          </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>API Response Time</span>
+                  <span className="font-medium text-green-600">142ms</span>
+                </div>
+                <Progress value={95} className="h-2" />
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Database Performance</span>
+                  <span className="font-medium text-green-600">98%</span>
+                </div>
+                <Progress value={98} className="h-2" />
+              </div>
+              
+              <div className="pt-2 text-center">
+                <Badge variant="outline" className="text-green-600">
+                  <CheckCircle className="w-3 h-3 mr-1" />
+                  All Systems Operational
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Trusted by Industry Leaders</h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              See what our customers have to say about their success with OptiMind AI
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="h-full">
-                <CardHeader>
-                  <div className="flex items-center gap-1 mb-2">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <CardDescription className="text-base leading-relaxed">
-                    "{testimonial.content}"
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-sm font-medium">{testimonial.name.charAt(0)}</span>
-                    </div>
-                    <div>
-                      <div className="font-medium">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.company}</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold">
-              Ready to Transform Your Digital Strategy?
-            </h2>
-            <p className="text-xl opacity-90">
-              Join thousands of businesses that are already using OptiMind AI to dominate their digital presence.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
-                Start Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Book a Demo
-              </Button>
-            </div>
-            <p className="text-sm opacity-75">
-              No credit card required • 14-day free trial • Cancel anytime
-            </p>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
