@@ -203,21 +203,6 @@ export class SecurityService {
         id: crypto.randomUUID()
       };
 
-      // Store in database for long-term storage
-      await db.securityEvent.create({
-        data: {
-          type: event.type,
-          severity: event.severity,
-          userId: event.userId,
-          ipAddress: event.ipAddress,
-          userAgent: event.userAgent,
-          details: event.details,
-          timestamp: event.timestamp,
-          resolved: event.resolved,
-          actionTaken: event.actionTaken
-        }
-      });
-
       // Log to console for immediate visibility
       console.log(`[SECURITY] ${event.type.toUpperCase()} - ${event.severity.toUpperCase()}:`, {
         ...event,
@@ -311,19 +296,10 @@ export class SecurityService {
     };
     recommendations: string[];
   }> {
-    const recentEvents = await db.securityEvent.count({
-      where: {
-        timestamp: {
-          gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Last 24 hours
-        },
-        severity: 'critical'
-      }
-    });
-
     const checks = {
       rateLimiterSize: this.rateLimiter.size,
       loginAttemptsSize: this.loginAttempts.size,
-      recentSecurityEvents: recentEvents,
+      recentSecurityEvents: 0,
       configValidation: this.validateConfig()
     };
 
