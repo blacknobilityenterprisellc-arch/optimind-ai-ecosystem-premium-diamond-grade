@@ -1,0 +1,11 @@
+/home/z/my-project/optimind-ai-ecosystem1/next.config.ts
+/home/z/my-project/optimind-ai-ecosystem1/server.ts
+/home/z/my-project/optimind-ai-ecosystem1/src/app/layout.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/app/page.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/components/ui/badge.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/components/ui/button.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/components/ui/card.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/components/ui/tabs.tsx
+/home/z/my-project/optimind-ai-ecosystem1/src/lib/db.ts
+/home/z/my-project/optimind-ai-ecosystem1/src/lib/utils.ts
+/home/z/my-project/optimind-ai-ecosystem1/tailwind.config.ts
