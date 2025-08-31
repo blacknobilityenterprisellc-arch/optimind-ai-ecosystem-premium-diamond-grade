@@ -1,6 +1,6 @@
 {
-  "name": "nextjs_tailwind_shadcn_ts",
-  "version": "0.1.0",
+  "name": "optimind-ai-ecosystem",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx 2>&1 | tee dev.log",
@@ -10,9 +10,6 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-<<<<<<< HEAD
-    "db:reset": "prisma migrate reset"
-=======
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
@@ -22,7 +19,6 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\""
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -61,15 +57,11 @@
     "@reactuses/core": "^6.0.5",
     "@tanstack/react-query": "^5.82.0",
     "@tanstack/react-table": "^8.21.3",
-<<<<<<< HEAD
-    "axios": "^1.10.0",
-=======
     "@types/bcryptjs": "^2.4.6",
     "abort-controller": "^3.0.0",
     "ajv-formats": "^3.0.1",
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -82,11 +74,8 @@
     "next-auth": "^4.24.11",
     "next-intl": "^4.3.4",
     "next-themes": "^0.4.6",
-<<<<<<< HEAD
-=======
     "node-fetch": "^3.3.2",
     "openrouter-client": "^1.6.0",
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     "prisma": "^6.11.1",
     "react": "^19.0.0",
     "react-day-picker": "^9.8.0",
