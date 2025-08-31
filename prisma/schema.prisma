@@ -35,6 +35,12 @@ model User {
   analyses        Analysis[]
   conversations   Conversation[]
   uploads         Upload[]
+  // Business Solutions Relations
+  contractAnalyses ContractAnalysis[]
+  localizationAnalyses LocalizationAnalysis[]
+  customerBehaviorAnalyses CustomerBehaviorAnalysis[]
+  complianceMonitoring ComplianceMonitoring[]
+  learningPaths   LearningPath[]
   
   @@map("users")
 }
@@ -115,6 +121,12 @@ model Project {
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   analyses    Analysis[]
   uploads     Upload[]
+  // Business Solutions Relations
+  contractAnalyses ContractAnalysis[]
+  localizationAnalyses LocalizationAnalysis[]
+  customerBehaviorAnalyses CustomerBehaviorAnalysis[]
+  complianceMonitoring ComplianceMonitoring[]
+  learningPaths   LearningPath[]
   
   @@map("projects")
 }
@@ -276,4 +288,199 @@ enum UploadStatus {
   COMPLETED
   FAILED
   DELETED
+}
+
+// Business Solution Models
+// ContractWise AI Models
+model ContractAnalysis {
+  id              String               @id @default(cuid())
+  userId          String
+  projectId       String?
+  contractTitle   String
+  contractType    ContractType
+  fileUrl         String?
+  extractedText   String?
+  riskAssessment  Json?
+  clauses         Json?
+  plainLanguage   Json?
+  complianceCheck Json?
+  recommendations Json?
+  confidence      Float?
+  processingTime  Int?
+  status          ContractAnalysisStatus @default(PENDING)
+  metadata        Json?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  
+  // Relations
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project?             @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("contract_analyses")
+}
+
+// GlobalFit AI Models
+model LocalizationAnalysis {
+  id              String                   @id @default(cuid())
+  userId          String
+  projectId       String?
+  productName     String
+  targetMarket    String
+  productImages   Json?                    // URLs to product images (stored as JSON array)
+  productDesc     String?
+  culturalAnalysis Json?
+  visualAdaptation Json?
+  marketStrategy  Json?
+  complianceCheck Json?
+  competitorAnalysis Json?
+  confidence      Float?
+  processingTime  Int?
+  status          LocalizationStatus @default(PENDING)
+  metadata        Json?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  
+  // Relations
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project?                 @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("localization_analyses")
+}
+
+// BehaviorPredict AI Models
+model CustomerBehaviorAnalysis {
+  id              String                     @id @default(cuid())
+  userId          String
+  projectId       String?
+  customerSegment String?
+  dataSource      Json?                      // CRM, email, social media, etc. (stored as JSON array)
+  behaviorPrediction Json?
+  sentimentAnalysis Json?
+  journeyMapping  Json?
+  recommendations Json?
+  conversionProbability Float?
+  churnRisk       Float?
+  confidence      Float?
+  processingTime  Int?
+  status          BehaviorAnalysisStatus @default(PENDING)
+  metadata        Json?
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  
+  // Relations
+  user            User                       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project?                   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("customer_behavior_analyses")
+}
+
+// ComplianceGuard AI Models
+model ComplianceMonitoring {
+  id              String                   @id @default(cuid())
+  userId          String
+  projectId       String?
+  businessType    String
+  jurisdiction    String
+  regulations     Json?                    // Tracked regulations
+  riskAssessment  Json?
+  documentReviews Json?
+  actionPlan      Json?
+  auditPreparation Json?
+  trainingMaterials Json?
+  nextReviewDate  DateTime?
+  confidence      Float?
+  processingTime  Int?
+  status          ComplianceStatus @default(PENDING)
+  metadata        Json?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  
+  // Relations
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project?                 @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("compliance_monitoring")
+}
+
+// SkillPath AI Models
+model LearningPath {
+  id              String                   @id @default(cuid())
+  userId          String
+  projectId       String?
+  userProfile     Json?                    // Skills, experience, goals
+  skillAssessment Json?
+  learningStyle   Json?
+  generatedPath   Json?
+  progressTracking Json?
+  certifications Json?
+  recommendations Json?
+  estimatedCompletion DateTime?
+  confidence      Float?
+  processingTime  Int?
+  status          LearningPathStatus @default(PENDING)
+  metadata        Json?
+  createdAt       DateTime                 @default(now())
+  updatedAt       DateTime                 @updatedAt
+  
+  // Relations
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project         Project?                 @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("learning_paths")
+}
+
+// Business Solution Enums
+enum ContractType {
+  EMPLOYMENT
+  SERVICE_AGREEMENT
+  NDA
+  PARTNERSHIP
+  SALES_CONTRACT
+  LEASE_AGREEMENT
+  LICENSE_AGREEMENT
+  FRANCHISE
+  MERGER_ACQUISITION
+  OTHER
+}
+
+enum ContractAnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REVIEW_REQUIRED
+}
+
+enum LocalizationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REVIEW_REQUIRED
+}
+
+enum BehaviorAnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  INSUFFICIENT_DATA
+}
+
+enum ComplianceStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REVIEW_REQUIRED
+  URGENT_ATTENTION
+}
+
+enum LearningPathStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  IN_PROGRESS
+  ON_HOLD
 }
