@@ -1,90 +1,3 @@
-<<<<<<< HEAD
-# 🚀 Welcome to Z.ai Code Scaffold
-
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
-
-## ✨ Technology Stack
-
-This scaffold provides a robust foundation built with:
-
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
-
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
-
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
-
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
-
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
-
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
-
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
-
-## 🎯 Why This Scaffold?
-
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
-
-## 🚀 Quick Start
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
-
-## 🤖 Powered by Z.ai
-
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
-
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
-
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
-=======
 # 🚀 OptiMind AI Ecosystem - Premium Diamond Grade
 
 A comprehensive, enterprise-grade AI platform that combines advanced SEO, AEO, GEO, and AIO optimization with user-controlled privacy and intelligent automation. Built for creators, businesses, and enterprises seeking powerful AI-driven digital optimization solutions.
@@ -311,65 +224,10 @@ npm run dev
    npm run build
    npm start
    ```
->>>>>>> ef631a04b041f300087971414fcec38beffaf1ab
 
 ## 📁 Project Structure
 
 ```
-<<<<<<< HEAD
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
-```
-
-## 🎨 Available Features & Components
-
-This scaffold includes a comprehensive set of modern web development tools:
-
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
-
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
-
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
-
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
-
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
-
-## 🤝 Get Started with Z.ai
-
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
-
----
-
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
-=======
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── api/               # API routes
@@ -423,108 +281,69 @@ The application provides comprehensive RESTful APIs:
 - **`/api/analytics`** - Analytics and reporting
 - **`/api/users`** - User management
 - **`/api/subscription`** - Subscription management
-- **`/api/models/*`** - AI model endpoints
+- **`/api/models/*`** - AI model testing and evaluation
+- **`/api/upload`** - File upload and processing
+- **`/api/search`** - Smart search functionality
+- **`/api/settings`** - Application configuration
 
 ## 🤝 Contributing
 
-We welcome contributions to the OptiMind AI ecosystem! Please see our contributing guidelines for more details.
+We welcome contributions from the community! Please follow these guidelines:
 
 ### Development Workflow
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+1. **Fork the repository**
+2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Make your changes** with proper testing
+4. **Commit your changes** (`git commit -m 'Add amazing feature'`)
+5. **Push to the branch** (`git push origin feature/amazing-feature`)
+6. **Open a Pull Request**
+
+### Code Standards
+
+- Follow TypeScript best practices
+- Use ESLint configuration
+- Write comprehensive tests
+- Update documentation as needed
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
 For support and questions:
-- **Documentation**: Check our comprehensive documentation
-- **Issues**: Report bugs and request features on GitHub
-- **Community**: Join our community discussions
-- **Enterprise**: Contact us for enterprise support
+
+- **Documentation**: Check the `/docs` folder for detailed guides
+- **Issues**: Report bugs and request features on GitHub Issues
+- **Discussions**: Join community discussions on GitHub
+- **Email**: Contact support@optimind.ai for enterprise support
 
 ## 🌟 Acknowledgments
 
-- **Z.ai** - For providing powerful AI services and capabilities
 - **Next.js Team** - For the excellent React framework
 - **shadcn/ui** - For the beautiful component library
+- **Prisma Team** - For the modern database toolkit
+- **Z.ai** - For powering the AI capabilities
 - **Contributors** - All the amazing developers who have contributed to this project
-
----
 
 ## ❓ Frequently Asked Questions
 
-### 🤖 What makes OptiMind AI different from other AI platforms?
+### Q: What makes this platform different from other AI tools?
+A: OptiMind AI Ecosystem combines multiple AI models with enterprise-grade security, comprehensive optimization tools, and user-controlled privacy in a single, integrated platform.
 
-OptiMind AI stands out with its comprehensive optimization suite that combines SEO, AEO, GEO, and AIO capabilities in a single platform. Unlike other AI tools that focus on single aspects, OptiMind provides end-to-end solutions with enterprise-grade security, user-controlled privacy, and multi-model AI integration.
+### Q: Can I use this for commercial purposes?
+A: Yes, this project is licensed under MIT and can be used for commercial purposes. However, please ensure compliance with the AI service providers' terms of service.
 
-### 🔒 How does OptiMind AI ensure data privacy and security?
+### Q: How do I deploy this application?
+A: The application can be deployed to any platform that supports Node.js applications, including Vercel, AWS, Google Cloud, and traditional hosting providers.
 
-OptiMind AI implements multiple layers of security including:
-- **End-to-end encryption** for all data transmissions
-- **Blockchain storage** for decentralized, tamper-proof data storage
-- **User-controlled privacy settings** allowing granular control over data sharing
-- **Enterprise-grade security monitoring** with real-time threat detection
-- **Compliance reporting** for GDPR, CCPA, and other regulations
+### Q: Is my data secure?
+A: Yes, the platform includes enterprise-grade security features including encryption, secure storage, and comprehensive access controls.
 
-### 🚀 What AI models does OptiMind AI support?
-
-OptiMind AI features a multi-model ensemble approach including:
-- **GLM-4.5** - Advanced language model for complex reasoning
-- **Air Model** - Specialized for real-time processing and analysis
-- **Computer Vision Models** - For image analysis and enhancement
-- **Custom Ensemble Models** - Optimized for specific optimization tasks
-
-### 📈 How quickly can I see results with OptiMind AI?
-
-Results vary by use case, but typical timelines include:
-- **SEO Optimization**: Noticeable improvements in 2-4 weeks
-- **Content Creation**: Immediate generation with optimization within 24 hours
-- **Image Enhancement**: Real-time processing with instant results
-- **Analytics Insights**: Real-time dashboard with historical analysis
-
-### 💰 What are the pricing options for OptiMind AI?
-
-OptiMind AI offers flexible pricing tiers:
-- **Starter**: Free tier with basic optimization features
-- **Professional**: $29/month for advanced features and API access
-- **Enterprise**: Custom pricing for large-scale deployments
-- **Agency**: Specialized plans for marketing agencies and service providers
-
-### 🛠️ What technical skills are required to use OptiMind AI?
-
-OptiMind AI is designed for accessibility:
-- **No-code Interface**: Intuitive dashboard for non-technical users
-- **API Access**: RESTful APIs for developers and integrations
-- **Documentation**: Comprehensive guides and examples
-- **Support**: 24/7 technical support and community forums
-
-### 🌐 Can OptiMind AI integrate with existing systems?
-
-Yes, OptiMind AI provides extensive integration capabilities:
-- **RESTful APIs** for seamless integration
-- **Webhook Support** for real-time notifications
-- **SDK Libraries** for popular programming languages
-- **Third-party Integrations** with major marketing and analytics platforms
-
-### 📊 How does OptiMind AI handle large-scale deployments?
-
-OptiMind AI is built for enterprise scale:
-- **Cloud-Native Architecture** for horizontal scaling
-- **Load Balancing** for high-traffic scenarios
-- **Caching Layer** for optimal performance
-- **Monitoring & Analytics** for system health
-- **Disaster Recovery** with automated backups
+### Q: Can I extend the platform with custom features?
+A: Absolutely! The platform is designed to be extensible with modular architecture and comprehensive API documentation.
 
 ---
 
-Built with ❤️ for the AI community. Empowering creators with intelligent, user-controlled optimization tools.
-
-**OptiMind AI Ecosystem** - Where Intelligence Meets Integrity 🚀
->>>>>>> ef631a04b041f300087971414fcec38beffaf1ab
+Built with ❤️ for the AI developer community. Powered by OptiMind AI Ecosystem 🚀
