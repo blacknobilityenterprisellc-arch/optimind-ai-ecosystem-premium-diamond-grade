@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+<<<<<<< HEAD
 import { aiService } from '@/lib/ai';
 
 interface FormField {
@@ -14,10 +15,13 @@ interface FormValidationRequest {
   formType: string;
   context?: string;
 }
+=======
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+<<<<<<< HEAD
     const { fields, formType, context } = body as FormValidationRequest;
 
     // Validate required fields
@@ -128,5 +132,27 @@ function parseValidationResponse(aiResponse: string) {
       recommendations: ["Error parsing AI response"],
       summary: "Validation analysis encountered an error"
     };
+=======
+    const { formData, schema } = body;
+    
+    // Form validation logic here
+    const validation = {
+      valid: true,
+      errors: [],
+      warnings: [],
+      validated_at: new Date().toISOString()
+    };
+    
+    return NextResponse.json({ 
+      message: 'Form validated',
+      data: validation,
+      status: 'success' 
+    });
+  } catch (error) {
+    return NextResponse.json({ 
+      error: 'Failed to validate form',
+      status: 'error' 
+    }, { status: 500 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

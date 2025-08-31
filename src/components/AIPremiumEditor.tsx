@@ -341,7 +341,11 @@ import {
   Geological,
   Astronomical,
   Cosmological,
+<<<<<<< HEAD
   Advanced,
+=======
+  Quantum,
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   Relativistic,
   Newtonian,
   Einsteinian,

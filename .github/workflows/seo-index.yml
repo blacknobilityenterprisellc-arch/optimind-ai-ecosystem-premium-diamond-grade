@@ -1,0 +1,49 @@
+name: SEO Indexing Trigger
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  seo-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Check SEO elements
+      run: |
+        echo "🔍 Checking SEO optimization elements..."
+        
+        # Check if README.md has proper structure
+        if grep -q "Table of Contents" README.md; then
+          echo "✅ Table of Contents found in README.md"
+        else
+          echo "❌ Table of Contents missing from README.md"
+        fi
+        
+        # Check for FAQ section
+        if grep -q "Frequently Asked Questions" README.md; then
+          echo "✅ FAQ section found in README.md"
+        else
+          echo "❌ FAQ section missing from README.md"
+        fi
+        
+        # Check for GitHub Pages
+        if [ -f "docs/index.html" ]; then
+          echo "✅ GitHub Pages site found"
+        else
+          echo "❌ GitHub Pages site missing"
+        fi
+        
+        # Check for robots.txt
+        if [ -f "public/robots.txt" ]; then
+          echo "✅ robots.txt found"
+        else
+          echo "❌ robots.txt missing"
+        fi
+        
+        echo "🚀 SEO optimization check completed!"

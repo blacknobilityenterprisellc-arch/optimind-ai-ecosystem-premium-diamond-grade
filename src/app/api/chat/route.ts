@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
 
@@ -45,5 +46,30 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
+=======
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { message, context } = body;
+    
+    // Chat processing logic here
+    const response = {
+      reply: 'Chat response',
+      timestamp: new Date().toISOString()
+    };
+    
+    return NextResponse.json({ 
+      message: 'Chat processed',
+      response,
+      status: 'success' 
+    });
+  } catch (error) {
+    return NextResponse.json({ 
+      error: 'Failed to process chat',
+      status: 'error' 
+    }, { status: 500 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

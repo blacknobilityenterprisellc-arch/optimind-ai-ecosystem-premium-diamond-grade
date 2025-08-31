@@ -9,6 +9,15 @@ import {
   ZAIServiceError,
   zaiClientService 
 } from './zai-client-service';
+<<<<<<< HEAD
+=======
+import { 
+  OpenRouterAnalysisRequest,
+  OpenRouterAnalysisResponse,
+  OpenRouterModelConfig,
+  openRouterService
+} from './openrouter-service';
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
 export interface AIModel {
   id: string;
@@ -19,6 +28,14 @@ export interface AIModel {
   provider: string;
   isAvailable: boolean;
   isFlagship?: boolean;
+<<<<<<< HEAD
+=======
+  service: 'zai' | 'openrouter'; // Add service type
+  pricing?: {
+    input: number;
+    output: number;
+  };
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 }
 
 export interface ModelAnalysisResult {
@@ -58,11 +75,25 @@ export interface AnalysisError {
   timestamp: Date;
 }
 
+<<<<<<< HEAD
 // Convert ZAI models to UI models
 export const getAvailableModels = async (options: MultiModelAIOptions): Promise<AIModel[]> => {
   const zaiModels = await zaiClientService.getAvailableModels();
   
   return zaiModels
+=======
+// Convert ZAI and Open Router models to UI models
+export const getAvailableModels = async (options: MultiModelAIOptions): Promise<AIModel[]> => {
+  const [zaiModels, openRouterModels] = await Promise.all([
+    zaiClientService.getAvailableModels(),
+    openRouterService.getAvailableModels()
+  ]);
+  
+  const allModels: AIModel[] = [];
+  
+  // Add ZAI models
+  zaiModels
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     .filter(model => {
       switch (model.id) {
         case 'glm-45v': return options.enableGLM45V;
@@ -73,16 +104,62 @@ export const getAvailableModels = async (options: MultiModelAIOptions): Promise<
         default: return true;
       }
     })
+<<<<<<< HEAD
     .map(model => ({
+=======
+    .forEach(model => {
+      allModels.push({
+        id: model.id,
+        name: model.name,
+        description: `${model.name} - ${model.capabilities.join(', ')}`,
+        capabilities: model.capabilities,
+        version: '1.0.0',
+        provider: 'Z-AI',
+        isAvailable: true,
+        isFlagship: model.id === 'glm-45-flagship',
+        service: 'zai'
+      });
+    });
+  
+  // Add Open Router models (prioritize these)
+  openRouterModels.forEach(model => {
+    allModels.push({
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       id: model.id,
       name: model.name,
       description: `${model.name} - ${model.capabilities.join(', ')}`,
       capabilities: model.capabilities,
       version: '1.0.0',
+<<<<<<< HEAD
       provider: 'Z-AI',
       isAvailable: true,
       isFlagship: model.id === 'glm-45-flagship'
     }));
+=======
+      provider: model.provider,
+      isAvailable: true,
+      isFlagship: model.id === 'gpt-4o' || model.id === 'claude-3.5-sonnet',
+      service: 'openrouter',
+      pricing: model.pricing
+    });
+  });
+  
+  // Sort by priority: Open Router first, then ZAI, with flagship models at the top
+  return allModels.sort((a, b) => {
+    // Open Router models come first
+    if (a.service !== b.service) {
+      return a.service === 'openrouter' ? -1 : 1;
+    }
+    
+    // Flagship models come first within each service
+    if (a.isFlagship !== b.isFlagship) {
+      return a.isFlagship ? -1 : 1;
+    }
+    
+    // Then sort by name
+    return a.name.localeCompare(b.name);
+  });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 };
 
 // Default options
@@ -140,7 +217,18 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     
     for (const model of models) {
       try {
+<<<<<<< HEAD
         const isOnline = await zaiClientService.testModelConnection(model.id);
+=======
+        let isOnline: boolean;
+        
+        if (model.service === 'openrouter') {
+          isOnline = await openRouterService.testModelConnection(model.id);
+        } else {
+          isOnline = await zaiClientService.testModelConnection(model.id);
+        }
+        
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         statusMap.set(model.id, isOnline);
       } catch (error) {
         console.error(`Failed to check status for model ${model.id}:`, error);
@@ -164,6 +252,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
       // Convert file to base64
       const base64Image = await fileToBase64(imageFile);
       
+<<<<<<< HEAD
       const request: ZAIAnalysisRequest = {
         imageBase64: base64Image,
         analysisType,
@@ -180,6 +269,52 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
         processingTime: response.processingTime,
         timestamp: response.timestamp
       };
+=======
+      // Determine which service to use based on model
+      const model = availableModels.find(m => m.id === modelId);
+      if (!model) {
+        throw new Error(`Model ${modelId} not found`);
+      }
+      
+      let result: ModelAnalysisResult;
+      
+      if (model.service === 'openrouter') {
+        const request: OpenRouterAnalysisRequest = {
+          prompt: `Analyze this image for ${analysisType}`,
+          modelId,
+          imageBase64: base64Image
+        };
+
+        const response = await openRouterService.analyzeWithModel(request);
+        
+        result = {
+          modelId: response.modelId,
+          modelName: response.modelName,
+          result: response.result,
+          confidence: response.confidence,
+          processingTime: response.processingTime,
+          timestamp: response.timestamp
+        };
+      } else {
+        // Use ZAI service
+        const request: ZAIAnalysisRequest = {
+          imageBase64: base64Image,
+          analysisType,
+          modelId
+        };
+
+        const response = await zaiClientService.analyzeWithModel(request);
+        
+        result = {
+          modelId: response.modelId,
+          modelName: response.modelName,
+          result: response.result,
+          confidence: response.confidence,
+          processingTime: response.processingTime,
+          timestamp: response.timestamp
+        };
+      }
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
       setAnalysisResults(prev => {
         const newMap = new Map(prev);
@@ -193,16 +328,26 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
       console.error('Model analysis failed:', err);
       const serviceError = err as ZAIServiceError;
       setError({
+<<<<<<< HEAD
         code: serviceError.code,
         message: serviceError.message,
         retryable: serviceError.retryable,
+=======
+        code: serviceError.code || 'ANALYSIS_FAILED',
+        message: serviceError.message || 'Analysis failed',
+        retryable: serviceError.retryable || true,
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         timestamp: new Date()
       });
       throw err;
     } finally {
       setIsAnalyzing(false);
     }
+<<<<<<< HEAD
   }, []);
+=======
+  }, [availableModels]);
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
   const performEnsembleAnalysis = useCallback(async (
     photoId: string, 
@@ -281,6 +426,7 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     analysisType: string
   ): Promise<string> => {
     if (!options.autoSelectBestModel) {
+<<<<<<< HEAD
       return 'glm-45v'; // Default fallback
     }
 
@@ -291,6 +437,38 @@ export function useMultiModelAI(options: MultiModelAIOptions = DEFAULT_OPTIONS) 
     // For now, return the flagship model if available, otherwise first model
     const flagshipModel = models.find(m => m.isFlagship);
     return flagshipModel?.id || models[0]?.id || 'glm-45v';
+=======
+      return 'gpt-4o'; // Default to Open Router's GPT-4o
+    }
+
+    const models = await getAvailableModels(options);
+    if (models.length === 0) return 'gpt-4o';
+
+    // Prioritize Open Router models, especially flagship ones
+    const openRouterFlagship = models.find(m => 
+      m.service === 'openrouter' && m.isFlagship
+    );
+    if (openRouterFlagship) {
+      return openRouterFlagship.id;
+    }
+
+    // Then any Open Router model
+    const openRouterModel = models.find(m => m.service === 'openrouter');
+    if (openRouterModel) {
+      return openRouterModel.id;
+    }
+
+    // Fallback to ZAI flagship
+    const zaiFlagship = models.find(m => 
+      m.service === 'zai' && m.isFlagship
+    );
+    if (zaiFlagship) {
+      return zaiFlagship.id;
+    }
+
+    // Final fallback
+    return models[0]?.id || 'gpt-4o';
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }, [options]);
 
   const refreshModelStatus = useCallback(() => {

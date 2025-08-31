@@ -63,7 +63,11 @@ export default function ContentFreshnessDetector() {
       severity: "high",
       description: "Voice search statistics from 2022 are outdated",
       location: "Section 2: Voice Search Trends",
+<<<<<<< HEAD
       suggestion: "Update with 2024 voice search statistics and trends",
+=======
+      suggestion: "Update with 2025 voice search statistics and trends",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       impact: 85
     },
     {

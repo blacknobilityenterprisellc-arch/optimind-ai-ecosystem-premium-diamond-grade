@@ -106,7 +106,11 @@ export default function AIPoweredResearchStrategy() {
       id: "1",
       type: "statistic",
       content: "Voice searches are 3x more likely to be local-based than text searches",
+<<<<<<< HEAD
       source: "Google Search Data 2024",
+=======
+      source: "Google Search Data 2025",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       confidence: 95,
       priority: "high"
     },

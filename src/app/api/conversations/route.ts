@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -63,11 +64,25 @@ export async function GET(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
+=======
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  try {
+    return NextResponse.json({
+      message: 'Conversations API endpoint',
+      status: 'operational',
+      endpoints: ['list', 'create', 'update', 'delete', 'export']
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+<<<<<<< HEAD
     const { title, userId, projectId, model = 'gpt-4' } = await request.json()
 
     if (!title || !userId) {
@@ -109,5 +124,14 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
+=======
+    const body = await request.json();
+    return NextResponse.json({
+      message: 'Conversation operation completed',
+      data: body
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

@@ -55,7 +55,11 @@ export async function POST(request: NextRequest) {
           "title": "content_title",
           "domain": "domain_name",
           "wordCount": 2500,
+<<<<<<< HEAD
           "publishDate": "2024-01-15",
+=======
+          "publishDate": "2025-01-15",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
           "contentScore": 85,
           "seoScore": 82,
           "readabilityScore": 88,
@@ -145,7 +149,11 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Competitor analysis error:', error);
     return NextResponse.json(
+<<<<<<< HEAD
       { error: 'Failed to analyze competitors', details: error.message },
+=======
+      { error: 'Failed to analyze competitors', details: error instanceof Error ? error.message : 'Unknown error' },
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       { status: 500 }
     );
   }

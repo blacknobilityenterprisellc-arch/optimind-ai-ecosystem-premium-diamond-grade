@@ -89,9 +89,15 @@ export default function ContentOptimizationRefresh() {
   const contentItems: ContentItem[] = [
     {
       id: "1",
+<<<<<<< HEAD
       title: "Voice Search Optimization Guide 2024",
       url: "/blog/voice-search-optimization",
       lastUpdated: "2024-01-15",
+=======
+      title: "Voice Search Optimization Guide 2025",
+      url: "/blog/voice-search-optimization",
+      lastUpdated: "2025-01-15",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       freshnessScore: 85,
       performanceScore: 78,
       optimizationScore: 72,
@@ -103,7 +109,11 @@ export default function ContentOptimizationRefresh() {
       id: "2",
       title: "AI Content Creation Best Practices",
       url: "/blog/ai-content-creation",
+<<<<<<< HEAD
       lastUpdated: "2024-02-20",
+=======
+      lastUpdated: "2025-02-20",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       freshnessScore: 92,
       performanceScore: 85,
       optimizationScore: 88,
@@ -146,7 +156,11 @@ export default function ContentOptimizationRefresh() {
       contentScore: 82,
       strengths: ["Clear structure", "Actionable tips", "Good examples"],
       weaknesses: ["Outdated information", "Missing recent trends"],
+<<<<<<< HEAD
       opportunities: ["Update statistics", "Add 2024 trends"]
+=======
+      opportunities: ["Update statistics", "Add 2025 trends"]
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     }
   ];
 
@@ -156,7 +170,11 @@ export default function ContentOptimizationRefresh() {
       contentId: "1",
       type: "update_statistics",
       priority: "high",
+<<<<<<< HEAD
       description: "Update voice search statistics with 2024 data",
+=======
+      description: "Update voice search statistics with 2025 data",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       impact: 85,
       effort: 30,
       estimatedTime: "2 hours"

@@ -88,7 +88,11 @@ export default function NonTextMultimodalOptimization() {
       optimizationScore: 72,
       seoScore: 68,
       accessibilityScore: 45,
+<<<<<<< HEAD
       lastOptimized: "2024-01-10",
+=======
+      lastOptimized: "2025-01-10",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       status: 'needs_optimization'
     },
     {
@@ -102,7 +106,11 @@ export default function NonTextMultimodalOptimization() {
       optimizationScore: 85,
       seoScore: 78,
       accessibilityScore: 90,
+<<<<<<< HEAD
       lastOptimized: "2024-02-05",
+=======
+      lastOptimized: "2025-02-05",
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       status: 'optimized'
     },
     {

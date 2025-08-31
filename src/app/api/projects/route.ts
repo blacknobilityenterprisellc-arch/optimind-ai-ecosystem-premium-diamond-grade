@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -53,11 +54,29 @@ export async function GET(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
+=======
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(request: NextRequest) {
+  try {
+    // Projects retrieval logic here
+    return NextResponse.json({ 
+      message: 'Projects retrieved',
+      data: [],
+      status: 'success' 
+    });
+  } catch (error) {
+    return NextResponse.json({ 
+      error: 'Failed to retrieve projects',
+      status: 'error' 
+    }, { status: 500 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
+<<<<<<< HEAD
     const { name, description, userId } = await request.json()
 
     if (!name || !userId) {
@@ -92,5 +111,27 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
+=======
+    const body = await request.json();
+    const { project } = body;
+    
+    // Project creation logic here
+    const createdProject = {
+      id: Date.now().toString(),
+      ...project,
+      createdAt: new Date().toISOString()
+    };
+    
+    return NextResponse.json({ 
+      message: 'Project created',
+      data: createdProject,
+      status: 'success' 
+    });
+  } catch (error) {
+    return NextResponse.json({ 
+      error: 'Failed to create project',
+      status: 'error' 
+    }, { status: 500 });
+>>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
