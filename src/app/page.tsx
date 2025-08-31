@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-export default function Home() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-8 p-4">
-      <div className="relative w-24 h-24 md:w-32 md:h-32">
-        <img
-          src="/logo.svg"
-          alt="Z.ai Logo"
-          className="w-full h-full object-contain"
-        />
-      </div>
-    </div>
-  )
-=======
 "use client";
 
 import { useState, useEffect } from "react";
@@ -531,43 +517,40 @@ export default function Dashboard() {
             </Badge>
           </CardTitle>
           <CardDescription>
-            Explore our comprehensive suite of AI-powered tools and features
+            Explore our comprehensive suite of AI-powered capabilities
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {aiCapabilities.map((capability) => (
-              <Card key={capability.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className={`p-2 bg-gradient-to-r ${capability.color} rounded-lg`}>
+              <Card key={capability.id} className="hover:shadow-lg transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-3">
+                    <div className={`p-2 rounded-lg bg-gradient-to-r ${capability.color}`}>
                       <capability.icon className="w-5 h-5 text-white" />
                     </div>
-                    <div className="flex items-center space-x-1">
-                      {capability.badge && (
-                        <Badge variant="secondary" className="text-xs">
-                          {capability.badge}
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <h3 className="font-semibold">{capability.title}</h3>
+                        {capability.badge && (
+                          <Badge variant="secondary" className="text-xs">
+                            {capability.badge}
+                          </Badge>
+                        )}
+                        <Badge 
+                          variant={capability.status === 'active' ? 'default' : 'secondary'}
+                          className="text-xs"
+                        >
+                          {capability.status === 'active' ? 'Active' : capability.status === 'beta' ? 'Beta' : 'Coming Soon'}
                         </Badge>
-                      )}
-                      <Badge 
-                        variant={capability.status === 'active' ? 'default' : 'outline'} 
-                        className="text-xs"
-                      >
-                        {capability.status === 'active' ? 'Active' : capability.status === 'beta' ? 'Beta' : 'Coming Soon'}
-                      </Badge>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        {capability.description}
+                      </p>
+                      <p className="text-xs font-medium text-primary">
+                        {capability.stats}
+                      </p>
                     </div>
-                  </div>
-                  <CardTitle className="text-lg">{capability.title}</CardTitle>
-                  <CardDescription className="text-sm">
-                    {capability.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">{capability.stats}</span>
-                    <Button size="sm" variant="ghost" className="group-hover:bg-primary group-hover:text-primary-foreground">
-                      <ArrowRight className="w-4 h-4" />
-                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -576,157 +559,177 @@ export default function Dashboard() {
         </CardContent>
       </Card>
 
-      {/* Analytics Chart */}
-      <AnalyticsChart />
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Recent Activity */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Recent Activity */}
+      {/* Main Content Tabs */}
+      <Tabs defaultValue="analytics" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
+          <TabsTrigger value="alerts">Alerts</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <BarChart3 className="w-5 h-5" />
+                  <span>Performance Trends</span>
+                </CardTitle>
+                <CardDescription>
+                  Content generation and optimization metrics over time
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AnalyticsChart />
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Zap className="w-5 h-5" />
+                  <span>System Status</span>
+                </CardTitle>
+                <CardDescription>
+                  Real-time system health and performance indicators
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>AI Models</span>
+                    <span className="font-medium text-green-600">Online</span>
+                  </div>
+                  <Progress value={100} className="h-2" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>API Response</span>
+                    <span className="font-medium text-green-600">98ms</span>
+                  </div>
+                  <Progress value={95} className="h-2" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>Database</span>
+                    <span className="font-medium text-green-600">Healthy</span>
+                  </div>
+                  <Progress value={98} className="h-2" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>WebSocket</span>
+                    <span className={`font-medium ${isConnected ? 'text-green-600' : 'text-red-600'}`}>
+                      {isConnected ? 'Connected' : 'Disconnected'}
+                    </span>
+                  </div>
+                  <Progress value={isConnected ? 100 : 0} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="activity" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Activity className="w-5 h-5" />
                 <span>Recent Activity</span>
+                <Badge variant="outline">{sortedActivities.length} items</Badge>
               </CardTitle>
               <CardDescription>
-                Latest actions and system events
+                Latest actions and events in your AI ecosystem
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {sortedActivities.length > 0 ? (
-                sortedActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
-                    <div className="p-1.5 bg-background rounded">
-                      {getActivityIcon(activity.type)}
+            <CardContent>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {sortedActivities.length > 0 ? (
+                  sortedActivities.map((activity) => (
+                    <div key={activity.id} className="flex items-center space-x-3 p-3 rounded-lg border">
+                      <div className="p-2 rounded-full bg-primary/10">
+                        {getActivityIcon(activity.type)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <h4 className="font-medium">{activity.title}</h4>
+                          <Badge variant="outline" className="text-xs">
+                            {activity.type}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {activity.timestamp}
+                        </p>
+                      </div>
+                      <Badge 
+                        variant={activity.status === 'completed' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {activity.status}
+                      </Badge>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.title}</p>
-                      <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className={`text-xs ${
-                        activity.status === 'success' ? 'text-green-600' :
-                        activity.status === 'in_progress' ? 'text-blue-600' :
-                        activity.status === 'error' ? 'text-red-600' : 'text-gray-600'
-                      }`}
-                    >
-                      {activity.status.replace('_', ' ')}
-                    </Badge>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <Clock className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                    <p className="text-muted-foreground">No recent activity found</p>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No activities found matching your criteria</p>
-                </div>
-              )}
+                )}
+              </div>
             </CardContent>
           </Card>
-        </div>
-
-        {/* Right Column - Alerts and Quick Actions */}
-        <div className="space-y-6">
-          {/* System Alerts */}
+        </TabsContent>
+        
+        <TabsContent value="alerts" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <AlertTriangle className="w-5 h-5" />
                 <span>System Alerts</span>
+                <Badge variant="outline">{sortedAlerts.length} alerts</Badge>
               </CardTitle>
               <CardDescription>
-                Important notifications and updates
+                Important notifications and system alerts
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {sortedAlerts.length > 0 ? (
-                sortedAlerts.map((alert) => (
-                  <div key={alert.id} className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
-                    {getAlertIcon(alert.type)}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{alert.title}</p>
-                      <p className="text-xs text-muted-foreground">{alert.description}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{alert.timestamp}</p>
+            <CardContent>
+              <div className="space-y-3 max-h-96 overflow-y-auto">
+                {sortedAlerts.length > 0 ? (
+                  sortedAlerts.map((alert) => (
+                    <div key={alert.id} className="flex items-start space-x-3 p-3 rounded-lg border">
+                      <div className="p-1 rounded-full">
+                        {getAlertIcon(alert.type)}
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <h4 className="font-medium">{alert.title}</h4>
+                          <Badge 
+                            variant={alert.type === 'error' ? 'destructive' : alert.type === 'warning' ? 'default' : 'secondary'}
+                            className="text-xs"
+                          >
+                            {alert.type}
+                          </Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-1">
+                          {alert.description}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {alert.timestamp}
+                        </p>
+                      </div>
                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-4" />
+                    <p className="text-muted-foreground">No active alerts</p>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No alerts found matching your criteria</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Zap className="w-5 h-5" />
-                <span>Quick Actions</span>
-              </CardTitle>
-              <CardDescription>
-                Common tasks and shortcuts
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button className="w-full justify-start" variant="outline">
-                <Plus className="w-4 h-4 mr-2" />
-                New Content Project
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Search className="w-4 h-4 mr-2" />
-                Run SEO Analysis
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Brain className="w-4 h-4 mr-2" />
-                Start Research Query
-              </Button>
-              <Button className="w-full justify-start" variant="outline">
-                <Eye className="w-4 h-4 mr-2" />
-                View Reports
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* System Status */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="w-5 h-5" />
-                <span>System Status</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Overall Health</span>
-                  <span className="font-medium text-green-600">{metrics?.systemHealth}%</span>
-                </div>
-                <Progress value={metrics?.systemHealth} className="h-2" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>AI Models</span>
-                  <span className="font-medium text-green-600">Online</span>
-                </div>
-                <Progress value={100} className="h-2" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>API Response</span>
-                  <span className="font-medium text-green-600">98ms</span>
-                </div>
-                <Progress value={95} className="h-2" />
+                )}
               </div>
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
->>>>>>> ef631a04b041f300087971414fcec38beffaf1ab
 }
