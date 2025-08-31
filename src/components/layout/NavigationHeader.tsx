@@ -22,7 +22,7 @@ import {
   Image as ImageIcon, 
   FileText, 
   Shield, 
-n  BarChart3, 
+  BarChart3, 
   Settings, 
   User, 
   Menu, 

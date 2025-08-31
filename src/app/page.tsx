@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { useRealTimeDashboard } from "@/hooks/useRealTimeDashboard";
+import SearchAndFilter from "@/components/SearchAndFilter";
+import AnalyticsChart from "@/components/AnalyticsChart";
 import {
   BarChart3,
   FileText,
@@ -45,7 +48,10 @@ import {
   Lightbulb,
   Fingerprint,
   Gem,
-  Infinity
+  Infinity,
+  Wifi,
+  WifiOff,
+  AlertCircle
 } from "lucide-react";
 
 interface DashboardMetrics {
@@ -82,237 +88,168 @@ interface AICapability {
 }
 
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
-  const [alerts, setAlerts] = useState<SystemAlert[]>([]);
+  const {
+    metrics: realTimeMetrics,
+    alerts: realTimeAlerts,
+    activities: realTimeActivities,
+    isConnected,
+    connectionError,
+    requestMetricsUpdate,
+    monitorActivity,
+    sendSystemAlert
+  } = useRealTimeDashboard();
+
+  const [fallbackMetrics, setFallbackMetrics] = useState<DashboardMetrics | null>(null);
+  const [fallbackAlerts, setFallbackAlerts] = useState<SystemAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Search and filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterOptions, setFilterOptions] = useState({
+    status: [] as string[],
+    type: [] as string[],
+    dateRange: 'all' as string,
+    sortBy: 'timestamp' as string,
+    sortOrder: 'desc' as 'asc' | 'desc'
+  });
 
+  // Load fallback data if WebSocket is not available
   useEffect(() => {
-    // Simulate loading dashboard data
-    const loadDashboardData = async () => {
-      setIsLoading(true);
+    if (!isConnected && !connectionError) {
+      const loadFallbackData = async () => {
+        setIsLoading(true);
+        try {
+          const [metricsResponse, alertsResponse] = await Promise.all([
+            fetch('/api/analytics'),
+            fetch('/api/health')
+          ]);
 
-      try {
-        // Try to fetch real data from API
-        const [metricsResponse, alertsResponse] = await Promise.all([
-          fetch('/api/analytics'),
-          fetch('/api/health')
-        ]);
-
-        let dashboardMetrics: DashboardMetrics;
-        let systemAlerts: SystemAlert[] = [];
-
-        if (metricsResponse.ok) {
-          const metricsData = await metricsResponse.json();
-          dashboardMetrics = {
-            totalContent: metricsData.totalContent || 1247,
-            avgOptimizationScore: metricsData.avgOptimizationScore || 87,
-            activeProjects: metricsData.activeProjects || 23,
-            systemHealth: metricsData.systemHealth || 96,
-            recentActivity: metricsData.recentActivity || [
-              {
-                id: "1",
-                type: "content",
-                title: "AI Content Generation Completed",
-                timestamp: "2 minutes ago",
-                status: "success"
-              },
-              {
-                id: "2",
-                type: "optimization",
-                title: "SEO Analysis Updated",
-                timestamp: "15 minutes ago",
-                status: "success"
-              },
-              {
-                id: "3",
-                type: "research",
-                title: "Multi-Model Analysis Started",
-                timestamp: "1 hour ago",
-                status: "in_progress"
-              },
-              {
-                id: "4",
-                type: "system",
-                title: "System Maintenance Scheduled",
-                timestamp: "2 hours ago",
-                status: "info"
-              }
-            ]
-          };
-        } else {
-          // Fallback metrics
-          dashboardMetrics = {
-            totalContent: 1247,
-            avgOptimizationScore: 87,
-            activeProjects: 23,
-            systemHealth: 96,
-            recentActivity: [
-              {
-                id: "1",
-                type: "content",
-                title: "AI Content Generation Completed",
-                timestamp: "2 minutes ago",
-                status: "success"
-              },
-              {
-                id: "2",
-                type: "optimization",
-                title: "SEO Analysis Updated",
-                timestamp: "15 minutes ago",
-                status: "success"
-              },
-              {
-                id: "3",
-                type: "research",
-                title: "Multi-Model Analysis Started",
-                timestamp: "1 hour ago",
-                status: "in_progress"
-              },
-              {
-                id: "4",
-                type: "system",
-                title: "System Maintenance Scheduled",
-                timestamp: "2 hours ago",
-                status: "info"
-              }
-            ]
-          };
-        }
-
-        if (alertsResponse.ok) {
-          const healthData = await alertsResponse.json();
-          systemAlerts = healthData.alerts || [
-            {
-              id: "1",
-              type: "success",
-              title: "System Performance Optimized",
-              description: "All systems are running at peak efficiency",
-              timestamp: "5 minutes ago"
-            },
-            {
-              id: "2",
-              type: "info",
-              title: "New Features Available",
-              description: "Check out the latest AI optimization tools",
-              timestamp: "1 hour ago"
-            },
-            {
-              id: "3",
-              type: "warning",
-              title: "API Rate Limit Approaching",
-              description: "Consider upgrading your plan for higher limits",
-              timestamp: "3 hours ago"
-            }
-          ];
-        } else {
-          // Fallback alerts
-          systemAlerts = [
-            {
-              id: "1",
-              type: "success",
-              title: "System Performance Optimized",
-              description: "All systems are running at peak efficiency",
-              timestamp: "5 minutes ago"
-            },
-            {
-              id: "2",
-              type: "info",
-              title: "New Features Available",
-              description: "Check out the latest AI optimization tools",
-              timestamp: "1 hour ago"
-            },
-            {
-              id: "3",
-              type: "warning",
-              title: "API Rate Limit Approaching",
-              description: "Consider upgrading your plan for higher limits",
-              timestamp: "3 hours ago"
-            }
-          ];
-        }
-
-        setMetrics(dashboardMetrics);
-        setAlerts(systemAlerts);
-      } catch (error) {
-        console.error('Failed to load dashboard data:', error);
-        // Fallback data if all APIs fail
-        const fallbackMetrics: DashboardMetrics = {
-          totalContent: 1247,
-          avgOptimizationScore: 87,
-          activeProjects: 23,
-          systemHealth: 96,
-          recentActivity: [
-            {
-              id: "1",
-              type: "content",
-              title: "AI Content Generation Completed",
-              timestamp: "2 minutes ago",
-              status: "success"
-            },
-            {
-              id: "2",
-              type: "optimization",
-              title: "SEO Analysis Updated",
-              timestamp: "15 minutes ago",
-              status: "success"
-            },
-            {
-              id: "3",
-              type: "research",
-              title: "Multi-Model Analysis Started",
-              timestamp: "1 hour ago",
-              status: "in_progress"
-            },
-            {
-              id: "4",
-              type: "system",
-              title: "System Maintenance Scheduled",
-              timestamp: "2 hours ago",
-              status: "info"
-            }
-          ]
-        };
-
-        const fallbackAlerts: SystemAlert[] = [
-          {
-            id: "1",
-            type: "success",
-            title: "System Performance Optimized",
-            description: "All systems are running at peak efficiency",
-            timestamp: "5 minutes ago"
-          },
-          {
-            id: "2",
-            type: "info",
-            title: "New Features Available",
-            description: "Check out the latest AI optimization tools",
-            timestamp: "1 hour ago"
-          },
-          {
-            id: "3",
-            type: "warning",
-            title: "API Rate Limit Approaching",
-            description: "Consider upgrading your plan for higher limits",
-            timestamp: "3 hours ago"
+          if (metricsResponse.ok) {
+            const metricsData = await metricsResponse.json();
+            setFallbackMetrics({
+              totalContent: metricsData.totalContent || 1247,
+              avgOptimizationScore: metricsData.avgOptimizationScore || 87,
+              activeProjects: metricsData.activeProjects || 23,
+              systemHealth: metricsData.systemHealth || 96,
+              recentActivity: metricsData.recentActivity || []
+            });
           }
-        ];
 
-        setMetrics(fallbackMetrics);
-        setAlerts(fallbackAlerts);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+          if (alertsResponse.ok) {
+            const healthData = await alertsResponse.json();
+            setFallbackAlerts(healthData.alerts || []);
+          }
+        } catch (error) {
+          console.error('Failed to load fallback data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    loadDashboardData();
-  }, []);
+      loadFallbackData();
+    }
+  }, [isConnected, connectionError]);
+
+  // Use real-time data if available, otherwise use fallback
+  const metrics = realTimeMetrics || fallbackMetrics;
+  const alerts = realTimeAlerts.length > 0 ? realTimeAlerts : fallbackAlerts;
+  const activities = realTimeActivities.length > 0 ? realTimeActivities : metrics?.recentActivity || [];
+
+  // Filter and search functionality
+  const filteredActivities = activities.filter(activity => {
+    const matchesSearch = !searchQuery || 
+      activity.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      activity.type.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = filterOptions.status.length === 0 || 
+      filterOptions.status.includes(activity.status);
+    
+    const matchesType = filterOptions.type.length === 0 || 
+      filterOptions.type.includes(activity.type);
+    
+    return matchesSearch && matchesStatus && matchesType;
+  });
+
+  const filteredAlerts = alerts.filter(alert => {
+    const matchesSearch = !searchQuery || 
+      alert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      alert.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = filterOptions.status.length === 0 || 
+      filterOptions.status.includes(alert.type);
+    
+    return matchesSearch && matchesStatus;
+  });
+
+  // Sort functionality
+  const sortedActivities = [...filteredActivities].sort((a, b) => {
+    let comparison = 0;
+    
+    switch (filterOptions.sortBy) {
+      case 'timestamp':
+        comparison = 0; // For simplicity, keep original order
+        break;
+      case 'title':
+        comparison = a.title.localeCompare(b.title);
+        break;
+      case 'type':
+        comparison = a.type.localeCompare(b.type);
+        break;
+      case 'status':
+        comparison = a.status.localeCompare(b.status);
+        break;
+    }
+    
+    return filterOptions.sortOrder === 'desc' ? -comparison : comparison;
+  });
+
+  const sortedAlerts = [...filteredAlerts].sort((a, b) => {
+    let comparison = 0;
+    
+    switch (filterOptions.sortBy) {
+      case 'timestamp':
+        comparison = 0; // For simplicity, keep original order
+        break;
+      case 'title':
+        comparison = a.title.localeCompare(b.title);
+        break;
+      case 'type':
+        comparison = a.type.localeCompare(b.type);
+        break;
+      case 'status':
+        comparison = a.type.localeCompare(b.type);
+        break;
+    }
+    
+    return filterOptions.sortOrder === 'desc' ? -comparison : comparison;
+  });
+
+  // Search and filter handlers
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const handleFilter = (filters: any) => {
+    setFilterOptions(filters);
+  };
+
+  const handleClearFilters = () => {
+    setSearchQuery('');
+    setFilterOptions({
+      status: [],
+      type: [],
+      dateRange: 'all',
+      sortBy: 'timestamp',
+      sortOrder: 'desc'
+    });
+  };
 
   const quickStats = [
     {
       title: "Content Generated",
       value: metrics?.totalContent || 0,
-      change: "+12.5%",
-      trend: "up",
+      change: isConnected ? "+12.5%" : "+8.2%",
+      trend: "up" as const,
       icon: FileText,
       color: "text-blue-600",
       bgColor: "bg-blue-50"
@@ -320,8 +257,8 @@ export default function Dashboard() {
     {
       title: "Optimization Score",
       value: `${metrics?.avgOptimizationScore || 0}%`,
-      change: "+5.2%",
-      trend: "up",
+      change: isConnected ? "+5.2%" : "+3.1%",
+      trend: "up" as const,
       icon: Target,
       color: "text-green-600",
       bgColor: "bg-green-50"
@@ -329,8 +266,8 @@ export default function Dashboard() {
     {
       title: "Active Projects",
       value: metrics?.activeProjects || 0,
-      change: "+8.1%",
-      trend: "up",
+      change: isConnected ? "+8.1%" : "+5.7%",
+      trend: "up" as const,
       icon: Brain,
       color: "text-purple-600",
       bgColor: "bg-purple-50"
@@ -338,8 +275,8 @@ export default function Dashboard() {
     {
       title: "System Health",
       value: `${metrics?.systemHealth || 0}%`,
-      change: "Stable",
-      trend: "stable",
+      change: isConnected ? "Live" : "Stable",
+      trend: isConnected ? "up" as const : "stable" as const,
       icon: Shield,
       color: "text-green-600",
       bgColor: "bg-green-50"
@@ -488,15 +425,36 @@ export default function Dashboard() {
               <Gem className="w-3 h-3 mr-1" />
               Premium
             </Badge>
+            {isConnected ? (
+              <Badge variant="outline" className="border-green-500 text-green-600">
+                <Wifi className="w-3 h-3 mr-1" />
+                Live
+              </Badge>
+            ) : connectionError ? (
+              <Badge variant="outline" className="border-red-500 text-red-600">
+                <WifiOff className="w-3 h-3 mr-1" />
+                Offline
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+                <AlertCircle className="w-3 h-3 mr-1" />
+                Connecting...
+              </Badge>
+            )}
           </div>
           <p className="text-muted-foreground">
             Welcome to your OptiMind AI Ecosystem control center
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={requestMetricsUpdate}
+            disabled={!isConnected}
+          >
             <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh
+            Refresh Data
           </Button>
           <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-2" />
@@ -538,6 +496,14 @@ export default function Dashboard() {
           </Card>
         ))}
       </div>
+
+      {/* Search and Filter */}
+      <SearchAndFilter
+        onSearch={handleSearch}
+        onFilter={handleFilter}
+        onClearFilters={handleClearFilters}
+        totalResults={sortedActivities.length + sortedAlerts.length}
+      />
 
       {/* AI Capabilities Showcase */}
       <Card>
@@ -596,6 +562,9 @@ export default function Dashboard() {
         </CardContent>
       </Card>
 
+      {/* Analytics Chart */}
+      <AnalyticsChart />
+
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Recent Activity */}
@@ -612,27 +581,34 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {metrics?.recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
-                  <div className="p-1.5 bg-background rounded">
-                    {getActivityIcon(activity.type)}
+              {sortedActivities.length > 0 ? (
+                sortedActivities.map((activity) => (
+                  <div key={activity.id} className="flex items-center space-x-3 p-3 bg-muted/50 rounded-lg">
+                    <div className="p-1.5 bg-background rounded">
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{activity.title}</p>
+                      <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
+                    </div>
+                    <Badge
+                      variant="outline"
+                      className={`text-xs ${
+                        activity.status === 'success' ? 'text-green-600' :
+                        activity.status === 'in_progress' ? 'text-blue-600' :
+                        activity.status === 'error' ? 'text-red-600' : 'text-gray-600'
+                      }`}
+                    >
+                      {activity.status.replace('_', ' ')}
+                    </Badge>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{activity.title}</p>
-                    <p className="text-xs text-muted-foreground">{activity.timestamp}</p>
-                  </div>
-                  <Badge
-                    variant="outline"
-                    className={`text-xs ${
-                      activity.status === 'success' ? 'text-green-600' :
-                      activity.status === 'in_progress' ? 'text-blue-600' :
-                      activity.status === 'error' ? 'text-red-600' : 'text-gray-600'
-                    }`}
-                  >
-                    {activity.status.replace('_', ' ')}
-                  </Badge>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Activity className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>No activities found matching your criteria</p>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
         </div>
@@ -651,16 +627,23 @@ export default function Dashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {alerts.map((alert) => (
-                <div key={alert.id} className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
-                  {getAlertIcon(alert.type)}
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{alert.title}</p>
-                    <p className="text-xs text-muted-foreground">{alert.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">{alert.timestamp}</p>
+              {sortedAlerts.length > 0 ? (
+                sortedAlerts.map((alert) => (
+                  <div key={alert.id} className="flex items-start space-x-3 p-3 bg-muted/50 rounded-lg">
+                    {getAlertIcon(alert.type)}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">{alert.title}</p>
+                      <p className="text-xs text-muted-foreground">{alert.description}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{alert.timestamp}</p>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>No alerts found matching your criteria</p>
                 </div>
-              ))}
+              )}
             </CardContent>
           </Card>
 
