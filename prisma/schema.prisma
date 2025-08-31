@@ -13,24 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<<< HEAD
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-=======
 // Core User Management
 model User {
   id              String   @id @default(cuid())
@@ -247,67 +229,6 @@ model Post {
   @@map("posts")
 }
 
-// Enums
-enum UserRole {
-  USER
-  ADMIN
-  MODERATOR
-  DEVELOPER
-}
-
-enum SubscriptionPlan {
-  FREE
-  BASIC
-  PRO
-  ENTERPRISE
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  CANCELLED
-  EXPIRED
-  PENDING
-}
-
-enum ProjectStatus {
-  ACTIVE
-  COMPLETED
-  ARCHIVED
-  SUSPENDED
-}
-
-enum AnalysisType {
-  TEXT_ANALYSIS
-  IMAGE_ANALYSIS
-  CODE_ANALYSIS
-  DATA_ANALYSIS
-  SENTIMENT_ANALYSIS
-  CONTENT_OPTIMIZATION
-  SEO_ANALYSIS
-  MULTIMODAL_ANALYSIS
-}
-
-enum AnalysisStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum MessageRole {
-  USER
-  ASSISTANT
-  SYSTEM
-}
-
-enum UploadStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  DELETED
-}
-
 // Business Solution Models
 // ContractWise AI Models
 model ContractAnalysis {
@@ -447,6 +368,67 @@ model LearningPath {
   @@map("learning_paths")
 }
 
+// Enums
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+  DEVELOPER
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+  SUSPENDED
+}
+
+enum AnalysisType {
+  TEXT_ANALYSIS
+  IMAGE_ANALYSIS
+  CODE_ANALYSIS
+  DATA_ANALYSIS
+  SENTIMENT_ANALYSIS
+  CONTENT_OPTIMIZATION
+  SEO_ANALYSIS
+  MULTIMODAL_ANALYSIS
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  DELETED
+}
+
 // Business Solution Enums
 enum ContractType {
   EMPLOYMENT
@@ -501,5 +483,4 @@ enum LearningPathStatus {
   FAILED
   IN_PROGRESS
   ON_HOLD
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 }
