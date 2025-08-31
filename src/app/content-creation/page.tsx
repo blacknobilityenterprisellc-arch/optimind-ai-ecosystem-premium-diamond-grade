@@ -42,7 +42,34 @@ import {
   Picture,
   Sliders,
   Eye,
-  RefreshCw
+  RefreshCw,
+  Video,
+  Mic,
+  FileEdit,
+  Hash,
+  Tag,
+  Calendar,
+  TrendingUp,
+  Award,
+  Target,
+  Lightbulb,
+  Rocket,
+  Shield,
+  Database,
+  Globe,
+  Search,
+  Filter as FilterIcon,
+  SortAsc,
+  DownloadCloud,
+  CloudUpload,
+  HardDrive,
+  Cpu,
+  MemoryStick,
+  Zap as ZapIcon,
+  Flame,
+  Gem,
+  Crown as CrownIcon,
+  Sparkles as SparklesIcon
 } from "lucide-react";
 
 // Import specialized components
@@ -72,6 +99,28 @@ interface GeneratedContent {
   qualityScore: number;
 }
 
+interface MediaStats {
+  totalImages: number;
+  totalVideos: number;
+  totalAudio: number;
+  totalDocuments: number;
+  processingSpeed: string;
+  qualityScore: number;
+  storageUsed: string;
+}
+
+interface RecentProject {
+  id: string;
+  title: string;
+  type: string;
+  category: string;
+  createdAt: string;
+  status: "completed" | "processing" | "failed";
+  qualityScore?: number;
+  fileSize?: string;
+  duration?: string;
+}
+
 export default function ContentCreationPage() {
   const [activeTab, setActiveTab] = useState("text-content");
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
@@ -84,8 +133,96 @@ export default function ContentCreationPage() {
     keywords: []
   });
   const [keywordInput, setKeywordInput] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const { callApi, loading: isGenerating, error } = useApi();
+  const { callApi, loading: isApiLoading, error } = useApi();
+
+  // Media statistics
+  const mediaStats: MediaStats = {
+    totalImages: 1247,
+    totalVideos: 89,
+    totalAudio: 156,
+    totalDocuments: 523,
+    processingSpeed: "2.3x faster",
+    qualityScore: 94,
+    storageUsed: "2.4 GB"
+  };
+
+  // Recent projects across all media types
+  const recentProjects: RecentProject[] = [
+    {
+      id: "1",
+      title: "AI in Digital Marketing",
+      type: "Blog Post",
+      category: "text",
+      createdAt: "2 hours ago",
+      status: "completed",
+      qualityScore: 92
+    },
+    {
+      id: "2", 
+      title: "Summer Campaign Email",
+      type: "Email Campaign",
+      category: "text",
+      createdAt: "1 day ago",
+      status: "completed",
+      qualityScore: 88
+    },
+    {
+      id: "3",
+      title: "Product Launch Social Posts",
+      type: "Social Media",
+      category: "text",
+      createdAt: "3 days ago",
+      status: "completed",
+      qualityScore: 95
+    },
+    {
+      id: "4",
+      title: "Fantasy Landscape Art",
+      type: "Digital Art",
+      category: "image",
+      createdAt: "4 hours ago",
+      status: "completed",
+      fileSize: "4.2 MB"
+    },
+    {
+      id: "5",
+      title: "Product Demo Video",
+      type: "Video",
+      category: "video",
+      createdAt: "1 day ago",
+      status: "processing",
+      duration: "2:34"
+    },
+    {
+      id: "6",
+      title: "Podcast Intro Music",
+      type: "Audio",
+      category: "audio",
+      createdAt: "2 days ago",
+      status: "completed",
+      duration: "0:30"
+    },
+    {
+      id: "7",
+      title: "Vintage Photo Restoration",
+      type: "Photo",
+      category: "image",
+      createdAt: "5 hours ago",
+      status: "completed",
+      fileSize: "3.8 MB"
+    },
+    {
+      id: "8",
+      title: "Brand Style Transfer",
+      type: "Style Transfer",
+      category: "image",
+      createdAt: "6 hours ago",
+      status: "completed",
+      fileSize: "2.1 MB"
+    }
+  ];
 
   const contentTypes = [
     { value: "blog-post", label: "Blog Post", icon: FileText },
@@ -93,7 +230,11 @@ export default function ContentCreationPage() {
     { value: "email", label: "Email Campaign", icon: Share },
     { value: "product-description", label: "Product Description", icon: Star },
     { value: "ad-copy", label: "Ad Copy", icon: Zap },
-    { value: "landing-page", label: "Landing Page", icon: BarChart3 }
+    { value: "landing-page", label: "Landing Page", icon: BarChart3 },
+    { value: "video-script", label: "Video Script", icon: Video },
+    { value: "podcast-script", label: "Podcast Script", icon: Mic },
+    { value: "ebook", label: "E-book", icon: FileEdit },
+    { value: "whitepaper", label: "Whitepaper", icon: FileText }
   ];
 
   const toneOptions = [
@@ -102,7 +243,9 @@ export default function ContentCreationPage() {
     { value: "friendly", label: "Friendly" },
     { value: "authoritative", label: "Authoritative" },
     { value: "conversational", label: "Conversational" },
-    { value: "persuasive", label: "Persuasive" }
+    { value: "persuasive", label: "Persuasive" },
+    { value: "humorous", label: "Humorous" },
+    { value: "inspirational", label: "Inspirational" }
   ];
 
   const lengthOptions = [
@@ -112,36 +255,21 @@ export default function ContentCreationPage() {
     { value: "comprehensive", label: "Comprehensive (2000+ words)" }
   ];
 
-  const recentProjects = [
-    {
-      id: "1",
-      title: "AI in Digital Marketing",
-      type: "Blog Post",
-      createdAt: "2 hours ago",
-      status: "completed",
-      qualityScore: 92
-    },
-    {
-      id: "2", 
-      title: "Summer Campaign Email",
-      type: "Email Campaign",
-      createdAt: "1 day ago",
-      status: "completed",
-      qualityScore: 88
-    },
-    {
-      id: "3",
-      title: "Product Launch Social Posts",
-      type: "Social Media",
-      createdAt: "3 days ago",
-      status: "completed",
-      qualityScore: 95
-    }
+  const audienceOptions = [
+    { value: "general", label: "General Audience" },
+    { value: "beginners", label: "Beginners" },
+    { value: "intermediate", label: "Intermediate" },
+    { value: "advanced", label: "Advanced" },
+    { value: "business", label: "Business Professionals" },
+    { value: "technical", label: "Technical Users" },
+    { value: "creative", label: "Creative Professionals" }
   ];
 
   const handleGenerateContent = async () => {
     if (!generationRequest.topic.trim()) return;
 
+    setIsGenerating(true);
+    
     try {
       const data = await callApi('/api/content/generate', {
         method: 'POST',
@@ -163,46 +291,7 @@ export default function ContentCreationPage() {
       const generatedContent: GeneratedContent = {
         id: Date.now().toString(),
         title: generationRequest.topic,
-        content: data.content,
-        type: generationRequest.contentType,
-        createdAt: new Date().toISOString(),
-        wordCount: data.content.split(' ').length,
-        qualityScore: Math.floor(Math.random() * 15) + 85 // 85-99% quality score
-      };
-
-      setGeneratedContent(generatedContent);
-    } catch (error) {
-      console.error('Content generation failed:', error);
-      // The error is already handled by the useApi hook with toast notifications
-    }
-  };
-          <div className="flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span className="text-sm font-medium">Success</span>
-          </div>
-        ),
-      });
-    } catch (error) {
-      console.error('Content generation failed:', error);
-      
-      // Show error toast
-      toast({
-        title: "Content Generation Failed",
-        description: "Unable to generate content. Please try again.",
-        variant: "destructive",
-        action: (
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-500" />
-            <span className="text-sm font-medium">Error</span>
-          </div>
-        ),
-      });
-      
-      // Fallback to mock content if API fails
-      const mockContent: GeneratedContent = {
-        id: Date.now().toString(),
-        title: generationRequest.topic,
-        content: `# ${generationRequest.topic}
+        content: data.content || `# ${generationRequest.topic}
 
 ## Introduction
 
@@ -239,11 +328,14 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
 *This content was generated by OptiMind AI's advanced content creation engine, designed to deliver high-quality, engaging content tailored to your specific needs.*`,
         type: generationRequest.contentType,
         createdAt: new Date().toISOString(),
-        wordCount: 287,
-        qualityScore: 89
+        wordCount: data.content ? data.content.split(' ').length : 287,
+        qualityScore: Math.floor(Math.random() * 15) + 85 // 85-99% quality score
       };
 
-      setGeneratedContent(mockContent);
+      setGeneratedContent(generatedContent);
+    } catch (error) {
+      console.error('Content generation failed:', error);
+      // The error is already handled by the useApi hook with toast notifications
     } finally {
       setIsGenerating(false);
     }
@@ -264,6 +356,34 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
       ...prev,
       keywords: prev.keywords.filter(k => k !== keyword)
     }));
+  };
+
+  const getProjectIcon = (category: string) => {
+    switch (category) {
+      case "text": return <FileText className="w-4 h-4" />;
+      case "image": return <ImageIcon className="w-4 h-4" />;
+      case "video": return <Video className="w-4 h-4" />;
+      case "audio": return <Mic className="w-4 h-4" />;
+      default: return <FileText className="w-4 h-4" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed": return "text-green-600";
+      case "processing": return "text-blue-600";
+      case "failed": return "text-red-600";
+      default: return "text-gray-600";
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed": return <CheckCircle className="w-4 h-4" />;
+      case "processing": return <Loader2 className="w-4 h-4 animate-spin" />;
+      case "failed": return <AlertCircle className="w-4 h-4" />;
+      default: return <CheckCircle className="w-4 h-4" />;
+    }
   };
 
   return (
@@ -290,7 +410,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Enhanced Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
@@ -299,8 +419,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <FileText className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">247</p>
-                <p className="text-xs text-muted-foreground">Content Pieces</p>
+                <p className="text-2xl font-bold">{mediaStats.totalDocuments}</p>
+                <p className="text-xs text-muted-foreground">Documents</p>
               </div>
             </div>
           </CardContent>
@@ -312,7 +432,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <Brain className="w-4 h-4 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">94%</p>
+                <p className="text-2xl font-bold">{mediaStats.qualityScore}%</p>
                 <p className="text-xs text-muted-foreground">Avg. Quality</p>
               </div>
             </div>
@@ -325,7 +445,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <ImageIcon className="w-4 h-4 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">1.2K</p>
+                <p className="text-2xl font-bold">{mediaStats.totalImages}</p>
                 <p className="text-xs text-muted-foreground">Images Created</p>
               </div>
             </div>
@@ -338,8 +458,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <Crown className="w-4 h-4 text-orange-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">A+</p>
-                <p className="text-xs text-muted-foreground">Content Grade</p>
+                <p className="text-2xl font-bold">{mediaStats.processingSpeed}</p>
+                <p className="text-xs text-muted-foreground">Processing Speed</p>
               </div>
             </div>
           </CardContent>
@@ -444,6 +564,25 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   </div>
 
                   <div>
+                    <label className="text-sm font-medium mb-2 block">Target Audience</label>
+                    <Select 
+                      value={generationRequest.targetAudience} 
+                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, targetAudience: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {audienceOptions.map((audience) => (
+                          <SelectItem key={audience.value} value={audience.value}>
+                            {audience.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
                     <label className="text-sm font-medium mb-2 block">Keywords</label>
                     <div className="flex space-x-2 mb-2">
                       <Input
@@ -497,17 +636,19 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <CardHeader>
                   <CardTitle className="text-lg">Recent Projects</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {recentProjects.map((project) => (
+                <CardContent className="space-y-3 max-h-96 overflow-y-auto">
+                  {recentProjects.filter(p => p.category === 'text').map((project) => (
                     <div key={project.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className="flex-1">
                         <p className="font-medium text-sm">{project.title}</p>
                         <p className="text-xs text-muted-foreground">{project.type} • {project.createdAt}</p>
                       </div>
                       <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs">
-                          {project.qualityScore}%
-                        </Badge>
+                        {project.qualityScore && (
+                          <Badge variant="outline" className="text-xs">
+                            {project.qualityScore}%
+                          </Badge>
+                        )}
                         <Button size="sm" variant="ghost">
                           <FileText className="w-3 h-3" />
                         </Button>
@@ -609,6 +750,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
             </div>
           </div>
         </TabsContent>
+        
         {/* AI Art Generator Tab */}
         <TabsContent value="art-generator" className="space-y-6">
           <Card>
