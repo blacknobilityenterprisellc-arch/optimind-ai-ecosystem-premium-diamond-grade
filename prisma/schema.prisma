@@ -13,28 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<<< HEAD
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-=======
 // Core User Management
 model User {
   id              String   @id @default(cuid())
   email           String   @unique
+  password        String   // Added for authentication
   name            String?
   avatar          String?
   role            UserRole @default(USER)
@@ -69,6 +52,17 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   
   @@map("sessions")
+}
+
+// Security Settings for PIN Authentication
+model SecuritySettings {
+  id        String   @id @default("main")
+  pin_hash  String
+  salt      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("security_settings")
 }
 
 // Subscription Management
@@ -282,5 +276,4 @@ enum UploadStatus {
   COMPLETED
   FAILED
   DELETED
->>>>>>> ef631a04b041f300087971414fcec38beffaf1ab
 }
