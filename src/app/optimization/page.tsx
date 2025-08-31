@@ -30,8 +30,27 @@ import {
   Award,
   Rocket,
   Shield,
-  Database
+  Database,
+  Users,
+  FileText,
+  Clock,
+  Link,
+  TrendingDown,
+  Filter,
+  Scale,
+  Globe2,
+  Navigation,
+  Megaphone,
+  Targeting,
+  Analytics,
+  Comparison,
+  RotateCcw
 } from "lucide-react";
+
+// Import specialized components
+import { CompetitorContentAnalyzer } from "@/components/CompetitorContentAnalyzer";
+import { ContentFreshnessDetector } from "@/components/ContentFreshnessDetector";
+import { ContentOptimizationRefresh } from "@/components/ContentOptimizationRefresh";
 
 interface OptimizationScore {
   category: string;
@@ -272,11 +291,14 @@ export default function OptimizationPage() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="seo">SEO Analysis</TabsTrigger>
           <TabsTrigger value="aeo">AEO Enhancement</TabsTrigger>
           <TabsTrigger value="geo">GEO Targeting</TabsTrigger>
+          <TabsTrigger value="competitor">Competitor Intel</TabsTrigger>
+          <TabsTrigger value="freshness">Content Freshness</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="optimization">Optimization</TabsTrigger>
         </TabsList>
 
         {/* SEO Analysis Tab */}
@@ -615,6 +637,42 @@ export default function OptimizationPage() {
           </div>
         </TabsContent>
 
+        {/* Competitor Intelligence Tab */}
+        <TabsContent value="competitor" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Comparison className="w-5 h-5" />
+                <span>Competitor Intelligence</span>
+              </CardTitle>
+              <CardDescription>
+                Advanced competitor analysis with AI-powered insights and recommendations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CompetitorContentAnalyzer />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Content Freshness Tab */}
+        <TabsContent value="freshness" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <RotateCcw className="w-5 h-5" />
+                <span>Content Freshness Detector</span>
+              </CardTitle>
+              <CardDescription>
+                Monitor and maintain content freshness to ensure optimal SEO performance
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ContentFreshnessDetector />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Performance Tab */}
         <TabsContent value="performance" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -705,6 +763,24 @@ export default function OptimizationPage() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Optimization Tab */}
+        <TabsContent value="optimization" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Targeting className="w-5 h-5" />
+                <span>Content Optimization Refresh</span>
+              </CardTitle>
+              <CardDescription>
+                Refresh and optimize your existing content for maximum SEO impact
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ContentOptimizationRefresh />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

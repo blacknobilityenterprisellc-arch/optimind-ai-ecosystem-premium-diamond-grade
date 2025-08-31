@@ -30,8 +30,28 @@ import {
   Brain,
   Loader2,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Palette,
+  Camera,
+  Brush,
+  Crop,
+  Filter,
+  Layers,
+  Edit3,
+  Magic,
+  Picture,
+  Sliders,
+  Eye,
+  RefreshCw
 } from "lucide-react";
+
+// Import specialized components
+import { AIArtGenerator } from "@/components/AIArtGenerator";
+import { AIImageOrganizer } from "@/components/AIImageOrganizer";
+import { AIPhotoRestoration } from "@/components/AIPhotoRestoration";
+import { AIStyleTransfer } from "@/components/AIStyleTransfer";
+import { AIBackgroundGenerator } from "@/components/AIBackgroundGenerator";
+import { AIPremiumEditor } from "@/components/AIPremiumEditor";
 
 interface ContentGenerationRequest {
   topic: string;
@@ -53,7 +73,7 @@ interface GeneratedContent {
 }
 
 export default function ContentCreationPage() {
-  const [activeTab, setActiveTab] = useState("generator");
+  const [activeTab, setActiveTab] = useState("text-content");
   const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
   const [generationRequest, setGenerationRequest] = useState<ContentGenerationRequest>({
     topic: "",
@@ -302,11 +322,11 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <div className="p-2 bg-purple-100 rounded-lg">
-                <Clock className="w-4 h-4 text-purple-600" />
+                <ImageIcon className="w-4 h-4 text-purple-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">3.2x</p>
-                <p className="text-xs text-muted-foreground">Time Saved</p>
+                <p className="text-2xl font-bold">1.2K</p>
+                <p className="text-xs text-muted-foreground">Images Created</p>
               </div>
             </div>
           </CardContent>
@@ -326,255 +346,377 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
         </Card>
       </div>
 
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Panel - Input */}
-        <div className="lg:col-span-1 space-y-6">
+      {/* Main Content Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-7">
+          <TabsTrigger value="text-content">Text Content</TabsTrigger>
+          <TabsTrigger value="art-generator">Art Generator</TabsTrigger>
+          <TabsTrigger value="image-tools">Image Tools</TabsTrigger>
+          <TabsTrigger value="photo-restoration">Photo Restore</TabsTrigger>
+          <TabsTrigger value="style-transfer">Style Transfer</TabsTrigger>
+          <TabsTrigger value="backgrounds">Backgrounds</TabsTrigger>
+          <TabsTrigger value="premium-editor">Premium Editor</TabsTrigger>
+        </TabsList>
+
+        {/* Text Content Tab */}
+        <TabsContent value="text-content" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Panel - Input */}
+            <div className="lg:col-span-1 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Wand2 className="w-5 h-5" />
+                    <span>Content Generator</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Create high-quality content with AI assistance
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Topic or Title</label>
+                    <Input
+                      placeholder="Enter your content topic..."
+                      value={generationRequest.topic}
+                      onChange={(e) => setGenerationRequest(prev => ({ ...prev, topic: e.target.value }))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Content Type</label>
+                    <Select 
+                      value={generationRequest.contentType} 
+                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, contentType: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {contentTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            <div className="flex items-center space-x-2">
+                              <type.icon className="w-4 h-4" />
+                              <span>{type.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Tone</label>
+                    <Select 
+                      value={generationRequest.tone} 
+                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, tone: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {toneOptions.map((tone) => (
+                          <SelectItem key={tone.value} value={tone.value}>
+                            {tone.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Length</label>
+                    <Select 
+                      value={generationRequest.length} 
+                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, length: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {lengthOptions.map((length) => (
+                          <SelectItem key={length.value} value={length.value}>
+                            {length.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Keywords</label>
+                    <div className="flex space-x-2 mb-2">
+                      <Input
+                        placeholder="Add keyword..."
+                        value={keywordInput}
+                        onChange={(e) => setKeywordInput(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
+                      />
+                      <Button onClick={addKeyword} size="sm">
+                        Add
+                      </Button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {generationRequest.keywords.map((keyword) => (
+                        <Badge key={keyword} variant="secondary" className="text-xs">
+                          {keyword}
+                          <button 
+                            onClick={() => removeKeyword(keyword)}
+                            className="ml-1 hover:text-destructive"
+                          >
+                            ×
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button 
+                    onClick={handleGenerateContent} 
+                    disabled={!generationRequest.topic.trim() || isGenerating}
+                    className="w-full"
+                    size="lg"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Generate Content
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Recent Projects */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Recent Projects</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {recentProjects.map((project) => (
+                    <div key={project.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <div className="flex-1">
+                        <p className="font-medium text-sm">{project.title}</p>
+                        <p className="text-xs text-muted-foreground">{project.type} • {project.createdAt}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-xs">
+                          {project.qualityScore}%
+                        </Badge>
+                        <Button size="sm" variant="ghost">
+                          <FileText className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Right Panel - Output */}
+            <div className="lg:col-span-2">
+              <Card className="h-full">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Generated Content</CardTitle>
+                      <CardDescription>
+                        {generatedContent ? "Your AI-generated content is ready" : "Content will appear here after generation"}
+                      </CardDescription>
+                    </div>
+                    {generatedContent && (
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="text-xs">
+                          <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
+                          {generatedContent.qualityScore}% Quality
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {generatedContent.wordCount} words
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {isGenerating ? (
+                    <div className="flex flex-col items-center justify-center h-96 space-y-4">
+                      <div className="relative">
+                        <Brain className="w-16 h-16 text-primary animate-pulse" />
+                        <div className="absolute -top-2 -right-2">
+                          <Sparkles className="w-6 h-6 text-yellow-500 animate-spin" />
+                        </div>
+                      </div>
+                      <div className="text-center space-y-2">
+                        <p className="text-lg font-medium">Generating Content...</p>
+                        <p className="text-sm text-muted-foreground">Our AI is crafting your content</p>
+                        <Progress value={75} className="w-48" />
+                      </div>
+                    </div>
+                  ) : generatedContent ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-xl font-semibold">{generatedContent.title}</h3>
+                        <div className="flex items-center space-x-2">
+                          <Button size="sm" variant="outline">
+                            <Copy className="w-4 h-4 mr-1" />
+                            Copy
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <Download className="w-4 h-4 mr-1" />
+                            Export
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <Share className="w-4 h-4 mr-1" />
+                            Share
+                          </Button>
+                        </div>
+                      </div>
+                      
+                      <div className="prose prose-sm max-w-none bg-muted/30 p-6 rounded-lg border">
+                        <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                          {generatedContent.content}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t">
+                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                          <span>Generated {new Date(generatedContent.createdAt).toLocaleString()}</span>
+                          <span>•</span>
+                          <span>Type: {generatedContent.type}</span>
+                        </div>
+                        <Button variant="outline" size="sm">
+                          <Wand2 className="w-4 h-4 mr-1" />
+                          Regenerate
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-96 space-y-4 text-muted-foreground">
+                      <FileText className="w-16 h-16" />
+                      <div className="text-center space-y-2">
+                        <p className="text-lg font-medium">No Content Generated Yet</p>
+                        <p className="text-sm">Fill in the form and click "Generate Content" to get started</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        {/* AI Art Generator Tab */}
+        <TabsContent value="art-generator" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Wand2 className="w-5 h-5" />
-                <span>Content Generator</span>
+                <Palette className="w-5 h-5" />
+                <span>AI Art Generator</span>
               </CardTitle>
               <CardDescription>
-                Create high-quality content with AI assistance
+                Create stunning artwork and images with advanced AI generation technology
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Topic or Title</label>
-                <Input
-                  placeholder="Enter your content topic..."
-                  value={generationRequest.topic}
-                  onChange={(e) => setGenerationRequest(prev => ({ ...prev, topic: e.target.value }))}
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Content Type</label>
-                <Select 
-                  value={generationRequest.contentType} 
-                  onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, contentType: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {contentTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        <div className="flex items-center space-x-2">
-                          <type.icon className="w-4 h-4" />
-                          <span>{type.label}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Tone</label>
-                <Select 
-                  value={generationRequest.tone} 
-                  onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, tone: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {toneOptions.map((tone) => (
-                      <SelectItem key={tone.value} value={tone.value}>
-                        {tone.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Length</label>
-                <Select 
-                  value={generationRequest.length} 
-                  onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, length: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {lengthOptions.map((length) => (
-                      <SelectItem key={length.value} value={length.value}>
-                        {length.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">Keywords</label>
-                <div className="flex space-x-2 mb-2">
-                  <Input
-                    placeholder="Add keyword..."
-                    value={keywordInput}
-                    onChange={(e) => setKeywordInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
-                  />
-                  <Button onClick={addKeyword} size="sm">
-                    Add
-                  </Button>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {generationRequest.keywords.map((keyword) => (
-                    <Badge key={keyword} variant="secondary" className="text-xs">
-                      {keyword}
-                      <button 
-                        onClick={() => removeKeyword(keyword)}
-                        className="ml-1 hover:text-destructive"
-                      >
-                        ×
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <Button 
-                onClick={handleGenerateContent} 
-                disabled={!generationRequest.topic.trim() || isGenerating}
-                className="w-full"
-                size="lg"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Generate Content
-                  </>
-                )}
-              </Button>
+            <CardContent>
+              <AIArtGenerator />
             </CardContent>
           </Card>
+        </TabsContent>
 
-          {/* Recent Projects */}
+        {/* AI Image Tools Tab */}
+        <TabsContent value="image-tools" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Recent Projects</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {recentProjects.map((project) => (
-                <div key={project.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <div className="flex-1">
-                    <p className="font-medium text-sm">{project.title}</p>
-                    <p className="text-xs text-muted-foreground">{project.type} • {project.createdAt}</p>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="text-xs">
-                      {project.qualityScore}%
-                    </Badge>
-                    <Button size="sm" variant="ghost">
-                      <FileText className="w-3 h-3" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Panel - Output */}
-        <div className="lg:col-span-2">
-          <Card className="h-full">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Generated Content</CardTitle>
-                  <CardDescription>
-                    {generatedContent ? "Your AI-generated content is ready" : "Content will appear here after generation"}
-                  </CardDescription>
-                </div>
-                {generatedContent && (
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="text-xs">
-                      <CheckCircle className="w-3 h-3 mr-1 text-green-500" />
-                      {generatedContent.qualityScore}% Quality
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {generatedContent.wordCount} words
-                    </Badge>
-                  </div>
-                )}
-              </div>
+              <CardTitle className="flex items-center space-x-2">
+                <Layers className="w-5 h-5" />
+                <span>AI Image Tools</span>
+              </CardTitle>
+              <CardDescription>
+                Organize, enhance, and manage your image library with AI-powered tools
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              {isGenerating ? (
-                <div className="flex flex-col items-center justify-center h-96 space-y-4">
-                  <div className="relative">
-                    <Brain className="w-16 h-16 text-primary animate-pulse" />
-                    <div className="absolute -top-2 -right-2">
-                      <Sparkles className="w-6 h-6 text-yellow-500 animate-spin" />
-                    </div>
-                  </div>
-                  <div className="text-center space-y-2">
-                    <p className="text-lg font-medium">Generating Content...</p>
-                    <p className="text-sm text-muted-foreground">Our AI is crafting your content</p>
-                    <Progress value={75} className="w-48" />
-                  </div>
-                </div>
-              ) : generatedContent ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold">{generatedContent.title}</h3>
-                    <div className="flex items-center space-x-2">
-                      <Button size="sm" variant="outline">
-                        <Copy className="w-4 h-4 mr-1" />
-                        Copy
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Download className="w-4 h-4 mr-1" />
-                        Export
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Share className="w-4 h-4 mr-1" />
-                        Share
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  <div className="prose prose-sm max-w-none bg-muted/30 p-6 rounded-lg border">
-                    <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                      {generatedContent.content}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between pt-4 border-t">
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <span>Generated {new Date(generatedContent.createdAt).toLocaleString()}</span>
-                      <span>•</span>
-                      <span>Type: {generatedContent.type}</span>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      <Wand2 className="w-4 h-4 mr-1" />
-                      Regenerate
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-96 space-y-4 text-muted-foreground">
-                  <FileText className="w-16 h-16" />
-                  <div className="text-center space-y-2">
-                    <p className="text-lg font-medium">No Content Generated Yet</p>
-                    <p className="text-sm">Fill in the form and click "Generate Content" to get started</p>
-                  </div>
-                </div>
-              )}
+              <AIImageOrganizer />
             </CardContent>
           </Card>
-        </div>
-      </div>
+        </TabsContent>
+
+        {/* AI Photo Restoration Tab */}
+        <TabsContent value="photo-restoration" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Camera className="w-5 h-5" />
+                <span>AI Photo Restoration</span>
+              </CardTitle>
+              <CardDescription>
+                Restore and enhance old or damaged photos with advanced AI technology
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AIPhotoRestoration />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* AI Style Transfer Tab */}
+        <TabsContent value="style-transfer" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Brush className="w-5 h-5" />
+                <span>AI Style Transfer</span>
+              </CardTitle>
+              <CardDescription>
+                Apply artistic styles to your images using advanced AI style transfer technology
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AIStyleTransfer />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* AI Background Generator Tab */}
+        <TabsContent value="backgrounds" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Picture className="w-5 h-5" />
+                <span>AI Background Generator</span>
+              </CardTitle>
+              <CardDescription>
+                Generate perfect backgrounds for your images, presentations, and designs
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AIBackgroundGenerator />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* AI Premium Editor Tab */}
+        <TabsContent value="premium-editor" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Edit3 className="w-5 h-5" />
+                <span>AI Premium Editor</span>
+              </CardTitle>
+              <CardDescription>
+                Advanced content editing with AI-powered enhancement and optimization tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AIPremiumEditor />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

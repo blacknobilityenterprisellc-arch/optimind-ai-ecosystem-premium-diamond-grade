@@ -35,8 +35,35 @@ import {
   Network,
   Lightbulb,
   MessageSquare,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Mic,
+  Video,
+  Code,
+  PieChart,
+  LineChart,
+  ScatterChart,
+  Activity,
+  Filter,
+  SortAsc,
+  Calendar,
+  MapPin,
+  TrendingDown,
+  Fingerprint,
+  Satellite,
+  Telescope,
+  Microscope,
+  GitBranch,
+  Layers,
+  Merge,
+  Split,
+  Workflow,
+  Upload
 } from "lucide-react";
+
+// Import specialized components
+import { MultiModelAIAnalyzer } from "@/components/MultiModelAIAnalyzer";
+import { BrandMentionTracker } from "@/components/BrandMentionTracker";
+import { AIPoweredResearchStrategy } from "@/components/AIPoweredResearchStrategy";
 
 interface ResearchQuery {
   query: string;
@@ -317,38 +344,94 @@ export default function ResearchAnalysisPage() {
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="multi-model">Multi-Model Analysis</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-6">
+          <TabsTrigger value="multi-model">Multi-Model</TabsTrigger>
+          <TabsTrigger value="brand-tracking">Brand Tracking</TabsTrigger>
+          <TabsTrigger value="research-strategy">Research Strategy</TabsTrigger>
           <TabsTrigger value="insights">Data Insights</TabsTrigger>
-          <TabsTrigger value="brand">Brand Tracking</TabsTrigger>
+          <TabsTrigger value="multimodal">Multimodal</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         {/* Multi-Model Analysis Tab */}
         <TabsContent value="multi-model" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Input Panel */}
-            <div className="lg:col-span-1">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Search className="w-5 h-5" />
-                    <span>Research Query</span>
-                  </CardTitle>
-                  <CardDescription>
-                    Enter your research question or topic
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Research Topic</label>
-                    <Textarea
-                      placeholder="Enter your research question or topic..."
-                      value={researchQuery.query}
-                      onChange={(e) => setResearchQuery(prev => ({ ...prev, query: e.target.value }))}
-                      className="min-h-[100px]"
-                    />
-                  </div>
-                  
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Brain className="w-5 h-5" />
+                <span>Multi-Model AI Analyzer</span>
+              </CardTitle>
+              <CardDescription>
+                Advanced analysis using multiple AI models for comprehensive insights and accuracy
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <MultiModelAIAnalyzer />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Brand Tracking Tab */}
+        <TabsContent value="brand-tracking" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Satellite className="w-5 h-5" />
+                <span>Brand Mention Tracker</span>
+              </CardTitle>
+              <CardDescription>
+                Real-time brand monitoring and sentiment analysis across digital platforms
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <BrandMentionTracker />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Research Strategy Tab */}
+        <TabsContent value="research-strategy" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Telescope className="w-5 h-5" />
+                <span>AI-Powered Research Strategy</span>
+              </CardTitle>
+              <CardDescription>
+                Strategic research planning and execution with AI-powered recommendations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AIPoweredResearchStrategy />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Data Insights Tab */}
+        <TabsContent value="insights" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Lightbulb className="w-5 h-5" />
+                  <span>Research Query</span>
+                </CardTitle>
+                <CardDescription>
+                  Enter your research question or topic for AI-powered insights
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Research Topic</label>
+                  <Textarea
+                    placeholder="Enter your research question or topic..."
+                    value={researchQuery.query}
+                    onChange={(e) => setResearchQuery(prev => ({ ...prev, query: e.target.value }))}
+                    className="min-h-[100px]"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-medium mb-2 block">Category</label>
                     <Select 
@@ -384,384 +467,237 @@ export default function ResearchAnalysisPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
-                  <Button 
-                    onClick={handleResearch} 
-                    disabled={!researchQuery.query.trim() || isResearching}
-                    className="w-full"
-                  >
-                    {isResearching ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Researching...
-                      </>
-                    ) : (
-                      <>
-                        <Brain className="w-4 h-4 mr-2" />
-                        Start Research
-                      </>
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
+                </div>
+                
+                <Button 
+                  onClick={handleResearch} 
+                  disabled={!researchQuery.query.trim() || isResearching}
+                  className="w-full"
+                >
+                  {isResearching ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Researching...
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="w-4 h-4 mr-2" />
+                      Generate Insights
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
 
-              {/* Recent Analyses */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Recent Analyses</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {recentAnalyses.map((analysis) => (
-                    <div key={analysis.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{analysis.title}</p>
-                        <p className="text-xs text-muted-foreground">{analysis.type} • {analysis.createdAt}</p>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline" className="text-xs">
-                          {analysis.insights} insights
-                        </Badge>
-                        <Button size="sm" variant="ghost">
-                          <Eye className="w-3 h-3" />
-                        </Button>
-                      </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Recent Analyses</CardTitle>
+                <CardDescription>
+                  Your recent research activities and findings
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {recentAnalyses.map((analysis) => (
+                  <div key={analysis.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div className="flex-1">
+                      <p className="font-medium text-sm">{analysis.title}</p>
+                      <p className="text-xs text-muted-foreground">{analysis.type} • {analysis.createdAt}</p>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Results Panel */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Model Comparison */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>AI Model Performance Comparison</CardTitle>
-                  <CardDescription>
-                    Compare different AI models for your research needs
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {modelComparisons.map((model) => (
-                    <div key={model.model} className="p-4 border rounded-lg space-y-3">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-semibold">{model.model}</h4>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className={`text-xs ${getScoreColor(model.accuracy)}`}>
-                            {model.accuracy}% Accurate
-                          </Badge>
-                          <Badge variant="outline" className={`text-xs ${getScoreColor(model.speed)}`}>
-                            {model.speed}% Speed
-                          </Badge>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-xs">Accuracy</span>
-                            <span className="text-xs font-medium">{model.accuracy}%</span>
-                          </div>
-                          <Progress value={model.accuracy} className="h-2" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-xs">Speed</span>
-                            <span className="text-xs font-medium">{model.speed}%</span>
-                          </div>
-                          <Progress value={model.speed} className="h-2" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between mb-1">
-                            <span className="text-xs">Cost Effect</span>
-                            <span className="text-xs font-medium">{model.cost}%</span>
-                          </div>
-                          <Progress value={model.cost} className="h-2" />
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                          <span className="font-medium text-green-600">Strengths:</span>
-                          <ul className="mt-1 space-y-1">
-                            {model.strengths.map((strength, index) => (
-                              <li key={index} className="flex items-start space-x-1">
-                                <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                                <span>{strength}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <span className="font-medium text-red-600">Weaknesses:</span>
-                          <ul className="mt-1 space-y-1">
-                            {model.weaknesses.map((weakness, index) => (
-                              <li key={index} className="flex items-start space-x-1">
-                                <AlertTriangle className="w-3 h-3 text-red-500 mt-0.5 flex-shrink-0" />
-                                <span>{weakness}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="outline" className="text-xs">
+                        {analysis.insights} insights
+                      </Badge>
+                      <Button size="sm" variant="ghost">
+                        <Eye className="w-3 h-3" />
+                      </Button>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
 
-              {/* Research Results */}
-              {researchResults.length > 0 && (
-                <Card>
+          {/* Research Results */}
+          {researchResults.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {researchResults.map((result) => (
+                <Card key={result.id}>
                   <CardHeader>
-                    <CardTitle>Research Results</CardTitle>
+                    <CardTitle className="text-lg flex items-center justify-between">
+                      <span>{result.title}</span>
+                      <Badge variant="outline" className={`text-xs ${getScoreColor(result.confidence)}`}>
+                        {result.confidence}% confidence
+                      </Badge>
+                    </CardTitle>
                     <CardDescription>
-                      AI-generated insights based on your query
+                      {result.category} analysis
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    {researchResults.map((result) => (
-                      <div key={result.id} className="p-4 bg-muted/30 rounded-lg space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-semibold">{result.title}</h4>
-                          <div className="flex items-center space-x-2">
-                            <Badge variant="outline" className="text-xs">
-                              {result.confidence}% confidence
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs">
-                              {result.category}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        <p className="text-sm leading-relaxed">{result.content}</p>
-                        
-                        <div className="space-y-2">
-                          <span className="text-xs font-medium">Sources:</span>
-                          <div className="flex flex-wrap gap-1">
-                            {result.sources.map((source, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {source}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">{result.content}</p>
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-medium">Sources:</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {result.sources.map((source, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {source}
+                          </Badge>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </CardContent>
                 </Card>
-              )}
+              ))}
             </div>
-          </div>
+          )}
         </TabsContent>
 
-        {/* Data Insights Tab */}
-        <TabsContent value="insights" className="space-y-6">
+        {/* Multimodal Analysis Tab */}
+        <TabsContent value="multimodal" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Layers className="w-5 h-5" />
+                <span>Multimodal Analysis</span>
+              </CardTitle>
+              <CardDescription>
+                Analyze text, images, audio, and video together for comprehensive insights
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card className="p-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <FileText className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium">Text Analysis</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Natural language processing and sentiment analysis</p>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <ImageIcon className="w-4 h-4 text-green-600" />
+                    <span className="text-sm font-medium">Image Recognition</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Object detection and visual content analysis</p>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Mic className="w-4 h-4 text-purple-600" />
+                    <span className="text-sm font-medium">Audio Processing</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Speech recognition and audio pattern analysis</p>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Video className="w-4 h-4 text-red-600" />
+                    <span className="text-sm font-medium">Video Analysis</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">Motion detection and video content understanding</p>
+                </Card>
+              </div>
+              
+              <div className="flex items-center justify-center p-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
+                <div className="text-center space-y-2">
+                  <Merge className="w-12 h-12 mx-auto text-muted-foreground" />
+                  <p className="text-lg font-medium">Multimodal Analysis Ready</p>
+                  <p className="text-sm text-muted-foreground">Upload files or connect data sources to begin analysis</p>
+                  <Button className="mt-4">
+                    <Upload className="w-4 h-4 mr-2" />
+                    Start Multimodal Analysis
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Database className="w-5 h-5" />
-                  <span>Data Analysis</span>
+                  <PieChart className="w-5 h-5" />
+                  <span>Research Analytics</span>
                 </CardTitle>
                 <CardDescription>
-                  AI-powered insights from your data
+                  Comprehensive analytics and performance metrics
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                     <div className="flex items-center space-x-2">
-                      <BarChart3 className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium">Data Points Analyzed</span>
+                      <Brain className="w-4 h-4 text-blue-600" />
+                      <span className="text-sm font-medium">AI Models Utilized</span>
+                    </div>
+                    <Badge variant="outline">12 Active</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Database className="w-4 h-4 text-green-600" />
+                      <span className="text-sm font-medium">Data Points Processed</span>
                     </div>
                     <Badge variant="outline">1.2M</Badge>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <div className="flex items-center space-x-2">
-                      <TrendingUp className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium">Key Insights Found</span>
+                      <Target className="w-4 h-4 text-purple-600" />
+                      <span className="text-sm font-medium">Accuracy Rate</span>
+                    </div>
+                    <Badge variant="outline">94%</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Lightbulb className="w-4 h-4 text-orange-600" />
+                      <span className="text-sm font-medium">Insights Generated</span>
                     </div>
                     <Badge variant="outline">847</Badge>
                   </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <Lightbulb className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm font-medium">Actionable Items</span>
-                    </div>
-                    <Badge variant="outline">156</Badge>
-                  </div>
                 </div>
-
-                <div className="space-y-2">
-                  <h4 className="font-medium text-sm">Top Insights</h4>
-                  <ul className="space-y-1 text-xs">
-                    <li className="flex items-start space-x-2">
-                      <Star className="w-3 h-3 text-yellow-500 mt-0.5 flex-shrink-0" />
-                      <span>Customer engagement increased by 45% with AI-powered recommendations</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <Star className="w-3 h-3 text-yellow-500 mt-0.5 flex-shrink-0" />
-                      <span>Mobile traffic accounts for 68% of total visits</span>
-                    </li>
-                    <li className="flex items-start space-x-2">
-                      <Star className="w-3 h-3 text-yellow-500 mt-0.5 flex-shrink-0" />
-                      <span>Content optimization led to 32% improvement in conversion rates</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Generate New Insights
-                </Button>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Visualization Dashboard</CardTitle>
-                <CardDescription>
-                  Interactive data visualizations and charts
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">+45%</div>
-                    <div className="text-xs text-blue-800">Engagement Rate</div>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">+32%</div>
-                    <div className="text-xs text-green-800">Conversion Rate</div>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">-28%</div>
-                    <div className="text-xs text-purple-800">Bounce Rate</div>
-                  </div>
-                  <div className="p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">+67%</div>
-                    <div className="text-xs text-orange-800">Revenue Growth</div>
-                  </div>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Full Dashboard
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        {/* Brand Tracking Tab */}
-        <TabsContent value="brand" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
-                  <Target className="w-5 h-5" />
-                  <span>Brand Mention Tracking</span>
+                  <LineChart className="w-5 h-5" />
+                  <span>Performance Trends</span>
                 </CardTitle>
                 <CardDescription>
-                  Monitor brand mentions across the web
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium">Total Mentions</span>
-                    </div>
-                    <Badge variant="outline">12,847</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <TrendingUp className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium">Sentiment Score</span>
-                    </div>
-                    <Badge variant="outline">+8.5</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                    <div className="flex items-center space-x-2">
-                      <Globe className="w-4 h-4 text-purple-600" />
-                      <span className="text-sm font-medium">Coverage</span>
-                    </div>
-                    <Badge variant="outline">47 Countries</Badge>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h4 className="font-medium text-sm">Recent Mentions</h4>
-                  <div className="space-y-2">
-                    {[
-                      { source: "TechCrunch", sentiment: "Positive", time: "2 hours ago" },
-                      { source: "Forbes", sentiment: "Positive", time: "5 hours ago" },
-                      { source: "Reddit", sentiment: "Neutral", time: "1 day ago" }
-                    ].map((mention, index) => (
-                      <div key={index} className="flex items-center justify-between p-2 bg-muted/50 rounded text-xs">
-                        <span className="font-medium">{mention.source}</span>
-                        <div className="flex items-center space-x-2">
-                          <Badge variant="outline" className={`text-xs ${
-                            mention.sentiment === 'Positive' ? 'text-green-600' : 
-                            mention.sentiment === 'Negative' ? 'text-red-600' : 'text-gray-600'
-                          }`}>
-                            {mention.sentiment}
-                          </Badge>
-                          <span className="text-muted-foreground">{mention.time}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <Button className="w-full" variant="outline">
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Update Brand Tracking
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Competitor Intelligence</CardTitle>
-                <CardDescription>
-                  Track competitor activities and strategies
+                  Research performance and efficiency metrics over time
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   {[
-                    { name: "Competitor A", mentions: 8234, trend: "+12%", strategy: "Content Marketing" },
-                    { name: "Competitor B", mentions: 6156, trend: "+8%", strategy: "Social Media" },
-                    { name: "Competitor C", mentions: 4231, trend: "-3%", strategy: "Paid Advertising" }
-                  ].map((competitor, index) => (
-                    <div key={index} className="p-3 bg-muted/50 rounded-lg space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-sm">{competitor.name}</span>
-                        <Badge variant="outline" className="text-xs">
-                          {competitor.mentions} mentions
-                        </Badge>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground">Strategy: {competitor.strategy}</span>
-                        <span className={`${
-                          competitor.trend.startsWith('+') ? 'text-green-600' : 'text-red-600'
-                        }`}>
-                          {competitor.trend}
+                    { metric: "Research Speed", value: "2.3x faster", trend: "up" },
+                    { metric: "Data Accuracy", value: "+12%", trend: "up" },
+                    { metric: "Insight Quality", value: "+8%", trend: "up" },
+                    { metric: "Processing Time", value: "-45%", trend: "down" }
+                  ].map((item) => (
+                    <div key={item.metric} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <span className="text-sm font-medium">{item.metric}</span>
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-sm ${item.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                          {item.value}
                         </span>
+                        {item.trend === 'up' ? (
+                          <TrendingUp className="w-4 h-4 text-green-500" />
+                        ) : (
+                          <TrendingDown className="w-4 h-4 text-red-500" />
+                        )}
                       </div>
                     </div>
                   ))}
                 </div>
-
+                
                 <Button className="w-full" variant="outline">
                   <BarChart3 className="w-4 h-4 mr-2" />
-                  View Competitor Report
+                  View Detailed Analytics
                 </Button>
               </CardContent>
             </Card>
