@@ -41,6 +41,18 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Premium diamond-grade variables */
+  --color-gold: #FFD700;
+  --color-bronze: #CD7F32;
+  --color-silver: #C0C0C0;
+  --color-platinum: #E5E4E2;
+  --color-diamond: #B9F2FF;
+  --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px rgba(185, 242, 255, 0.3);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  --gradient-diamond: linear-gradient(135deg, #B9F2FF 0%, #667eea 100%);
 }
 
 :root {

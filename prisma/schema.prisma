@@ -13,20 +13,255 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Core User Management
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String?
+  avatar          String?
+  role            UserRole @default(USER)
+  subscription    Subscription?
+  apiKey          String?
+  isActive        Boolean  @default(true)
+  lastLoginAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  posts           Post[]
+  sessions        Session[]
+  projects        Project[]
+  analyses        Analysis[]
+  conversations   Conversation[]
+  uploads         Upload[]
+  
+  @@map("users")
 }
 
-model Post {
+// Enhanced Authentication & Sessions
+model Session {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+// Subscription Management
+model Subscription {
+  id              String            @id @default(cuid())
+  userId          String            @unique
+  plan            SubscriptionPlan
+  status          SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd Boolean           @default(false)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usage           SubscriptionUsage[]
+  
+  @@map("subscriptions")
+}
+
+model SubscriptionUsage {
+  id             String   @id @default(cuid())
+  subscriptionId String
+  metric         String
+  value          Int
+  period         String   // "daily", "monthly", "yearly"
+  createdAt      DateTime @default(now())
+  
+  // Relations
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  @@unique([subscriptionId, metric, period])
+  @@map("subscription_usage")
+}
+
+// Project Management
+model Project {
+  id          String      @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  userId      String
+  metadata    Json?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analyses    Analysis[]
+  uploads     Upload[]
+  
+  @@map("projects")
+}
+
+// AI Analysis & Processing
+model Analysis {
+  id            String           @id @default(cuid())
+  type          AnalysisType
+  input         String
+  result        Json?
+  confidence    Float?
+  status        AnalysisStatus   @default(PENDING)
+  userId        String
+  projectId     String?
+  model         String?
+  processingTime Int?
+  metadata      Json?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  
+  // Relations
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project       Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("analyses")
+}
+
+// Conversations & Chat
+model Conversation {
+  id        String   @id @default(cuid())
+  title     String?
+  userId    String
+  isActive  Boolean  @default(true)
+  metadata  Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Relations
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  
+  @@map("conversations")
+}
+
+model Message {
+  id            String      @id @default(cuid())
+  conversationId String
+  role          MessageRole
+  content       String
+  metadata      Json?
+  createdAt     DateTime    @default(now())
+  
+  // Relations
+  conversation  Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  @@map("messages")
+}
+
+// File Upload & Management
+model Upload {
+  id          String      @id @default(cuid())
+  filename    String
+  originalName String
+  path        String
+  size        Int
+  mimeType    String
+  status      UploadStatus @default(PENDING)
+  userId      String
+  projectId   String?
+  metadata    Json?
+  processedAt DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project?    @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("uploads")
+}
+
+// Enhanced Blog/Content Management
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String?
+  excerpt     String?
+  slug        String   @unique
+  published   Boolean  @default(false)
+  authorId    String
+  featured    Boolean  @default(false)
+  metadata    Json?
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  @@map("posts")
+}
+
+// Enums
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+  DEVELOPER
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
+}
+
+enum ProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+  SUSPENDED
+}
+
+enum AnalysisType {
+  TEXT_ANALYSIS
+  IMAGE_ANALYSIS
+  CODE_ANALYSIS
+  DATA_ANALYSIS
+  SENTIMENT_ANALYSIS
+  CONTENT_OPTIMIZATION
+  SEO_ANALYSIS
+  MULTIMODAL_ANALYSIS
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum UploadStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  DELETED
 }
