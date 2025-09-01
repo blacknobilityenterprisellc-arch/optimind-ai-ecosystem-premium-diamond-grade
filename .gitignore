@@ -47,3 +47,8 @@ test
 prompt
 
 server.logbackup/
+
+# database
+/db/*.db
+/db/*.sqlite
+/db/*.sqlite3
