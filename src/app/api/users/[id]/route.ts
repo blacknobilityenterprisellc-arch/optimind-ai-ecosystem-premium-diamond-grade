@@ -1,10 +1,7 @@
-<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-=======
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
 export async function GET(
   request: NextRequest,
@@ -13,7 +10,6 @@ export async function GET(
   try {
     const user = await db.user.findUnique({
       where: { id: params.id },
-<<<<<<< HEAD
       select: {
         id: true,
         email: true,
@@ -35,15 +31,12 @@ export async function GET(
         }
       }
     })
-=======
     });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
-<<<<<<< HEAD
       )
     }
 
@@ -54,7 +47,6 @@ export async function GET(
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
       );
     }
 
@@ -65,7 +57,6 @@ export async function GET(
       { error: 'Failed to fetch user' },
       { status: 500 }
     );
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
 
@@ -74,9 +65,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-<<<<<<< HEAD
     const { name, avatar, role, status, emailVerified } = await request.json()
-=======
     const { name, email } = await request.json();
 
     if (!name || !email) {
@@ -112,12 +101,10 @@ export async function PUT(
         { status: 400 }
       );
     }
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
     const user = await db.user.update({
       where: { id: params.id },
       data: {
-<<<<<<< HEAD
         ...(name && { name }),
         ...(avatar !== undefined && { avatar }),
         ...(role && { role }),
@@ -144,7 +131,6 @@ export async function PUT(
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
         name,
         email,
       },
@@ -157,7 +143,6 @@ export async function PUT(
       { error: 'Failed to update user' },
       { status: 500 }
     );
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
 
@@ -166,7 +151,6 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-<<<<<<< HEAD
     await db.user.delete({
       where: { id: params.id }
     })
@@ -178,7 +162,6 @@ export async function DELETE(
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
     // Check if user exists
     const existingUser = await db.user.findUnique({
       where: { id: params.id },
@@ -202,6 +185,5 @@ export async function DELETE(
       { error: 'Failed to delete user' },
       { status: 500 }
     );
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

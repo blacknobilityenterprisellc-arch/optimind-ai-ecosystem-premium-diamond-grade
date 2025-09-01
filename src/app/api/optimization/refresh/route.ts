@@ -119,11 +119,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Content refresh recommendations error:', error);
     return NextResponse.json(
-<<<<<<< HEAD
       { error: 'Failed to generate refresh recommendations', details: error.message },
-=======
       { error: 'Failed to generate refresh recommendations', details: error instanceof Error ? error.message : 'Unknown error' },
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       { status: 500 }
     );
   }

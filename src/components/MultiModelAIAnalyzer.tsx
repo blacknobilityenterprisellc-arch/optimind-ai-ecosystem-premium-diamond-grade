@@ -141,7 +141,6 @@ export function MultiModelAIAnalyzer({
     onAnalysisComplete
   ]);
 
-<<<<<<< HEAD
   const getModelIcon = (modelId: string) => {
     switch (modelId) {
       case 'glm-45v':
@@ -173,7 +172,6 @@ export function MultiModelAIAnalyzer({
         return "text-green-600";
       default:
         return "text-gray-600";
-=======
   const getModelIcon = (modelId: string, service?: 'zai' | 'openrouter') => {
     if (service === 'openrouter') {
       switch (modelId) {
@@ -265,7 +263,6 @@ export function MultiModelAIAnalyzer({
           Z.AI
         </Badge>
       );
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     }
   };
 
@@ -283,11 +280,8 @@ export function MultiModelAIAnalyzer({
             <Network className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Multi-Model AI Analysis</h3>
             <p className="text-sm text-muted-foreground mb-4">
-<<<<<<< HEAD
               Unlock advanced GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, and AIR models with our premium features
-=======
               Unlock advanced AI models including GPT-4o, Claude 3.5 Sonnet, Gemini Pro, Llama 3.1, and GLM-4.5V with our premium features
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
             </p>
             <Button className="w-full">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -457,19 +451,13 @@ export function MultiModelAIAnalyzer({
                   {availableModels.map(model => (
                     <SelectItem key={model.id} value={model.id}>
                       <div className="flex items-start gap-2 py-1">
-<<<<<<< HEAD
                         {getModelIcon(model.id)}
-=======
                         {getModelIcon(model.id, model.service)}
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                         <div className="flex-1 min-w-0">
                           <div className="font-medium flex items-center gap-1">
                             {model.name}
                             {model.isFlagship && <Crown className="w-3 h-3 text-yellow-500" />}
-<<<<<<< HEAD
-=======
                             {getServiceBadge(model.service)}
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                           </div>
                           <div className="text-xs text-muted-foreground truncate">
                             {model.description}
@@ -486,14 +474,11 @@ export function MultiModelAIAnalyzer({
                               </Badge>
                             )}
                           </div>
-<<<<<<< HEAD
-=======
                           {model.pricing && (
                             <div className="text-xs text-muted-foreground mt-1">
                               ${model.pricing.input.toFixed(4)}/input, ${model.pricing.output.toFixed(4)}/output per 1K tokens
                             </div>
                           )}
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                         </div>
                       </div>
                     </SelectItem>
@@ -829,11 +814,8 @@ export function MultiModelAIAnalyzer({
                           <h5 className="font-medium text-yellow-900">GLM-4.5 Flagship Analysis</h5>
                         </div>
                         <ul className="text-sm text-yellow-800 space-y-1">
-<<<<<<< HEAD
                           <li>• Advanced-level reasoning with unprecedented accuracy</li>
-=======
                           <li>• Quantum-level reasoning with unprecedented accuracy</li>
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                           <li>• Hyper-dimensional analysis across multiple contexts</li>
                           <li>• Superintelligence capabilities surpassing all other models</li>
                           <li>• Ultimate precision and perfect comprehension</li>
@@ -883,11 +865,8 @@ export function MultiModelAIAnalyzer({
                         </p>
                         <p>
                           <strong>GLM-4.5 Flagship</strong> represents the pinnacle of AI achievement with 
-<<<<<<< HEAD
                           advanced reasoning, universal comprehension, and superintelligence capabilities 
-=======
                           quantum reasoning, universal comprehension, and superintelligence capabilities 
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                           that far surpass all other models.
                         </p>
                         <p>

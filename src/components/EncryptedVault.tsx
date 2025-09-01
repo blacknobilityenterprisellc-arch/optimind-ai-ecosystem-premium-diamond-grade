@@ -58,11 +58,8 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "2.4 MB",
-<<<<<<< HEAD
           addedDate: "2024-01-15"
-=======
           addedDate: "2025-01-15"
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         },
         {
           id: "2", 
@@ -70,11 +67,8 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "3.1 MB",
-<<<<<<< HEAD
           addedDate: "2024-01-10"
-=======
           addedDate: "2025-01-10"
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         },
         {
           id: "3",
@@ -82,11 +76,8 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "1.8 MB",
-<<<<<<< HEAD
           addedDate: "2024-01-05"
-=======
           addedDate: "2025-01-05"
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         }
       ]);
     }

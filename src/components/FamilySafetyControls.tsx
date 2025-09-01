@@ -19,11 +19,8 @@ import {
   EyeOff, 
   Lock, 
   Unlock,
-<<<<<<< HEAD
   Child,
-=======
   Baby,
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   User,
   UserCheck,
   UserX,
@@ -99,18 +96,15 @@ import {
   Layers as LayersIcon,
   Eraser as EraserIcon,
   Replace as ReplaceIcon,
-<<<<<<< HEAD
   Magic as MagicIcon,
   Brush as BrushIcon,
   ImageDown as ImageDownIcon,
   Wrench as WrenchIcon,
   Baby,
-=======
   Wand2 as MagicIcon,
   Brush as BrushIcon,
   ImageDown as ImageDownIcon,
   Wrench as WrenchIcon,
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   UserPlus,
   UserMinus,
   Clock3,
@@ -181,11 +175,8 @@ import {
   Layers as LayersIcon2,
   Eraser as EraserIcon2,
   Replace as ReplaceIcon2,
-<<<<<<< HEAD
   Magic as MagicIcon2,
-=======
   Wand2 as MagicIcon2,
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   Brush as BrushIcon2,
   ImageDown as ImageDownIcon2,
   Wrench as WrenchIcon2
@@ -558,11 +549,8 @@ export function FamilySafetyControls() {
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                       {member.role === 'parent' && <User className="w-6 h-6 text-white" />}
-<<<<<<< HEAD
                       {member.role === 'child' && <Child className="w-6 h-6 text-white" />}
-=======
                       {member.role === 'child' && <Baby className="w-6 h-6 text-white" />}
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                       {member.role === 'teenager' && <User className="w-6 h-6 text-white" />}
                     </div>
                     <div>
@@ -847,11 +835,8 @@ export function FamilySafetyControls() {
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                           {member.role === 'parent' && <User className="w-5 h-5 text-white" />}
-<<<<<<< HEAD
                           {member.role === 'child' && <Child className="w-5 h-5 text-white" />}
-=======
                           {member.role === 'child' && <Baby className="w-5 h-5 text-white" />}
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
                           {member.role === 'teenager' && <User className="w-5 h-5 text-white" />}
                         </div>
                         <div>

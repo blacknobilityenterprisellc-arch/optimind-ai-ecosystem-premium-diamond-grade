@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -90,7 +89,6 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -119,6 +117,5 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('Settings update error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

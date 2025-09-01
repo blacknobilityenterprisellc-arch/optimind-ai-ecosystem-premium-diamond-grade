@@ -1,7 +1,5 @@
 import { Server } from 'socket.io';
 
-<<<<<<< HEAD
-=======
 interface DashboardMetrics {
   totalContent: number;
   avgOptimizationScore: number;
@@ -25,16 +23,13 @@ interface ActivityUpdate {
   status: string;
 }
 
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 export const setupSocket = (io: Server) => {
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
     
-<<<<<<< HEAD
     // Handle messages
     socket.on('message', (msg: { text: string; senderId: string }) => {
       // Echo: broadcast message only the client who send the message
-=======
     // Join dashboard room for real-time updates
     socket.join('dashboard');
     
@@ -93,7 +88,6 @@ export const setupSocket = (io: Server) => {
     
     // Handle messages (legacy support)
     socket.on('message', (msg: { text: string; senderId: string }) => {
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       socket.emit('message', {
         text: `Echo: ${msg.text}`,
         senderId: 'system',
@@ -104,27 +98,19 @@ export const setupSocket = (io: Server) => {
     // Handle disconnect
     socket.on('disconnect', () => {
       console.log('Client disconnected:', socket.id);
-<<<<<<< HEAD
-=======
       clearInterval(updateInterval);
       socket.leave('dashboard');
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     });
 
     // Send welcome message
     socket.emit('message', {
-<<<<<<< HEAD
       text: 'Welcome to WebSocket Echo Server!',
-=======
       text: 'Welcome to OptiMind AI Ecosystem Real-time Dashboard!',
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       senderId: 'system',
       timestamp: new Date().toISOString(),
     });
   });
-<<<<<<< HEAD
 };
-=======
 };
 
 // Helper functions to generate realistic data
@@ -182,4 +168,3 @@ function generateActivities(): ActivityUpdate[] {
   
   return activities;
 }
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d

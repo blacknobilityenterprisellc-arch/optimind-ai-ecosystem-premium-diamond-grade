@@ -126,26 +126,20 @@ export function AIImageOrganizer() {
         id: "1",
         url: "https://picsum.photos/seed/photo1/400/300.jpg",
         name: "Beach Sunset",
-<<<<<<< HEAD
         uploadDate: new Date("2024-01-15"),
-=======
         uploadDate: new Date("2025-01-15"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 2048000,
         tags: ["beach", "sunset", "nature", "vacation"],
         location: "Malibu, CA",
         people: ["John", "Sarah"],
-<<<<<<< HEAD
         event: "Summer Vacation 2024",
         quality: 95,
         isFavorite: true,
         albums: ["Vacation 2024", "Beaches", "Sunsets"],
-=======
         event: "Summer Vacation 2025",
         quality: 95,
         isFavorite: true,
         albums: ["Vacation 2025", "Beaches", "Sunsets"],
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         aiAnalysis: {
           objects: ["ocean", "sun", "clouds", "people"],
           scene: "beach sunset",
@@ -158,11 +152,8 @@ export function AIImageOrganizer() {
         id: "2",
         url: "https://picsum.photos/seed/photo2/400/300.jpg",
         name: "City Skyline",
-<<<<<<< HEAD
         uploadDate: new Date("2024-01-20"),
-=======
         uploadDate: new Date("2025-01-20"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 1536000,
         tags: ["city", "skyline", "urban", "night"],
         location: "New York, NY",
@@ -181,11 +172,8 @@ export function AIImageOrganizer() {
         id: "3",
         url: "https://picsum.photos/seed/photo3/400/300.jpg",
         name: "Family Portrait",
-<<<<<<< HEAD
         uploadDate: new Date("2024-01-25"),
-=======
         uploadDate: new Date("2025-01-25"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 3072000,
         tags: ["family", "portrait", "people", "indoor"],
         people: ["John", "Sarah", "Mike", "Emma"],
@@ -205,11 +193,8 @@ export function AIImageOrganizer() {
         id: "4",
         url: "https://picsum.photos/seed/photo4/400/300.jpg",
         name: "Mountain Hiking",
-<<<<<<< HEAD
         uploadDate: new Date("2024-02-01"),
-=======
         uploadDate: new Date("2025-02-01"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 2560000,
         tags: ["mountain", "hiking", "nature", "adventure"],
         location: "Rocky Mountains",
@@ -230,11 +215,8 @@ export function AIImageOrganizer() {
         id: "5",
         url: "https://picsum.photos/seed/photo5/400/300.jpg",
         name: "Birthday Party",
-<<<<<<< HEAD
         uploadDate: new Date("2024-02-10"),
-=======
         uploadDate: new Date("2025-02-10"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 2816000,
         tags: ["party", "birthday", "celebration", "people"],
         people: ["Sarah", "Emma", "Mike", "Lisa", "Tom"],
@@ -254,11 +236,8 @@ export function AIImageOrganizer() {
         id: "6",
         url: "https://picsum.photos/seed/photo6/400/300.jpg",
         name: "Pet Portrait",
-<<<<<<< HEAD
         uploadDate: new Date("2024-02-15"),
-=======
         uploadDate: new Date("2025-02-15"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         fileSize: 1792000,
         tags: ["pet", "dog", "portrait", "cute"],
         quality: 93,
@@ -277,21 +256,18 @@ export function AIImageOrganizer() {
     const mockAlbums: Album[] = [
       {
         id: "1",
-<<<<<<< HEAD
         name: "Vacation 2024",
         description: "Our amazing summer vacation photos",
         coverPhoto: "https://picsum.photos/seed/album1/400/300.jpg",
         photoCount: 45,
         createdDate: new Date("2024-01-15"),
         tags: ["vacation", "travel", "2024"],
-=======
         name: "Vacation 2025",
         description: "Our amazing summer vacation photos",
         coverPhoto: "https://picsum.photos/seed/album1/400/300.jpg",
         photoCount: 45,
         createdDate: new Date("2025-01-15"),
         tags: ["vacation", "travel", "2025"],
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         isSmart: false,
         autoUpdate: false,
         category: "event"
@@ -302,11 +278,8 @@ export function AIImageOrganizer() {
         description: "Photos with family and friends",
         coverPhoto: "https://picsum.photos/seed/album2/400/300.jpg",
         photoCount: 128,
-<<<<<<< HEAD
         createdDate: new Date("2024-01-01"),
-=======
         createdDate: new Date("2025-01-01"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         tags: ["family", "friends", "people"],
         isSmart: true,
         autoUpdate: true,
@@ -318,11 +291,8 @@ export function AIImageOrganizer() {
         description: "Beautiful nature and landscape photography",
         coverPhoto: "https://picsum.photos/seed/album3/400/300.jpg",
         photoCount: 67,
-<<<<<<< HEAD
         createdDate: new Date("2024-01-10"),
-=======
         createdDate: new Date("2025-01-10"),
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         tags: ["nature", "landscape", "outdoor"],
         isSmart: true,
         autoUpdate: true,
@@ -330,21 +300,18 @@ export function AIImageOrganizer() {
       },
       {
         id: "4",
-<<<<<<< HEAD
         name: "Best of 2024",
         description: "Highest quality photos from this year",
         coverPhoto: "https://picsum.photos/seed/album4/400/300.jpg",
         photoCount: 23,
         createdDate: new Date("2024-01-01"),
         tags: ["best", "quality", "2024"],
-=======
         name: "Best of 2025",
         description: "Highest quality photos from this year",
         coverPhoto: "https://picsum.photos/seed/album4/400/300.jpg",
         photoCount: 23,
         createdDate: new Date("2025-01-01"),
         tags: ["best", "quality", "2025"],
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
         isSmart: true,
         autoUpdate: true,
         category: "custom"

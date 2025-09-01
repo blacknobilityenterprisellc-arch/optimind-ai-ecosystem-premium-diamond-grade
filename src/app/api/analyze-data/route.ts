@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-<<<<<<< HEAD
 import { aiService } from '@/lib/ai';
-=======
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-<<<<<<< HEAD
     const { data, analysisType } = body;
 
     // Validate required fields
@@ -35,7 +31,6 @@ export async function POST(request: NextRequest) {
       { error: 'Failed to analyze data' },
       { status: 500 }
     );
-=======
     const { data, type } = body;
     
     // Data analysis logic here
@@ -55,6 +50,5 @@ export async function POST(request: NextRequest) {
       error: 'Failed to analyze data',
       status: 'error' 
     }, { status: 500 });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

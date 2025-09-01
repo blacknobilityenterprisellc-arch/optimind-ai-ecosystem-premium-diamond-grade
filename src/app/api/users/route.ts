@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 
@@ -62,7 +61,6 @@ export async function GET(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -78,13 +76,11 @@ export async function GET(request: NextRequest) {
       error: 'Failed to retrieve users',
       status: 'error' 
     }, { status: 500 });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-<<<<<<< HEAD
     const { email, name, avatar, role = 'USER' } = await request.json()
 
     if (!email) {
@@ -133,7 +129,6 @@ export async function POST(request: NextRequest) {
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-=======
     const body = await request.json();
     const { user } = body;
     
@@ -154,6 +149,5 @@ export async function POST(request: NextRequest) {
       error: 'Failed to create user',
       status: 'error' 
     }, { status: 500 });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

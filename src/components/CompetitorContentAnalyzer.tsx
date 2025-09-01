@@ -71,17 +71,14 @@ export default function CompetitorContentAnalyzer() {
     {
       id: "1",
       url: "https://competitor-a.com/voice-search-guide",
-<<<<<<< HEAD
       title: "Complete Voice Search Optimization Guide 2024",
       domain: "competitor-a.com",
       wordCount: 4200,
       publishDate: "2024-01-15",
-=======
       title: "Complete Voice Search Optimization Guide 2025",
       domain: "competitor-a.com",
       wordCount: 4200,
       publishDate: "2025-01-15",
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       contentScore: 88,
       seoScore: 85,
       readabilityScore: 92,
@@ -96,11 +93,8 @@ export default function CompetitorContentAnalyzer() {
       title: "Voice SEO: The Ultimate Guide",
       domain: "competitor-b.com",
       wordCount: 3800,
-<<<<<<< HEAD
       publishDate: "2024-02-01",
-=======
       publishDate: "2025-02-01",
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       contentScore: 82,
       seoScore: 79,
       readabilityScore: 85,

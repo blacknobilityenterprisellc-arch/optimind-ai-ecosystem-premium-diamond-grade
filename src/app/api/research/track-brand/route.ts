@@ -65,11 +65,8 @@ export async function POST(request: NextRequest) {
           "snippet": "mention snippet",
           "sentiment": "positive|neutral|negative",
           "authority": 85,
-<<<<<<< HEAD
           "date": "2024-01-15",
-=======
           "date": "2025-01-15",
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
           "type": "ai_overview|featured_snippet|organic_result|social_media"
         }
       ]
@@ -127,11 +124,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Brand tracking error:', error);
     return NextResponse.json(
-<<<<<<< HEAD
       { error: 'Failed to track brand mentions', details: error.message },
-=======
       { error: 'Failed to track brand mentions', details: error instanceof Error ? error.message : 'Unknown error' },
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
       { status: 500 }
     );
   }

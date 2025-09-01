@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-<<<<<<< HEAD
 import { aiService } from '@/lib/ai';
-=======
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-<<<<<<< HEAD
     const { query, context, type } = body;
 
     // Validate required fields
@@ -39,7 +35,6 @@ export async function POST(request: NextRequest) {
       { error: 'Failed to perform search' },
       { status: 500 }
     );
-=======
     const { query, context, use_ai } = body;
     
     // Smart search logic here
@@ -60,6 +55,5 @@ export async function POST(request: NextRequest) {
       error: 'Failed to perform smart search',
       status: 'error' 
     }, { status: 500 });
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
   }
 }

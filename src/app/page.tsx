@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Test page for the Z.AI GLM-4.5 Content Moderation System
  * Demonstrates the complete integration pipeline
@@ -328,7 +327,6 @@ export default function TestModerationPage() {
           </CardContent>
         </Card>
       </div>
-=======
 "use client";
 
 import { useState, useEffect } from "react";
@@ -1061,7 +1059,6 @@ export default function Dashboard() {
           </Card>
         </TabsContent>
       </Tabs>
->>>>>>> c358f87d910e205477b71ec74630ccafe0f3c33d
     </div>
   );
 }
