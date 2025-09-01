@@ -18,15 +18,6 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
-  openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
   title: "OptiMind AI Ecosystem - Premium Diamond Grade AI Platform",
   description: "Advanced AI-powered optimization platform with SEO, AEO, GEO, and content creation tools. Diamond-grade AI ecosystem for enterprise optimization.",
   keywords: ["OptiMind AI", "SEO", "AEO", "GEO", "AI optimization", "content creation", "enterprise AI", "diamond grade"],
@@ -40,8 +31,6 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
     title: "OptiMind AI Ecosystem",
     description: "Premium diamond-grade AI optimization platform",
   },
@@ -55,14 +44,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
-      >
-        {children}
-        <Toaster />
-      </body>
-    </html>
-  );
-}
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground premium-bg premium-scrollbar`}
       >
         <ThemeProvider defaultTheme="dark">

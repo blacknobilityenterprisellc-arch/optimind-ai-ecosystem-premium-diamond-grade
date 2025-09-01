@@ -27,9 +27,6 @@ export const setupSocket = (io: Server) => {
   io.on('connection', (socket) => {
     console.log('Client connected:', socket.id);
     
-    // Handle messages
-    socket.on('message', (msg: { text: string; senderId: string }) => {
-      // Echo: broadcast message only the client who send the message
     // Join dashboard room for real-time updates
     socket.join('dashboard');
     
@@ -104,13 +101,11 @@ export const setupSocket = (io: Server) => {
 
     // Send welcome message
     socket.emit('message', {
-      text: 'Welcome to WebSocket Echo Server!',
       text: 'Welcome to OptiMind AI Ecosystem Real-time Dashboard!',
       senderId: 'system',
       timestamp: new Date().toISOString(),
     });
   });
-};
 };
 
 // Helper functions to generate realistic data
