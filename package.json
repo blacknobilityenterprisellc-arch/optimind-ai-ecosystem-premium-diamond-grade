@@ -2,12 +2,13 @@
   "name": "optimind-ai-ecosystem",
   "version": "1.0.0",
   "private": true,
-  "description": "Enterprise-grade AI ecosystem with 45+ AI tools and 35+ advanced AI models, conceived and led by Jocely Honore",
+  "description": "Enterprise-grade AI ecosystem with 45+ AI tools and 35+ advanced AI models, conceived and led by Jocely Honore, produced by N.D.E. (Nobility Digital Empire)",
   "author": {
     "name": "Jocely Honore",
-    "email": "jocely.honore@blacknobilityenterprise.com",
+    "email": "jocely.honore@nobilitydigitalempire.com",
     "role": "Lead Master Mind, Manager & Owner/CEO",
-    "company": "Black Nobility Enterprise LLC Architecture"
+    "company": "N.D.E. - Nobility Digital Empire",
+    "parentCompany": "B.N.M.E. - Black Nobility Management & Enterprise LLC"
   },
   "contributors": [
     {
@@ -50,7 +51,10 @@
     "ecosystem",
     "glm-4.5",
     "optimind",
-    "black-nobility-enterprise",
+    "nobility-digital-empire",
+    "black-nobility-management-enterprise",
+    "nde",
+    "bnme",
     "jocely-honore",
     "multi-ai",
     "chatgpt",
@@ -61,7 +65,9 @@
     "z-ai",
     "nextjs",
     "typescript",
-    "enterprise-grade"
+    "enterprise-grade",
+    "digital-products",
+    "digital-assets"
   ],
   "license": "MIT",
   "scripts": {
