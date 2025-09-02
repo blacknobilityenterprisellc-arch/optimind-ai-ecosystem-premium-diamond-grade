@@ -169,13 +169,13 @@ async function main() {
     ],
   });
 
-  // Create sample posts
+  // Create sample posts (with unique slugs)
   await prisma.post.create({
     data: {
       title: 'Getting Started with AI Optimization',
       content: '# Getting Started with AI Optimization\n\nArtificial Intelligence is revolutionizing the way we approach content optimization...',
       excerpt: 'Learn how to leverage AI for content optimization and better engagement.',
-      slug: 'getting-started-with-ai-optimization',
+      slug: 'getting-started-with-ai-optimization-' + Date.now(),
       published: true,
       authorId: adminUser.id,
       featured: true,
