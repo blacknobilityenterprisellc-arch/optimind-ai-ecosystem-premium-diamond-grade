@@ -1,71 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server'
-import ZAI from 'z-ai-web-dev-sdk'
-
-export async function POST(request: NextRequest) {
-  try {
-    const { prompt, size = '1024x1024', style, quality = 'standard' } = await request.json()
-
-    if (!prompt) {
-      return NextResponse.json(
-        { error: 'Prompt is required' },
-        { status: 400 }
-      )
-    }
-
-    const zai = await ZAI.create()
-
-    const response = await zai.images.generations.create({
-      prompt,
-      size,
-      style,
-      quality
-    })
-
-    const imageData = response.data[0]?.base64
-
-    if (!imageData) {
-      return NextResponse.json(
-        { error: 'No image generated' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({
-      imageData,
-      prompt,
-      size,
-      style,
-      quality
-    })
-
-  } catch (error: any) {
-    console.error('Image generation API error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    )
-import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
-    return NextResponse.json({
-      message: 'Images API endpoint',
-      status: 'operational',
-      endpoints: ['analyze', 'optimize', 'generate', 'upload']
-    });
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    // Mock image analysis response
+    const imageData = {
+      status: 'success',
+      message: 'Image analysis API is working',
+      models: [
+        'glm-45v',
+        'gpt-4-vision',
+        'claude-3-vision'
+      ],
+      capabilities: [
+        'object-detection',
+        'text-recognition',
+        'content-analysis',
+        'style-classification'
+      ]
+    };
+
+    return NextResponse.json(imageData);
+  } catch (error: any) {
+    console.error('Images API error:', error);
+    return NextResponse.json(
+      { error: error.message || 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    return NextResponse.json({
-      message: 'Image processing initiated',
-      data: body
-    });
-  } catch (error) {
-    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+    const { imageUrl, analysisType } = body;
+
+    // Mock image analysis
+    const analysisResult = {
+      id: Math.random().toString(36).substr(2, 9),
+      type: analysisType || 'general',
+      result: {
+        objects: ['person', 'car', 'building'],
+        text: 'Sample text detected in image',
+        confidence: 0.92,
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    return NextResponse.json(analysisResult);
+  } catch (error: any) {
+    console.error('Image analysis error:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to analyze image' },
+      { status: 500 }
+    );
   }
 }

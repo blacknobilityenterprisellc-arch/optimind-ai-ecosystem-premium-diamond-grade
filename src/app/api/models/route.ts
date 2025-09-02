@@ -1,28 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { zaiApiService, ZAIModelConfig } from '@/lib/zai-api-service';
+import { NextRequest, NextResponse } from 'next/server'
+import { getAvailableModels } from '@/lib/multi-model-ai'
 
 export async function GET() {
   try {
-    const models = zaiApiService.getAvailableModels();
+    const models = await getAvailableModels();
     return NextResponse.json({ models });
-import { openRouterService, OpenRouterModelConfig } from '@/lib/openrouter-service';
-
-export async function GET() {
-  try {
-    const zaiModels = zaiApiService.getAvailableModels();
-    const openRouterModels = openRouterService.getAvailableModels();
-    
-    return NextResponse.json({ 
-      zaiModels,
-      openRouterModels,
-      totalZaiModels: zaiModels.length,
-      totalOpenRouterModels: openRouterModels.length,
-      openRouterProviders: [...new Set(openRouterModels.map(m => m.provider))]
-    });
-  } catch (error) {
-    console.error('Failed to get models:', error);
+  } catch (error: any) {
+    console.error('Models API error:', error);
     return NextResponse.json(
-      { error: 'Failed to get available models' },
+      { error: error.message || 'Failed to fetch models' },
       { status: 500 }
     );
   }

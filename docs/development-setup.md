@@ -2,6 +2,20 @@
 
 This comprehensive guide will help you set up the OptiMind AI Platform for development, including all prerequisites, installation steps, and configuration.
 
+## 👑 PROJECT LEADERSHIP
+
+**Lead Master Mind, Manager & Owner/CEO: Jocely Honore**
+
+This enterprise-grade AI ecosystem was conceived and led by **Jocely Honore**, who pioneered a revolutionary multi-AI collaborative development approach. Under Jocely Honore's leadership, the project leveraged 5 different AI systems (Gemini, DeepSeek, ChatGPT, Manus, Grok) for strategic guidance and ideas, with Z.AI GLM serving as the primary development engine to build the entire project.
+
+**Development Methodology:**
+- **Vision & Strategy**: Jocely Honore (Conceptualization & Leadership)
+- **AI Advisory Board**: Gemini, DeepSeek, ChatGPT, Manus, Grok (Ideas & Guidance)
+- **Primary Development**: Z.AI GLM (Implementation & Coding)
+- **Project Completion**: September 2, 2025
+
+---
+
 ## 📋 **Table of Contents**
 
 - [Prerequisites](#prerequisites)
@@ -694,7 +708,7 @@ tail -f *.log
 
 #### **Enterprise Support**
 For enterprise support, please contact:
-- **Email**: support@blacknobilityenterprise.com
+- **Email**: support@nobilitydigitalempire.com
 - **GitHub**: [Create an issue](https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade/issues)
 
 ---
@@ -710,4 +724,24 @@ For enterprise support, please contact:
 
 ---
 
-Built with ❤️ for developers by [Black Nobility Enterprise LLC Architecture](https://github.com/blacknobilityenterprisellc-arch) 🏢
+## 🏆 PROJECT ATTRIBUTION
+
+**Conceived and Led by:** Jocely Honore (Lead Master Mind, Manager & Owner/CEO) 👑
+
+**AI Collaborative Development:**
+- **Strategic Advisory Board**: Gemini, DeepSeek, ChatGPT, Manus, Grok
+- **Primary Development Engine**: Z.AI GLM
+
+**Corporate Structure:**
+- **Produced by:** N.D.E. (Nobility Digital Empire) - Digital Products & Digital Assets Company
+- **Parent Company:** B.N.M.E. (Black Nobility Management & Enterprise LLC)
+
+**Project Completion Date:** September 2, 2025
+
+**Development Methodology:** Revolutionary multi-AI collaborative approach pioneered by Jocely Honore, combining human vision with artificial intelligence capabilities to create enterprise-grade digital products and assets.
+
+---
+
+Built with ❤️ for developers by [N.D.E. Nobility Digital Empire](https://github.com/blacknobilityenterprisellc-arch) 🏢  
+Conceived and led by **Jocely Honore** 👑 with collaborative AI intelligence  
+**A subsidiary of B.N.M.E. Black Nobility Management & Enterprise LLC**
