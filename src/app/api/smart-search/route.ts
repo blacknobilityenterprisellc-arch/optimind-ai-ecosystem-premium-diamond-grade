@@ -1,59 +1,48 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { aiService } from '@/lib/ai';
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { query, context, type } = body;
+    const body = await request.json()
+    const { query, filters, context } = body
 
-    // Validate required fields
-    if (!query) {
-      return NextResponse.json(
-        { error: 'Query is required' },
-        { status: 400 }
-      );
+    // Mock smart search results
+    const smartSearchResults = {
+      query,
+      results: [
+        {
+          id: '1',
+          title: 'Advanced AI Content Creation',
+          description: 'Create high-quality content using advanced AI models',
+          category: 'content-creation',
+          confidence: 0.94,
+          features: ['multi-language', 'seo-optimization', 'tone-adjustment']
+        },
+        {
+          id: '2',
+          title: 'Real-time Content Analysis',
+          description: 'Analyze content performance in real-time',
+          category: 'analytics',
+          confidence: 0.89,
+          features: ['real-time', 'performance-metrics', 'insights']
+        }
+      ],
+      suggestions: [
+        'AI content optimization',
+        'Performance analytics',
+        'Multi-model analysis'
+      ],
+      context: context || {},
+      timestamp: new Date().toISOString()
     }
 
-    // Get smart search results using AI service
-    const result = await aiService.smartSearch({
-      query,
-      context: context || '',
-      type: type || 'general'
-    });
-
     return NextResponse.json({
-      success: true,
-      results: result.content,
-      model: result.model,
-      usage: result.usage,
-      cost: result.cost
-    });
-
-  } catch (error) {
-    console.error('Smart search error:', error);
-    return NextResponse.json(
-      { error: 'Failed to perform search' },
-      { status: 500 }
-    );
-    const { query, context, use_ai } = body;
-    
-    // Smart search logic here
-    const smartSearchResults = {
-      results: [],
-      ai_insights: [],
-      confidence: 0.9,
-      timestamp: new Date().toISOString()
-    };
-    
-    return NextResponse.json({ 
-      message: 'Smart search completed',
       data: smartSearchResults,
-      status: 'success' 
-    });
+      status: 'success'
+    })
   } catch (error) {
     return NextResponse.json({ 
       error: 'Failed to perform smart search',
       status: 'error' 
-    }, { status: 500 });
+    })
   }
 }

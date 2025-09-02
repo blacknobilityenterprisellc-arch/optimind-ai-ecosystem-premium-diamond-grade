@@ -1,73 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
-import ZAI from 'z-ai-web-dev-sdk'
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const { query, num = 10 } = await request.json()
+    const { searchParams } = new URL(request.url)
+    const query = searchParams.get('q') || ''
 
-    if (!query) {
-      return NextResponse.json(
-        { error: 'Query is required' },
-        { status: 400 }
-      )
+    // Mock search results
+    const searchResults = {
+      query,
+      results: [
+        {
+          id: '1',
+          title: 'AI Content Optimization',
+          description: 'Advanced AI-powered content optimization techniques',
+          url: '/content-optimization',
+          relevance: 0.95
+        },
+        {
+          id: '2',
+          title: 'Multi-Model Analysis',
+          description: 'Comprehensive analysis using multiple AI models',
+          url: '/research-analysis',
+          relevance: 0.87
+        }
+      ],
+      total: 2,
+      took: 12
     }
 
-    const zai = await ZAI.create()
-
-    const searchResult = await zai.functions.invoke("web_search", {
-      query,
-      num
-    })
-
-    return NextResponse.json({
-      query,
-      results: searchResult,
-      count: searchResult.length
-    })
-
+    return NextResponse.json(searchResults)
   } catch (error: any) {
-    console.error('Web search API error:', error)
+    console.error('Search API error:', error)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q');
-    
-    if (!query) {
-      return NextResponse.json({ error: 'Search query is required' }, { status: 400 });
-    }
-
-    // TODO: Implement search functionality
-    return NextResponse.json({
-      results: [],
-      query,
-      message: 'Search endpoint - implementation pending'
-    });
-  } catch (error) {
-    console.error('Search error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const { query, filters } = body;
-    
-    // TODO: Implement advanced search with filters
-    return NextResponse.json({
-      results: [],
-      query,
-      filters,
-      message: 'Advanced search endpoint - implementation pending'
-    });
-  } catch (error) {
-    console.error('Advanced search error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
