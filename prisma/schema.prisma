@@ -41,6 +41,20 @@ model User {
   customerBehaviorAnalyses CustomerBehaviorAnalysis[]
   complianceMonitoring ComplianceMonitoring[]
   learningPaths   LearningPath[]
+  // Zero-Trust Security Relations
+  accessControls  AccessControl[]
+  auditLogs       AuditLog[]
+  securityAuditLogs AccessAuditLog[]
+  // Enhanced Analytics Relations
+  predictions     Prediction[]
+  // Enhanced Relations
+  dashboards      Dashboard[]
+  dashboardShares DashboardShare[]
+  workflows       Workflow[]
+  workflowExecutions WorkflowExecution[]
+  searchQueries   SearchQuery[]
+  apiUsage        ApiUsage[]
+  apiKeys         ApiKey[]
   
   @@map("users")
 }
@@ -87,6 +101,7 @@ model Subscription {
   // Relations
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   usage           SubscriptionUsage[]
+  usageMetrics    UsageMetric[]
   
   @@map("subscriptions")
 }
@@ -383,6 +398,15 @@ enum SubscriptionPlan {
   ENTERPRISE
 }
 
+enum LearningPathStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  IN_PROGRESS
+  ON_HOLD
+}
+
 enum SubscriptionStatus {
   ACTIVE
   CANCELLED
@@ -476,11 +500,1111 @@ enum ComplianceStatus {
   URGENT_ATTENTION
 }
 
-enum LearningPathStatus {
+// Zero-Trust Security Models
+model AccessControl {
+  id              String              @id @default(cuid())
+  userId          String
+  resourceType    String              // 'project', 'analysis', 'document', 'api', etc.
+  resourceId      String
+  permission      AccessPermission
+  grantedBy       String?
+  grantedAt       DateTime            @default(now())
+  expiresAt       DateTime?
+  conditions      Json?               // Dynamic conditions for access
+  auditLog        AccessAuditLog[]
+  
+  // Relations
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, resourceType, resourceId])
+  @@index([userId])
+  @@index([resourceType, resourceId])
+  @@map("access_controls")
+}
+
+model AccessAuditLog {
+  id              String              @id @default(cuid())
+  accessControlId String
+  userId          String
+  action          AuditAction         // 'granted', 'denied', 'revoked', 'accessed'
+  resourceType    String
+  resourceId      String
+  ipAddress       String?
+  userAgent       String?
+  timestamp       DateTime            @default(now())
+  details         Json?
+  
+  // Relations
+  accessControl   AccessControl       @relation(fields: [accessControlId], references: [id], onDelete: Cascade)
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("access_audit_logs")
+}
+
+model SecurityPolicy {
+  id              String              @id @default(cuid())
+  name            String              @unique
+  description     String?
+  type            PolicyType          @default(ACCESS_CONTROL)
+  rules           Json                // Policy rules and conditions
+  priority        Int                 @default(0)
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  assignments      PolicyAssignment[]
+  
+  @@index([type])
+  @@index([isActive])
+  @@map("security_policies")
+}
+
+model PolicyAssignment {
+  id              String              @id @default(cuid())
+  policyId        String
+  userId          String?
+  roleId          String?
+  conditions      Json?
+  assignedAt      DateTime            @default(now())
+  assignedBy      String?
+  
+  // Relations
+  policy          SecurityPolicy      @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([roleId])
+  @@map("policy_assignments")
+}
+
+model SecurityIncident {
+  id              String              @id @default(cuid())
+  type            IncidentType
+  severity        IncidentSeverity    @default(MEDIUM)
+  title           String
+  description     String
+  affectedUsers   Json?               // Array of affected user IDs
+  affectedResources Json?             // Array of affected resource IDs
+  status          IncidentStatus      @default(OPEN)
+  assignedTo      String?
+  resolution      Json?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([type])
+  @@index([severity])
+  @@index([status])
+  @@index([createdAt])
+  @@map("security_incidents")
+}
+
+model SecurityMetrics {
+  id              String              @id @default(cuid())
+  metricType      MetricType
+  value           Float
+  unit            String?
+  timestamp       DateTime            @default(now())
+  metadata        Json?
+  
+  @@index([metricType])
+  @@index([timestamp])
+  @@map("security_metrics")
+}
+
+// Enhanced Analytics Models for Predictive Insights
+model PredictiveModel {
+  id              String              @id @default(cuid())
+  name            String
+  type            ModelType           // 'regression', 'classification', 'clustering', 'neural_network'
+  version         String
+  description     String?
+  trainingData    Json                // Training data configuration
+  hyperparameters Json?
+  performance     Json?               // Model performance metrics
+  status          ModelStatus         @default(TRAINING)
+  accuracy        Float?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  predictions     Prediction[]
+  trainingHistory ModelTrainingHistory[]
+  
+  @@index([type])
+  @@index([status])
+  @@map("predictive_models")
+}
+
+model Prediction {
+  id              String              @id @default(cuid())
+  modelId         String
+  inputData       Json
+  outputData      Json
+  confidence      Float
+  predictionType  PredictionType
+  userId          String?
+  projectId       String?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  
+  // Relations
+  model           PredictiveModel     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([modelId])
+  @@index([predictionType])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("predictions")
+}
+
+model ModelTrainingHistory {
+  id              String              @id @default(cuid())
+  modelId         String
+  epoch           Int
+  loss            Float?
+  accuracy        Float?
+  validationLoss  Float?
+  validationAccuracy Float?
+  learningRate    Float?
+  metadata        Json?
+  timestamp       DateTime            @default(now())
+  
+  // Relations
+  model           PredictiveModel     @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@index([modelId])
+  @@index([epoch])
+  @@map("model_training_history")
+}
+
+// Enhanced Performance Monitoring
+model PerformanceLog {
+  id              String              @id @default(cuid())
+  endpoint        String
+  method          String
+  responseTime    Int                 // in milliseconds
+  statusCode      Int
+  userId          String?
+  ipAddress       String?
+  userAgent       String?
+  error           String?
+  metadata        Json?
+  timestamp       DateTime            @default(now())
+  
+  @@index([endpoint])
+  @@index([method])
+  @@index([responseTime])
+  @@index([statusCode])
+  @@index([timestamp])
+  @@map("performance_logs")
+}
+
+model SystemHealth {
+  id              String              @id @default(cuid())
+  metric          String
+  value           Float
+  threshold       Float?
+  status          HealthStatus        @default(HEALTHY)
+  component       String?
+  timestamp       DateTime            @default(now())
+  metadata        Json?
+  
+  @@index([metric])
+  @@index([status])
+  @@index([component])
+  @@index([timestamp])
+  @@map("system_health")
+}
+
+// Enhanced User Activity Tracking
+model UserActivity {
+  id              String              @id @default(cuid())
+  userId          String
+  action          String
+  resourceType    String?
+  resourceId      String?
+  ipAddress       String?
+  userAgent       String?
+  metadata        Json?
+  timestamp       DateTime            @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("user_activities")
+}
+
+// Enhanced Analytics and Reporting
+model AnalyticsReport {
+  id              String              @id @default(cuid())
+  name            String
+  type            ReportType
+  configuration   Json                // Report configuration
+  schedule        Json?               // Scheduling configuration
+  lastGenerated   DateTime?
+  nextRun        DateTime?
+  isActive        Boolean             @default(true)
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  generations     ReportGeneration[]
+  
+  @@index([type])
+  @@index([isActive])
+  @@map("analytics_reports")
+}
+
+model ReportGeneration {
+  id              String              @id @default(cuid())
+  reportId        String
+  generatedBy     String
+  status          GenerationStatus    @default(PENDING)
+  filePath        String?
+  fileSize        Int?
+  recordCount     Int?
+  error           String?
+  generatedAt     DateTime?
+  completedAt     DateTime?
+  
+  // Relations
+  report          AnalyticsReport     @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  
+  @@index([reportId])
+  @@index([status])
+  @@index([generatedAt])
+  @@map("report_generations")
+}
+
+// Enhanced Security Settings
+model SecurityConfiguration {
+  id              String              @id @default(cuid())
+  key             String              @unique
+  value           Json
+  category        String              // 'authentication', 'authorization', 'encryption', etc.
+  isSystem        Boolean             @default(false)
+  description     String?
+  lastModifiedBy  String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([category])
+  @@index([key])
+  @@map("security_configurations")
+}
+
+model SecurityEvent {
+  id              String              @id @default(cuid())
+  eventType       SecurityEventType
+  severity        EventSeverity       @default(MEDIUM)
+  title           String
+  description     String
+  source          String?
+  userId          String?
+  sessionId       String?
+  ipAddress       String?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  
+  @@index([eventType])
+  @@index([severity])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("security_events")
+}
+
+// Enhanced Subscription and Usage Tracking
+model UsageMetric {
+  id              String              @id @default(cuid())
+  subscriptionId  String
+  metricName      String
+  metricValue     Int
+  period          String              // 'hourly', 'daily', 'weekly', 'monthly'
+  timestamp       DateTime            @default(now())
+  metadata        Json?
+  
+  // Relations
+  subscription    Subscription        @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  
+  @@unique([subscriptionId, metricName, period, timestamp])
+  @@index([subscriptionId])
+  @@index([metricName])
+  @@index([period])
+  @@index([timestamp])
+  @@map("usage_metrics")
+}
+
+model RateLimit {
+  id              String              @id @default(cuid())
+  key             String              @unique
+  windowSize      Int                 // in seconds
+  maxRequests     Int
+  currentCount    Int                 @default(0)
+  resetAt         DateTime
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([key])
+  @@index([resetAt])
+  @@map("rate_limits")
+}
+
+// Enhanced Communication and Notification
+model Notification {
+  id              String              @id @default(cuid())
+  userId          String
+  type            NotificationType
+  title           String
+  message         String
+  status          NotificationStatus   @default(UNREAD)
+  priority        NotificationPriority @default(MEDIUM)
+  metadata        Json?
+  scheduledAt     DateTime?
+  sentAt          DateTime?
+  readAt          DateTime?
+  createdAt       DateTime            @default(now())
+  
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@index([priority])
+  @@index([scheduledAt])
+  @@map("notifications")
+}
+
+model NotificationTemplate {
+  id              String              @id @default(cuid())
+  name            String              @unique
+  type            NotificationType
+  subject         String
+  content         String
+  variables       Json?               // Template variables
+  isActive        Boolean             @default(true)
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([type])
+  @@index([isActive])
+  @@map("notification_templates")
+}
+
+// Enhanced File and Document Management
+model Document {
+  id              String              @id @default(cuid())
+  name            String
+  type            DocumentType
+  category        String?
+  version         String              @default("1.0")
+  content         String?
+  metadata        Json?
+  tags            Json?               // Array of tags
+  accessLevel     AccessLevel         @default(PUBLIC)
+  createdBy       String
+  updatedBy       String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  versions        DocumentVersion[]
+  accessControls  DocumentAccess[]
+  
+  @@index([type])
+  @@index([category])
+  @@index([accessLevel])
+  @@index([createdBy])
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id              String              @id @default(cuid())
+  documentId      String
+  version         String
+  content         String?
+  changes         Json?
+  changelog       String?
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  
+  // Relations
+  document        Document            @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  @@unique([documentId, version])
+  @@index([documentId])
+  @@map("document_versions")
+}
+
+model DocumentAccess {
+  id              String              @id @default(cuid())
+  documentId      String
+  userId          String
+  permission      DocumentPermission
+  grantedBy       String
+  grantedAt       DateTime            @default(now())
+  expiresAt       DateTime?
+  
+  // Relations
+  document        Document            @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  @@unique([documentId, userId])
+  @@index([documentId])
+  @@index([userId])
+  @@map("document_access")
+}
+
+// Enhanced Integration and API Management
+model ApiKey {
+  id              String              @id @default(cuid())
+  name            String
+  key             String              @unique
+  secret          String
+  userId          String
+  permissions     Json?
+  rateLimit       Int?                // requests per minute
+  isActive        Boolean             @default(true)
+  lastUsedAt      DateTime?
+  expiresAt       DateTime?
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usage           ApiUsage[]
+  
+  @@index([userId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("api_keys")
+}
+
+model ApiUsage {
+  id              String              @id @default(cuid())
+  apiKeyId        String
+  endpoint        String
+  method          String
+  responseTime    Int
+  statusCode      Int
+  requestSize     Int?
+  responseSize    Int?
+  userId          String?
+  ipAddress       String?
+  userAgent       String?
+  error           String?
+  timestamp       DateTime            @default(now())
+  
+  // Relations
+  apiKey          ApiKey              @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([apiKeyId])
+  @@index([endpoint])
+  @@index([method])
+  @@index([timestamp])
+  @@map("api_usage")
+}
+
+// Enhanced Machine Learning and AI Features
+model MLModel {
+  id              String              @id @default(cuid())
+  name            String
+  type            MLModelType
+  version         String
+  description     String?
+  framework       String              // 'tensorflow', 'pytorch', 'sklearn', etc.
+  modelPath       String?
+  config          Json?
+  performance     Json?
+  status          MLModelStatus       @default(TRAINING)
+  accuracy        Float?
+  loss            Float?
+  trainingTime    Int?                // in seconds
+  datasetSize     Int?
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  deployments     MLDeployment[]
+  evaluations     MLEvaluation[]
+  
+  @@index([type])
+  @@index([status])
+  @@index([createdBy])
+  @@map("ml_models")
+}
+
+model MLDeployment {
+  id              String              @id @default(cuid())
+  modelId         String
+  version         String
+  environment     String              // 'development', 'staging', 'production'
+  endpoint        String?
+  status          DeploymentStatus    @default(DEPLOYING)
+  deployedAt      DateTime?
+  metrics         Json?
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  model           MLModel             @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@index([modelId])
+  @@index([environment])
+  @@index([status])
+  @@map("ml_deployments")
+}
+
+model MLEvaluation {
+  id              String              @id @default(cuid())
+  modelId         String
+  datasetName     String
+  accuracy        Float?
+  precision       Float?
+  recall          Float?
+  f1Score         Float?
+  confusionMatrix Json?
+  evaluationTime  Int?                // in seconds
+  evaluatedBy     String
+  evaluatedAt     DateTime            @default(now())
+  
+  // Relations
+  model           MLModel             @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@index([modelId])
+  @@index([evaluatedAt])
+  @@map("ml_evaluations")
+}
+
+// Enhanced Business Intelligence
+model Dashboard {
+  id              String              @id @default(cuid())
+  name            String
+  description     String?
+  type            DashboardType       @default(CUSTOM)
+  configuration   Json                // Layout, widgets, filters
+  isPublic        Boolean             @default(false)
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  widgets         DashboardWidget[]
+  shares          DashboardShare[]
+  creator         User                @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  
+  @@index([type])
+  @@index([isPublic])
+  @@index([createdBy])
+  @@map("dashboards")
+}
+
+model DashboardWidget {
+  id              String              @id @default(cuid())
+  dashboardId     String
+  type            WidgetType
+  title           String
+  configuration   Json                // Widget-specific config
+  position        Json                // x, y, width, height
+  dataSource      Json?               // Data source configuration
+  refreshInterval Int?                // in seconds
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  dashboard       Dashboard           @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  
+  @@index([dashboardId])
+  @@index([type])
+  @@map("dashboard_widgets")
+}
+
+model DashboardShare {
+  id              String              @id @default(cuid())
+  dashboardId     String
+  userId          String
+  permission      SharePermission     @default(VIEW)
+  sharedBy        String
+  sharedAt       DateTime            @default(now())
+  expiresAt       DateTime?
+  
+  // Relations
+  dashboard       Dashboard           @relation(fields: [dashboardId], references: [id], onDelete: Cascade)
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([dashboardId, userId])
+  @@index([dashboardId])
+  @@index([userId])
+  @@map("dashboard_shares")
+}
+
+// Enhanced Workflow and Automation
+model Workflow {
+  id              String              @id @default(cuid())
+  name            String
+  description     String?
+  type            WorkflowType        @default(MANUAL)
+  status          WorkflowStatus      @default(DRAFT)
+  trigger         Json?               // Trigger configuration
+  steps           Json                // Workflow steps configuration
+  variables       Json?               // Workflow variables
+  isActive        Boolean             @default(true)
+  createdBy       String
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  executions      WorkflowExecution[]
+  creator         User                @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  
+  @@index([type])
+  @@index([status])
+  @@index([isActive])
+  @@index([createdBy])
+  @@map("workflows")
+}
+
+model WorkflowExecution {
+  id              String              @id @default(cuid())
+  workflowId      String
+  executorId      String?
+  status          ExecutionStatus     @default(RUNNING)
+  triggerData     Json?
+  input           Json?
+  output          Json?
+  error           String?
+  startedAt       DateTime            @default(now())
+  completedAt     DateTime?
+  executionTime   Int?                // in seconds
+  
+  // Relations
+  workflow        Workflow            @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  executor        User?               @relation(fields: [executorId], references: [id], onDelete: SetNull)
+  
+  @@index([workflowId])
+  @@index([status])
+  @@index([startedAt])
+  @@map("workflow_executions")
+}
+
+// Enhanced Audit and Compliance
+model AuditLog {
+  id              String              @id @default(cuid())
+  action          String
+  resourceType    String
+  resourceId      String
+  userId          String?
+  sessionId       String?
+  changes         Json?               // Before/after values
+  metadata        Json?
+  ipAddress       String?
+  userAgent       String?
+  timestamp       DateTime            @default(now())
+  
+  // Relations
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([action])
+  @@index([resourceType])
+  @@index([userId])
+  @@index([timestamp])
+  @@map("audit_logs")
+}
+
+model ComplianceCheck {
+  id              String              @id @default(cuid())
+  framework       String              // 'SOC2', 'GDPR', 'HIPAA', 'ISO27001', etc.
+  control         String
+  status          ComplianceStatus    @default(PENDING)
+  evidence        Json?
+  findings        Json?
+  lastChecked     DateTime?
+  nextCheck       DateTime?
+  assignedTo      String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([framework])
+  @@index([status])
+  @@index([lastChecked])
+  @@index([nextCheck])
+  @@map("compliance_checks")
+}
+
+model ComplianceReport {
+  id              String              @id @default(cuid())
+  framework       String
+  period          String              // 'monthly', 'quarterly', 'annual'
+  score           Float               // Compliance score 0-100
+  findings        Json?
+  recommendations Json?
+  generatedBy     String
+  generatedAt     DateTime            @default(now())
+  
+  @@index([framework])
+  @@index([period])
+  @@index([generatedAt])
+  @@map("compliance_reports")
+}
+
+// Enhanced Search and Indexing
+model SearchIndex {
+  id              String              @id @default(cuid())
+  entityType      String              // 'user', 'project', 'document', 'analysis', etc.
+  entityId        String
+  content         String
+  metadata        Json?
+  tags            Json?               // Search tags
+  relevance       Float               @default(1.0)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@unique([entityType, entityId])
+  @@index([entityType])
+  @@index([createdAt])
+  @@map("search_indices")
+}
+
+model SearchQuery {
+  id              String              @id @default(cuid())
+  query           String
+  userId          String?
+  filters         Json?
+  resultsCount    Int                 @default(0)
+  executionTime   Int                 // in milliseconds
+  timestamp       DateTime            @default(now())
+  
+  // Relations
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([timestamp])
+  @@map("search_queries")
+}
+
+// Enhanced Cache and Performance
+model CacheEntry {
+  id              String              @id @default(cuid())
+  key             String              @unique
+  value           String
+  type            CacheType           @default(GENERAL)
+  ttl             Int                 // Time to live in seconds
+  hits            Int                 @default(0)
+  createdAt       DateTime            @default(now())
+  expiresAt       DateTime
+  
+  @@index([type])
+  @@index([expiresAt])
+  @@map("cache_entries")
+}
+
+model PerformanceMetric {
+  id              String              @id @default(cuid())
+  metricName      String
+  metricValue     Float
+  unit            String?
+  tags            Json?
+  timestamp       DateTime            @default(now())
+  
+  @@index([metricName])
+  @@index([timestamp])
+  @@map("performance_metrics")
+}
+
+// Zero-Trust Security Enums
+enum AccessPermission {
+  READ
+  WRITE
+  EXECUTE
+  DELETE
+  ADMIN
+  OWNER
+}
+
+enum AuditAction {
+  GRANTED
+  DENIED
+  REVOKED
+  ACCESSED
+  MODIFIED
+  DELETED
+}
+
+enum PolicyType {
+  ACCESS_CONTROL
+  DATA_PROTECTION
+  SECURITY_POLICY
+  COMPLIANCE
+  AUDIT
+}
+
+enum IncidentType {
+  SECURITY_BREACH
+  UNAUTHORIZED_ACCESS
+  DATA_LEAK
+  MALWARE_DETECTION
+  PHISHING_ATTEMPT
+  DDOS_ATTACK
+  BRUTE_FORCE
+  POLICY_VIOLATION
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  ESCALATED
+}
+
+enum MetricType {
+  AUTHENTICATION_SUCCESS
+  AUTHENTICATION_FAILURE
+  AUTHORIZATION_SUCCESS
+  AUTHORIZATION_FAILURE
+  SECURITY_INCIDENTS
+  THREAT_DETECTIONS
+  VULNERABILITY_SCANS
+  COMPLIANCE_SCORE
+}
+
+// Predictive Analytics Enums
+enum ModelType {
+  REGRESSION
+  CLASSIFICATION
+  CLUSTERING
+  NEURAL_NETWORK
+  ENSEMBLE
+  TIME_SERIES
+  NLP
+  COMPUTER_VISION
+}
+
+enum ModelStatus {
+  TRAINING
+  TRAINED
+  DEPLOYING
+  DEPLOYED
+  FAILED
+  RETIRED
+}
+
+enum PredictionType {
+  CLASSIFICATION
+  REGRESSION
+  CLUSTERING
+  ANOMALY_DETECTION
+  RECOMMENDATION
+  FORECASTING
+}
+
+// Health and Performance Enums
+enum HealthStatus {
+  HEALTHY
+  WARNING
+  CRITICAL
+  UNKNOWN
+}
+
+// Analytics and Reporting Enums
+enum ReportType {
+  PERFORMANCE
+  SECURITY
+  USAGE
+  COMPLIANCE
+  CUSTOM
+  SCHEDULED
+}
+
+enum GenerationStatus {
   PENDING
-  PROCESSING
+  GENERATING
   COMPLETED
   FAILED
-  IN_PROGRESS
-  ON_HOLD
+  CANCELLED
+}
+
+// Security Configuration Enums
+enum SecurityEventType {
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  LOGOUT
+  PASSWORD_CHANGE
+  ACCOUNT_LOCKED
+  PERMISSION_CHANGED
+  DATA_ACCESS
+  DATA_MODIFICATION
+  SECURITY_POLICY_VIOLATION
+}
+
+enum EventSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Communication Enums
+enum NotificationType {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+  WEBHOOK
+  SLACK
+  TEAMS
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  ARCHIVED
+  DELETED
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Document Management Enums
+enum DocumentType {
+  PDF
+  DOC
+  DOCX
+  TXT
+  MD
+  HTML
+  XML
+  JSON
+  CSV
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+enum AccessLevel {
+  PUBLIC
+  INTERNAL
+  RESTRICTED
+  CONFIDENTIAL
+  SECRET
+  TOP_SECRET
+}
+
+enum DocumentPermission {
+  VIEW
+  EDIT
+  DOWNLOAD
+  SHARE
+  DELETE
+  ADMIN
+}
+
+// Machine Learning Enums
+enum MLModelType {
+  SUPERVISED
+  UNSUPERVISED
+  REINFORCEMENT
+  DEEP_LEARNING
+  TRANSFORMER
+  CNN
+  RNN
+  GAN
+}
+
+enum MLModelStatus {
+  TRAINING
+  TRAINED
+  VALIDATING
+  DEPLOYED
+  FAILED
+  DEPRECATED
+}
+
+enum DeploymentStatus {
+  DEPLOYING
+  DEPLOYED
+  FAILED
+  ROLLING_BACK
+  DEPRECATED
+}
+
+// Dashboard and Business Intelligence Enums
+enum DashboardType {
+  CUSTOM
+  SECURITY
+  PERFORMANCE
+  ANALYTICS
+  BUSINESS
+  OPERATIONAL
+}
+
+enum WidgetType {
+  CHART
+  TABLE
+  METRIC
+  MAP
+  TEXT
+  IMAGE
+  CUSTOM
+}
+
+enum SharePermission {
+  VIEW
+  EDIT
+  ADMIN
+}
+
+// Workflow and Automation Enums
+enum WorkflowType {
+  MANUAL
+  AUTOMATED
+  SCHEDULED
+  EVENT_TRIGGERED
+  API_TRIGGERED
+}
+
+enum WorkflowStatus {
+  DRAFT
+  ACTIVE
+  PAUSED
+  ARCHIVED
+  DEPRECATED
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+  TIMEOUT
+}
+
+// Cache and Performance Enums
+enum CacheType {
+  GENERAL
+  USER_DATA
+  API_RESPONSE
+  DATABASE_QUERY
+  ML_PREDICTION
+  SECURITY_POLICY
 }
