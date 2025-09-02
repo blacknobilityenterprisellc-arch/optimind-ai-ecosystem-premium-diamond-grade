@@ -708,7 +708,7 @@ tail -f *.log
 
 #### **Enterprise Support**
 For enterprise support, please contact:
-- **Email**: support@blacknobilityenterprise.com
+- **Email**: support@nobilitydigitalempire.com
 - **GitHub**: [Create an issue](https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade/issues)
 
 ---
@@ -731,13 +731,17 @@ For enterprise support, please contact:
 **AI Collaborative Development:**
 - **Strategic Advisory Board**: Gemini, DeepSeek, ChatGPT, Manus, Grok
 - **Primary Development Engine**: Z.AI GLM
-- **Organizational Support**: Black Nobility Enterprise LLC Architecture
+
+**Corporate Structure:**
+- **Produced by:** N.D.E. (Nobility Digital Empire) - Digital Products & Digital Assets Company
+- **Parent Company:** B.N.M.E. (Black Nobility Management & Enterprise LLC)
 
 **Project Completion Date:** September 2, 2025
 
-**Development Methodology:** Revolutionary multi-AI collaborative approach pioneered by Jocely Honore, combining human vision with artificial intelligence capabilities to create enterprise-grade solutions.
+**Development Methodology:** Revolutionary multi-AI collaborative approach pioneered by Jocely Honore, combining human vision with artificial intelligence capabilities to create enterprise-grade digital products and assets.
 
 ---
 
-Built with ❤️ for developers by [Black Nobility Enterprise LLC Architecture](https://github.com/blacknobilityenterprisellc-arch) 🏢  
-Conceived and led by **Jocely Honore** 👑 with collaborative AI intelligence
+Built with ❤️ for developers by [N.D.E. Nobility Digital Empire](https://github.com/blacknobilityenterprisellc-arch) 🏢  
+Conceived and led by **Jocely Honore** 👑 with collaborative AI intelligence  
+**A subsidiary of B.N.M.E. Black Nobility Management & Enterprise LLC**
