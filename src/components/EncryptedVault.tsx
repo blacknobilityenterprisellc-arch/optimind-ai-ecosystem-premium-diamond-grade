@@ -58,7 +58,6 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "2.4 MB",
-          addedDate: "2024-01-15"
           addedDate: "2025-01-15"
         },
         {
@@ -67,7 +66,6 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "3.1 MB",
-          addedDate: "2024-01-10"
           addedDate: "2025-01-10"
         },
         {
@@ -76,7 +74,6 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "1.8 MB",
-          addedDate: "2024-01-05"
           addedDate: "2025-01-05"
         }
       ]);
