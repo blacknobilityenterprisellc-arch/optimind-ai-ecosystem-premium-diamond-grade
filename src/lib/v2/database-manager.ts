@@ -8,8 +8,8 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
-import fs from 'fs/promises';
-import path from 'path';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 import { PrismaClient } from '@prisma/client';
 
@@ -104,9 +104,7 @@ class DatabaseManagerV2 {
     };
 
     this.prisma = new PrismaClient({
-      log: this.config.logLevel === 'debug' ? ['query', 'info', 'warn', 'error'] : ['error'],
-      connectionLimit: this.config.maxConnections,
-      connectionTimeoutMillis: this.config.connectionTimeout
+      log: this.config.logLevel === 'debug' ? ['query', 'info', 'warn', 'error'] : ['error']
     });
 
     this.initialize();
@@ -186,14 +184,14 @@ class DatabaseManagerV2 {
           
           this.backupHistory.push({
             id: this.generateId(),
-            timestamp: stats.mtime,
+            timestamp: stats.mtime.toISOString(),
             size: stats.size,
             path: filePath,
             status: 'completed',
             checksum: await this.calculateChecksum(filePath),
             metadata: {
               filename: file,
-              created: stats.birthtime
+              created: stats.birthtime.toISOString()
             }
           });
         }
@@ -327,7 +325,7 @@ class DatabaseManagerV2 {
 
       const backupInfo: BackupInfo = {
         id: backupId,
-        timestamp,
+        timestamp: timestamp.toISOString(),
         size: stats.size,
         path: filePath,
         status: 'completed',
@@ -352,7 +350,7 @@ class DatabaseManagerV2 {
       
       const backupInfo: BackupInfo = {
         id: backupId,
-        timestamp,
+        timestamp: timestamp.toISOString(),
         size: 0,
         path: filePath,
         status: 'failed',
@@ -619,6 +617,72 @@ class DatabaseManagerV2 {
   /**
    * Cleanup resources
    */
+  /**
+   * Perform health check
+   */
+  async healthCheck(): Promise<DatabaseHealth> {
+    try {
+      const startTime = Date.now();
+      
+      // Test database connection
+      await this.prisma.$queryRaw`SELECT 1`;
+      const responseTime = Date.now() - startTime;
+      
+      // Get current metrics
+      const metrics = this.getDatabaseMetrics();
+      
+      // Determine health status
+      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      const issues: string[] = [];
+      
+      if (responseTime > 1000) {
+        status = 'degraded';
+        issues.push('High response time');
+      }
+      
+      if (metrics.errorRate > 0.05) {
+        status = 'degraded';
+        issues.push('High error rate');
+      }
+      
+      if (metrics.activeConnections > metrics.totalConnections * 0.8) {
+        status = 'degraded';
+        issues.push('High connection usage');
+      }
+      
+      if (responseTime > 5000 || metrics.errorRate > 0.1) {
+        status = 'unhealthy';
+        issues.push('Critical performance issues');
+      }
+      
+      return {
+        status,
+        connections: metrics.activeConnections,
+        responseTime,
+        errorRate: metrics.errorRate,
+        lastCheck: new Date(),
+        issues
+      };
+    } catch (error) {
+      console.error('Database health check failed:', error);
+      return {
+        status: 'unhealthy',
+        connections: 0,
+        responseTime: 0,
+        errorRate: 1,
+        lastCheck: new Date(),
+        issues: [error.message]
+      };
+    }
+  }
+
+  /**
+   * Get database metrics
+   */
+  getDatabaseMetrics(): DatabaseMetrics {
+    return { ...this.metrics };
+  }
+
   async cleanup(): Promise<void> {
     try {
       // Stop health checks
@@ -643,9 +707,6 @@ class DatabaseManagerV2 {
 
 // Export singleton instance
 export const databaseManagerV2 = new DatabaseManagerV2();
-
-// Export types and utilities
-export type { DatabaseConfig, DatabaseMetrics, QueryResult, BackupInfo, DatabaseHealth };
 
 // Export factory function
 export const createDatabaseManager = (config?: Partial<DatabaseConfig>) => {
