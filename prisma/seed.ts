@@ -451,98 +451,148 @@ async function main() {
   });
 
   // Create enhanced tenant settings with security configuration
-  await prisma.tenantSetting.createMany({
-    data: [
-      {
+  await prisma.tenantSetting.upsert({
+    where: {
+      tenantId_key: {
         tenantId: defaultTenant.id,
-        key: 'security_configuration',
-        value: {
-          enableMFA: true,
-          sessionTimeout: 3600,
-          passwordPolicy: {
-            minLength: 12,
-            requireSpecialChars: true,
-            requireNumbers: true,
-            requireUppercase: true,
-            expirationDays: 90,
-          },
-          encryptionStandards: ['AES-256', 'quantum-resistant'],
-          auditLogLevel: 'detailed',
+        key: 'security_configuration'
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      key: 'security_configuration',
+      value: {
+        enableMFA: true,
+        sessionTimeout: 3600,
+        passwordPolicy: {
+          minLength: 12,
+          requireSpecialChars: true,
+          requireNumbers: true,
+          requireUppercase: true,
+          expirationDays: 90,
         },
-        category: 'SECURITY',
-        isSystem: true,
+        encryptionStandards: ['AES-256', 'quantum-resistant'],
+        auditLogLevel: 'detailed',
       },
-      {
+      category: 'SECURITY',
+      isSystem: true,
+    },
+  });
+
+  await prisma.tenantSetting.upsert({
+    where: {
+      tenantId_key: {
         tenantId: defaultTenant.id,
-        key: 'ai_model_configuration',
-        value: {
-          defaultModel: 'GLM-4.5',
-          availableModels: ['GLM-4.5', 'GPT-4', 'Claude-3', 'Llama-3'],
-          maxTokens: 8192,
-          temperature: 0.7,
-          securityEnabled: true,
-        },
-        category: 'FEATURES',
-        isSystem: false,
+        key: 'ai_model_configuration'
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      key: 'ai_model_configuration',
+      value: {
+        defaultModel: 'GLM-4.5',
+        availableModels: ['GLM-4.5', 'GPT-4', 'Claude-3', 'Llama-3'],
+        maxTokens: 8192,
+        temperature: 0.7,
+        securityEnabled: true,
       },
-      {
+      category: 'FEATURES',
+      isSystem: false,
+    },
+  });
+
+  await prisma.tenantSetting.upsert({
+    where: {
+      tenantId_key: {
         tenantId: defaultTenant.id,
-        key: 'compliance_settings',
-        value: {
-          enabledFrameworks: ['SOC2', 'GDPR', 'ISO27001', 'HIPAA'],
-          auditFrequency: 'weekly',
-          dataRetention: '7-years',
-          encryptionRequired: true,
-        },
-        category: 'GENERAL',
-        isSystem: true,
+        key: 'compliance_settings'
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      key: 'compliance_settings',
+      value: {
+        enabledFrameworks: ['SOC2', 'GDPR', 'ISO27001', 'HIPAA'],
+        auditFrequency: 'weekly',
+        dataRetention: '7-years',
+        encryptionRequired: true,
       },
-    ],
+      category: 'GENERAL',
+      isSystem: true,
+    },
   });
 
   // Create tenant users with enhanced roles
-  await prisma.tenantUser.createMany({
-    data: [
-      {
+  await prisma.tenantUser.upsert({
+    where: {
+      tenantId_userId: {
         tenantId: defaultTenant.id,
-        userId: adminUser.id,
-        role: 'OWNER',
-        status: 'ACTIVE',
-        permissions: {
-          canManageUsers: true,
-          canManageBilling: true,
-          canManageSecurity: true,
-          canAccessAllData: true,
-          canConfigureAI: true,
-        },
+        userId: adminUser.id
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      userId: adminUser.id,
+      role: 'OWNER',
+      status: 'ACTIVE',
+      permissions: {
+        canManageUsers: true,
+        canManageBilling: true,
+        canManageSecurity: true,
+        canAccessAllData: true,
+        canConfigureAI: true,
       },
-      {
+    },
+  });
+
+  await prisma.tenantUser.upsert({
+    where: {
+      tenantId_userId: {
         tenantId: defaultTenant.id,
-        userId: enterpriseUser.id,
-        role: 'ADMIN',
-        status: 'ACTIVE',
-        permissions: {
-          canManageUsers: true,
-          canManageBilling: false,
-          canManageSecurity: true,
-          canAccessAllData: false,
-          canConfigureAI: true,
-        },
+        userId: enterpriseUser.id
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      userId: enterpriseUser.id,
+      role: 'ADMIN',
+      status: 'ACTIVE',
+      permissions: {
+        canManageUsers: true,
+        canManageBilling: false,
+        canManageSecurity: true,
+        canAccessAllData: false,
+        canConfigureAI: true,
       },
-      {
+    },
+  });
+
+  await prisma.tenantUser.upsert({
+    where: {
+      tenantId_userId: {
         tenantId: defaultTenant.id,
-        userId: testUser.id,
-        role: 'MEMBER',
-        status: 'ACTIVE',
-        permissions: {
-          canManageUsers: false,
-          canManageBilling: false,
-          canManageSecurity: false,
-          canAccessAllData: false,
-          canConfigureAI: false,
-        },
+        userId: testUser.id
+      }
+    },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      userId: testUser.id,
+      role: 'MEMBER',
+      status: 'ACTIVE',
+      permissions: {
+        canManageUsers: false,
+        canManageBilling: false,
+        canManageSecurity: false,
+        canAccessAllData: false,
+        canConfigureAI: false,
       },
-    ],
+    },
   });
 
   // Create audit logs for security updates
