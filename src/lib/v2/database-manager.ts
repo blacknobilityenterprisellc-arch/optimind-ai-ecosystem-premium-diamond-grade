@@ -429,7 +429,7 @@ class DatabaseManagerV2 {
    * Calculate file checksum
    */
   private async calculateChecksum(filePath: string): Promise<string> {
-    const crypto = require('crypto');
+    const crypto = await import('crypto');
     const hash = crypto.createHash('sha256');
     const data = await fs.readFile(filePath);
     hash.update(data);
@@ -610,8 +610,9 @@ class DatabaseManagerV2 {
   /**
    * Generate unique ID
    */
-  private generateId(): string {
-    return require('crypto').randomBytes(16).toString('hex');
+  private async generateId(): Promise<string> {
+    const crypto = await import('crypto');
+    return crypto.randomBytes(16).toString('hex');
   }
 
   /**

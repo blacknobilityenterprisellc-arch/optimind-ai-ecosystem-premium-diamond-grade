@@ -599,8 +599,9 @@ class PredictiveAnalyticsV2 {
   /**
    * Generate unique ID
    */
-  private generateId(): string {
-    return require('crypto').randomBytes(16).toString('hex');
+  private async generateId(): Promise<string> {
+    const crypto = await import('crypto');
+    return crypto.randomBytes(16).toString('hex');
   }
 
   /**
