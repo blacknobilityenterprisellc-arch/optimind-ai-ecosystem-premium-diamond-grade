@@ -6,8 +6,9 @@
  * enterprise-grade model management, training, and inference capabilities.
  */
 
-import { predictiveAnalyticsV2, type PredictiveModelConfig, type TrainingData, type PredictionResult, type PredictiveInsight } from './predictive-analytics';
 import { prisma } from '@/lib/db';
+
+import { predictiveAnalyticsV2, type PredictiveModelConfig, type TrainingData, type PredictionResult, type PredictiveInsight } from './predictive-analytics';
 
 export interface PredictiveAnalyticsRequest {
   operation: 'create_model' | 'train_model' | 'predict' | 'generate_insights' | 'get_metrics' | 'health_check';
@@ -66,7 +67,7 @@ class PredictiveAnalyticsServiceV2 {
       
       // Execute operation
       let result: any;
-      let operationSuccess = true;
+      const operationSuccess = true;
       let modelType: string | undefined;
       let confidence: number | undefined;
       

@@ -736,9 +736,9 @@ class PremiumContextEngineeringService {
   }
 
   private initializeTemplates(): void {
-    PREMIUM_CONTEXT_TEMPLATES.forEach(template => {
+    for (const template of PREMIUM_CONTEXT_TEMPLATES) {
       this.templates.set(template.id, template);
-    });
+    }
   }
 
   // Template Management
@@ -811,7 +811,7 @@ class PremiumContextEngineeringService {
       
       // Create context prompt object
       const contextPrompt: ContextPrompt = {
-        id: `prompt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `prompt-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
         templateId: request.templateId,
         variables: request.variables,
         sections,
@@ -1027,7 +1027,7 @@ class PremiumContextEngineeringService {
   } {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
-    let score = 1.0;
+    let score = 1;
 
     // Validate required sections
     for (const sectionId of template.structure.requiredSections) {
@@ -1134,7 +1134,7 @@ class PremiumContextEngineeringService {
         section: 'general',
         field: 'validation'
       };
-    } catch (error) {
+    } catch {
       return {
         passed: false,
         section: 'validation',
@@ -1181,14 +1181,14 @@ class PremiumContextEngineeringService {
         if (lengthMatch) {
           const variable = lengthMatch[1];
           const operator = lengthMatch[2];
-          const length = parseInt(lengthMatch[3]);
+          const length = Number.parseInt(lengthMatch[3]);
           // This is simplified - in production, properly get the variable length
           return true; // Placeholder
         }
       }
 
       return true; // Default to true for complex conditions
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -1201,11 +1201,11 @@ class PremiumContextEngineeringService {
     
     // Parse numbers
     if (/^\d+$/.test(value)) {
-      return parseInt(value, 10);
+      return Number.parseInt(value, 10);
     }
     
     if (/^\d+\.\d+$/.test(value)) {
-      return parseFloat(value);
+      return Number.parseFloat(value);
     }
     
     // Parse booleans
@@ -1266,7 +1266,7 @@ class PremiumContextEngineeringService {
   }
 
   private calculateComplianceScore(template: ContextPromptTemplate, validation: any): number {
-    let score = 1.0;
+    let score = 1;
 
     // Check compliance requirements
     if (template.compliance.hipaa) {

@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
 
     // Mock scan response
     const scanResult = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       target,
       type,
       status: 'completed',

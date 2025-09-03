@@ -11,6 +11,7 @@
  */
 
 import ZAI from 'z-ai-web-dev-sdk';
+
 import { ModelResult } from '../types/index';
 
 // Z.AI Client singleton
@@ -164,7 +165,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
         }
       ],
       model: "glm-4.5v",
-      temperature: 0.0,  // Deterministic output
+      temperature: 0,  // Deterministic output
       max_tokens: 2048,
       thinking: {
         type: "enabled"  // Enable multi-step reasoning
@@ -295,7 +296,7 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
         }
       ],
       model: "glm-4.5",
-      temperature: 0.0,  // Deterministic output
+      temperature: 0,  // Deterministic output
       max_tokens: 1024,
       thinking: {
         type: "enabled"  // Enable multi-step reasoning

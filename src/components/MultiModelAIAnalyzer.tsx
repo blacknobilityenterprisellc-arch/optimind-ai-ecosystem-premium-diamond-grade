@@ -1,24 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { 
-  useMultiModelAI, 
-  AIModel, 
-  ModelAnalysisResult, 
-  EnsembleAnalysisResult,
-  AnalysisError,
-  multiModelAIUtils 
-} from "@/lib/multi-model-ai";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Brain, 
   Shield, 
@@ -47,6 +29,25 @@ import {
   Gem,
   RefreshCw
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { 
+  useMultiModelAI, 
+  AIModel, 
+  ModelAnalysisResult, 
+  EnsembleAnalysisResult,
+  AnalysisError,
+  multiModelAIUtils 
+} from "@/lib/multi-model-ai";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 
 interface MultiModelAIAnalyzerProps {
   photoId: string;

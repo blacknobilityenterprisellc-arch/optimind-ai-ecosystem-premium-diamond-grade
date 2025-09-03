@@ -263,9 +263,9 @@ export function usePremiumAIServices() {
       const batchResults = await services.batchProcess(serviceId, images, options);
       
       const newResults = new Map(results);
-      batchResults.forEach(({ imageId, result }) => {
+      for (const { imageId, result } of batchResults) {
         newResults.set(imageId, result);
-      });
+      }
       
       setResults(newResults);
       

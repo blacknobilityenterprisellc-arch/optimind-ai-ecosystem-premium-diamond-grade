@@ -877,9 +877,9 @@ class EnterpriseComplianceService {
   }
 
   private initializeFrameworks(): void {
-    ENTERPRISE_COMPLIANCE_FRAMEWORKS.forEach(framework => {
+    for (const framework of ENTERPRISE_COMPLIANCE_FRAMEWORKS) {
       this.frameworks.set(framework.id, framework);
-    });
+    }
   }
 
   // Framework Management
@@ -899,7 +899,7 @@ class EnterpriseComplianceService {
   // Compliance Assessment
   async assessCompliance(request: ComplianceAssessmentRequest): Promise<ComplianceAssessmentResult> {
     const startTime = Date.now();
-    const assessmentId = `assessment-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const assessmentId = `assessment-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       const framework = this.frameworks.get(request.frameworkId);
@@ -1113,7 +1113,7 @@ class EnterpriseComplianceService {
     // Simulate technical validation
     const findings: ComplianceFinding[] = [];
     const recommendations: ComplianceRecommendation[] = [];
-    let score = 0.7; // Default technical score
+    const score = 0.7; // Default technical score
 
     // Check for common technical compliance patterns
     if (requirement.description.toLowerCase().includes('encryption')) {
@@ -1158,7 +1158,7 @@ class EnterpriseComplianceService {
     // Simulate administrative validation
     const findings: ComplianceFinding[] = [];
     const recommendations: ComplianceRecommendation[] = [];
-    let score = 0.6; // Default administrative score
+    const score = 0.6; // Default administrative score
 
     // Check for common administrative compliance patterns
     if (requirement.description.toLowerCase().includes('training')) {
@@ -1203,7 +1203,7 @@ class EnterpriseComplianceService {
     // Simulate physical validation
     const findings: ComplianceFinding[] = [];
     const recommendations: ComplianceRecommendation[] = [];
-    let score = 0.8; // Default physical score
+    const score = 0.8; // Default physical score
 
     // Check for common physical compliance patterns
     if (requirement.description.toLowerCase().includes('security')) {
@@ -1229,7 +1229,7 @@ class EnterpriseComplianceService {
 
   // Incident Management
   async reportComplianceIncident(incident: ComplianceIncidentRequest): Promise<ComplianceIncidentResponse> {
-    const incidentId = `incident-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const incidentId = `incident-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       const framework = this.frameworks.get(incident.frameworkId);
@@ -1294,7 +1294,7 @@ class EnterpriseComplianceService {
 
   // Monitoring and Alerting
   async monitorComplianceStatus(request: ComplianceMonitoringRequest): Promise<ComplianceMonitoringResponse> {
-    const monitoringId = `monitor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const monitoringId = `monitor-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       const framework = this.frameworks.get(request.frameworkId);
@@ -1429,7 +1429,7 @@ class EnterpriseComplianceService {
 
   // Reporting and Analytics
   async generateComplianceReport(request: ComplianceReportRequest): Promise<ComplianceReportResponse> {
-    const reportId = `report-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const reportId = `report-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       const framework = this.frameworks.get(request.frameworkId);
@@ -1527,7 +1527,7 @@ class EnterpriseComplianceService {
   // Audit Trail
   private logAuditEntry(action: string, description: string): void {
     const entry: ComplianceAuditEntry = {
-      id: `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `audit-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       timestamp: new Date(),
       action,
       description,

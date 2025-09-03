@@ -222,7 +222,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     if (deviceInfo.isLowEndDevice && typeof gc !== 'undefined') {
       try {
         (gc as any)();
-      } catch (e) {
+      } catch {
         // Ignore errors if gc is not available
       }
     }
@@ -294,7 +294,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         <div className="fixed bottom-4 left-4 z-50 bg-black/80 text-white p-3 rounded-lg text-xs space-y-1 max-w-xs">
           <div className="flex items-center gap-2">
             {deviceInfo.isMobile ? <Smartphone className="w-3 h-3" /> : <Monitor className="w-3 h-3" />}
-            <span>{deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}</span>
+            <span>{deviceInfo.isMobile ? 'Mobile' : (deviceInfo.isTablet ? 'Tablet' : 'Desktop')}</span>
             <span>({deviceInfo.screenWidth}x{deviceInfo.screenHeight})</span>
           </div>
           <div className="flex items-center gap-2">
@@ -404,7 +404,7 @@ export class PerformanceMonitor {
   getMetrics(): Record<string, { average: number; min: number; max: number; count: number }> {
     const result: Record<string, any> = {};
     
-    this.metrics.forEach((values, name) => {
+    for (const [name, values] of this.metrics.entries()) {
       if (values.length > 0) {
         result[name] = {
           average: values.reduce((sum, val) => sum + val, 0) / values.length,
@@ -413,7 +413,7 @@ export class PerformanceMonitor {
           count: values.length,
         };
       }
-    });
+    }
     
     return result;
   }

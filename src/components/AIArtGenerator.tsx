@@ -1,22 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { 
-  useSecureSubscription,
-  useAIArtGenerator 
-} from "@/lib/ai-art-generator";
 import { 
   Palette, 
   Sparkles, 
@@ -53,6 +37,23 @@ import {
   Star,
   Gem
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { 
+  useSecureSubscription,
+  useAIArtGenerator 
+} from "@/lib/ai-art-generator";
 
 interface ArtGenerationConfig {
   prompt: string;
@@ -566,7 +567,7 @@ export function AIArtGenerator() {
                     <Label htmlFor="batch-mode">Batch Mode</Label>
                   </div>
                   {batchMode && (
-                    <Select value={batchCount.toString()} onValueChange={(value) => setBatchCount(parseInt(value))}>
+                    <Select value={batchCount.toString()} onValueChange={(value) => setBatchCount(Number.parseInt(value))}>
                       <SelectTrigger className="w-20">
                         <SelectValue />
                       </SelectTrigger>

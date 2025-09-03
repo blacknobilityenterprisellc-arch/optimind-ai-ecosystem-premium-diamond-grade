@@ -3,7 +3,9 @@
  * Real GLM-4.5V + GLM-4.5 orchestration + consensus calculator with Z.AI integration
  */
 import { v4 as uuidv4 } from 'uuid';
+
 import { ModelResult, AnalysisResult, ConsensusResult, ImageUploadRequest } from '../types/index';
+
 import { ZaiClient } from './zaiClient';
 import { zaiVisionAnalyze } from './zaiVision';
 import { zaiTextReasoning } from './zaiText';
@@ -51,8 +53,7 @@ export function computeConsensus(modelResults: ModelResult[]): ConsensusResult {
     let totalWeighted = 0;
     let totalWeight = 0;
     
-    for (let i = 0; i < scores.length; i++) {
-      const score = scores[i];
+    for (const [i, score] of scores.entries()) {
       const modelName = modelResults[i]?.modelName || 'unknown';
       let weight = DEFAULT_MODEL_WEIGHTS[modelName] || 0.5;
       
@@ -95,7 +96,7 @@ export function computeConsensus(modelResults: ModelResult[]): ConsensusResult {
   
   const consensus: ConsensusResult = {
     topLabel: top.label,
-    score: Math.min(1.0, top.score + airConfidenceBoost), // Apply confidence boost
+    score: Math.min(1, top.score + airConfidenceBoost), // Apply confidence boost
     spread: Math.round(spread * 1000) / 1000,
     allLabels: aggregated,
     provenance: { 
@@ -133,7 +134,7 @@ function determineRecommendedActionWithAIR(
   airConfidenceBoost: number,
   hasAIRAnalysis: boolean
 ): ConsensusResult['recommendedAction'] {
-  const adjustedScore = Math.min(1.0, score + airConfidenceBoost);
+  const adjustedScore = Math.min(1, score + airConfidenceBoost);
   
   // More conservative thresholds when AIR analysis is available
   if (hasAIRAnalysis) {
@@ -231,7 +232,7 @@ export async function analyzeImage(imageBuffer: Buffer, upload: ImageUploadReque
   // 1) Vision model analysis with retry logic
   try {
     const vis = await zaiVisionAnalyze(zaiClient, imageBuffer, { 
-      temperature: 0.0,
+      temperature: 0,
       includeSaliencyBase64: false,
       allowLenientParse: true
     });
@@ -256,7 +257,7 @@ export async function analyzeImage(imageBuffer: Buffer, upload: ImageUploadReque
       uploaderId: upload.uploaderId,
       metadata: upload.metadata || {}
     }, {
-      temperature: 0.0,
+      temperature: 0,
       enableMultiStepReasoning: true,
       includeRelationshipAnalysis: true,
       analysisDepth: 'detailed',
@@ -289,7 +290,7 @@ export async function analyzeImage(imageBuffer: Buffer, upload: ImageUploadReque
     });
     
     const txt = await zaiTextReasoning(zaiClient, contextDescription, { 
-      temperature: 0.0,
+      temperature: 0,
       allowLenientParse: true 
     });
     modelResults.push(txt);
@@ -397,17 +398,17 @@ export function getAnalysisStats(results: AnalysisResult[]) {
   stats.averageConfidence = totalConfidence / results.length;
   
   // Action distribution
-  results.forEach(r => {
+  for (const r of results) {
     const action = r.consensus.recommendedAction;
     stats.actionDistribution[action] = (stats.actionDistribution[action] || 0) + 1;
-  });
+  }
   
   // Model usage
-  results.forEach(r => {
-    r.modelResults.forEach(model => {
+  for (const r of results) {
+    for (const model of r.modelResults) {
       stats.modelUsage[model.modelName] = (stats.modelUsage[model.modelName] || 0) + 1;
-    });
-  });
+    }
+  }
   
   // Average latency
   const totalLatency = results.reduce((sum, r) => 

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Loader2, Wand2, Copy, Download } from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +10,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Wand2, Copy, Download } from 'lucide-react';
 
 interface ContentGeneratorProps {
   className?: string;

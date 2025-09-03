@@ -1,12 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -22,6 +16,13 @@ import {
   Download,
   RefreshCw
 } from 'lucide-react';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface AnalyticsData {
   totalProcessed: number;
@@ -112,7 +113,7 @@ export function ModerationAnalyticsDashboard() {
         ],
         contentCategories: [
           { category: 'Safe Content', count: 12890, percentage: 83.6 },
-          { category: 'Adult Content', count: 1240, percentage: 8.0 },
+          { category: 'Adult Content', count: 1240, percentage: 8 },
           { category: 'Violence', count: 320, percentage: 2.1 },
           { category: 'Hate Speech', count: 180, percentage: 1.2 },
           { category: 'Other', count: 100, percentage: 5.1 }

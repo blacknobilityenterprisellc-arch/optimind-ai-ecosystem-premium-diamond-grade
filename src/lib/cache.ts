@@ -42,7 +42,7 @@ class CacheManager {
         .sort((a, b) => a[1].timestamp - b[1].timestamp);
       
       const toRemove = entries.slice(0, this.cache.size - this.maxSize);
-      toRemove.forEach(([key]) => this.cache.delete(key));
+      for (const [key] of toRemove) this.cache.delete(key);
     }
   }
 
@@ -230,10 +230,10 @@ export function registerServiceWorker() {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/sw.js')
         .then(registration => {
-          console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          console.log('ServiceWorker registration successful with scope:', registration.scope);
         })
         .catch(error => {
-          console.log('ServiceWorker registration failed: ', error);
+          console.log('ServiceWorker registration failed:', error);
         });
     });
   }

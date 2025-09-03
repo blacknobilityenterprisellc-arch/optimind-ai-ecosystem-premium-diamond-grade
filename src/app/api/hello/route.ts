@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     const response = {
       success: true,
       data: {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).slice(2, 11),
         name,
         message,
         timestamp: new Date().toISOString(),

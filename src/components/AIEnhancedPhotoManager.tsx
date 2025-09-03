@@ -1,18 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { OptimizedImage } from "./OptimizedImage";
-import { AIEnhancedAnalyzer } from "./AIEnhancedAnalyzer";
-import { useAIEnhancement, AIAnalysisResult } from "@/lib/ai-enhancement";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Search, 
   SortAsc, 
@@ -38,7 +26,21 @@ import {
   Calendar,
   HardDrive
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAIEnhancement, AIAnalysisResult } from "@/lib/ai-enhancement";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { useToast } from "@/hooks/use-toast";
+
+import { AIEnhancedAnalyzer } from "./AIEnhancedAnalyzer";
+import { OptimizedImage } from "./OptimizedImage";
 
 interface EnhancedPhotoItem {
   id: string;
@@ -83,7 +85,7 @@ export function AIEnhancedPhotoManager({ photos, onPhotosUpdate, isPremium }: AI
 
   // Advanced filtering and sorting
   const filteredAndSortedPhotos = useMemo(() => {
-    let filtered = photos.filter(photo => {
+    const filtered = photos.filter(photo => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
@@ -296,12 +298,12 @@ export function AIEnhancedPhotoManager({ photos, onPhotosUpdate, isPremium }: AI
         }
         
         // Simulate download
-        selectedPhotos.forEach(photo => {
+        for (const photo of selectedPhotos) {
           const link = document.createElement('a');
           link.href = photo.url;
           link.download = photo.name;
           link.click();
-        });
+        }
         
         toast({
           title: "Download Started",
@@ -385,7 +387,7 @@ export function AIEnhancedPhotoManager({ photos, onPhotosUpdate, isPremium }: AI
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   const formatDate = (date?: Date) => {

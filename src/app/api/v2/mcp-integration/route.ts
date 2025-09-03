@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { mcpIntegrationV2 } from '@/lib/v2/mcp-integration';
 
 export async function POST(request: NextRequest) {

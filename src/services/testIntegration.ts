@@ -3,9 +3,10 @@
  * This file demonstrates how to use the integration system
  */
 
-import { ZaiIntegration } from './zaiIntegration';
 import fs from 'fs/promises';
 import path from 'path';
+
+import { ZaiIntegration } from './zaiIntegration';
 
 async function testIntegration() {
   console.log('Testing ZaiIntegration...');
@@ -49,7 +50,7 @@ async function testIntegration() {
         } : null,
       });
 
-    } catch (fileError) {
+    } catch {
       console.log('Test image not found, skipping image analysis test');
     }
 

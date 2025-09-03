@@ -1,14 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAIEnhancement, AIAnalysisResult } from "@/lib/ai-enhancement";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Brain, 
   Shield, 
@@ -27,6 +19,15 @@ import {
   Lock,
   Sparkles
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAIEnhancement, AIAnalysisResult } from "@/lib/ai-enhancement";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 
 interface AIEnhancedAnalyzerProps {
   photoId: string;

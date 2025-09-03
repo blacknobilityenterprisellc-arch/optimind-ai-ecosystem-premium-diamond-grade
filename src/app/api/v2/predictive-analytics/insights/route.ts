@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { predictiveAnalyticsServiceV2, type PredictiveInsightRequest } from '@/lib/v2/predictive-analytics-service';
 
 export async function POST(request: NextRequest) {
@@ -62,7 +63,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const limit = parseInt(searchParams.get('limit') || '50');
+    const limit = Number.parseInt(searchParams.get('limit') || '50');
     
     // Get user's predictive insights
     const result = await predictiveAnalyticsServiceV2.getUserInsights(userId, limit);

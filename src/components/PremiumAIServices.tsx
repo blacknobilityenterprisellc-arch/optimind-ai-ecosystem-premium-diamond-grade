@@ -1,22 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useTheme } from "next-themes";
-import { 
-  usePremiumAIServices, 
-  PremiumAIService,
-  AIProcessingResult 
-} from "@/lib/premium-ai-services";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Brain, 
   Sparkles, 
@@ -40,6 +25,23 @@ import {
   Crown,
   CreditCard
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { 
+  usePremiumAIServices, 
+  PremiumAIService,
+  AIProcessingResult 
+} from "@/lib/premium-ai-services";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+
 
 interface PremiumAIServicesProps {
   photos?: Array<{ id: string; file: File; url: string }>;

@@ -149,7 +149,7 @@ class AgenticWorkflowEngine {
         },
         reasoningMode: 'hybrid',
         autoRouting: true,
-        budget: { maxCost: 0.10, currency: 'USD' },
+        budget: { maxCost: 0.1, currency: 'USD' },
         compliance: { gdpr: true }
       },
       {
@@ -211,7 +211,7 @@ class AgenticWorkflowEngine {
         },
         reasoningMode: 'thinking',
         autoRouting: false,
-        budget: { maxCost: 0.50, currency: 'USD' },
+        budget: { maxCost: 0.5, currency: 'USD' },
         compliance: { gdpr: true, soc2: true }
       },
       {
@@ -273,14 +273,14 @@ class AgenticWorkflowEngine {
         },
         reasoningMode: 'thinking',
         autoRouting: false,
-        budget: { maxCost: 1.00, currency: 'USD' },
+        budget: { maxCost: 1, currency: 'USD' },
         compliance: { hipaa: true, gdpr: true }
       }
     ];
 
-    defaultWorkflows.forEach(workflow => {
+    for (const workflow of defaultWorkflows) {
       this.workflows.set(workflow.id, workflow);
-    });
+    }
   }
 
   // Workflow Management
@@ -307,7 +307,7 @@ class AgenticWorkflowEngine {
       throw new Error(`Workflow ${workflowId} not found`);
     }
 
-    const executionId = `exec-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const executionId = `exec-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
     const execution: AgenticExecution = {
       id: executionId,
       workflowId,
@@ -438,7 +438,7 @@ class AgenticWorkflowEngine {
       'simple': 0.2,
       'moderate': 0.5,
       'complex': 0.8,
-      'expert': 1.0
+      'expert': 1
     };
     return scores[complexity as keyof typeof scores] || 0.5;
   }
@@ -448,7 +448,7 @@ class AgenticWorkflowEngine {
       'low': 0.2,
       'medium': 0.5,
       'high': 0.8,
-      'critical': 1.0
+      'critical': 1
     };
     return scores[priority as keyof typeof scores] || 0.5;
   }
@@ -681,7 +681,7 @@ class AgenticWorkflowEngine {
     if (task.type === 'validation' && tool.category === 'compliance') relevance += 0.3;
     if (task.complexity === 'expert' && tool.category === 'domain') relevance += 0.2;
 
-    return Math.min(relevance, 1.0);
+    return Math.min(relevance, 1);
   }
 
   private async orchestrateTools(task: AgenticTask, tools: any[], context: any): Promise<any[]> {
@@ -878,7 +878,7 @@ class AgenticWorkflowEngine {
         improvements: reflectionResult.improvements || [],
         issues: reflectionResult.issues || []
       };
-    } catch (error) {
+    } catch {
       return {
         confidence: 0.7,
         improvements: [],
@@ -914,7 +914,7 @@ class AgenticWorkflowEngine {
       reasoningSummary: reasoningSteps.map(s => ({
         type: s.type,
         confidence: s.confidence,
-        content: s.content.substring(0, 100) + '...'
+        content: s.content.slice(0, 100) + '...'
       })),
       metadata: {
         totalSteps: reasoningSteps.length,

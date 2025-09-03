@@ -94,7 +94,7 @@ class ContractWiseService {
     projectId?: string
   ): Promise<{ result: ContractAnalysisResult; dbRecord: any }> {
     const mcpRequest: MCPBusinessRequest = {
-      id: `contract-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `contract-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       businessType: 'contractwise',
       userId,
       projectId,
@@ -360,7 +360,7 @@ class ContractWiseService {
     userId: string
   ): Promise<{ template: string; suggestions: string[] }> {
     const mcpRequest: MCPBusinessRequest = {
-      id: `template-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `template-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       businessType: 'contractwise',
       userId,
       inputData: {
@@ -405,7 +405,7 @@ class ContractWiseService {
     ]);
 
     const mcpRequest: MCPBusinessRequest = {
-      id: `compare-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `compare-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
       businessType: 'contractwise',
       userId,
       inputData: {

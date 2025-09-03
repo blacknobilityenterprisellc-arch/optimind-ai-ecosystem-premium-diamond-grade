@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
 
     // Mock image analysis
     const analysisResult = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       type: analysisType || 'general',
       result: {
         objects: ['person', 'car', 'building'],

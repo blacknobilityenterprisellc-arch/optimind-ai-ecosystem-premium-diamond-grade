@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { contractWiseService, ContractAnalysisRequest } from '@/lib/contractwise-service';
 import { getServerSession } from 'next-auth';
+
+import { contractWiseService, ContractAnalysisRequest } from '@/lib/contractwise-service';
 import { authOptions } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {

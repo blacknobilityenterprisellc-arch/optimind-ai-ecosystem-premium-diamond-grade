@@ -1,12 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Shield, 
   Lock, 
@@ -37,6 +31,13 @@ import {
   HardDrive,
   Zap
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface SecurityEvent {
   id: string;
@@ -284,7 +285,7 @@ export function EnterpriseSecurity() {
             <Progress value={securityMetrics.threatLevel} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-1">
               {securityMetrics.threatLevel < 10 ? 'Low Risk' : 
-               securityMetrics.threatLevel < 30 ? 'Moderate Risk' : 'High Risk'}
+               (securityMetrics.threatLevel < 30 ? 'Moderate Risk' : 'High Risk')}
             </p>
           </CardContent>
         </Card>
@@ -453,8 +454,8 @@ export function EnterpriseSecurity() {
                   <div key={device.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                       {device.type === 'mobile' ? <Smartphone className="w-5 h-5" /> :
-                       device.type === 'tablet' ? <Monitor className="w-5 h-5" /> :
-                       <Monitor className="w-5 h-5" />}
+                       (device.type === 'tablet' ? <Monitor className="w-5 h-5" /> :
+                       <Monitor className="w-5 h-5" />)}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">

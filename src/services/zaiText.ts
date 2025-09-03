@@ -9,8 +9,10 @@
  */
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { ZaiClient } from './zaiClient';
+
 import { ModelResult, ModelLabel } from '../types/index';
+
+import { ZaiClient } from './zaiClient';
 
 addFormats(Ajv);
 
@@ -71,7 +73,7 @@ export async function zaiTextReasoning(
 ): Promise<ModelResult> {
   const options: TextOptions = {
     model: process.env.ZAI_TEXT_MODEL || 'GLM-4.5',
-    temperature: 0.0,
+    temperature: 0,
     max_tokens: 800,
     allowLenientParse: false,
     ...opts,
@@ -106,7 +108,7 @@ export async function zaiTextReasoning(
   let parsed: any;
   try {
     parsed = JSON.parse(rawText);
-  } catch (err) {
+  } catch {
     // attempt to extract JSON block
     const m = rawText.match(/\{[\s\S]*\}/);
     if (!m) {

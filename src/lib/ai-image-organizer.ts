@@ -280,16 +280,16 @@ class AIImageOrganizerService {
 
       // People-based albums
       const peopleMap = new Map<string, string[]>();
-      validAnalyses.forEach(analysis => {
-        analysis.people.forEach(person => {
+      for (const analysis of validAnalyses) {
+        for (const person of analysis.people) {
           if (!peopleMap.has(person.name)) {
             peopleMap.set(person.name, []);
           }
           peopleMap.get(person.name)!.push(analysis.id);
-        });
-      });
+        }
+      }
 
-      peopleMap.forEach((photoIds, personName) => {
+      for (const [personName, photoIds] of peopleMap.entries()) {
         if (photoIds.length >= 3) { // Only create albums for people appearing in 3+ photos
           smartAlbums.push({
             id: `people-${personName.toLowerCase().replace(/\s+/g, '-')}`,
@@ -302,11 +302,11 @@ class AIImageOrganizerService {
             createdDate: new Date()
           });
         }
-      });
+      }
 
       // Location-based albums
       const locationMap = new Map<string, string[]>();
-      validAnalyses.forEach(analysis => {
+      for (const analysis of validAnalyses) {
         if (analysis.location) {
           const locationName = analysis.location.name;
           if (!locationMap.has(locationName)) {
@@ -314,9 +314,9 @@ class AIImageOrganizerService {
           }
           locationMap.get(locationName)!.push(analysis.id);
         }
-      });
+      }
 
-      locationMap.forEach((photoIds, locationName) => {
+      for (const [locationName, photoIds] of locationMap.entries()) {
         if (photoIds.length >= 2) {
           smartAlbums.push({
             id: `location-${locationName.toLowerCase().replace(/\s+/g, '-')}`,
@@ -329,7 +329,7 @@ class AIImageOrganizerService {
             createdDate: new Date()
           });
         }
-      });
+      }
 
       // Quality-based albums
       const highQualityPhotos = validAnalyses

@@ -373,7 +373,7 @@ class AIService {
       ],
       model: this.getModelForTask('content-generation'),
       temperature: 0.8,
-      maxTokens: request.length === 'short' ? 500 : request.length === 'medium' ? 1000 : 2000
+      maxTokens: request.length === 'short' ? 500 : (request.length === 'medium' ? 1000 : 2000)
     });
   }
 

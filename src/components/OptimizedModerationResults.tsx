@@ -1,18 +1,6 @@
 'use client';
 
 import { useState, useMemo, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { 
-  VirtualList,
-  ProgressiveImage,
-  LazyLoadComponent,
-  useDebounce,
-  useThrottle,
-  useVirtualScroll
-} from '@/lib/performance-optimization.tsx';
 import { 
   Eye, 
   Download, 
@@ -29,6 +17,19 @@ import {
   ChevronRight,
   Loader2
 } from 'lucide-react';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { 
+  VirtualList,
+  ProgressiveImage,
+  LazyLoadComponent,
+  useDebounce,
+  useThrottle,
+  useVirtualScroll
+} from '@/lib/performance-optimization.tsx';
 
 interface ModerationResult {
   id: string;

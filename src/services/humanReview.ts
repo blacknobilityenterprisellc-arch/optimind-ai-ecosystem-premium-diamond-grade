@@ -4,6 +4,7 @@
  * Replace in-memory queue with Redis/Bull and DB persistence in production.
  */
 import { v4 as uuidv4 } from 'uuid';
+
 import { ReviewItem } from '../types/index';
 
 // In-memory queue for dev
@@ -57,13 +58,13 @@ function pickReviewer(priority: string, reasons: string[]): string {
     let score = 0;
     
     // Score based on specialty matches
-    contentCategories.forEach(category => {
+    for (const category of contentCategories) {
       if (reviewer.specialties.some(specialty => 
         specialty.toLowerCase().includes(category)
       )) {
         score += 10;
       }
-    });
+    }
     
     // Score based on availability (lower load = higher score)
     score += (reviewer.maxConcurrent - reviewer.currentLoad) * 2;

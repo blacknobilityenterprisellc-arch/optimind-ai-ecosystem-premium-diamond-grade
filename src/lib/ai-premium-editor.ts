@@ -49,7 +49,7 @@ class AIPremiumEditorService {
     const editedText = this.generateEditedText(text, options);
 
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       originalText: text,
       editedText,
       improvements: {

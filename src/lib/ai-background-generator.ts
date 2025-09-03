@@ -48,11 +48,11 @@ class AIBackgroundGeneratorService {
     // Simulate processing delay
     await new Promise(resolve => setTimeout(resolve, generationTime));
 
-    const imageUrl = `/generated/backgrounds/${Math.random().toString(36).substr(2, 9)}.png`;
+    const imageUrl = `/generated/backgrounds/${Math.random().toString(36).slice(2, 11)}.png`;
     const thumbnailUrl = `${imageUrl}_thumb`;
 
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       imageUrl,
       thumbnailUrl,
       metadata: {

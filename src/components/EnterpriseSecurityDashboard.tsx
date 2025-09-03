@@ -1,12 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   Shield, 
   AlertTriangle, 
@@ -92,6 +86,13 @@ import {
   ImageDown as ImageDownIcon,
   Wrench as WrenchIcon
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface SecurityMetrics {
   totalPhotos: number;
@@ -334,7 +335,7 @@ export function EnterpriseSecurityDashboard() {
   };
 
   const formatTimeAgo = (date: Date) => {
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
@@ -768,9 +769,9 @@ export function EnterpriseSecurityDashboard() {
                           className={
                             report.status === 'compliant' 
                               ? 'bg-green-100 text-green-800' 
-                              : report.status === 'non-compliant'
+                              : (report.status === 'non-compliant'
                               ? 'bg-red-100 text-red-800'
-                              : 'bg-yellow-100 text-yellow-800'
+                              : 'bg-yellow-100 text-yellow-800')
                           }
                         >
                           {report.status}

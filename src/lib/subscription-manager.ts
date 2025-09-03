@@ -141,7 +141,7 @@ class SubscriptionManager {
     const features = this.getPlanFeatures(planId);
 
     this.subscription = {
-      id: `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `sub_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       planId,
       status: "active",
       currentPeriodStart: now,
@@ -165,7 +165,7 @@ class SubscriptionManager {
     const trialEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
     this.subscription = {
-      id: `trial_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `trial_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       planId: "monthly",
       status: "trial",
       currentPeriodStart: now,

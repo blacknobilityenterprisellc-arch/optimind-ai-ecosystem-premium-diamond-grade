@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
       data: smartSearchResults,
       status: 'success'
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to perform smart search',
       status: 'error' 

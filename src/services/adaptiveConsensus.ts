@@ -62,7 +62,7 @@ export class AdaptiveConsensusEngine {
     };
 
     // Initialize model performance tracking
-    Object.keys(this.config.baseWeights).forEach(modelName => {
+    for (const modelName of Object.keys(this.config.baseWeights)) {
       this.modelPerformance.set(modelName, {
         modelName,
         totalAnalyses: 0,
@@ -72,9 +72,9 @@ export class AdaptiveConsensusEngine {
         errorRate: 0,
         lastUpdated: new Date(),
         accuracy: 0,
-        reliability: 1.0
+        reliability: 1
       });
-    });
+    }
   }
 
   /**
@@ -112,7 +112,7 @@ export class AdaptiveConsensusEngine {
       .reduce((sum, perf) => sum + perf.reliability, 0);
 
     // Calculate adaptive weights based on performance
-    this.modelPerformance.forEach((performance, modelName) => {
+    for (const [modelName, performance] of this.modelPerformance.entries()) {
       const baseWeight = this.config.baseWeights[modelName] || 0.25;
       const performanceMultiplier = totalPerformance > 0 
         ? (performance.reliability / totalPerformance) * this.modelPerformance.size 
@@ -126,14 +126,14 @@ export class AdaptiveConsensusEngine {
         Math.min(this.config.maxWeight, adaptiveWeight));
       
       weights[modelName] = adaptiveWeight;
-    });
+    }
 
     // Normalize weights to sum to 1
     const weightSum = Object.values(weights).reduce((sum, w) => sum + w, 0);
     if (weightSum > 0) {
-      Object.keys(weights).forEach(key => {
+      for (const key of Object.keys(weights)) {
         weights[key] = weights[key] / weightSum;
-      });
+      }
     }
 
     return weights;
@@ -240,7 +240,7 @@ export class AdaptiveConsensusEngine {
    * Calculate agreement score between models
    */
   private calculateAgreementScore(scores: number[], weights: number[]): number {
-    if (scores.length <= 1) return 1.0;
+    if (scores.length <= 1) return 1;
 
     // Calculate weighted variance
     const weightedMean = scores.reduce((sum, score, i) => sum + score * weights[i], 0) / 
@@ -388,7 +388,7 @@ export class AdaptiveConsensusEngine {
     
     // Add to analysis history
     this.analysisHistory.push({
-      imageId: `analysis_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      imageId: `analysis_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       modelsUsed: modelResults.map(r => r.modelName),
       consensus,
       timestamp
@@ -463,7 +463,7 @@ export class AdaptiveConsensusEngine {
   private getPerformanceSummary() {
     const summary: any = {};
     
-    this.modelPerformance.forEach((performance, modelName) => {
+    for (const [modelName, performance] of this.modelPerformance.entries()) {
       summary[modelName] = {
         accuracy: performance.accuracy,
         reliability: performance.reliability,
@@ -471,7 +471,7 @@ export class AdaptiveConsensusEngine {
         averageLatency: performance.averageLatency,
         totalAnalyses: performance.totalAnalyses
       };
-    });
+    }
     
     return summary;
   }
@@ -486,13 +486,13 @@ export class AdaptiveConsensusEngine {
     analysis.groundTruth = groundTruth;
     
     // Update performance based on ground truth
-    analysis.modelsUsed.forEach(modelName => {
+    for (const modelName of analysis.modelsUsed) {
       const performance = this.modelPerformance.get(modelName);
-      if (!performance) return;
+      if (!performance) continue;
 
       // Find if this model predicted the ground truth
       const modelResult = analysis.consensus.provenance.models.find(m => m.name === modelName);
-      if (!modelResult) return;
+      if (!modelResult) continue;
 
       // In a real system, we'd have the actual model prediction
       // For now, we'll use consensus as proxy
@@ -506,7 +506,7 @@ export class AdaptiveConsensusEngine {
       performance.accuracy = performance.correctPredictions / performance.totalAnalyses;
       performance.reliability = this.calculateReliability(performance);
       performance.lastUpdated = new Date();
-    });
+    }
   }
 
   /**
@@ -531,7 +531,7 @@ export class AdaptiveConsensusEngine {
     this.analysisHistory = [];
     
     // Reinitialize with base weights
-    Object.keys(this.config.baseWeights).forEach(modelName => {
+    for (const modelName of Object.keys(this.config.baseWeights)) {
       this.modelPerformance.set(modelName, {
         modelName,
         totalAnalyses: 0,
@@ -541,8 +541,8 @@ export class AdaptiveConsensusEngine {
         errorRate: 0,
         lastUpdated: new Date(),
         accuracy: 0,
-        reliability: 1.0
+        reliability: 1
       });
-    });
+    }
   }
 }

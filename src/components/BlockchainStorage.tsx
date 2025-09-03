@@ -1,23 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  useBlockchainStorage, 
-  BlockchainStorageConfig,
-  NFTMetadata,
-  StorageResult 
-} from "@/lib/blockchain-storage";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Shield, 
   Database, 
@@ -40,6 +23,24 @@ import {
   Crown,
   Sparkles
 } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { 
+  useBlockchainStorage, 
+  BlockchainStorageConfig,
+  NFTMetadata,
+  StorageResult 
+} from "@/lib/blockchain-storage";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 
 interface BlockchainStorageProps {
   photoId?: string;

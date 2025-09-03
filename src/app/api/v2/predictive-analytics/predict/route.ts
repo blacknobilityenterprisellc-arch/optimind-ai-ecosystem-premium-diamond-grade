@@ -6,6 +6,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { predictiveAnalyticsService } from '@/lib/v2/predictive-analytics-service';
 
 export async function POST(request: NextRequest) {

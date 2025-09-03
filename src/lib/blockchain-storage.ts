@@ -66,7 +66,7 @@ export class BlockchainStorage {
       console.log('Minting NFT with metadata:', metadata);
       
       // Simulate blockchain transaction
-      const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+      const transactionHash = `0x${Math.random().toString(16).slice(2, 66)}`;
       const blockNumber = Math.floor(Math.random() * 1000000) + 18000000;
       const gasUsed = Math.floor(Math.random() * 50000) + 100000;
 
@@ -102,7 +102,7 @@ export class BlockchainStorage {
       console.log(`Transferring NFT ${tokenId} from ${fromAddress} to ${toAddress}`);
       
       // Simulate transfer transaction
-      const transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+      const transactionHash = `0x${Math.random().toString(16).slice(2, 66)}`;
       const blockNumber = Math.floor(Math.random() * 1000000) + 18000000;
       const gasUsed = Math.floor(Math.random() * 30000) + 50000;
 

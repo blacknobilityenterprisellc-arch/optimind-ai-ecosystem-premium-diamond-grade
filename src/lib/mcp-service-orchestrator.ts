@@ -162,7 +162,7 @@ Stay current with the latest regulatory changes and provide practical guidance f
     pricing: {
       base: 299,
       perPage: 35,
-      ensembleMultiplier: 2.0
+      ensembleMultiplier: 2
     }
   },
   skillpath: {
@@ -272,8 +272,8 @@ class MCPServiceOrchestrator {
       return {
         primaryModel: config.defaultModels.primary,
         secondaryModels: [],
-        consensusThreshold: 1.0,
-        weighting: { primary: 1.0, secondary: 0.0 }
+        consensusThreshold: 1,
+        weighting: { primary: 1, secondary: 0 }
       };
     }
 
@@ -392,7 +392,7 @@ class MCPServiceOrchestrator {
         prompt += `Contract Type: ${request.inputData.contractType}\n`;
         prompt += `Contract Title: ${request.inputData.contractTitle}\n`;
         if (request.inputData.contractText) {
-          prompt += `Contract Text: ${request.inputData.contractText.substring(0, 2000)}...\n`;
+          prompt += `Contract Text: ${request.inputData.contractText.slice(0, 2000)}...\n`;
         }
         break;
         
@@ -460,7 +460,7 @@ class MCPServiceOrchestrator {
 
       const response = await openRouterService.analyzeWithModel(synthesisRequest);
       return response.result;
-    } catch (error) {
+    } catch {
       // Fallback to simple weighted combination
       return this.simpleSynthesis(modelResults);
     }
@@ -516,7 +516,7 @@ class MCPServiceOrchestrator {
         businessType: request.businessType,
         generatedAt: new Date().toISOString()
       };
-    } catch (error) {
+    } catch {
       // Fallback: return synthesized data without action plan
       return {
         analysis: synthesizedData,
@@ -584,7 +584,7 @@ class MCPServiceOrchestrator {
   }
 
   private calculateConsensus(modelResults: MCPModelResult[]): number {
-    if (modelResults.length <= 1) return 1.0;
+    if (modelResults.length <= 1) return 1;
     
     // Simple consensus calculation based on result similarity
     // This is a simplified version - in practice, you'd use more sophisticated methods
@@ -594,7 +594,7 @@ class MCPServiceOrchestrator {
   private calculateCost(modelResults: MCPModelResult[], config: BusinessSolutionConfig): number {
     const baseCost = config.pricing.base;
     const modelCosts = modelResults.reduce((sum, result) => sum + result.cost, 0);
-    const ensembleMultiplier = modelResults.length > 1 ? config.pricing.ensembleMultiplier : 1.0;
+    const ensembleMultiplier = modelResults.length > 1 ? config.pricing.ensembleMultiplier : 1;
     
     return (baseCost + modelCosts) * ensembleMultiplier;
   }
@@ -660,7 +660,7 @@ class MCPServiceOrchestrator {
       } else {
         return await zaiApiService.testModelConnection(modelId);
       }
-    } catch (error) {
+    } catch {
       return false;
     }
   }

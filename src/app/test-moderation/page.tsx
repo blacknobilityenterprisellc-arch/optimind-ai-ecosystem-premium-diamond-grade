@@ -6,12 +6,13 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { Upload, Shield, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Upload, Shield, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 
 interface ModerationResult {
   success: boolean;

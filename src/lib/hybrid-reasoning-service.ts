@@ -287,7 +287,7 @@ class HybridReasoningService {
             model: 'glm-45-flagship',
             parameters: { maxDepth: 4, selfReflection: true, compliance: 'strict' }
           },
-          weight: 1.0
+          weight: 1
         },
         {
           id: 'legal-detailed',
@@ -559,7 +559,7 @@ class HybridReasoningService {
     // Cost sensitivity (inverse of budget)
     let costSensitivity = 0.5; // Default medium sensitivity
     if (context?.budget) {
-      const budgetRatio = context.budget / 1.0; // Normalize to $1
+      const budgetRatio = context.budget / 1; // Normalize to $1
       costSensitivity = Math.max(0, Math.min(1, 1 - budgetRatio));
     }
 
@@ -584,7 +584,7 @@ class HybridReasoningService {
       'simple': 0.2,
       'moderate': 0.5,
       'complex': 0.8,
-      'expert': 1.0
+      'expert': 1
     };
     return scores[complexity as keyof typeof scores] || 0.5;
   }
@@ -594,7 +594,7 @@ class HybridReasoningService {
       'low': 0.2,
       'medium': 0.5,
       'high': 0.8,
-      'critical': 1.0
+      'critical': 1
     };
     return scores[priority as keyof typeof scores] || 0.5;
   }
@@ -712,9 +712,9 @@ class HybridReasoningService {
     // Adjust based on task characteristics
     if (decision.mode === 'thinking') {
       processingTime *= 2.5; // Thinking mode takes longer
-      cost *= 2.0; // Higher cost
+      cost *= 2; // Higher cost
       accuracy *= 1.1; // Better accuracy
-      tokenUsage *= 2.0; // More tokens used
+      tokenUsage *= 2; // More tokens used
     } else if (decision.mode === 'hybrid') {
       processingTime *= 1.5;
       cost *= 1.3;
@@ -897,7 +897,7 @@ class HybridReasoningService {
 
     const [, field, operator, valueStr] = match;
     const fieldValue = this.getNestedValue(context, field);
-    const value = parseFloat(valueStr);
+    const value = Number.parseFloat(valueStr);
 
     switch (operator) {
       case '>': return fieldValue > value;
@@ -975,7 +975,7 @@ class HybridReasoningService {
       if (performance) {
         // Adjust weight based on success rate and accuracy
         const performanceScore = (performance.successRate * 0.6 + performance.accuracy * 0.4);
-        rule.weight = Math.max(0.1, Math.min(1.0, performanceScore));
+        rule.weight = Math.max(0.1, Math.min(1, performanceScore));
       }
     }
   }

@@ -72,7 +72,7 @@ class SecureSubscriptionManager {
   // Public Methods
   async subscribe(planId: SubscriptionPlan["id"]): Promise<UserSubscription> {
     if (typeof window === "undefined") {
-      throw new Error("Subscription management requires browser context");
+      throw new TypeError("Subscription management requires browser context");
     }
 
     const sessionToken = sessionStorage.getItem('auth_session');
@@ -107,7 +107,7 @@ class SecureSubscriptionManager {
 
   async startFreeTrial(): Promise<UserSubscription> {
     if (typeof window === "undefined") {
-      throw new Error("Subscription management requires browser context");
+      throw new TypeError("Subscription management requires browser context");
     }
 
     const sessionToken = sessionStorage.getItem('auth_session');

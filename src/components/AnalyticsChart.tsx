@@ -1,11 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import {
   BarChart3,
   TrendingUp,
@@ -22,6 +17,12 @@ import {
   Award,
   Star
 } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 
 interface ChartData {
   labels: string[];
@@ -250,17 +251,17 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                 </div>
                 {metric.trend === 'up' ? (
                   <TrendingUp className="w-3 h-3 text-green-500" />
-                ) : metric.trend === 'down' ? (
+                ) : (metric.trend === 'down' ? (
                   <TrendingDown className="w-3 h-3 text-red-500" />
                 ) : (
                   <Activity className="w-3 h-3 text-gray-500" />
-                )}
+                ))}
               </div>
               <div className="mt-2">
                 <p className="text-xl font-bold">{metric.value}</p>
                 <p className={`text-xs ${
                   metric.trend === 'up' ? 'text-green-600' :
-                  metric.trend === 'down' ? 'text-red-600' : 'text-gray-600'
+                  (metric.trend === 'down' ? 'text-red-600' : 'text-gray-600')
                 }`}>
                   {metric.change}
                 </p>
@@ -292,7 +293,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                 <p className="text-muted-foreground">Loading analytics data...</p>
               </div>
             </div>
-          ) : chartData ? (
+          ) : (chartData ? (
             <div className="border rounded-lg p-4 bg-muted/20">
               {renderBarChart(chartData)}
             </div>
@@ -303,7 +304,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                 <p>No data available</p>
               </div>
             </div>
-          )}
+          ))}
         </div>
 
         {/* Key Insights */}

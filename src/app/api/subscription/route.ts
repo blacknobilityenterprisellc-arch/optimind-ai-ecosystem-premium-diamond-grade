@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { db } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const sessionToken = authHeader.substring(7);
+    const sessionToken = authHeader.slice(7);
     
     // Validate session
     const session = await db.session.findFirst({
@@ -123,7 +124,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const sessionToken = authHeader.substring(7);
+    const sessionToken = authHeader.slice(7);
     
     // Validate session
     const session = await db.session.findFirst({
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create subscription
-    const subscriptionId = `sub_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const subscriptionId = `sub_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     
     await db.subscription.create({
       data: {
@@ -198,7 +199,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Create or update usage record
-    const usageId = `usage_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const usageId = `usage_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     const isPremium = true;
     
     await db.subscriptionUsage.create({

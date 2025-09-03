@@ -6,11 +6,12 @@
  * connection pooling, query optimization, backup/restore, and performance monitoring.
  */
 
-import { PrismaClient } from '@prisma/client';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs/promises';
 import path from 'path';
+
+import { PrismaClient } from '@prisma/client';
 
 const execAsync = promisify(exec);
 
@@ -474,7 +475,7 @@ class DatabaseManagerV2 {
       if (!this.isHealthy) issues.push('Database connection issues');
 
       const health: DatabaseHealth = {
-        status: issues.length === 0 ? 'healthy' : issues.length < 3 ? 'degraded' : 'unhealthy',
+        status: issues.length === 0 ? 'healthy' : (issues.length < 3 ? 'degraded' : 'unhealthy'),
         connections: this.metrics.activeConnections,
         responseTime: Date.now() - startTime,
         errorRate,

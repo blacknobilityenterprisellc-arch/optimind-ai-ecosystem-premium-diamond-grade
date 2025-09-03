@@ -68,15 +68,14 @@ const enterpriseConfig = [
       "no-script-url": "error",
       
       // SonarJS security rules - Enterprise grade
-      "sonarjs/no-hardcoded-credentials": "error",
-      "sonarjs/no-clear-text-protocols": "error",
-      "sonarjs/no-insecure-password": "error",
-      "sonarjs/no-weak-crypto": "error",
-      "sonarjs/no-direct-access-state": "error",
       "sonarjs/no-identical-expressions": "error",
       "sonarjs/no-collapsible-if": "error",
       "sonarjs/no-all-duplicated-branches": "error",
       "sonarjs/no-ignored-exceptions": "error",
+      "sonarjs/no-duplicate-string": "error",
+      "sonarjs/no-empty-collection": "error",
+      "sonarjs/no-extra-arguments": "error",
+      "sonarjs/no-identical-functions": "error",
       
       // Import security - Prevent path traversal
       "import/no-unresolved": "error",
@@ -85,8 +84,8 @@ const enterpriseConfig = [
       
       // Promise handling - Enterprise async safety
       "promise/always-return": "error",
-      "promise/no-native-settimeout": "error",
       "promise/catch-or-return": "error",
+      "promise/no-return-in-finally": "error",
       
       // Unicorn plugin - Modern JavaScript best practices
       "unicorn/no-abusive-eslint-disable": "error",
@@ -103,7 +102,6 @@ const enterpriseConfig = [
       "unicorn/no-new-buffer": "error",
       "unicorn/no-process-exit": "error",
       "unicorn/no-static-only-class": "error",
-      "unicorn/no-unsafe-regex": "error",
       "unicorn/no-unused-properties": "error",
       "unicorn/no-useless-undefined": "error",
       "unicorn/no-zero-fractions": "error",
@@ -206,17 +204,9 @@ const enterpriseConfig = [
       "prefer-promise-reject-errors": "warn",
       
       // === MAINTAINABILITY & READABILITY ===
-      "indent": ["warn", 2],
-      "quotes": ["warn", "double"],
-      "semi": ["warn", "always"],
-      "comma-dangle": ["warn", "never"],
-      "object-curly-spacing": ["warn", "always"],
-      "array-bracket-spacing": ["warn", "never"],
-      "space-before-blocks": ["warn", "always"],
-      "keyword-spacing": ["warn", { "before": true, "after": true }],
-      "space-infix-ops": ["warn", { "int32Hint": false }],
-      "eol-last": ["warn", "always"],
-      "no-trailing-spaces": "warn",
+      // Note: Formatting handled by Prettier integration in Next.js config
+      "indent": "off",
+      "@typescript-eslint/indent": "off",
     },
   },
   

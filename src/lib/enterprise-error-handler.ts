@@ -305,7 +305,7 @@ export class EnterpriseErrorHandler {
 
     // Limit error size
     if (sanitized.length > this.config.security.maxErrorSize) {
-      sanitized = sanitized.substring(0, this.config.security.maxErrorSize) + '...';
+      sanitized = sanitized.slice(0, Math.max(0, this.config.security.maxErrorSize)) + '...';
     }
 
     return sanitized;
@@ -483,9 +483,9 @@ export class EnterpriseErrorHandler {
     };
 
     // Send to configured notification channels
-    this.config.notificationChannels.forEach(channel => {
+    for (const channel of this.config.notificationChannels) {
       this.sendNotification(alert, channel);
-    });
+    }
 
     console.error('🚨 ALERT TRIGGERED:', JSON.stringify(alert, null, 2));
   }
@@ -560,7 +560,7 @@ export class EnterpriseErrorHandler {
 
   // Utility methods
   private generateErrorId(): string {
-    return `err_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `err_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
   }
 
   // Public API for error handling

@@ -219,7 +219,7 @@ ${this.config.enableDeepfakeDetection ? '- manipulatedContent: detection of imag
 - riskLevel: 'low', 'medium', 'high', or 'critical'
 - recommendations: array of safety recommendations
 
-Image data: ${imageBase64.substring(0, 100)}...
+Image data: ${imageBase64.slice(0, 100)}...
 
 Focus on maximum accuracy and comprehensive safety assessment.`;
   }
@@ -378,19 +378,19 @@ Focus on maximum accuracy and comprehensive safety assessment.`;
     const results: NSFWDetectionResult[] = [];
     const total = imageData.length;
 
-    for (let i = 0; i < imageData.length; i++) {
+    for (const [i, imageDatum] of imageData.entries()) {
       try {
-        const result = await this.analyzeImage(imageData[i].base64, imageData[i].photoId);
+        const result = await this.analyzeImage(imageDatum.base64, imageDatum.photoId);
         results.push(result);
         
         if (onProgress) {
           onProgress(((i + 1) / total) * 100);
         }
       } catch (error) {
-        console.error(`Failed to analyze image ${imageData[i].photoId}:`, error);
+        console.error(`Failed to analyze image ${imageDatum.photoId}:`, error);
         // Add a fallback result
         results.push({
-          photoId: imageData[i].photoId,
+          photoId: imageDatum.photoId,
           isNsfw: false,
           confidence: 0.5,
           categories: ['error'],

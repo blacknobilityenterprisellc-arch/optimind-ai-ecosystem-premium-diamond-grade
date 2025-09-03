@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { quantumSecurityV2 } from '@/lib/v2/quantum-security';
 
 export async function POST(request: NextRequest) {

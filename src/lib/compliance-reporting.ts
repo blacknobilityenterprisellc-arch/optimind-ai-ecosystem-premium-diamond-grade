@@ -374,9 +374,9 @@ class ComplianceReportingService {
       }
     ];
 
-    frameworks.forEach(framework => {
+    for (const framework of frameworks) {
       this.frameworks.set(framework.id, framework);
-    });
+    }
   }
 
   // Generate compliance report
@@ -497,7 +497,7 @@ class ComplianceReportingService {
       limit: 1000
     });
 
-    quarantineEvents.forEach(event => {
+    for (const event of quarantineEvents) {
       if (event.timestamp >= period.startDate && event.timestamp <= period.endDate) {
         findings.push({
           id: crypto.randomBytes(8).toString('hex'),
@@ -513,12 +513,12 @@ class ComplianceReportingService {
           evidence: [JSON.stringify(event)]
         });
       }
-    });
+    }
 
     // Analyze vault access logs
     const vaultLogs = secureVault.getAccessLogs(1000);
     
-    vaultLogs.forEach(log => {
+    for (const log of vaultLogs) {
       if (log.timestamp >= period.startDate && log.timestamp <= period.endDate && !log.success) {
         findings.push({
           id: crypto.randomBytes(8).toString('hex'),
@@ -532,7 +532,7 @@ class ComplianceReportingService {
           evidence: [JSON.stringify(log)]
         });
       }
-    });
+    }
 
     return findings;
   }
@@ -541,7 +541,7 @@ class ComplianceReportingService {
   private async generateRecommendations(findings: ComplianceFinding[]): Promise<Recommendation[]> {
     const recommendations: Recommendation[] = [];
 
-    findings.forEach(finding => {
+    for (const finding of findings) {
       if (finding.severity === 'critical' || finding.severity === 'high') {
         recommendations.push({
           id: crypto.randomBytes(8).toString('hex'),
@@ -555,7 +555,7 @@ class ComplianceReportingService {
           dependencies: [finding.id]
         });
       }
-    });
+    }
 
     return recommendations;
   }

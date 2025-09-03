@@ -1,12 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { multiModelAIUtils } from "@/lib/multi-model-ai";
 import { 
   Brain, 
   Network, 
@@ -20,6 +14,13 @@ import {
   Crown,
   Lightbulb
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { multiModelAIUtils } from "@/lib/multi-model-ai";
 
 interface ModelStatus {
   id: string;

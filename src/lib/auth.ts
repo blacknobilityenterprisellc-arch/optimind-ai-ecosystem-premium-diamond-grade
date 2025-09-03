@@ -47,7 +47,7 @@ export class AuthService {
   async createUser(userData: Omit<User, 'id'>): Promise<User> {
     // In production, this would create a user in the database
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       ...userData
     };
   }
@@ -58,9 +58,9 @@ export class AuthService {
     expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
 
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       userId,
-      token: Math.random().toString(36).substr(2, 32),
+      token: Math.random().toString(36).slice(2, 34),
       expiresAt,
       isActive: true
     };

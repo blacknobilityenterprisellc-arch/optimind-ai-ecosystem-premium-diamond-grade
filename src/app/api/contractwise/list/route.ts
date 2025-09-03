@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { contractWiseService } from '@/lib/contractwise-service';
 import { getServerSession } from 'next-auth';
+
+import { contractWiseService } from '@/lib/contractwise-service';
 import { authOptions } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
@@ -14,8 +15,8 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    const limit = Number.parseInt(searchParams.get('limit') || '20');
+    const offset = Number.parseInt(searchParams.get('offset') || '0');
 
     const userId = session.user.id;
     const contracts = await contractWiseService.getUserContractAnalyses(

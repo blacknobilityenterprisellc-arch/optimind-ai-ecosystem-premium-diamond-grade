@@ -15,8 +15,10 @@
 
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { ZaiClient } from './zaiClient';
+
 import { ModelResult, ModelLabel } from '../types/index';
+
+import { ZaiClient } from './zaiClient';
 
 addFormats(Ajv);
 
@@ -233,7 +235,7 @@ Metadata Context: ${JSON.stringify(metadata)}
 Analysis Requirements: 
 - Multi-step reasoning: ${options.enableMultiStepReasoning ? 'enabled' : 'disabled'}
 - Relationship analysis: ${options.includeRelationshipAnalysis ? 'enabled' : 'disabled'}
-- Temperature: ${options.temperature || 0.0} (deterministic output)
+- Temperature: ${options.temperature || 0} (deterministic output)
 
 Provide comprehensive analysis following the specified schema.`;
 
@@ -259,7 +261,7 @@ export async function zaiAirAnalyze(
 ): Promise<ModelResult> {
   const options: AirOptions = {
     model: process.env.ZAI_AIR_MODEL || 'GLM-4.5-AIR',
-    temperature: 0.0,
+    temperature: 0,
     max_tokens: 2048,
     enableMultiStepReasoning: true,
     includeRelationshipAnalysis: true,
@@ -324,7 +326,7 @@ export async function zaiAirAnalyze(
       parsed = {
         scene_analysis: { primary_subjects: [] },
         risk_assessment: { 
-          content_categories: [{ category: 'analysis_error', severity: 0.5, confidence: 1.0 }],
+          content_categories: [{ category: 'analysis_error', severity: 0.5, confidence: 1 }],
           recommended_action: 'hold_for_review'
         },
         provenance: { model: options.model }

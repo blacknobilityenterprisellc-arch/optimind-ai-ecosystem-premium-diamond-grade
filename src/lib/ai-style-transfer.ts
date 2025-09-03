@@ -46,11 +46,11 @@ class AIStyleTransferService {
     // Simulate processing delay
     await new Promise(resolve => setTimeout(resolve, processingTime));
 
-    const stylizedImageUrl = `${contentImageUrl}_styled_${Math.random().toString(36).substr(2, 9)}`;
+    const stylizedImageUrl = `${contentImageUrl}_styled_${Math.random().toString(36).slice(2, 11)}`;
     const thumbnailUrl = `${stylizedImageUrl}_thumb`;
 
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       originalImageUrl: contentImageUrl,
       stylizedImageUrl,
       thumbnailUrl,
