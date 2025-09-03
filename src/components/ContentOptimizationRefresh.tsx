@@ -150,7 +150,6 @@ export default function ContentOptimizationRefresh() {
       contentScore: 82,
       strengths: ["Clear structure", "Actionable tips", "Good examples"],
       weaknesses: ["Outdated information", "Missing recent trends"],
-      opportunities: ["Update statistics", "Add 2024 trends"]
       opportunities: ["Update statistics", "Add 2025 trends"]
     }
   ];

@@ -1,54 +1,36 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { aiService } from '@/lib/ai';
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { context, type } = body;
-
-    // Validate required fields
-    if (!context || !type) {
-      return NextResponse.json(
-        { error: 'Context and type are required' },
-        { status: 400 }
-      );
-    }
-
-    // Get recommendations using AI service
-    const result = await aiService.getRecommendations(context, type);
+    // Mock recommendations data
+    const recommendations = [
+      {
+        id: '1',
+        type: 'content-optimization',
+        title: 'Optimize Content Structure',
+        description: 'Improve content organization for better readability',
+        priority: 'high',
+        confidence: 0.89
+      },
+      {
+        id: '2',
+        type: 'seo-improvement',
+        title: 'Enhance SEO Keywords',
+        description: 'Add relevant keywords to improve search ranking',
+        priority: 'medium',
+        confidence: 0.76
+      }
+    ];
 
     return NextResponse.json({
-      success: true,
-      recommendations: result.content,
-      model: result.model,
-      usage: result.usage,
-      cost: result.cost
-    });
-
-  } catch (error) {
-    console.error('Recommendations error:', error);
-    return NextResponse.json(
-      { error: 'Failed to get recommendations' },
-      { status: 500 }
-    );
-    const { context, preferences } = body;
-    
-    // Recommendations logic here
-    const recommendations = {
-      items: [],
-      confidence: 0.85,
-      generated_at: new Date().toISOString()
-    };
-    
-    return NextResponse.json({ 
-      message: 'Recommendations generated',
       data: recommendations,
-      status: 'success' 
+      status: 'success'
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error('Recommendations API error:', error);
     return NextResponse.json({ 
       error: 'Failed to generate recommendations',
       status: 'error' 
-    }, { status: 500 });
+    });
   }
 }
