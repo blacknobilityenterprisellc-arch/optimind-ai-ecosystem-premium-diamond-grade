@@ -7,6 +7,7 @@
 import crypto from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { SecureStorageResult, DeletionCertificate } from '../types/index';
+import { debug } from '@/lib/debug';
 
 // ---------- Configuration ----------
 // Set these in your environment in production
@@ -136,7 +137,7 @@ export class SecureVault {
   async cryptoErase(imageId: string, wrappedDEK: string): Promise<boolean> {
     // TODO: In production call KMS to schedule key destroy or delete reference to DEK.
     // Here we simulate and log — also return true for success.
-    console.log(`[SecureVault] cryptoErase invoked for imageId=${imageId}`);
+    debug.log(`[SecureVault] cryptoErase invoked for imageId=${imageId}`);
     // If using envelope encryption, deleting DEK or KMS key material makes ciphertext unrecoverable.
     return true;
   }

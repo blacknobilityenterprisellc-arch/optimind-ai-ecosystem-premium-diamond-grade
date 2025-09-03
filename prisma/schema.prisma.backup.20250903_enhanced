@@ -43,10 +43,6 @@ model Tenant {
   tenantModelSettings TenantModelSetting[]
   aiModelUsageLogs AIModelUsageLog[]
   aiModelComparisons AIModelComparison[]
-  // Enhanced AI Service Relations
-  aiServiceConfigs AIServiceConfig[]
-  fileStorage     FileStorage[]
-  aiRequestLogs    AIRequestLog[]
   
   @@map("tenants")
 }
@@ -166,9 +162,6 @@ model User {
   modelPreferences UserModelPreference[]
   modelUsageLogs  AIModelUsageLog[]
   modelComparisons AIModelComparison[]
-  // Enhanced AI Service Relations
-  aiRequestLogs   AIRequestLog[]
-  fileStorage     FileStorage[]
   
   @@map("users")
 }
@@ -2061,103 +2054,6 @@ model AIModelComparison {
   @@index([tenantId])
   @@index([createdAt])
   @@map("ai_model_comparisons")
-}
-
-// Enhanced AI Service Models for GLM-4.5 Integration
-model AIServiceConfig {
-  id              String            @id @default(cuid())
-  tenantId        String
-  name            String
-  provider        AIProvider
-  model           String
-  modelType       AIModelType
-  taskTypes       Json              // Array of TaskType
-  configuration   Json              // Model-specific configuration
-  apiKey          String?
-  baseUrl         String?
-  maxTokens       Int               @default(4000)
-  temperature     Float             @default(0.7)
-  topP            Float             @default(1.0)
-  enabled         Boolean           @default(true)
-  priority        Int               @default(0)
-  metadata        Json?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  
-  // Relations
-  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  requestLogs     AIRequestLog[]
-  
-  @@unique([tenantId, name])
-  @@map("ai_service_configs")
-}
-
-model AIRequestLog {
-  id              String            @id @default(cuid())
-  tenantId        String
-  userId          String
-  serviceConfigId String
-  requestType     TaskType
-  input           String
-  output          Json?
-  tokensUsed      Int?
-  processingTime  Int?
-  cost            Float?
-  status          UsageStatus       @default(COMPLETED)
-  errorMessage    String?
-  metadata        Json?
-  createdAt       DateTime          @default(now())
-  
-  // Relations
-  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  serviceConfig   AIServiceConfig   @relation(fields: [serviceConfigId], references: [id], onDelete: Cascade)
-  
-  @@index([tenantId])
-  @@index([userId])
-  @@index([serviceConfigId])
-  @@index([createdAt])
-  @@map("ai_request_logs")
-}
-
-model FileStorage {
-  id              String            @id @default(cuid())
-  tenantId        String
-  userId          String
-  filename        String
-  originalName    String
-  path            String
-  size            Int
-  mimeType        String
-  checksum        String
-  status          FileStatus        @default(ACTIVE)
-  encryptionKey   String?           // For encrypted files
-  metadata        Json?
-  accessCount     Int               @default(0)
-  lastAccessedAt  DateTime?
-  expiresAt       DateTime?
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  
-  // Relations
-  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@index([tenantId])
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("file_storage")
-}
-
-// Additional Enums for Enhanced Models
-enum FileStatus {
-  ACTIVE
-  DELETED
-  EXPIRED
-  QUARANTINED
-  PROCESSING
-  FAILED
 }
 
 // AI Model Enums

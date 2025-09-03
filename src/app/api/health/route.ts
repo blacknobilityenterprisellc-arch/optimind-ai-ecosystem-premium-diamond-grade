@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
-  import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
->>>>>>> main
     // Simulate health data
     const healthData = {
       status: 'healthy',

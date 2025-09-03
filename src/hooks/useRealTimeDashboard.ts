@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { debug } from '@/lib/debug';
 
 interface DashboardMetrics {
   totalContent: number;
@@ -59,7 +60,7 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
 
     // Connection events
     socket.on('connect', () => {
-      console.log('Connected to real-time dashboard');
+      debug.log('Connected to real-time dashboard');
       setIsConnected(true);
       setConnectionError(null);
       
@@ -68,7 +69,7 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
     });
 
     socket.on('disconnect', () => {
-      console.log('Disconnected from real-time dashboard');
+      debug.log('Disconnected from real-time dashboard');
       setIsConnected(false);
     });
 
@@ -80,19 +81,19 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
 
     // Dashboard data events
     socket.on('dashboard-init', (data) => {
-      console.log('Received initial dashboard data:', data);
+      debug.log('Received initial dashboard data:', data);
       setMetrics(data.metrics);
       setAlerts(data.alerts);
       setActivities(data.activities);
     });
 
     socket.on('metrics-update', (newMetrics: DashboardMetrics) => {
-      console.log('Metrics updated:', newMetrics);
+      debug.log('Metrics updated:', newMetrics);
       setMetrics(newMetrics);
     });
 
     socket.on('new-activity', (activity: ActivityUpdate) => {
-      console.log('New activity:', activity);
+      debug.log('New activity:', activity);
       setActivities(prev => {
         // Keep only the latest 10 activities
         const updated = [activity, ...prev];
@@ -101,7 +102,7 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
     });
 
     socket.on('new-alert', (alert: SystemAlert) => {
-      console.log('New alert:', alert);
+      debug.log('New alert:', alert);
       setAlerts(prev => {
         // Keep only the latest 5 alerts
         const updated = [alert, ...prev];
