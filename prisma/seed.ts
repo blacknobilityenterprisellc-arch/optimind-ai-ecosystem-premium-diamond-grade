@@ -253,11 +253,25 @@ async function main() {
     ],
   });
 
+<<<<<<< HEAD
+  // Create sample posts (with unique slugs)
+  await prisma.post.create({
+    data: {
+      title: 'Getting Started with AI Optimization',
+      content: '# Getting Started with AI Optimization\n\nArtificial Intelligence is revolutionizing the way we approach content optimization...',
+      excerpt: 'Learn how to leverage AI for content optimization and better engagement.',
+      slug: 'getting-started-with-ai-optimization-' + Date.now(),
+      published: true,
+      authorId: adminUser.id,
+      featured: true,
+      publishedAt: new Date(),
+=======
   // Create enterprise conversations
   const enterpriseConversation1 = await prisma.conversation.create({
     data: {
       title: 'Enterprise AI Strategy Planning',
       userId: adminUser.id,
+>>>>>>> main
       metadata: {
         model: 'GLM-4.5',
         totalMessages: 8,
