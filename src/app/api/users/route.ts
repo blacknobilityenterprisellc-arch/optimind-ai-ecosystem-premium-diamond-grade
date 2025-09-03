@@ -1,153 +1,69 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
-    const search = searchParams.get('search') || ''
 
-    const skip = (page - 1) * limit
-
-    const where = search
-      ? {
-          OR: [
-            { name: { contains: search, mode: 'insensitive' } },
-            { email: { contains: search, mode: 'insensitive' } }
-          ]
-        }
-      : {}
-
-    const [users, total] = await Promise.all([
-      db.user.findMany({
-        where,
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          avatar: true,
-          role: true,
-          status: true,
-          emailVerified: true,
-          createdAt: true,
-          updatedAt: true,
-          _count: {
-            select: {
-              conversations: true,
-              projects: true
-            }
-          }
-        },
-        orderBy: { createdAt: 'desc' },
-        skip,
-        take: limit
-      }),
-      db.user.count({ where })
-    ])
+    // Mock users data
+    const users = [
+      {
+        id: '1',
+        email: 'admin@optimind.ai',
+        name: 'Admin User',
+        role: 'ADMIN',
+        isActive: true,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: '2',
+        email: 'user@example.com',
+        name: 'Test User',
+        role: 'USER',
+        isActive: true,
+        createdAt: new Date().toISOString()
+      }
+    ]
 
     return NextResponse.json({
       users,
       pagination: {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit)
+        total: users.length,
+        totalPages: Math.ceil(users.length / limit)
       }
     })
   } catch (error: any) {
-    console.error('Get users error:', error)
+    console.error('Users API error:', error)
     return NextResponse.json(
       { error: error.message || 'Internal server error' },
       { status: 500 }
     )
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function GET(request: NextRequest) {
-  try {
-    // Users retrieval logic here
-    return NextResponse.json({ 
-      message: 'Users retrieved',
-      data: [],
-      status: 'success' 
-    });
-  } catch (error) {
-    return NextResponse.json({ 
-      error: 'Failed to retrieve users',
-      status: 'error' 
-    }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name, avatar, role = 'USER' } = await request.json()
+    const body = await request.json()
+    const { email, name, role } = body
 
-    if (!email) {
-      return NextResponse.json(
-        { error: 'Email is required' },
-        { status: 400 }
-      )
+    const newUser = {
+      id: Math.random().toString(36).substr(2, 9),
+      email,
+      name,
+      role: role || 'USER',
+      isActive: true,
+      createdAt: new Date().toISOString()
     }
 
-    // Check if user already exists
-    const existingUser = await db.user.findUnique({
-      where: { email }
-    })
-
-    if (existingUser) {
-      return NextResponse.json(
-        { error: 'User with this email already exists' },
-        { status: 409 }
-      )
-    }
-
-    const user = await db.user.create({
-      data: {
-        email,
-        name,
-        avatar,
-        role
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        avatar: true,
-        role: true,
-        status: true,
-        emailVerified: true,
-        createdAt: true,
-        updatedAt: true
-      }
-    })
-
-    return NextResponse.json(user, { status: 201 })
+    return NextResponse.json(newUser)
   } catch (error: any) {
-    console.error('Create user error:', error)
+    console.error('User creation error:', error)
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: error.message || 'Failed to create user' },
       { status: 500 }
     )
-    const body = await request.json();
-    const { user } = body;
-    
-    // User creation logic here
-    const createdUser = {
-      id: Date.now().toString(),
-      ...user,
-      createdAt: new Date().toISOString()
-    };
-    
-    return NextResponse.json({ 
-      message: 'User created',
-      data: createdUser,
-      status: 'success' 
-    });
-  } catch (error) {
-    return NextResponse.json({ 
-      error: 'Failed to create user',
-      status: 'error' 
-    }, { status: 500 });
   }
 }
