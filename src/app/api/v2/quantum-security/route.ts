@@ -1,98 +1,137 @@
 /**
  * OptiMind AI Ecosystem - Quantum Security API v2.0
- * Premium Diamond Grade Quantum Security Endpoints
+ * Premium Diamond Grade Quantum-Resistant Security Endpoints
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { quantumSecurityServiceV2, type QuantumSecurityRequest, type QuantumKeyManagementRequest } from '@/lib/v2/quantum-security-service';
+import { quantumSecurityV2 } from '@/lib/v2/quantum-security';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { operation, ...params } = body;
 
-    // Validate required fields
-    if (!operation) {
-      return NextResponse.json(
-        { error: 'Operation is required' },
-        { status: 400 }
-      );
+    let result;
+
+    switch (operation) {
+      case 'generate_key_pair':
+        result = await quantumSecurityV2.generateQuantumKeyPair(
+          params.userId || 'anonymous',
+          params.expiresInSeconds || 86400
+        );
+        break;
+
+      case 'encrypt':
+        result = await quantumSecurityV2.encryptQuantumSecure(
+          params.data,
+          params.keyId,
+          params.userId || 'anonymous'
+        );
+        break;
+
+      case 'decrypt':
+        result = await quantumSecurityV2.decryptQuantumSecure(
+          params.secureMessage,
+          params.userId || 'anonymous'
+        );
+        break;
+
+      case 'quantum_hash':
+        result = await quantumSecurityV2.quantumHash(params.data, params.salt);
+        break;
+
+      case 'quantum_sign':
+        result = await quantumSecurityV2.quantumSign(
+          params.data,
+          params.keyId,
+          params.userId || 'anonymous'
+        );
+        break;
+
+      case 'verify_signature':
+        result = await quantumSecurityV2.quantumVerifySignature(
+          params.data,
+          params.signature,
+          params.keyId,
+          params.userId || 'anonymous'
+        );
+        break;
+
+      case 'key_exchange':
+        result = await quantumSecurityV2.quantumKeyExchange(params.userId || 'anonymous');
+        break;
+
+      case 'health_check':
+        result = await quantumSecurityV2.healthCheck();
+        break;
+
+      case 'get_metrics':
+        result = quantumSecurityV2.getSecurityMetrics();
+        break;
+
+      case 'get_audit_log':
+        result = quantumSecurityV2.getAuditLog(params.userId);
+        break;
+
+      case 'cleanup_expired_keys':
+        quantumSecurityV2.cleanupExpiredKeys();
+        result = { message: 'Expired keys cleaned up successfully' };
+        break;
+
+      default:
+        return NextResponse.json(
+          { error: 'Unsupported operation', operation },
+          { status: 400 }
+        );
     }
 
-    if (!params.userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // Execute quantum security operation
-    const securityRequest: QuantumSecurityRequest = {
+    return NextResponse.json({
+      success: true,
       operation,
-      ...params
-    };
-
-    const result = await quantumSecurityServiceV2.executeOperation(securityRequest);
-
-    return NextResponse.json(result);
+      result,
+      timestamp: new Date().toISOString()
+    });
 
   } catch (error) {
-    console.error('❌ Quantum Security API Error:', error);
-    
+    console.error('Quantum Security API error:', error);
     return NextResponse.json(
       { 
         error: 'Internal server error',
-        details: error.message 
+        message: error.message,
+        operation: body.operation
       },
       { status: 500 }
     );
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const operation = searchParams.get('operation');
-    const limit = parseInt(searchParams.get('limit') || '100');
+    const health = await quantumSecurityV2.healthCheck();
+    const metrics = quantumSecurityV2.getSecurityMetrics();
 
-    // Handle different GET operations
-    if (operation === 'audit') {
-      if (!userId) {
-        return NextResponse.json(
-          { error: 'User ID is required for audit log' },
-          { status: 400 }
-        );
-      }
-
-      const auditResult = await quantumSecurityServiceV2.getAuditLog(userId, limit);
-      return NextResponse.json(auditResult);
-    }
-
-    if (operation === 'metrics') {
-      const metricsResult = await quantumSecurityServiceV2.getSecurityMetrics(userId || undefined);
-      return NextResponse.json(metricsResult);
-    }
-
-    if (operation === 'health') {
-      const healthResult = await quantumSecurityServiceV2.healthCheck();
-      return NextResponse.json(healthResult);
-    }
-
-    return NextResponse.json(
-      { error: 'Invalid operation. Use: audit, metrics, or health' },
-      { status: 400 }
-    );
-
+    return NextResponse.json({
+      service: 'Quantum Security v2.0',
+      status: 'operational',
+      health,
+      metrics,
+      capabilities: [
+        'quantum_key_generation',
+        'quantum_encryption',
+        'quantum_decryption',
+        'quantum_hashing',
+        'quantum_signing',
+        'quantum_verification',
+        'quantum_key_exchange',
+        'security_audit'
+      ],
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
-    console.error('❌ Quantum Security API Error:', error);
-    
+    console.error('Quantum Security GET error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: error.message 
-      },
-      { status: 500 }
+      { error: 'Service unavailable', message: error.message },
+      { status: 503 }
     );
   }
 }

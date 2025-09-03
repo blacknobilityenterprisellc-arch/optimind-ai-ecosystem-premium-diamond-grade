@@ -1,105 +1,122 @@
 /**
  * OptiMind AI Ecosystem - Predictive Analytics API v2.0
- * Premium Diamond Grade Predictive Analytics Endpoints
+ * Premium Diamond Grade AI-Powered Predictive Analytics Endpoints
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { predictiveAnalyticsServiceV2, type PredictiveAnalyticsRequest, type ModelManagementRequest } from '@/lib/v2/predictive-analytics-service';
+import { predictiveAnalyticsV2 } from '@/lib/v2/predictive-analytics';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { operation, ...params } = body;
 
-    // Validate required fields
-    if (!operation) {
-      return NextResponse.json(
-        { error: 'Operation is required' },
-        { status: 400 }
-      );
+    let result;
+
+    switch (operation) {
+      case 'create_model':
+        result = await predictiveAnalyticsV2.createModel(params.config);
+        break;
+
+      case 'train_model':
+        result = await predictiveAnalyticsV2.trainModel(
+          params.modelId,
+          params.trainingData,
+          params.options
+        );
+        break;
+
+      case 'predict':
+        result = await predictiveAnalyticsV2.predict(
+          params.modelId,
+          params.input
+        );
+        break;
+
+      case 'batch_predict':
+        result = await predictiveAnalyticsV2.batchPredict(
+          params.modelId,
+          params.inputs
+        );
+        break;
+
+      case 'get_model_performance':
+        result = await predictiveAnalyticsV2.getModelPerformance(params.modelId);
+        break;
+
+      case 'get_analytics_metrics':
+        result = predictiveAnalyticsV2.getAnalyticsMetrics();
+        break;
+
+      case 'deploy_model':
+        await predictiveAnalyticsV2.deployModel(params.modelId);
+        result = { message: 'Model deployed successfully' };
+        break;
+
+      case 'generate_prediction_report':
+        result = await predictiveAnalyticsV2.generatePredictionReport(
+          new Date(params.startDate),
+          new Date(params.endDate)
+        );
+        break;
+
+      case 'health_check':
+        result = await predictiveAnalyticsV2.healthCheck();
+        break;
+
+      default:
+        return NextResponse.json(
+          { error: 'Unsupported operation', operation },
+          { status: 400 }
+        );
     }
 
-    if (!params.userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      );
-    }
-
-    // Execute predictive analytics operation
-    const analyticsRequest: PredictiveAnalyticsRequest = {
+    return NextResponse.json({
+      success: true,
       operation,
-      ...params
-    };
-
-    const result = await predictiveAnalyticsServiceV2.executeOperation(analyticsRequest);
-
-    return NextResponse.json(result);
+      result,
+      timestamp: new Date().toISOString()
+    });
 
   } catch (error) {
-    console.error('❌ Predictive Analytics API Error:', error);
-    
+    console.error('Predictive Analytics API error:', error);
     return NextResponse.json(
       { 
         error: 'Internal server error',
-        details: error.message 
+        message: error.message,
+        operation: body.operation
       },
       { status: 500 }
     );
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
-    const operation = searchParams.get('operation');
+    const health = await predictiveAnalyticsV2.healthCheck();
+    const metrics = predictiveAnalyticsV2.getAnalyticsMetrics();
 
-    // Handle different GET operations
-    if (operation === 'models') {
-      if (!userId) {
-        return NextResponse.json(
-          { error: 'User ID is required for models' },
-          { status: 400 }
-        );
-      }
-
-      const modelsResult = await predictiveAnalyticsServiceV2.getUserModels(userId);
-      return NextResponse.json(modelsResult);
-    }
-
-    if (operation === 'insights') {
-      if (!userId) {
-        return NextResponse.json(
-          { error: 'User ID is required for insights' },
-          { status: 400 }
-        );
-      }
-
-      const limit = parseInt(searchParams.get('limit') || '50');
-      const insightsResult = await predictiveAnalyticsServiceV2.getUserInsights(userId, limit);
-      return NextResponse.json(insightsResult);
-    }
-
-    if (operation === 'health') {
-      const healthResult = await predictiveAnalyticsServiceV2.healthCheck();
-      return NextResponse.json(healthResult);
-    }
-
-    return NextResponse.json(
-      { error: 'Invalid operation. Use: models, insights, or health' },
-      { status: 400 }
-    );
-
+    return NextResponse.json({
+      service: 'Predictive Analytics v2.0',
+      status: 'operational',
+      health,
+      metrics,
+      capabilities: [
+        'model_creation',
+        'model_training',
+        'prediction',
+        'batch_prediction',
+        'performance_monitoring',
+        'analytics_reporting',
+        'model_deployment'
+      ],
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
-    console.error('❌ Predictive Analytics API Error:', error);
-    
+    console.error('Predictive Analytics GET error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: error.message 
-      },
-      { status: 500 }
+      { error: 'Service unavailable', message: error.message },
+      { status: 503 }
     );
   }
 }
