@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+
 import { db } from './db';
 
 export interface SecurityEvent {

@@ -264,7 +264,7 @@ export class FocusManager {
       'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
 
-    interactiveElements.forEach(element => {
+    for (const element of interactiveElements) {
       const el = element as HTMLElement;
       
       // Add aria-label if missing and no other label exists
@@ -279,7 +279,7 @@ export class FocusManager {
           el.setAttribute('aria-label', label);
         }
       }
-    });
+    }
   }
 
   private generateAccessibleLabel(element: HTMLElement): string {
@@ -430,12 +430,10 @@ export function useModalFocus(isOpen: boolean) {
     }
 
     return () => {
-      if (!isOpen && previousFocusRef.current) {
-        // Restore focus when modal closes
-        if (focusManager) {
+      if (!isOpen && previousFocusRef.current && // Restore focus when modal closes
+        focusManager) {
           focusManager.focusElement(previousFocusRef.current);
         }
-      }
     };
   }, [isOpen]);
 

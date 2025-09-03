@@ -4,10 +4,11 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { quantumSecurityV2 } from '@/lib/v2/quantum-security';
 import { predictiveAnalyticsV2 } from '@/lib/v2/predictive-analytics';
 import { mcpIntegrationV2 } from '@/lib/v2/mcp-integration';
-import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
+import DatabaseManagerV2 from '@/lib/v2/database-manager';
 
 // Create instances
 const dbManager = new DatabaseManagerV2();
@@ -33,7 +34,7 @@ export async function GET() {
     const healthyComponents = Object.values(componentHealth).filter(status => status === 'healthy').length;
     const totalComponents = Object.keys(componentHealth).length;
     const overallHealth = (healthyComponents / totalComponents) >= 0.75 ? 'healthy' : 
-                           (healthyComponents / totalComponents) >= 0.5 ? 'degraded' : 'unhealthy';
+                           ((healthyComponents / totalComponents) >= 0.5 ? 'degraded' : 'unhealthy');
 
     // Get metrics from all components
     const quantumMetrics = quantumHealth.status === 'fulfilled' ? quantumHealth.value.metrics : null;

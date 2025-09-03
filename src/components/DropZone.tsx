@@ -1,10 +1,6 @@
 "use client";
 
 import { useCallback, useState, useRef } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { 
   Upload, 
   Image as ImageIcon, 
@@ -13,6 +9,11 @@ import {
   CheckCircle,
   AlertCircle
 } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 
 interface FileWithPreview extends File {
@@ -46,11 +47,9 @@ export function DropZone({
     }
 
     // Check file type
-    if (acceptedTypes.includes("image/*")) {
-      if (!file.type.startsWith("image/")) {
+    if (acceptedTypes.includes("image/*") && !file.type.startsWith("image/")) {
         return `File ${file.name} is not a valid image type`;
       }
-    }
 
     return null;
   };
@@ -59,24 +58,24 @@ export function DropZone({
     const validFiles: File[] = [];
     const errors: string[] = [];
 
-    Array.from(fileList).forEach((file) => {
+    for (const file of Array.from(fileList)) {
       const error = validateFile(file);
       if (error) {
         errors.push(error);
       } else {
         validFiles.push(file);
       }
-    });
+    }
 
     // Show errors
     if (errors.length > 0) {
-      errors.forEach((error) => {
+      for (const error of errors) {
         toast({
           title: "Upload Error",
           description: error,
           variant: "destructive",
         });
-      });
+      }
     }
 
     // Check max files
@@ -178,7 +177,7 @@ export function DropZone({
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
   return (

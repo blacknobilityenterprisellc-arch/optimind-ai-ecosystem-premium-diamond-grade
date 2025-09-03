@@ -1,12 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Upload, 
   Play, 
@@ -25,6 +19,13 @@ import {
   FileText,
   Image as ImageIcon
 } from 'lucide-react';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface BatchItem {
   id: string;
@@ -263,7 +264,7 @@ export function BatchProcessingManager() {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const formatDuration = (ms: number) => {
@@ -316,7 +317,7 @@ export function BatchProcessingManager() {
                 id="batch-file-input"
               />
               <Button
-                onClick={() => document.getElementById('batch-file-input')?.click()}
+                onClick={() => document.querySelector('#batch-file-input')?.click()}
                 variant="outline"
               >
                 <Upload className="h-4 w-4 mr-2" />

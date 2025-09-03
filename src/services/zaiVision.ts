@@ -14,8 +14,10 @@
  */
 import Ajv, { JSONSchemaType } from 'ajv';
 import addFormats from 'ajv-formats';
-import { ZaiClient } from './zaiClient';
+
 import { ModelResult, ModelLabel } from '../types/index';
+
+import { ZaiClient } from './zaiClient';
 
 addFormats(Ajv);
 
@@ -116,7 +118,7 @@ export async function zaiVisionAnalyze(
 ): Promise<ModelResult> {
   const options: VisionOptions = {
     model: process.env.ZAI_VISION_MODEL || 'GLM-4.5V',
-    temperature: 0.0,
+    temperature: 0,
     max_tokens: 1200,
     includeSaliencyBase64: false,
     allowLenientParse: false,

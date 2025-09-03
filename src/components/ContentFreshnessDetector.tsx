@@ -1,13 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Calendar,
   Clock,
@@ -21,6 +14,14 @@ import {
   Target,
   Zap
 } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FreshnessIssue {
   id: string;
@@ -224,7 +225,7 @@ export default function ContentFreshnessDetector() {
             <CardContent className="space-y-6">
               <div className="text-center">
                 <div className="text-4xl font-bold mb-2">
-                  <span className={freshnessScore.overall >= 80 ? 'text-green-600' : freshnessScore.overall >= 60 ? 'text-yellow-600' : 'text-red-600'}>
+                  <span className={freshnessScore.overall >= 80 ? 'text-green-600' : (freshnessScore.overall >= 60 ? 'text-yellow-600' : 'text-red-600')}>
                     {freshnessScore.overall}%
                   </span>
                 </div>

@@ -222,7 +222,7 @@ class SecurityMonitor {
               details: { count: body.photoIds.length }
             });
           }
-        } catch (error) {
+        } catch {
           // Ignore JSON parse errors
         }
       }
@@ -383,7 +383,7 @@ class SecurityMonitor {
     const variance = frequencies.reduce((sum, freq) => sum + Math.pow(freq - mean, 2), 0) / frequencies.length;
     const standardDeviation = Math.sqrt(variance);
 
-    frequencies.forEach((freq, index) => {
+    for (const [index, freq] of frequencies.entries()) {
       if (Math.abs(freq - mean) > 2 * standardDeviation) {
         this.detectAnomaly({
           type: 'statistical',
@@ -397,7 +397,7 @@ class SecurityMonitor {
           }
         });
       }
-    });
+    }
   }
 
   private detectPatternAnomalies() {
@@ -492,7 +492,7 @@ class SecurityMonitor {
     };
 
     this.alerts.push(newAlert);
-    this.alertCallbacks.forEach(callback => callback(newAlert));
+    for (const callback of this.alertCallbacks) callback(newAlert);
     
     console.log('Security alert created:', newAlert);
   }
@@ -506,7 +506,7 @@ class SecurityMonitor {
     };
 
     this.events.push(securityEvent);
-    this.eventCallbacks.forEach(callback => callback(securityEvent));
+    for (const callback of this.eventCallbacks) callback(securityEvent);
     
     // Keep only last 1000 events
     if (this.events.length > 1000) {
@@ -515,7 +515,7 @@ class SecurityMonitor {
   }
 
   private generateId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
   }
 
   // Public API

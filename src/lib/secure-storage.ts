@@ -189,11 +189,11 @@ export class SecureStorage {
     
     // Remove all secure items
     const keys = Object.keys(localStorage);
-    keys.forEach(key => {
+    for (const key of keys) {
       if (key.startsWith('secure_')) {
         localStorage.removeItem(key);
       }
-    });
+    }
   }
 
   // Check if key exists
@@ -210,16 +210,14 @@ export class SecureStorage {
     const keys: string[] = [];
     const allKeys = Object.keys(localStorage);
     
-    allKeys.forEach(key => {
+    for (const key of allKeys) {
       if (key.startsWith('secure_')) {
-        keys.push(key.substring(7)); // Remove 'secure_' prefix
-      } else if (!key.startsWith('secure_')) {
-        // Only add non-secure keys if they don't have a secure counterpart
-        if (!localStorage.getItem(`secure_${key}`)) {
+        keys.push(key.slice(7)); // Remove 'secure_' prefix
+      } else if (!key.startsWith('secure_') && // Only add non-secure keys if they don't have a secure counterpart
+        !localStorage.getItem(`secure_${key}`)) {
           keys.push(key);
         }
-      }
-    });
+    }
     
     return keys;
   }

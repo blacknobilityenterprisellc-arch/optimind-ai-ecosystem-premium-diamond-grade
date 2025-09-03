@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
 
 // Create singleton instance

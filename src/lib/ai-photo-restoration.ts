@@ -50,7 +50,7 @@ class AIPhotoRestorationService {
     await new Promise(resolve => setTimeout(resolve, processingTime));
 
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       originalImageUrl: imageUrl,
       restoredImageUrl: `${imageUrl}_restored`,
       improvements: {

@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
       data: [],
       status: 'success' 
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to retrieve content',
       status: 'error' 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       data: createdContent,
       status: 'success' 
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to create content',
       status: 'error' 

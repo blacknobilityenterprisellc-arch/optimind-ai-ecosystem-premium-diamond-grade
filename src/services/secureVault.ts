@@ -5,9 +5,12 @@
  * NOTE: This is an infra-agnostic starter. Replace wrapKey/unwrapKey with your cloud KMS/HSM calls.
  */
 import crypto from 'crypto';
+
 import { v4 as uuidv4 } from 'uuid';
-import { SecureStorageResult, DeletionCertificate } from '../types/index';
+
 import { debug } from '@/lib/debug';
+
+import { SecureStorageResult, DeletionCertificate } from '../types/index';
 
 // ---------- Configuration ----------
 // Set these in your environment in production

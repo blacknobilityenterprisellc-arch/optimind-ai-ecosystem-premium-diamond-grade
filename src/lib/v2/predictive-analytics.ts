@@ -7,6 +7,7 @@
  */
 
 import * as tf from '@tensorflow/tfjs';
+
 import { db } from '@/lib/db';
 
 export interface PredictiveModel {
@@ -567,12 +568,12 @@ class PredictiveAnalyticsV2 {
     const accuracies: number[] = [];
     const confidences = periodPredictions.map(p => p.result.confidence);
 
-    periodPredictions.forEach(p => {
+    for (const p of periodPredictions) {
       const stats = modelStats.get(p.result.modelUsed) || {predictions: 0, confidenceSum: 0};
       stats.predictions++;
       stats.confidenceSum += p.result.confidence;
       modelStats.set(p.result.modelUsed, stats);
-    });
+    }
 
     const topModels = Array.from(modelStats.entries())
       .map(([name, stats]) => ({
@@ -617,9 +618,9 @@ class PredictiveAnalyticsV2 {
     
     const status = this.metrics.modelsDeployed > 0 && this.metrics.averageConfidence > 0.7
       ? 'healthy'
-      : this.metrics.modelsDeployed > 0
+      : (this.metrics.modelsDeployed > 0
         ? 'degraded'
-        : 'unhealthy';
+        : 'unhealthy');
 
     return {
       status,

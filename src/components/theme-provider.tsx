@@ -33,7 +33,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     
     const initialTheme = storedTheme || 
                         (systemPrefersHighContrast ? 'high-contrast' : 
-                         systemPrefersDark ? 'dark' : 'light');
+                         (systemPrefersDark ? 'dark' : 'light'));
     
     setThemeState(initialTheme);
     
@@ -161,7 +161,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
       `;
       
       // Remove existing high contrast styles
-      const existingStyle = document.getElementById('high-contrast-styles');
+      const existingStyle = document.querySelector('#high-contrast-styles');
       if (existingStyle) {
         existingStyle.remove();
       }
@@ -169,7 +169,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
       document.head.appendChild(style);
     } else {
       // Remove high contrast styles
-      const existingStyle = document.getElementById('high-contrast-styles');
+      const existingStyle = document.querySelector('#high-contrast-styles');
       if (existingStyle) {
         existingStyle.remove();
       }

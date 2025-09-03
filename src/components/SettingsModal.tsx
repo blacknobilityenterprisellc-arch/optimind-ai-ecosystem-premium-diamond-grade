@@ -1,17 +1,6 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { useTheme } from "@/components/theme-provider";
 import { 
   Settings, 
   Shield, 
@@ -30,6 +19,18 @@ import {
   Save,
   X
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/components/theme-provider";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       });
       
       onClose();
-    } catch (error) {
+    } catch {
       toast({
         title: "Save Failed",
         description: "Unable to save settings. Please try again.",
@@ -384,7 +385,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <Input
                     type="number"
                     value={settings.maxFileSize}
-                    onChange={(e) => setSettings(prev => ({ ...prev, maxFileSize: parseInt(e.target.value) || 10 }))}
+                    onChange={(e) => setSettings(prev => ({ ...prev, maxFileSize: Number.parseInt(e.target.value) || 10 }))}
                     min="1"
                     max="100"
                   />

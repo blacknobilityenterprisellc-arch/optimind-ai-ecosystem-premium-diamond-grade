@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+
 import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
@@ -6,8 +7,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
     const projectId = searchParams.get('projectId')
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
+    const page = Number.parseInt(searchParams.get('page') || '1')
+    const limit = Number.parseInt(searchParams.get('limit') || '10')
 
     const skip = (page - 1) * limit
 

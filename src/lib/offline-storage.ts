@@ -354,11 +354,11 @@ class OfflineStorage {
       await this.setPhotos(updatedPhotos);
       
       // Clean up object URLs
-      photosToRemove.forEach(photo => {
+      for (const photo of photosToRemove) {
         if (photo.url.startsWith("blob:")) {
           URL.revokeObjectURL(photo.url);
         }
-      });
+      }
     }
   }
 
@@ -372,9 +372,9 @@ class OfflineStorage {
     if (typeof window === "undefined") return;
     
     try {
-      Object.values(STORAGE_KEYS).forEach(key => {
+      for (const key of Object.values(STORAGE_KEYS)) {
         secureStorage.removeItem(key);
-      });
+      }
     } catch (error) {
       console.error("Error clearing secure storage:", error);
     }

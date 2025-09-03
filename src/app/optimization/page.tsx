@@ -1,14 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   Target, 
   Search, 
@@ -111,6 +103,15 @@ import {
   Minus,
   X
 } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Import specialized components
 import { CompetitorContentAnalyzer } from "@/components/CompetitorContentAnalyzer";
@@ -665,14 +666,14 @@ export default function OptimizationPage() {
                           <div className="flex items-center space-x-1">
                             {metric.trend === 'up' ? (
                               <TrendingUp className="w-4 h-4 text-green-500" />
-                            ) : metric.trend === 'down' ? (
+                            ) : (metric.trend === 'down' ? (
                               <TrendingDown className="w-4 h-4 text-red-500" />
                             ) : (
                               <Activity className="w-4 h-4 text-gray-500" />
-                            )}
+                            ))}
                             <span className={`text-xs ${
                               metric.trend === 'up' ? 'text-green-500' : 
-                              metric.trend === 'down' ? 'text-red-500' : 'text-gray-500'
+                              (metric.trend === 'down' ? 'text-red-500' : 'text-gray-500')
                             }`}>
                               {metric.change}
                             </span>
@@ -683,11 +684,11 @@ export default function OptimizationPage() {
                           <div className="flex items-center space-x-1">
                             {metric.status === 'good' ? (
                               <CheckCircle className="w-3 h-3 text-green-500" />
-                            ) : metric.status === 'warning' ? (
+                            ) : (metric.status === 'warning' ? (
                               <AlertTriangle className="w-3 h-3 text-yellow-500" />
                             ) : (
                               <AlertCircle className="w-3 h-3 text-red-500" />
-                            )}
+                            ))}
                             <span className="text-xs text-muted-foreground">Target: {metric.target}</span>
                           </div>
                         </div>

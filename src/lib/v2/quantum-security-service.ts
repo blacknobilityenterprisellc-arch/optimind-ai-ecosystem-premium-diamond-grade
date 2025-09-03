@@ -6,8 +6,9 @@
  * enterprise-grade authentication, authorization, and audit logging.
  */
 
-import { quantumSecurityV2, type QuantumKeyPair, type QuantumSecureMessage } from './quantum-security';
 import { prisma } from '@/lib/db';
+
+import { quantumSecurityV2, type QuantumKeyPair, type QuantumSecureMessage } from './quantum-security';
 
 export interface QuantumSecurityRequest {
   operation: 'generate_keys' | 'encrypt' | 'decrypt' | 'sign' | 'verify' | 'hash';
@@ -61,7 +62,7 @@ class QuantumSecurityServiceV2 {
       
       // Execute operation
       let result: any;
-      let operationSuccess = true;
+      const operationSuccess = true;
       
       switch (request.operation) {
         case 'generate_keys':

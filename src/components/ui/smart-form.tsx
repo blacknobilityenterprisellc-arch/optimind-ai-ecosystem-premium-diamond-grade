@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Loader2, Wand2, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, Wand2, CheckCircle, AlertTriangle, Info } from 'lucide-react';
 
 interface FormField {
   name: string;
@@ -405,7 +406,7 @@ export function SmartForm({ className }: SmartFormProps) {
                         <div 
                           className={`h-2 rounded-full ${
                             validationResults.overallScore >= 80 ? 'bg-green-500' :
-                            validationResults.overallScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                            (validationResults.overallScore >= 60 ? 'bg-yellow-500' : 'bg-red-500')
                           }`}
                           style={{ width: `${validationResults.overallScore}%` }}
                         ></div>

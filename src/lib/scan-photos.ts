@@ -48,8 +48,7 @@ export async function scanMultiplePhotos(
   const totalPhotos = photos.length;
 
   try {
-    for (let i = 0; i < photos.length; i++) {
-      const photo = photos[i];
+    for (const [i, photo] of photos.entries()) {
       const file = files[i];
 
       if (!file) {

@@ -1,12 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
-import { Slider } from '@/components/ui/slider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Eye, 
   EyeOff, 
@@ -25,6 +19,13 @@ import {
   Save,
   RotateCcw
 } from 'lucide-react';
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useTheme, useAccessibility } from '@/components/theme-provider';
 
 interface AccessibilitySettings {
@@ -69,8 +70,8 @@ export function AccessibilitySettings() {
     },
     textToSpeech: {
       enabled: false,
-      rate: 1.0,
-      pitch: 1.0,
+      rate: 1,
+      pitch: 1,
       volume: 0.8
     }
   });
@@ -158,8 +159,8 @@ export function AccessibilitySettings() {
       },
       textToSpeech: {
         enabled: false,
-        rate: 1.0,
-        pitch: 1.0,
+        rate: 1,
+        pitch: 1,
         volume: 0.8
       }
     });
@@ -308,8 +309,8 @@ export function AccessibilitySettings() {
                 <Slider
                   value={[settings.lineHeight]}
                   onValueChange={([value]) => updateSetting('lineHeight', value)}
-                  min={1.0}
-                  max={2.0}
+                  min={1}
+                  max={2}
                   step={0.1}
                   className="w-full"
                 />
@@ -484,7 +485,7 @@ export function AccessibilitySettings() {
                         updateNestedSetting('textToSpeech', 'rate', value)
                       }
                       min={0.5}
-                      max={2.0}
+                      max={2}
                       step={0.1}
                       className="w-full"
                     />
@@ -500,7 +501,7 @@ export function AccessibilitySettings() {
                         updateNestedSetting('textToSpeech', 'pitch', value)
                       }
                       min={0.5}
-                      max={2.0}
+                      max={2}
                       step={0.1}
                       className="w-full"
                     />

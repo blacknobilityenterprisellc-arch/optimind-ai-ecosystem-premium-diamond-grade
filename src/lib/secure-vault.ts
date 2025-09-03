@@ -161,7 +161,7 @@ class SecureVault {
           mimeType: metadata.mimeType || 'application/octet-stream',
           hash,
           encryptionAlgorithm: this.config.encryptionAlgorithm,
-          keyId: crypto.createHash('sha256').update(this.vaultKey).digest('hex').substring(0, 16),
+          keyId: crypto.createHash('sha256').update(this.vaultKey).digest('hex').slice(0, 16),
           accessCount: 0,
           tags: metadata.tags || [],
           nsfwAnalysis

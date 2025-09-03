@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
 import crypto from 'crypto';
+
+import { NextRequest, NextResponse } from 'next/server';
+
+import { db } from '@/lib/db';
 
 // Rate limiting in memory (in production, use Redis or similar)
 const rateLimit = new Map<string, { count: number; resetTime: number }>();
@@ -127,7 +129,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const sessionToken = authHeader.substring(7);
+    const sessionToken = authHeader.slice(7);
     
     // Delete session from database
     await db.session.delete({

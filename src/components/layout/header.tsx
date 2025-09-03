@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { 
   Menu, 
   X, 
@@ -14,6 +12,9 @@ import {
   ChevronDown,
   ArrowRight
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

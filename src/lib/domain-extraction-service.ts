@@ -224,7 +224,7 @@ class DomainExtractionService {
   // Main extraction method
   async extractData(request: ExtractionRequest): Promise<ExtractionResult> {
     const startTime = Date.now();
-    const extractionId = `extract-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const extractionId = `extract-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       // Get domain configuration
@@ -703,7 +703,7 @@ class DomainExtractionService {
         return {
           ...baseResponse,
           clauses: [
-            { type: 'confidentiality', content: 'All information shall be kept confidential', confidence: 0.90 }
+            { type: 'confidentiality', content: 'All information shall be kept confidential', confidence: 0.9 }
           ],
           parties: [
             { name: 'Party A', role: 'Client', confidence: 0.95 }
@@ -776,7 +776,7 @@ class DomainExtractionService {
 
   private calculateValidationScore(data: any, request: ExtractionRequest): number {
     // Calculate validation score based on data quality and completeness
-    let score = 1.0;
+    let score = 1;
     
     // Check for required fields based on domain
     const requiredFields = {
@@ -1032,7 +1032,7 @@ class DomainExtractionService {
 
       const response = await mcpService.executeTool(toolRequest);
       return response.success && response.result?.compliant;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -1050,7 +1050,7 @@ class DomainExtractionService {
 
       const response = await mcpService.executeTool(toolRequest);
       return response.success && response.result?.compliant;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

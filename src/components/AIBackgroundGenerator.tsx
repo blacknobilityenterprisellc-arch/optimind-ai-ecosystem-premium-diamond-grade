@@ -1,26 +1,6 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { PremiumFeature, PremiumBadge } from "@/components/PremiumBadge";
-import { Paywall } from "@/components/Paywall";
-import { DropZone } from "@/components/DropZone";
-import { 
-  aiBackgroundGenerator, 
-  BackgroundGenerationOptions,
-  BackgroundGenerationResult,
-  BackgroundRemovalResult,
-  BackgroundReplacementOptions
-} from "@/lib/ai-background-generator";
-import { useToast } from "@/hooks/use-toast";
 import { 
   Wand2, 
   Image as ImageIcon, 
@@ -48,6 +28,27 @@ import {
   AlertCircle,
   Loader2
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { PremiumFeature, PremiumBadge } from "@/components/PremiumBadge";
+import { Paywall } from "@/components/Paywall";
+import { DropZone } from "@/components/DropZone";
+import { 
+  aiBackgroundGenerator, 
+  BackgroundGenerationOptions,
+  BackgroundGenerationResult,
+  BackgroundRemovalResult,
+  BackgroundReplacementOptions
+} from "@/lib/ai-background-generator";
+import { useToast } from "@/hooks/use-toast";
 
 interface BackgroundPreset {
   id: string;

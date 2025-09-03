@@ -325,7 +325,7 @@ class AutoQuarantineSystem {
           return {
             shouldQuarantine: true,
             action: rule.action === 'delete' ? 'deleted' : 
-                   rule.action === 'flag' ? 'flagged' : 'quarantined',
+                   (rule.action === 'flag' ? 'flagged' : 'quarantined'),
             reason: `Policy violation: ${rule.name}`
           };
         }

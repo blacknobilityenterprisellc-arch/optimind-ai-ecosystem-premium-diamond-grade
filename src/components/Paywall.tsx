@@ -1,11 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { PremiumBadge, PremiumButton } from "@/components/PremiumBadge";
 import { 
   X, 
   Shield, 
@@ -20,6 +15,12 @@ import {
   Brain,
   Palette
 } from "lucide-react";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { PremiumBadge, PremiumButton } from "@/components/PremiumBadge";
 
 interface PaywallProps {
   isOpen: boolean;

@@ -4,8 +4,9 @@
  * Handles storing analysis results, failures, and review items
  */
 
-import { db } from '@/lib/db';
 import { AnalysisType, ReviewPriority, ReviewStatus } from '@prisma/client';
+
+import { db } from '@/lib/db';
 import { ModelResult, ConsensusResult } from '@/types';
 
 export interface PersistAnalysisInput {
@@ -71,7 +72,7 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
       data: {
         inputRef: inputRef,
         type: AnalysisType.CONSENSUS, // Use consensus as the fallback type
-        labels: [{ label: 'analysis_failed', score: 1.0 }],
+        labels: [{ label: 'analysis_failed', score: 1 }],
         reasons: [`Analysis failed: ${failure.error}`, ...(failure.details ? [failure.details] : [])],
         provenance: { model: 'system', version: '1.0' },
         rawOutput: {
@@ -85,7 +86,7 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
     });
 
     // Create a high-priority review item for failures
-    await createReviewItem(inputRef, [{ label: 'analysis_failed', score: 1.0 }], [
+    await createReviewItem(inputRef, [{ label: 'analysis_failed', score: 1 }], [
       `Analysis failed: ${failure.error}`,
       ...(failure.details ? [failure.details] : [])
     ], ReviewPriority.HIGH);
@@ -189,7 +190,7 @@ function calculateReviewPriority(
  */
 function calculateSeverity(labels: Array<{ label: string; score: number }>): number {
   const severityWeights: Record<string, number> = {
-    'child_exposed': 1.0,
+    'child_exposed': 1,
     'sexual_nudity': 0.9,
     'deepfake_suspected': 0.85,
     'violence': 0.8,

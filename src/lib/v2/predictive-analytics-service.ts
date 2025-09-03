@@ -6,8 +6,9 @@
  * enterprise-grade model management, training, and inference capabilities.
  */
 
-import { predictiveAnalyticsV2, type PredictiveModelConfig, type TrainingData, type PredictionResult, type PredictiveInsight } from './predictive-analytics';
 import { prisma } from '@/lib/db';
+
+import { predictiveAnalyticsV2, type PredictiveModelConfig, type TrainingData, type PredictionResult, type PredictiveInsight } from './predictive-analytics';
 
 export interface PredictiveAnalyticsRequest {
   operation: 'create_model' | 'train_model' | 'predict' | 'generate_insights' | 'get_metrics' | 'health_check';
@@ -66,7 +67,7 @@ class PredictiveAnalyticsServiceV2 {
       
       // Execute operation
       let result: any;
-      let operationSuccess = true;
+      const operationSuccess = true;
       let modelType: string | undefined;
       let confidence: number | undefined;
       
@@ -370,7 +371,7 @@ class PredictiveAnalyticsServiceV2 {
       await this.validateUser(request.userId);
 
       switch (request.action) {
-        case 'create':
+        case 'create': {
           if (!request.config) {
             throw new Error('Model configuration is required for creation');
           }
@@ -416,6 +417,7 @@ class PredictiveAnalyticsServiceV2 {
             models: [model],
             message: 'Predictive model created successfully'
           };
+        }
 
         case 'train':
           if (!request.modelId) {
@@ -436,7 +438,7 @@ class PredictiveAnalyticsServiceV2 {
             message: 'Model training initiated'
           };
 
-        case 'deploy':
+        case 'deploy': {
           if (!request.modelId) {
             throw new Error('Model ID is required for deployment');
           }
@@ -464,6 +466,7 @@ class PredictiveAnalyticsServiceV2 {
             success: true,
             message: 'Model deployed successfully'
           };
+        }
 
         case 'archive':
           if (!request.modelId) {

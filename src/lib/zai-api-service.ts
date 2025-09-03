@@ -73,9 +73,9 @@ class ZAIApiService {
   ): Promise<ZAIResponse> {
     // Mock completion
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       model: modelId,
-      content: `This is a mock response from ${modelId} for the prompt: "${prompt.substring(0, 100)}..."`,
+      content: `This is a mock response from ${modelId} for the prompt: "${prompt.slice(0, 100)}..."`,
       usage: {
         promptTokens: Math.floor(Math.random() * 100) + 50,
         completionTokens: Math.floor(Math.random() * 200) + 100,
@@ -92,7 +92,7 @@ class ZAIApiService {
   ): Promise<any> {
     // Mock image analysis
     return {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       model: modelId,
       analysis: {
         objects: ['person', 'car', 'building'],

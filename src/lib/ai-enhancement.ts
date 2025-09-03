@@ -203,7 +203,7 @@ class AIEnhancementEngine {
         - Inappropriate situations
         - Safety concerns
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -248,7 +248,7 @@ class AIEnhancementEngine {
         - Animals and nature
         - Vehicles and structures
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -289,7 +289,7 @@ class AIEnhancementEngine {
         
         Possible emotions: happy, sad, angry, surprised, fearful, disgusted, calm, excited, romantic, nostalgic, peaceful, tense, joyful, melancholic, serene, dramatic
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -328,7 +328,7 @@ class AIEnhancementEngine {
         - Handwritten text
         - Digital text
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -367,7 +367,7 @@ class AIEnhancementEngine {
         - Profile views
         - Different angles
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -415,7 +415,7 @@ class AIEnhancementEngine {
         - sharpness: number (0-1)
         - blur: number (0-1, lower is better)
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({
@@ -475,7 +475,7 @@ class AIEnhancementEngine {
         - Artistic merit
         - Overall appeal
         
-        Image data: ${base64Image.substring(0, 100)}...
+        Image data: ${base64Image.slice(0, 100)}...
       `;
 
       const response = await this.zai!.chat.completions.create({

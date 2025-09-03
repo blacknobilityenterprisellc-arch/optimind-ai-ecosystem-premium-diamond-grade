@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
 import { ZaiIntegration } from '@/services/zaiIntegration';
 
 export async function POST(request: NextRequest) {
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     
     // Generate a unique ID for this analysis
-    const imageId = `mod_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const imageId = `mod_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     
     // Extract metadata
     const metadata = {

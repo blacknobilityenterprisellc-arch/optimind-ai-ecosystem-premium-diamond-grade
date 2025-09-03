@@ -7,6 +7,7 @@
  */
 
 import crypto from 'crypto';
+
 import { hash as bcryptHash, compare as bcryptCompare } from 'bcryptjs';
 
 export interface QuantumSecurityConfig {
@@ -452,7 +453,7 @@ class QuantumSecurityV2 {
     const passedChecks = Object.values(checks).filter(Boolean).length;
     const totalChecks = Object.keys(checks).length;
     const status = passedChecks === totalChecks ? 'healthy' : 
-                   passedChecks > totalChecks / 2 ? 'degraded' : 'unhealthy';
+                   (passedChecks > totalChecks / 2 ? 'degraded' : 'unhealthy');
 
     return {
       status,

@@ -1,12 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { ModerationFilterPanel, FilterState } from '@/components/ModerationFilterPanel';
-import { ModerationResultsTable } from '@/components/ModerationResultsTable';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   ArrowLeft, 
   Download, 
@@ -19,6 +13,13 @@ import {
   Clock
 } from 'lucide-react';
 import Link from 'next/link';
+
+import { ModerationFilterPanel, FilterState } from '@/components/ModerationFilterPanel';
+import { ModerationResultsTable } from '@/components/ModerationResultsTable';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ModerationResult {
   id: string;

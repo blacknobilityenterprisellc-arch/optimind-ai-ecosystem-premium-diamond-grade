@@ -1,16 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { LoadingCard, LoadingSkeleton } from "@/components/ui/loading-spinner";
-import { useApi } from "@/hooks/use-api";
 import { toast } from "sonner";
 import { 
   FileText, 
@@ -71,6 +61,17 @@ import {
   Crown as CrownIcon,
   Sparkles as SparklesIcon
 } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Progress } from "@/components/ui/progress";
+import { LoadingCard, LoadingSkeleton } from "@/components/ui/loading-spinner";
+import { useApi } from "@/hooks/use-api";
 
 // Import specialized components
 import { AIArtGenerator } from "@/components/AIArtGenerator";
@@ -698,7 +699,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                         <Progress value={75} className="w-48" />
                       </div>
                     </div>
-                  ) : generatedContent ? (
+                  ) : (generatedContent ? (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-xl font-semibold">{generatedContent.title}</h3>
@@ -744,7 +745,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                         <p className="text-sm">Fill in the form and click "Generate Content" to get started</p>
                       </div>
                     </div>
-                  )}
+                  ))}
                 </CardContent>
               </Card>
             </div>

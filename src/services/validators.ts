@@ -4,6 +4,7 @@
  */
 
 import Ajv from 'ajv';
+
 import schema from '../schemas/moderation.schema.json';
 
 const ajv = new Ajv({ strict: false });

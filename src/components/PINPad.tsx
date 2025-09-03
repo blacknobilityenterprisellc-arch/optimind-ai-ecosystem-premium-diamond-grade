@@ -1,12 +1,6 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { useFocusTrap, useKeyboardNavigation, useModalFocus } from "@/lib/keyboard-navigation";
-import { useFocusManagement } from "@/lib/focus-manager";
 import { 
   X, 
   Lock, 
@@ -16,6 +10,13 @@ import {
   Delete,
   Fingerprint
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { useFocusTrap, useKeyboardNavigation, useModalFocus } from "@/lib/keyboard-navigation";
+import { useFocusManagement } from "@/lib/focus-manager";
 
 interface PINPadProps {
   isOpen: boolean;
@@ -109,7 +110,7 @@ export function PINPad({
           setError("");
         }, 2000);
       }
-    } catch (err) {
+    } catch {
       const errorMsg = "Authentication failed. Please check your connection and try again.";
       setError(errorMsg);
       onError?.(errorMsg);
@@ -131,7 +132,7 @@ export function PINPad({
       onSuccess();
       setPin("");
       setError("");
-    } catch (err) {
+    } catch {
       const errorMsg = "Biometric authentication failed";
       setError(errorMsg);
       onError?.(errorMsg);
@@ -189,9 +190,9 @@ export function PINPad({
                   key={index}
                   className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                     pin[index]
-                      ? error
+                      ? (error
                         ? "border-red-500 bg-red-500/10"
-                        : "border-green-500 bg-green-500/10"
+                        : "border-green-500 bg-green-500/10")
                       : "border-gray-300 bg-gray-50"
                   }`}
                 >

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+
 import { db } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
-    const days = parseInt(searchParams.get('days') || '30')
+    const days = Number.parseInt(searchParams.get('days') || '30')
 
     const startDate = new Date()
     startDate.setDate(startDate.getDate() - days)

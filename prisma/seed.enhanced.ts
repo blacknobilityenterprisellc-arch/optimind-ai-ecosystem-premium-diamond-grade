@@ -6,17 +6,38 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding Enhanced Premium Diamond-Grade Database with GLM-4.5 Integration...');
 
+  // Get the existing tenant and users
+  const tenant = await prisma.tenant.findFirst({
+    where: { slug: 'default' }
+  });
+
+  const users = await prisma.user.findMany({
+    where: { 
+      email: {
+        in: ['admin@optimind.ai', 'enterprise@optimind.ai', 'test@optimind.ai']
+      }
+    }
+  });
+
+  if (!tenant || users.length === 0) {
+    console.error('❌ No tenant or users found. Please run the main seed first: npm run db:seed');
+    return;
+  }
+
+  const adminUser = users.find(u => u.email === 'admin@optimind.ai')!;
+  const enterpriseUser = users.find(u => u.email === 'enterprise@optimind.ai')!;
+
   // Create enhanced AI service configurations
   const glmConfig = await prisma.aIServiceConfig.upsert({
     where: { 
       tenantId_name: {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
+        tenantId: tenant.id,
         name: 'GLM-4.5 Flagship'
       }
     },
     update: {},
     create: {
-      tenantId: 'cmf3w3no40003otkl666x8ujd',
+      tenantId: tenant.id,
       name: 'GLM-4.5 Flagship',
       provider: 'Z_AI',
       model: 'GLM-4.5',
@@ -44,13 +65,13 @@ async function main() {
   const glmVisionConfig = await prisma.aIServiceConfig.upsert({
     where: { 
       tenantId_name: {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
+        tenantId: tenant.id,
         name: 'GLM-4.5V Vision'
       }
     },
     update: {},
     create: {
-      tenantId: 'cmf3w3no40003otkl666x8ujd',
+      tenantId: tenant.id,
       name: 'GLM-4.5V Vision',
       provider: 'Z_AI',
       model: 'GLM-4.5V',
@@ -78,13 +99,13 @@ async function main() {
   const glmAirConfig = await prisma.aIServiceConfig.upsert({
     where: { 
       tenantId_name: {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
+        tenantId: tenant.id,
         name: 'GLM-4.5-AIR Advanced'
       }
     },
     update: {},
     create: {
-      tenantId: 'cmf3w3no40003otkl666x8ujd',
+      tenantId: tenant.id,
       name: 'GLM-4.5-AIR Advanced',
       provider: 'Z_AI',
       model: 'GLM-4.5-AIR',
@@ -114,8 +135,8 @@ async function main() {
   await prisma.aIRequestLog.createMany({
     data: [
       {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
-        userId: 'cmf24ulin0000nlrgkontt9it',
+        tenantId: tenant.id,
+        userId: adminUser.id,
         serviceConfigId: glmConfig.id,
         requestType: TaskType.GENERAL,
         input: 'Analyze the enterprise AI ecosystem architecture and provide optimization recommendations',
@@ -135,8 +156,8 @@ async function main() {
         },
       },
       {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
-        userId: 'cmf3w3nle0001otkllnqi801f',
+        tenantId: tenant.id,
+        userId: enterpriseUser.id,
         serviceConfigId: glmVisionConfig.id,
         requestType: TaskType.IMAGE_GENERATION,
         input: 'Analyze uploaded enterprise security dashboard screenshot for vulnerabilities',
@@ -157,8 +178,8 @@ async function main() {
         },
       },
       {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
-        userId: 'cmf24ulin0000nlrgkontt9it',
+        tenantId: tenant.id,
+        userId: adminUser.id,
         serviceConfigId: glmAirConfig.id,
         requestType: TaskType.RESEARCH,
         input: 'Conduct comprehensive analysis of zero-trust security implementation best practices',
@@ -186,8 +207,8 @@ async function main() {
   await prisma.fileStorage.createMany({
     data: [
       {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
-        userId: 'cmf24ulin0000nlrgkontt9it',
+        tenantId: tenant.id,
+        userId: adminUser.id,
         filename: 'enterprise-architecture.pdf',
         originalName: 'Enterprise AI Architecture Blueprint.pdf',
         path: '/uploads/enterprise/enterprise-architecture.pdf',
@@ -207,8 +228,8 @@ async function main() {
         lastAccessedAt: new Date(),
       },
       {
-        tenantId: 'cmf3w3no40003otkl666x8ujd',
-        userId: 'cmf3w3nle0001otkllnqi801f',
+        tenantId: tenant.id,
+        userId: enterpriseUser.id,
         filename: 'security-dashboard.png',
         originalName: 'Security Dashboard Screenshot.png',
         path: '/uploads/security/security-dashboard.png',

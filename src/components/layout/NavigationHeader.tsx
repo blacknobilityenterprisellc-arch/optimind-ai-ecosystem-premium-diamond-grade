@@ -3,17 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
 import { 
   Brain, 
   Search, 
@@ -32,6 +21,25 @@ import {
   Crown,
   ChevronDown
 } from "lucide-react";
+  import { 
+    TestTube, 
+    Activity, 
+    TrendingUp, 
+    AlertTriangle,
+    FileCheck
+  } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 export default function NavigationHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -43,6 +51,12 @@ export default function NavigationHeader() {
       href: "/",
       icon: BarChart3,
       description: "Overview and analytics"
+    },
+    {
+      title: "OptiTest AI",
+      href: "/testing",
+      icon: TestTube,
+      description: "Autonomous testing framework"
     },
     {
       title: "AI Content & Creation",
@@ -61,6 +75,27 @@ export default function NavigationHeader() {
       href: "/research-analysis",
       icon: Brain,
       description: "Multi-model analysis and insights"
+    }
+  ];
+
+  const testingSubItems = [
+    {
+      title: "Testing Dashboard",
+      href: "/testing",
+      icon: Activity,
+      description: "Main testing overview"
+    },
+    {
+      title: "Automated Remediation",
+      href: "/testing/remediation",
+      icon: AlertTriangle,
+      description: "Self-healing and repair system"
+    },
+    {
+      title: "Enterprise Reports",
+      href: "/testing/reports",
+      icon: FileCheck,
+      description: "Comprehensive reporting and alerts"
     }
   ];
 
@@ -89,17 +124,55 @@ export default function NavigationHeader() {
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {navigationItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`transition-colors hover:text-foreground/80 ${
-                  isActive(item.href) 
-                    ? "text-foreground" 
-                    : "text-foreground/60"
-                }`}
-              >
-                {item.title}
-              </Link>
+              item.title === "OptiTest AI" ? (
+                <DropdownMenu key={item.href}>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className={`flex items-center space-x-1 transition-colors hover:text-foreground/80 ${
+                        isActive(item.href) 
+                          ? "text-foreground" 
+                          : "text-foreground/60"
+                      }`}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                      <ChevronDown className="h-3 w-3" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {testingSubItems.map((subItem) => (
+                      <DropdownMenuItem key={subItem.href} asChild>
+                        <Link
+                          href={subItem.href}
+                          className={`flex items-center space-x-2 ${
+                            isActive(subItem.href) 
+                              ? "bg-accent text-accent-foreground" 
+                              : ""
+                          }`}
+                        >
+                          <subItem.icon className="h-4 w-4" />
+                          <div>
+                            <div>{subItem.title}</div>
+                            <div className="text-xs text-muted-foreground">{subItem.description}</div>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`transition-colors hover:text-foreground/80 ${
+                    isActive(item.href) 
+                      ? "text-foreground" 
+                      : "text-foreground/60"
+                  }`}
+                >
+                  {item.title}
+                </Link>
+              )
             ))}
           </nav>
         </div>
@@ -182,22 +255,51 @@ export default function NavigationHeader() {
         <div className="md:hidden">
           <nav className="flex flex-col space-y-1 border-t p-4">
             {navigationItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                  isActive(item.href) 
-                    ? "bg-accent text-accent-foreground" 
-                    : ""
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <item.icon className="h-4 w-4" />
-                <div>
-                  <div>{item.title}</div>
-                  <div className="text-xs text-muted-foreground">{item.description}</div>
+              item.title === "OptiTest AI" ? (
+                <div key={item.href} className="space-y-1">
+                  <div className="flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium">
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.title}</span>
+                  </div>
+                  <div className="ml-6 space-y-1">
+                    {testingSubItems.map((subItem) => (
+                      <Link
+                        key={subItem.href}
+                        href={subItem.href}
+                        className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                          isActive(subItem.href) 
+                            ? "bg-accent text-accent-foreground" 
+                            : ""
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <subItem.icon className="h-4 w-4" />
+                        <div>
+                          <div>{subItem.title}</div>
+                          <div className="text-xs text-muted-foreground">{subItem.description}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </Link>
+              ) : (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
+                    isActive(item.href) 
+                      ? "bg-accent text-accent-foreground" 
+                      : ""
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <item.icon className="h-4 w-4" />
+                  <div>
+                    <div>{item.title}</div>
+                    <div className="text-xs text-muted-foreground">{item.description}</div>
+                  </div>
+                </Link>
+              )
             ))}
           </nav>
         </div>

@@ -402,7 +402,7 @@ class SecureDeletionService {
         if (sample.bytesRead > 0) {
           throw new Error('File still contains readable data after deletion');
         }
-      } catch (readError) {
+      } catch {
         // Expected error - file should be unreadable
       }
 
@@ -459,7 +459,7 @@ class SecureDeletionService {
     const bufferSize = 1024 * 1024; // 1MB buffer
     
     try {
-      let buffer = Buffer.alloc(bufferSize);
+      const buffer = Buffer.alloc(bufferSize);
       let bytesRead;
       
       do {
@@ -667,9 +667,9 @@ Certificate Hash: ${crypto.createHash('sha256').update(certificate).digest('hex'
 
     // Find most used method
     const methodCounts = new Map<string, number>();
-    this.deletionHistory.forEach(job => {
+    for (const job of this.deletionHistory) {
       methodCounts.set(job.method.id, (methodCounts.get(job.method.id) || 0) + 1);
-    });
+    }
     
     const mostUsedMethod = Array.from(methodCounts.entries())
       .sort((a, b) => b[1] - a[1])[0]?.[0] || 'none';

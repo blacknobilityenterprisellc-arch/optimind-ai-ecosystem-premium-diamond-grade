@@ -71,7 +71,7 @@ export const OPENROUTER_MODELS: OpenRouterModelConfig[] = [
     apiModel: 'openai/o1-preview',
     capabilities: ['advanced-reasoning', 'problem-solving', 'mathematics', 'science'],
     maxTokens: 32768,
-    temperature: 1.0,
+    temperature: 1,
     systemPrompt: 'You are O1 Preview, an advanced reasoning model with exceptional problem-solving capabilities.',
     provider: 'OpenAI',
     pricing: { input: 0.015, output: 0.06 }
@@ -82,7 +82,7 @@ export const OPENROUTER_MODELS: OpenRouterModelConfig[] = [
     apiModel: 'openai/o1-mini',
     capabilities: ['reasoning', 'problem-solving', 'coding', 'analysis'],
     maxTokens: 65536,
-    temperature: 1.0,
+    temperature: 1,
     systemPrompt: 'You are O1 Mini, a fast reasoning model with strong problem-solving abilities.',
     provider: 'OpenAI',
     pricing: { input: 0.003, output: 0.012 }

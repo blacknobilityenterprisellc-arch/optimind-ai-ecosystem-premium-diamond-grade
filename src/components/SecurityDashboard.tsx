@@ -1,16 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useSecurityMonitor, SecurityEvent, SecurityAlert } from "@/lib/security-monitor";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { 
   Shield, 
   AlertTriangle, 
@@ -36,6 +26,17 @@ import {
   XCircle,
   Filter
 } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useSecurityMonitor, SecurityEvent, SecurityAlert } from "@/lib/security-monitor";
+import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 import { useToast } from "@/hooks/use-toast";
 
 export function SecurityDashboard() {
@@ -298,7 +299,7 @@ export function SecurityDashboard() {
                 <div>
                   <p className="text-sm text-muted-foreground">System Health</p>
                   <p className="text-2xl font-bold text-green-600">
-                    {metrics.threatScore < 40 ? 'Good' : metrics.threatScore < 70 ? 'Fair' : 'Poor'}
+                    {metrics.threatScore < 40 ? 'Good' : (metrics.threatScore < 70 ? 'Fair' : 'Poor')}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     Last updated: {new Date(metrics.lastUpdated).toLocaleTimeString()}

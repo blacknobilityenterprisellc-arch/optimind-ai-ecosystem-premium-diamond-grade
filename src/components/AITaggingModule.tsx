@@ -1,10 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { PremiumBadge, PremiumFeature } from "@/components/PremiumBadge";
 import { 
   Tag, 
   X, 
@@ -20,6 +16,11 @@ import {
   Filter,
   Loader2
 } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { PremiumBadge, PremiumFeature } from "@/components/PremiumBadge";
 
 interface AITag {
   id: string;
@@ -161,7 +162,7 @@ export function AITaggingModule({
       id: `custom-${Date.now()}`,
       name: customTagName.trim(),
       type: "custom",
-      confidence: 1.0,
+      confidence: 1,
       color: TAG_COLORS.custom
     };
 
@@ -191,9 +192,9 @@ export function AITaggingModule({
 
   const getAllTags = () => {
     const allTags = new Set<string>();
-    photos.forEach(photo => {
-      photo.tags.forEach(tag => allTags.add(tag.type));
-    });
+    for (const photo of photos) {
+      for (const tag of photo.tags) allTags.add(tag.type);
+    }
     return Array.from(allTags);
   };
 

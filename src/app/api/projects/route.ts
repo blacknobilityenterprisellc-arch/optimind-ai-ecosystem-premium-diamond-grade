@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const { name, description } = body;
 
     const newProject = {
-      id: Math.random().toString(36).substr(2, 9),
+      id: Math.random().toString(36).slice(2, 11),
       name,
       description,
       status: 'active',

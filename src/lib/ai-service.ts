@@ -256,12 +256,12 @@ export class AIService {
     }
 
     if (request.context) {
-      request.context.forEach((context, index) => {
+      for (const [index, context] of request.context.entries()) {
         messages.push({
           role: index % 2 === 0 ? 'user' : 'assistant',
           content: context
         });
-      });
+      }
     }
 
     messages.push({
@@ -281,9 +281,9 @@ export class AIService {
     
     // Adjust confidence based on token usage
     const tokenRatio = usage.completion_tokens / usage.total_tokens;
-    const tokenConfidence = Math.min(1.0, tokenRatio * 1.5);
+    const tokenConfidence = Math.min(1, tokenRatio * 1.5);
     
-    return Math.max(0.1, Math.min(1.0, baseConfidence + (tokenConfidence - 0.5) * 0.3));
+    return Math.max(0.1, Math.min(1, baseConfidence + (tokenConfidence - 0.5) * 0.3));
   }
 
   getAvailableModels(): AIModel[] {

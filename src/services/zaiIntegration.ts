@@ -13,16 +13,18 @@
  *   const result = await integr.analyzeAndPersistImage(imageId, imageBuffer, uploadMetadata);
  */
 
+import { AnalysisType } from '@prisma/client';
+import pLimit from 'p-limit';
+
 import { ZaiClient } from './zaiClient';
 import { zaiVisionAnalyze } from './zaiVision';
 import { zaiTextReasoning } from './zaiText';
 import { zaiAirAnalyze } from './zaiAir';
 import { assertValidModeration } from './validators';
 import { persistAnalysisResult, flagAnalysisAsFailed } from './moderationPersistence';
-import { AnalysisType } from '@prisma/client';
 import { computeConsensus } from './imageAnalysis';
 import { AdaptiveConsensusEngine } from './adaptiveConsensus';
-import pLimit from 'p-limit';
+
 
 const DEFAULT_TIMEOUT_MS = Number(process.env.ZAI_CALL_TIMEOUT_MS || 30000);
 
@@ -192,7 +194,7 @@ export class ZaiIntegration {
       
       const modelResult = await zaiVisionAnalyze(this.client, buffer, {
         model: this.visionModel,
-        temperature: 0.0,
+        temperature: 0,
         max_tokens: 1200,
         includeSaliencyBase64: false,
         allowLenientParse: false,
@@ -250,7 +252,7 @@ export class ZaiIntegration {
         metadata: ctx.metadata || {}
       }, {
         model: this.airModel,
-        temperature: 0.0,
+        temperature: 0,
         max_tokens: 1500,
         enableMultiStepReasoning: true,
         includeRelationshipAnalysis: true,
@@ -313,7 +315,7 @@ export class ZaiIntegration {
 
       const modelResult = await zaiTextReasoning(this.client, ctxDesc, {
         model: this.textModel,
-        temperature: 0.0,
+        temperature: 0,
         max_tokens: 800,
         allowLenientParse: false,
       });

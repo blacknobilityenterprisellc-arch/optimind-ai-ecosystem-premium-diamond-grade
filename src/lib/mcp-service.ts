@@ -369,9 +369,9 @@ class MCPService {
   }
 
   private initializeTools(): void {
-    MCP_TOOLS.forEach(tool => {
+    for (const tool of MCP_TOOLS) {
       this.tools.set(tool.id, tool);
-    });
+    }
   }
 
   private initializeDefaultAgents(): void {
@@ -432,9 +432,9 @@ class MCPService {
       }
     ];
 
-    defaultAgents.forEach(agent => {
+    for (const agent of defaultAgents) {
       this.agents.set(agent.id, agent);
-    });
+    }
   }
 
   // Tool Management
@@ -484,7 +484,7 @@ class MCPService {
     }
 
     const startTime = Date.now();
-    const requestId = request.requestId || `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const requestId = request.requestId || `req-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 
     try {
       // Validate input schema

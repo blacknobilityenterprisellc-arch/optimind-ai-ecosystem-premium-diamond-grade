@@ -23,9 +23,9 @@ export interface ModerationAction {
  * Default threshold configuration
  */
 export const DEFAULT_THRESHOLDS: ThresholdConfig = {
-  quarantine: 0.90,
+  quarantine: 0.9,
   review: 0.75,
-  allow: 0.50
+  allow: 0.5
 };
 
 /**
@@ -255,7 +255,7 @@ export function getHandlingRecommendation(result: ModerationResult): {
  */
 export const POLICY_CONFIGS = {
   strict: {
-    thresholds: { quarantine: 0.75, review: 0.60, allow: 0.40 },
+    thresholds: { quarantine: 0.75, review: 0.6, allow: 0.4 },
     description: 'Strict policy for sensitive environments'
   },
   standard: {
@@ -263,7 +263,7 @@ export const POLICY_CONFIGS = {
     description: 'Standard balanced policy'
   },
   lenient: {
-    thresholds: { quarantine: 0.95, review: 0.85, allow: 0.60 },
+    thresholds: { quarantine: 0.95, review: 0.85, allow: 0.6 },
     description: 'Lenient policy for creative/educational content'
   }
 };
