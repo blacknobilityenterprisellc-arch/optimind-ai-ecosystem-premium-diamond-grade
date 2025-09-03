@@ -13,6 +13,98 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Multi-Tenant Architecture
+model Tenant {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  slug            String            @unique
+  domain          String?
+  logo            String?
+  branding        Json?             // Branding configuration
+  settings        Json?             // Tenant-specific settings
+  plan            TenantPlan        @default(FREE)
+  status          TenantStatus      @default(ACTIVE)
+  maxUsers        Int               @default(10)
+  maxProjects     Int               @default(5)
+  maxStorage      Int               @default(1024) // MB
+  features        Json?             // Enabled features
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  users           User[]
+  projects        Project[]
+  subscriptions   Subscription[]
+  settings        TenantSetting[]
+  auditLogs       TenantAuditLog[]
+  
+  @@map("tenants")
+}
+
+model TenantSetting {
+  id              String            @id @default(cuid())
+  tenantId        String
+  key             String
+  value           Json
+  category        SettingCategory   @default(GENERAL)
+  isSystem        Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, key])
+  @@map("tenant_settings")
+}
+
+model TenantAuditLog {
+  id              String            @id @default(cuid())
+  tenantId        String
+  userId          String?
+  action          String
+  resourceType    String?
+  resourceId      String?
+  oldValues       Json?
+  newValues       Json?
+  metadata        Json?
+  ipAddress       String?
+  userAgent       String?
+  timestamp       DateTime          @default(now())
+  
+  // Relations
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([tenantId])
+  @@index([action])
+  @@index([timestamp])
+  @@map("tenant_audit_logs")
+}
+
+model TenantUser {
+  id              String            @id @default(cuid())
+  tenantId        String
+  userId          String
+  role            TenantUserRole    @default(MEMBER)
+  status          TenantUserStatus  @default(ACTIVE)
+  invitedBy       String?
+  invitedAt       DateTime          @default(now())
+  joinedAt        DateTime?
+  permissions     Json?             // Custom permissions
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, userId])
+  @@map("tenant_users")
+}
+
 // Core User Management
 model User {
   id              String   @id @default(cuid())
@@ -55,6 +147,14 @@ model User {
   searchQueries   SearchQuery[]
   apiUsage        ApiUsage[]
   apiKeys         ApiKey[]
+  // Multi-Tenant Relations
+  tenantUsers     TenantUser[]
+  // Enhanced RBAC Relations
+  userRoles       UserRoleAssignment[]
+  // AI Model Relations
+  modelPreferences UserModelPreference[]
+  modelUsageLogs  AIModelUsageLog[]
+  modelComparisons AIModelComparison[]
   
   @@map("users")
 }
@@ -88,7 +188,8 @@ model SecuritySettings {
 // Subscription Management
 model Subscription {
   id              String            @id @default(cuid())
-  userId          String            @unique
+  userId          String
+  tenantId        String?
   plan            SubscriptionPlan
   status          SubscriptionStatus @default(ACTIVE)
   currentPeriodStart DateTime
@@ -100,9 +201,11 @@ model Subscription {
   
   // Relations
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant?           @relation(fields: [tenantId], references: [id], onDelete: SetNull)
   usage           SubscriptionUsage[]
   usageMetrics    UsageMetric[]
   
+  @@unique([userId, tenantId])
   @@map("subscriptions")
 }
 
@@ -128,12 +231,14 @@ model Project {
   description String?
   status      ProjectStatus @default(ACTIVE)
   userId      String
+  tenantId    String?
   metadata    Json?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   
   // Relations
   user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant      Tenant?     @relation(fields: [tenantId], references: [id], onDelete: SetNull)
   analyses    Analysis[]
   uploads     Upload[]
   // Business Solutions Relations
@@ -389,6 +494,48 @@ enum UserRole {
   ADMIN
   MODERATOR
   DEVELOPER
+}
+
+// Multi-Tenant Enums
+enum TenantPlan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+  CUSTOM
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+  DELETED
+}
+
+enum TenantUserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  GUEST
+}
+
+enum TenantUserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  SUSPENDED
+  DELETED
+}
+
+enum SettingCategory {
+  GENERAL
+  SECURITY
+  BILLING
+  FEATURES
+  INTEGRATIONS
+  BRANDING
+  NOTIFICATIONS
 }
 
 enum SubscriptionPlan {
@@ -1607,4 +1754,532 @@ enum CacheType {
   DATABASE_QUERY
   ML_PREDICTION
   SECURITY_POLICY
+}
+
+// Enhanced RBAC Models
+model Permission {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  key             String            @unique
+  description     String?
+  category        PermissionCategory @default(GENERAL)
+  resourceType    String?
+  action          String?
+  conditions      Json?             // Dynamic conditions for permission
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  rolePermissions RolePermission[]
+  
+  @@index([category])
+  @@index([resourceType])
+  @@map("permissions")
+}
+
+model Role {
+  id              String        @id @default(cuid())
+  name            String        @unique
+  description     String?
+  level           RoleLevel     @default(STANDARD)
+  isSystem        Boolean       @default(false)
+  permissions     Json?         // Legacy permissions array
+  isActive        Boolean       @default(true)
+  metadata        Json?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  // Relations
+  userRoles       UserRoleAssignment[]
+  rolePermissions RolePermission[]
+  
+  @@index([level])
+  @@index([isActive])
+  @@map("roles")
+}
+
+model UserRoleAssignment {
+  id              String            @id @default(cuid())
+  userId          String
+  roleId          String
+  tenantId        String?
+  assignedBy      String?
+  assignedAt      DateTime          @default(now())
+  expiresAt       DateTime?
+  conditions      Json?             // Dynamic conditions for role assignment
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role            Role              @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  tenant          Tenant?           @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  @@unique([userId, roleId, tenantId])
+  @@index([userId])
+  @@index([roleId])
+  @@index([tenantId])
+  @@map("user_role_assignments")
+}
+
+model RolePermission {
+  id              String            @id @default(cuid())
+  roleId          String
+  permissionId    String
+  conditions      Json?             // Override default permission conditions
+  grantedBy       String?
+  grantedAt       DateTime          @default(now())
+  expiresAt       DateTime?
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  role            Role              @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission      Permission        @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  @@unique([roleId, permissionId])
+  @@index([roleId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model PermissionTemplate {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  description     String?
+  category        TemplateCategory  @default(GENERAL)
+  permissions     Json              // Array of permission keys
+  isSystem        Boolean           @default(false)
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  roleTemplates   RoleTemplate[]
+  
+  @@index([category])
+  @@index([isActive])
+  @@map("permission_templates")
+}
+
+model RoleTemplate {
+  id              String            @id @default(cuid())
+  templateId      String
+  roleId          String
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  template        PermissionTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  role            Role              @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  @@unique([templateId, roleId])
+  @@index([templateId])
+  @@index([roleId])
+  @@map("role_templates")
+}
+
+// Enhanced RBAC Enums
+enum PermissionCategory {
+  GENERAL
+  USER_MANAGEMENT
+  PROJECT_MANAGEMENT
+  AI_SERVICES
+  BILLING
+  SECURITY
+  ANALYTICS
+  INTEGRATIONS
+  SYSTEM
+  TENANT_MANAGEMENT
+}
+
+enum RoleLevel {
+  BASIC
+  STANDARD
+  ADVANCED
+  ADMIN
+  SUPER_ADMIN
+  SYSTEM
+}
+
+enum TemplateCategory {
+  GENERAL
+  DEPARTMENT
+  PROJECT
+  TENANT
+  SYSTEM
+}
+
+// AI Model Management Models
+model AIModel {
+  id              String            @id @default(cuid())
+  name            String            @unique
+  provider        AIProvider
+  modelType       AIModelType
+  version         String?
+  description     String?
+  capabilities    Json?             // Array of capabilities
+  maxTokens       Int?
+  costPerToken    Float?
+  costPerMinute   Float?
+  features        Json?             // Additional features
+  config          Json?             // Model configuration
+  isActive        Boolean           @default(true)
+  isPremium       Boolean           @default(false)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  userPreferences UserModelPreference[]
+  tenantSettings  TenantModelSetting[]
+  usageLogs       AIModelUsageLog[]
+  
+  @@index([provider])
+  @@index([modelType])
+  @@index([isActive])
+  @@index([isPremium])
+  @@map("ai_models")
+}
+
+model UserModelPreference {
+  id              String            @id @default(cuid())
+  userId          String
+  modelId         String
+  taskType        TaskType          @default(GENERAL)
+  isDefault       Boolean           @default(false)
+  priority        Int               @default(0)
+  config          Json?             // User-specific configuration
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model           AIModel           @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, modelId, taskType])
+  @@index([userId])
+  @@index([taskType])
+  @@map("user_model_preferences")
+}
+
+model TenantModelSetting {
+  id              String            @id @default(cuid())
+  tenantId        String
+  modelId         String
+  isAllowed       Boolean           @default(true)
+  maxUsage        Int?              // Maximum usage per period
+  costLimit       Float?            // Cost limit per period
+  config          Json?             // Tenant-specific configuration
+  isActive        Boolean           @default(true)
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  // Relations
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  model           AIModel           @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@unique([tenantId, modelId])
+  @@index([tenantId])
+  @@map("tenant_model_settings")
+}
+
+model AIModelUsageLog {
+  id              String            @id @default(cuid())
+  userId          String
+  tenantId        String?
+  modelId         String
+  taskType        TaskType
+  inputTokens     Int?
+  outputTokens    Int?
+  processingTime  Int?              // in milliseconds
+  cost            Float?
+  status          UsageStatus       @default(COMPLETED)
+  errorMessage    String?
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant?           @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  model           AIModel           @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([tenantId])
+  @@index([modelId])
+  @@index([taskType])
+  @@index([status])
+  @@index([createdAt])
+  @@map("ai_model_usage_logs")
+}
+
+model AIModelComparison {
+  id              String            @id @default(cuid())
+  userId          String
+  tenantId        String?
+  prompt          String
+  models          Json              // Array of model IDs used
+  results         Json              // Comparison results
+  winnerModelId   String?
+  metrics         Json?             // Performance metrics
+  feedback        Json?             // User feedback
+  metadata        Json?
+  createdAt       DateTime          @default(now())
+  
+  // Relations
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant?           @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([tenantId])
+  @@index([createdAt])
+  @@map("ai_model_comparisons")
+}
+
+// AI Model Enums
+enum AIProvider {
+  OPENAI
+  ANTHROPIC
+  GOOGLE
+  META
+  Z_AI
+  OPENROUTER
+  LOCAL
+  CUSTOM
+}
+
+enum AIModelType {
+  LANGUAGE
+  VISION
+  MULTIMODAL
+  CODE
+  AUDIO
+  EMBEDDING
+  REASONING
+  CREATIVE
+}
+
+enum TaskType {
+  GENERAL
+  CODE_GENERATION
+  TEXT_ANALYSIS
+  IMAGE_GENERATION
+  DATA_ANALYSIS
+  TRANSLATION
+  SUMMARIZATION
+  CREATIVE_WRITING
+  RESEARCH
+  CHAT
+  DOCUMENT_PROCESSING
+}
+
+enum UsageStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  TIMEOUT
+}
+
+// Performance Monitoring Models
+model PerformanceMetric {
+  id              String                @id @default(cuid())
+  type            MetricType            @default(RESPONSE_TIME)
+  name            String
+  value           Float
+  unit            String?
+  tags            Json?                 // Additional tags for filtering
+  timestamp       DateTime              @default(now())
+  metadata        Json?
+  
+  // Relations
+  alerts          PerformanceAlert[]
+  
+  @@index([type])
+  @@index([name])
+  @@index([timestamp])
+  @@map("performance_metrics")
+}
+
+model PerformanceAlert {
+  id              String                @id @default(cuid())
+  metricId        String
+  type            AlertType             @default(THRESHOLD)
+  severity        AlertSeverity         @default(MEDIUM)
+  condition       Json                  // Alert condition
+  message         String?
+  status          AlertStatus           @default(ACTIVE)
+  acknowledgedBy  String?
+  acknowledgedAt  DateTime?
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  // Relations
+  metric          PerformanceMetric     @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  
+  @@index([metricId])
+  @@index([type])
+  @@index([severity])
+  @@index([status])
+  @@index([createdAt])
+  @@map("performance_alerts")
+}
+
+model SystemHealth {
+  id              String                @id @default(cuid())
+  component       String
+  status          HealthStatus          @default(HEALTHY)
+  metrics         Json?                 // Health metrics
+  issues          Json?                 // Current issues
+  lastChecked     DateTime              @default(now())
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([component])
+  @@index([status])
+  @@index([lastChecked])
+  @@map("system_health")
+}
+
+model RequestTrace {
+  id              String                @id @default(cuid())
+  traceId         String                @unique
+  requestId       String
+  userId          String?
+  tenantId        String?
+  method          String
+  path            String
+  statusCode      Int
+  responseTime    Int                   // in milliseconds
+  userAgent       String?
+  ipAddress       String?
+  error           Json?                 // Error details if any
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  
+  @@index([userId])
+  @@index([tenantId])
+  @@index([method])
+  @@index([path])
+  @@index([statusCode])
+  @@index([responseTime])
+  @@index([createdAt])
+  @@map("request_traces")
+}
+
+model ErrorLog {
+  id              String                @id @default(cuid())
+  level           ErrorLevel            @default(ERROR)
+  message         String
+  stackTrace      String?
+  context         Json?                 // Error context
+  userId          String?
+  tenantId        String?
+  requestId       String?
+  isResolved      Boolean               @default(false)
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([level])
+  @@index([userId])
+  @@index([tenantId])
+  @@index([isResolved])
+  @@index([createdAt])
+  @@map("error_logs")
+}
+
+model ResourceUsage {
+  id              String                @id @default(cuid())
+  type            ResourceType          @default(CPU)
+  value           Float
+  percentage      Float                 // Percentage of total capacity
+  timestamp       DateTime              @default(now())
+  metadata        Json?
+  
+  @@index([type])
+  @@index([timestamp])
+  @@map("resource_usage")
+}
+
+// Performance Monitoring Enums
+enum MetricType {
+  RESPONSE_TIME
+  THROUGHPUT
+  ERROR_RATE
+  MEMORY_USAGE
+  CPU_USAGE
+  DISK_USAGE
+  NETWORK_USAGE
+  DATABASE_QUERIES
+  API_CALLS
+  AI_MODEL_USAGE
+  CUSTOM
+}
+
+enum AlertType {
+  THRESHOLD
+  ANOMALY
+  TREND
+  AVAILABILITY
+  CUSTOM
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+  SUPPRESSED
+}
+
+enum HealthStatus {
+  HEALTHY
+  WARNING
+  CRITICAL
+  UNKNOWN
+}
+
+enum ErrorLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+enum ResourceType {
+  CPU
+  MEMORY
+  DISK
+  NETWORK
+  DATABASE
+  CACHE
+  AI_SERVICES
+  CUSTOM
 }
