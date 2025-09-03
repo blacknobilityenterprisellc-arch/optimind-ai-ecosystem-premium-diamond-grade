@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import { PINPad } from "@/components/PINPad";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,6 +19,8 @@ export function PremiumBadge({
   animated = true,
   text = "PRO"
 }: PremiumBadgeProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const sizeClasses = {
     sm: "text-xs px-2 py-1",
     md: "text-sm px-3 py-1.5", 
@@ -28,7 +31,9 @@ export function PremiumBadge({
     <div 
       className={cn(
         "relative inline-flex items-center justify-center font-bold text-white rounded-full",
-        "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500",
+        isDark 
+          ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600"
+          : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500",
         "shadow-lg",
         sizeClasses[size],
         animated && "animate-pulse",
@@ -38,8 +43,18 @@ export function PremiumBadge({
       {/* Glow effect */}
       {animated && (
         <>
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 opacity-50 blur-md animate-pulse" />
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-30 blur-sm animate-pulse" />
+          <div className={cn(
+            "absolute inset-0 rounded-full bg-gradient-to-r opacity-50 blur-md animate-pulse",
+            isDark 
+              ? "from-yellow-500 via-yellow-600 to-orange-600" 
+              : "from-yellow-400 via-yellow-500 to-orange-500"
+          )} />
+          <div className={cn(
+            "absolute inset-0 rounded-full bg-gradient-to-r opacity-30 blur-sm animate-pulse",
+            isDark 
+              ? "from-yellow-400 to-yellow-500" 
+              : "from-yellow-300 to-yellow-400"
+          )} />
         </>
       )}
       
@@ -106,14 +121,20 @@ export function PremiumButton({
   onAuthSuccess
 }: PremiumButtonProps) {
   const [showPINPad, setShowPINPad] = useState(false);
+  const { theme } = useTheme();
   const { toast } = useToast();
+  const isDark = theme === 'dark';
 
   const baseClasses = "relative inline-flex items-center justify-center font-bold text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95";
   
   const variantClasses = {
-    default: "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg",
-    outline: "border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400/10",
-    glow: "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40"
+    default: isDark 
+      ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg"
+      : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg",
+    outline: "border-2 text-yellow-400 hover:bg-yellow-400/10",
+    glow: isDark 
+      ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg shadow-yellow-600/25 hover:shadow-yellow-600/40"
+      : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40"
   };
 
   const handleClick = () => {
@@ -151,8 +172,18 @@ export function PremiumButton({
         {/* Glow effects */}
         {(variant === "default" || variant === "glow") && (
           <>
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 opacity-50 blur-md animate-pulse" />
-            <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-30 blur-sm" />
+            <div className={cn(
+              "absolute inset-0 rounded-xl bg-gradient-to-r opacity-50 blur-md animate-pulse",
+              isDark 
+                ? "from-yellow-500 via-yellow-600 to-orange-600" 
+                : "from-yellow-400 via-yellow-500 to-orange-500"
+            )} />
+            <div className={cn(
+              "absolute inset-0 rounded-xl bg-gradient-to-r opacity-30 blur-sm",
+              isDark 
+                ? "from-yellow-400 to-yellow-500" 
+                : "from-yellow-300 to-yellow-400"
+            )} />
           </>
         )}
         

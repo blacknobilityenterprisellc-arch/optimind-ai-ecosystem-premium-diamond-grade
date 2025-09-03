@@ -60,12 +60,32 @@ async function main() {
     },
   });
 
+  // Create default tenant
+  const defaultTenant = await prisma.tenant.upsert({
+    where: { slug: 'default' },
+    update: {},
+    create: {
+      name: 'Default Organization',
+      slug: 'default',
+      plan: 'ENTERPRISE',
+      maxUsers: 100,
+      maxProjects: 50,
+      maxStorage: 10240,
+    },
+  });
+
   // Create enterprise subscriptions
   const adminSubscription = await prisma.subscription.upsert({
-    where: { userId: adminUser.id },
+    where: { 
+      userId_tenantId: {
+        userId: adminUser.id,
+        tenantId: defaultTenant.id
+      }
+    },
     update: {},
     create: {
       userId: adminUser.id,
+      tenantId: defaultTenant.id,
       plan: 'ENTERPRISE',
       status: 'ACTIVE',
       currentPeriodStart: new Date(),
@@ -74,10 +94,16 @@ async function main() {
   });
 
   const enterpriseSubscription = await prisma.subscription.upsert({
-    where: { userId: enterpriseUser.id },
+    where: { 
+      userId_tenantId: {
+        userId: enterpriseUser.id,
+        tenantId: defaultTenant.id
+      }
+    },
     update: {},
     create: {
       userId: enterpriseUser.id,
+      tenantId: defaultTenant.id,
       plan: 'PRO',
       status: 'ACTIVE',
       currentPeriodStart: new Date(),
@@ -86,10 +112,16 @@ async function main() {
   });
 
   const testSubscription = await prisma.subscription.upsert({
-    where: { userId: testUser.id },
+    where: { 
+      userId_tenantId: {
+        userId: testUser.id,
+        tenantId: defaultTenant.id
+      }
+    },
     update: {},
     create: {
       userId: testUser.id,
+      tenantId: defaultTenant.id,
       plan: 'BASIC',
       status: 'ACTIVE',
       currentPeriodStart: new Date(),
