@@ -47,3 +47,12 @@ test
 prompt
 
 server.log
+
+# Scaffolding project files (to be untracked)
+src/
+examples/
+README.md
+components.json
+public/logo.svg
+public/robots.txt
+server.ts
