@@ -1,62 +1,70 @@
 /**
  * OptiMind AI Ecosystem - Database Manager API v2.0
- * Premium Diamond Grade Database Management Endpoints
+ * Premium Diamond Grade Resumable Database Management Endpoints
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { databaseManagerV2, type DatabaseConfig } from '@/lib/v2/database-manager';
+import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
+
+// Create singleton instance
+const dbManager = new DatabaseManagerV2();
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { operation, ...params } = body;
 
-    // Validate required fields
-    if (!operation) {
-      return NextResponse.json(
-        { error: 'Operation is required' },
-        { status: 400 }
-      );
-    }
-
-    // Execute database management operation
     let result;
 
     switch (operation) {
-      case 'health':
-        result = await databaseManagerV2.performHealthCheck();
-        break;
-
-      case 'metrics':
-        result = await databaseManagerV2.getMetrics();
-        break;
-
-      case 'optimize':
-        result = await databaseManagerV2.optimizeDatabase();
-        break;
-
-      case 'backup':
-        const backupResult = await databaseManagerV2.createBackup(params.type, params.options);
-        result = { backup: backupResult };
-        break;
-
-      case 'cleanup':
-        const cleanupResult = await databaseManagerV2.cleanup(params.options);
-        result = cleanupResult;
-        break;
-
-      case 'create_work':
-        const work = await databaseManagerV2.createResumableWork(
+      case 'create_operation':
+        result = await dbManager.createOperation(
           params.type,
-          params.totalItems,
-          params.metadata
+          params.table,
+          params.data,
+          params.options
         );
-        result = { work };
+        break;
+
+      case 'execute_query':
+        result = await dbManager.executeQuery(params.query, params.params);
+        break;
+
+      case 'execute_transaction':
+        result = await dbManager.executeTransaction(params.operations);
+        break;
+
+      case 'backup_database':
+        result = await dbManager.backupDatabase(params.backupPath);
+        break;
+
+      case 'restore_database':
+        result = await dbManager.restoreDatabase(params.backupPath);
+        break;
+
+      case 'get_operation_status':
+        result = await dbManager.getOperationStatus(params.operationId);
+        break;
+
+      case 'get_database_metrics':
+        result = dbManager.getDatabaseMetrics();
+        break;
+
+      case 'health_check':
+        result = await dbManager.healthCheck();
+        break;
+
+      case 'cleanup_expired_operations':
+        result = await dbManager.cleanupExpiredOperations();
+        break;
+
+      case 'get_operation_history':
+        result = dbManager.getOperationHistory(params.limit);
         break;
 
       default:
         return NextResponse.json(
-          { error: `Unsupported operation: ${operation}` },
+          { error: 'Unsupported operation', operation },
           { status: 400 }
         );
     }
@@ -65,73 +73,48 @@ export async function POST(request: NextRequest) {
       success: true,
       operation,
       result,
-      timestamp: new Date()
+      timestamp: new Date().toISOString()
     });
 
   } catch (error) {
-    console.error('❌ Database Manager API Error:', error);
-    
+    console.error('Database Manager API error:', error);
     return NextResponse.json(
       { 
         error: 'Internal server error',
-        details: error.message 
+        message: error.message,
+        operation: body.operation
       },
       { status: 500 }
     );
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const operation = searchParams.get('operation');
+    const health = await dbManager.healthCheck();
+    const metrics = dbManager.getDatabaseMetrics();
 
-    // Handle different GET operations
-    switch (operation) {
-      case 'health':
-        const health = await databaseManagerV2.performHealthCheck();
-        return NextResponse.json({
-          success: true,
-          operation: 'health',
-          result: health,
-          timestamp: new Date()
-        });
-
-      case 'metrics':
-        const metrics = await databaseManagerV2.getMetrics();
-        return NextResponse.json({
-          success: true,
-          operation: 'metrics',
-          result: metrics,
-          timestamp: new Date()
-        });
-
-      case 'backups':
-        // Get list of backups (simplified)
-        const backups = await databaseManagerV2.createBackup('full'); // This would normally list existing backups
-        return NextResponse.json({
-          success: true,
-          operation: 'backups',
-          result: { backups: [] }, // Placeholder
-          timestamp: new Date()
-        });
-
-      default:
-        return NextResponse.json(
-          { error: 'Invalid operation. Use: health, metrics, or backups' },
-          { status: 400 }
-        );
-    }
-
+    return NextResponse.json({
+      service: 'Database Manager v2.0',
+      status: 'operational',
+      health,
+      metrics,
+      capabilities: [
+        'operation_management',
+        'query_execution',
+        'transaction_processing',
+        'backup_restore',
+        'health_monitoring',
+        'metrics_tracking',
+        'resumable_operations'
+      ],
+      timestamp: new Date().toISOString()
+    });
   } catch (error) {
-    console.error('❌ Database Manager API Error:', error);
-    
+    console.error('Database Manager GET error:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: error.message 
-      },
-      { status: 500 }
+      { error: 'Service unavailable', message: error.message },
+      { status: 503 }
     );
   }
 }
