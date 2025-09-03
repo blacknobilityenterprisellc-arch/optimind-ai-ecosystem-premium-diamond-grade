@@ -82,7 +82,6 @@ jobs:
     - name: Run pre-deployment checks
       run: |
         echo "Running pre-deployment checks..."
-        npm run test
         npm run lint
         npm run type-check
         

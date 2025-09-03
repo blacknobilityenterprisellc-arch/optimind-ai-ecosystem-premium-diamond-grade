@@ -33,7 +33,7 @@ jobs:
       run: npm run build
     
     - name: Run tests
-      run: echo "Tests would run here"
+      run: echo "No tests configured - skipping test phase"
 
   deploy-docker:
     needs: test
