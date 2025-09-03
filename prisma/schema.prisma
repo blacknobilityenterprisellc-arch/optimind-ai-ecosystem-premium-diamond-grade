@@ -122,6 +122,8 @@ model User {
   name            String?
   avatar          String?
   role            UserRole @default(USER)
+  credits         Int      @default(1000) // User credits for AI services
+  dailyLimit      Int      @default(100) // Daily generation limit
   subscriptions   Subscription[]
   apiKey          String?
   isActive        Boolean  @default(true)
@@ -169,11 +171,47 @@ model User {
   // Enhanced AI Service Relations
   aiRequestLogs   AIRequestLog[]
   fileStorage     FileStorage[]
+  creditTransactions CreditTransaction[]
+  contentGenerations ContentGeneration[]
   
   @@map("users")
 }
 
-// Enhanced Authentication & Sessions
+// Credit Transaction Management
+model CreditTransaction {
+  id              String               @id @default(cuid())
+  userId          String
+  amount          Int
+  type            CreditTransactionType
+  description     String
+  metadata        Json?
+  createdAt       DateTime             @default(now())
+  
+  // Relations
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("credit_transactions")
+}
+
+// Content Generation Tracking
+model ContentGeneration {
+  id              String                   @id @default(cuid())
+  userId          String
+  type            ContentGenerationType
+  input           String?
+  output          Json?
+  tokensUsed      Int?
+  processingTime  Int?
+  cost            Float?
+  status          ContentGenerationStatus @default(COMPLETED)
+  metadata        Json?
+  createdAt       DateTime                 @default(now())
+  
+  // Relations
+  user            User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("content_generations")
+}
 model Session {
   id        String   @id @default(cuid())
   userId    String
@@ -2198,6 +2236,39 @@ enum TaskType {
 }
 
 enum UsageStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  TIMEOUT
+}
+
+// Credit Transaction Enums
+enum CreditTransactionType {
+  CREDIT_PURCHASE
+  CONTENT_GENERATION
+  SUBSCRIPTION_RENEWAL
+  REFUND
+  BONUS
+  PENALTY
+}
+
+// Content Generation Enums
+enum ContentGenerationType {
+  TEXT_GENERATION
+  IMAGE_GENERATION
+  CODE_GENERATION
+  DATA_ANALYSIS
+  TRANSLATION
+  SUMMARIZATION
+  CREATIVE_WRITING
+  RESEARCH
+  CHAT
+  DOCUMENT_PROCESSING
+}
+
+enum ContentGenerationStatus {
   PENDING
   PROCESSING
   COMPLETED
