@@ -585,7 +585,7 @@ export const performanceUtils = {
       batchSize?: number;
       delay?: number;
     } = {}
-  ) => {
+  ) {
     const { batchSize = 10, delay = 100 } = options;
     let queue: T[] = [];
     let timeout: NodeJS.Timeout | null = null;

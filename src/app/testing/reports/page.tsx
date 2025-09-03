@@ -349,7 +349,7 @@ const EnterpriseReportingDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-indigo-600">{metrics.averageReportGenerationTime}s</div>
-              <p className="text-xs text-gray-500 mt-1">Target: <60s</p>
+              <p className="text-xs text-gray-500 mt-1">Target: &lt;60s</p>
             </CardContent>
           </Card>
         </div>

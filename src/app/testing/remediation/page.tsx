@@ -312,7 +312,7 @@ const AutomatedRemediationDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-purple-600">{metrics.averageResolutionTime}s</div>
-              <p className="text-xs text-gray-500 mt-1">Target: <300s</p>
+              <p className="text-xs text-gray-500 mt-1">Target: &lt;300s</p>
             </CardContent>
           </Card>
           

@@ -371,7 +371,7 @@ class PredictiveAnalyticsServiceV2 {
       await this.validateUser(request.userId);
 
       switch (request.action) {
-        case 'create':
+        case 'create': {
           if (!request.config) {
             throw new Error('Model configuration is required for creation');
           }
@@ -417,6 +417,7 @@ class PredictiveAnalyticsServiceV2 {
             models: [model],
             message: 'Predictive model created successfully'
           };
+        }
 
         case 'train':
           if (!request.modelId) {
@@ -437,7 +438,7 @@ class PredictiveAnalyticsServiceV2 {
             message: 'Model training initiated'
           };
 
-        case 'deploy':
+        case 'deploy': {
           if (!request.modelId) {
             throw new Error('Model ID is required for deployment');
           }
@@ -465,6 +466,7 @@ class PredictiveAnalyticsServiceV2 {
             success: true,
             message: 'Model deployed successfully'
           };
+        }
 
         case 'archive':
           if (!request.modelId) {
