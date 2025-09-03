@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useTheme } from "next-themes";
 import { 
   usePremiumAIServices, 
   PremiumAIService,
@@ -59,6 +60,7 @@ export function PremiumAIServices({
   const [showResults, setShowResults] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
+  const { theme } = useTheme();
 
   const { isPremium } = useSecureSubscription();
   const {
@@ -178,12 +180,23 @@ export function PremiumAIServices({
   };
 
   const getCategoryColor = (categoryId: string) => {
+    const isDark = theme === 'dark';
     switch (categoryId) {
-      case 'analysis': return 'text-blue-600 bg-blue-50 border-blue-200';
-      case 'enhancement': return 'text-purple-600 bg-purple-50 border-purple-200';
-      case 'security': return 'text-red-600 bg-red-50 border-red-200';
-      case 'organization': return 'text-green-600 bg-green-50 border-green-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
+      case 'analysis': return isDark 
+        ? 'text-blue-400 bg-blue-950/50 border-blue-800' 
+        : 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'enhancement': return isDark 
+        ? 'text-purple-400 bg-purple-950/50 border-purple-800' 
+        : 'text-purple-600 bg-purple-50 border-purple-200';
+      case 'security': return isDark 
+        ? 'text-red-400 bg-red-950/50 border-red-800' 
+        : 'text-red-600 bg-red-50 border-red-200';
+      case 'organization': return isDark 
+        ? 'text-green-400 bg-green-950/50 border-green-800' 
+        : 'text-green-600 bg-green-50 border-green-200';
+      default: return isDark 
+        ? 'text-gray-400 bg-gray-800/50 border-gray-700' 
+        : 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
@@ -211,9 +224,9 @@ export function PremiumAIServices({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Brain className="w-5 h-5 text-purple-600" />
+          <Brain className="w-5 h-5 text-purple-600 dark:text-purple-400" />
           Premium AI Services
-          <Badge variant="outline" className="text-purple-600 border-purple-600">
+          <Badge variant="outline" className="text-purple-600 border-purple-600 dark:text-purple-400 dark:border-purple-400">
             {availableServices.length} Services
           </Badge>
         </CardTitle>
@@ -227,7 +240,7 @@ export function PremiumAIServices({
               <TabsTrigger
                 key={category.id}
                 value={category.id}
-                className="flex items-center gap-2 p-3"
+                className="flex items-center gap-2 p-3 data-[state=active]:bg-purple-100 dark:data-[state=active]:bg-purple-900/50"
               >
                 <category.icon className="w-4 h-4" />
                 <span className="text-sm">{category.name}</span>
@@ -243,8 +256,8 @@ export function PremiumAIServices({
                   key={service.id}
                   className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
                     selectedService === service.id
-                      ? 'ring-2 ring-purple-500 bg-purple-50'
-                      : 'hover:bg-gray-50'
+                      ? 'ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-950/30'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
                   }`}
                   onClick={() => setSelectedService(service.id)}
                 >
@@ -329,14 +342,14 @@ export function PremiumAIServices({
                       </div>
 
                       {photos.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg">
+                        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg dark:border-gray-700">
                           {photos.map((photo) => (
                             <div
                               key={photo.id}
                               className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
                                 selectedPhotos.includes(photo.id)
-                                  ? 'border-purple-500 ring-2 ring-purple-200'
-                                  : 'border-gray-200 hover:border-gray-300'
+                                  ? 'border-purple-500 ring-2 ring-purple-200 dark:ring-purple-900/50'
+                                  : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
                               }`}
                               onClick={() => togglePhotoSelection(photo.id)}
                             >

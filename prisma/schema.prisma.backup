@@ -21,7 +21,7 @@ model Tenant {
   domain          String?
   logo            String?
   branding        Json?             // Branding configuration
-  configuration    Json?             // Tenant-specific configuration
+  settings        Json?             // Tenant-specific settings
   plan            TenantPlan        @default(FREE)
   status          TenantStatus      @default(ACTIVE)
   maxUsers        Int               @default(10)
@@ -38,11 +38,6 @@ model Tenant {
   subscriptions   Subscription[]
   settings        TenantSetting[]
   auditLogs       TenantAuditLog[]
-  tenantUsers     TenantUser[]
-  userRoles       UserRoleAssignment[]
-  tenantModelSettings TenantModelSetting[]
-  aiModelUsageLogs AIModelUsageLog[]
-  aiModelComparisons AIModelComparison[]
   
   @@map("tenants")
 }
@@ -118,7 +113,7 @@ model User {
   name            String?
   avatar          String?
   role            UserRole @default(USER)
-  subscriptions   Subscription[]
+  subscription    Subscription?
   apiKey          String?
   isActive        Boolean  @default(true)
   lastLoginAt     DateTime?
@@ -154,8 +149,6 @@ model User {
   apiKeys         ApiKey[]
   // Multi-Tenant Relations
   tenantUsers     TenantUser[]
-  tenantAuditLogs TenantAuditLog[]
-  tenants         Tenant[]
   // Enhanced RBAC Relations
   userRoles       UserRoleAssignment[]
   // AI Model Relations
@@ -1801,7 +1794,6 @@ model Role {
   // Relations
   userRoles       UserRoleAssignment[]
   rolePermissions RolePermission[]
-  roleTemplates   RoleTemplate[]
   
   @@index([level])
   @@index([isActive])
@@ -1949,7 +1941,7 @@ model AIModel {
   
   // Relations
   userPreferences UserModelPreference[]
-  tenantModelSettings TenantModelSetting[]
+  tenantSettings  TenantModelSetting[]
   usageLogs       AIModelUsageLog[]
   
   @@index([provider])
@@ -2100,4 +2092,194 @@ enum UsageStatus {
   FAILED
   CANCELLED
   TIMEOUT
+}
+
+// Performance Monitoring Models
+model PerformanceMetric {
+  id              String                @id @default(cuid())
+  type            MetricType            @default(RESPONSE_TIME)
+  name            String
+  value           Float
+  unit            String?
+  tags            Json?                 // Additional tags for filtering
+  timestamp       DateTime              @default(now())
+  metadata        Json?
+  
+  // Relations
+  alerts          PerformanceAlert[]
+  
+  @@index([type])
+  @@index([name])
+  @@index([timestamp])
+  @@map("performance_metrics")
+}
+
+model PerformanceAlert {
+  id              String                @id @default(cuid())
+  metricId        String
+  type            AlertType             @default(THRESHOLD)
+  severity        AlertSeverity         @default(MEDIUM)
+  condition       Json                  // Alert condition
+  message         String?
+  status          AlertStatus           @default(ACTIVE)
+  acknowledgedBy  String?
+  acknowledgedAt  DateTime?
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  // Relations
+  metric          PerformanceMetric     @relation(fields: [metricId], references: [id], onDelete: Cascade)
+  
+  @@index([metricId])
+  @@index([type])
+  @@index([severity])
+  @@index([status])
+  @@index([createdAt])
+  @@map("performance_alerts")
+}
+
+model SystemHealth {
+  id              String                @id @default(cuid())
+  component       String
+  status          HealthStatus          @default(HEALTHY)
+  metrics         Json?                 // Health metrics
+  issues          Json?                 // Current issues
+  lastChecked     DateTime              @default(now())
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([component])
+  @@index([status])
+  @@index([lastChecked])
+  @@map("system_health")
+}
+
+model RequestTrace {
+  id              String                @id @default(cuid())
+  traceId         String                @unique
+  requestId       String
+  userId          String?
+  tenantId        String?
+  method          String
+  path            String
+  statusCode      Int
+  responseTime    Int                   // in milliseconds
+  userAgent       String?
+  ipAddress       String?
+  error           Json?                 // Error details if any
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  
+  @@index([userId])
+  @@index([tenantId])
+  @@index([method])
+  @@index([path])
+  @@index([statusCode])
+  @@index([responseTime])
+  @@index([createdAt])
+  @@map("request_traces")
+}
+
+model ErrorLog {
+  id              String                @id @default(cuid())
+  level           ErrorLevel            @default(ERROR)
+  message         String
+  stackTrace      String?
+  context         Json?                 // Error context
+  userId          String?
+  tenantId        String?
+  requestId       String?
+  isResolved      Boolean               @default(false)
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  metadata        Json?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@index([level])
+  @@index([userId])
+  @@index([tenantId])
+  @@index([isResolved])
+  @@index([createdAt])
+  @@map("error_logs")
+}
+
+model ResourceUsage {
+  id              String                @id @default(cuid())
+  type            ResourceType          @default(CPU)
+  value           Float
+  percentage      Float                 // Percentage of total capacity
+  timestamp       DateTime              @default(now())
+  metadata        Json?
+  
+  @@index([type])
+  @@index([timestamp])
+  @@map("resource_usage")
+}
+
+// Performance Monitoring Enums
+enum MetricType {
+  RESPONSE_TIME
+  THROUGHPUT
+  ERROR_RATE
+  MEMORY_USAGE
+  CPU_USAGE
+  DISK_USAGE
+  NETWORK_USAGE
+  DATABASE_QUERIES
+  API_CALLS
+  AI_MODEL_USAGE
+  CUSTOM
+}
+
+enum AlertType {
+  THRESHOLD
+  ANOMALY
+  TREND
+  AVAILABILITY
+  CUSTOM
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  ACTIVE
+  ACKNOWLEDGED
+  RESOLVED
+  SUPPRESSED
+}
+
+enum HealthStatus {
+  HEALTHY
+  WARNING
+  CRITICAL
+  UNKNOWN
+}
+
+enum ErrorLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+enum ResourceType {
+  CPU
+  MEMORY
+  DISK
+  NETWORK
+  DATABASE
+  CACHE
+  AI_SERVICES
+  CUSTOM
 }
