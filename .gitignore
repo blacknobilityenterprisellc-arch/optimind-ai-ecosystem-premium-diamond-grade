@@ -56,7 +56,3 @@ components.json
 public/logo.svg
 public/robots.txt
 server.ts
-
-# Cloned repository and database files
-optimind-ai-ecosystem-premium-diamond-grade/
-db/
