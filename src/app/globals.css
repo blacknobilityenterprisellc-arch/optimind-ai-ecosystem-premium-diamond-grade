@@ -41,6 +41,18 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  
+  /* Premium diamond-grade variables */
+  --color-gold: #FFD700;
+  --color-bronze: #CD7F32;
+  --color-silver: #C0C0C0;
+  --color-platinum: #E5E4E2;
+  --color-diamond: #B9F2FF;
+  --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px rgba(185, 242, 255, 0.3);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  --gradient-diamond: linear-gradient(135deg, #B9F2FF 0%, #667eea 100%);
 }
 
 :root {
@@ -119,4 +131,51 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Premium diamond-grade styles */
+.premium-bg {
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background-attachment: fixed;
+}
+
+.premium-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+.premium-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Diamond glow effect */
+.diamond-glow {
+  box-shadow: 0 0 20px rgba(185, 242, 255, 0.3);
+}
+
+/* Premium card styles */
+.premium-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation classes */
+@keyframes diamond-sparkle {
+  0%, 100% { opacity: 0; transform: scale(0); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.diamond-sparkle {
+  animation: diamond-sparkle 2s ease-in-out infinite;
 }
