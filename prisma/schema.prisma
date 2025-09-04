@@ -173,6 +173,9 @@ model User {
   fileStorage     FileStorage[]
   creditTransactions CreditTransaction[]
   contentGenerations ContentGeneration[]
+  // Developer Access Control Relations
+  developerAccessKeys DeveloperAccessKey[]
+  developerAccessEvents DeveloperAccessEvent[]
   
   @@map("users")
 }
@@ -2242,6 +2245,75 @@ enum UsageStatus {
   FAILED
   CANCELLED
   TIMEOUT
+}
+
+// Developer Access Control Models
+model DeveloperAccessKey {
+  id              String              @id @default(cuid())
+  keyId           String              @unique
+  userId          String
+  keyType         KeyType             @default(STANDARD)
+  accessLevel     AccessLevel         @default(INTERNAL)
+  permissions     Json                // Array of permission strings
+  allowedEndpoints Json               // Array of allowed endpoint patterns
+  rateLimit       Json                // Rate limiting configuration
+  expiresAt       DateTime
+  isActive        Boolean             @default(true)
+  metadata        Json?               // Additional metadata
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  events          DeveloperAccessEvent[]
+  
+  @@index([userId])
+  @@index([keyId])
+  @@index([isActive])
+  @@index([expiresAt])
+  @@map("developer_access_keys")
+}
+
+model DeveloperAccessEvent {
+  id              String              @id @default(cuid())
+  keyId           String
+  userId          String
+  eventType       DeveloperEventType  @default(KEY_USED)
+  endpoint        String?
+  method          String?
+  ipAddress       String
+  userAgent       String
+  details         Json?               // Event details
+  severity        EventSeverity       @default(LOW)
+  timestamp       DateTime            @default(now())
+  
+  // Relations
+  accessKey       DeveloperAccessKey  @relation(fields: [keyId], references: [keyId], onDelete: Cascade)
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([keyId])
+  @@index([userId])
+  @@index([eventType])
+  @@index([severity])
+  @@index([timestamp])
+  @@map("developer_access_events")
+}
+
+// Enums for Developer Access Control
+enum KeyType {
+  EXCLUSIVE
+  STANDARD
+  TEMPORARY
+}
+
+enum DeveloperEventType {
+  KEY_GENERATED
+  KEY_USED
+  KEY_REVOKED
+  KEY_EXPIRED
+  ACCESS_GRANTED
+  ACCESS_DENIED
+  QUOTA_EXCEEDED
 }
 
 // Credit Transaction Enums
