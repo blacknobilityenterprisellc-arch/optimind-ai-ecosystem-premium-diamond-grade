@@ -7,9 +7,6 @@ const nextConfig: NextConfig = {
     tsconfigPath: './tsconfig.json',
   },
   
-  // Enable React strict mode for better development experience
-  reactStrictMode: true,
-  
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion'],
@@ -20,9 +17,6 @@ const nextConfig: NextConfig = {
     domains: ['localhost'],
     formats: ['image/webp', 'image/avif'],
   },
-  
-  // Compression
-  compress: true,
   
   // Environment variables that should be available to the client
   env: {
@@ -75,23 +69,13 @@ const nextConfig: NextConfig = {
   
   // Build timeout handling
   distDir: '.next',
-  output: 'standalone',
   
   // Performance optimizations
   poweredByHeader: false,
   generateEtags: false,
   
-  // Compression settings
-  compress: true,
-  
   // Asset optimization
   assetPrefix: process.env.ASSET_PREFIX,
-  
-  // Experimental features
-  swcMinify: true,
-  
-  // Incremental static regeneration
-  generateStaticParams: true,
   
   // Security headers
   async headers() {
