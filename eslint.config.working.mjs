@@ -150,7 +150,8 @@ const workingConfig = [
       // === REACT/Next.js ENTERPRISE RULES ===
       "react/no-unescaped-entities": "error",
       "react/display-name": ["error", { 
-        "ignoreTranspilerName": false
+        "ignoreTranspilerName": false,
+        "checkForwardRef": true
       }],
       "react/prop-types": "error",
       "react/jsx-key": "error",
@@ -316,6 +317,20 @@ const workingConfig = [
       "import/no-unused-modules": "error",
       
       // === MAINTAINABILITY & READABILITY ===
+      "indent": ["error", 2, {
+        "SwitchCase": 1,
+        "VariableDeclarator": 1,
+        "outerIIFEBody": 1,
+        "MemberExpression": 1,
+        "FunctionDeclaration": { "parameters": 1, "body": 1 },
+        "FunctionExpression": { "parameters": 1, "body": 1 },
+        "CallExpression": { "arguments": 1 },
+        "ArrayExpression": 1,
+        "ObjectExpression": 1,
+        "ImportDeclaration": 1,
+        "flatTernaryExpressions": false,
+        "ignoreComments": false
+      }],
       "quotes": ["error", "double", { 
         "avoidEscape": true,
         "allowTemplateLiterals": true
@@ -380,7 +395,6 @@ const workingConfig = [
       "@typescript-eslint/no-var-requires": "off",
       "import/no-extraneous-dependencies": "off",
       "no-magic-numbers": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
   
@@ -401,7 +415,7 @@ const workingConfig = [
   
   // Legacy Code - Minimal Enforcement
   {
-    files: ["**/migrations/**/*.{js,ts}", "**/legacy/**/*.{js,ts}", "**/deprecated/**/*.{js,ts}", "**/developer-testing/**/*.{js,ts}"],
+    files: ["**/migrations/**/*.{js,ts}", "**/legacy/**/*.{js,ts}", "**/deprecated/**/*.{js,ts}"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "no-console": "warn",
@@ -409,10 +423,6 @@ const workingConfig = [
       "no-magic-numbers": "off",
       "complexity": "warn",
       "max-lines-per-function": "warn",
-      "no-trailing-spaces": "off",
-      "import/order": "off",
-      "import/no-relative-parent-imports": "off",
-      "quotes": "warn",
     },
   },
 ];

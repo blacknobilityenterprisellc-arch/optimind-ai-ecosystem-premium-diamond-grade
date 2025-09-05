@@ -7,8 +7,8 @@
  * @license MIT
  */
 
-import { EventEmitter } from 'events';
-import { Logger } from '@/lib/logger';
+import { EventEmitter } from "events";
+import { Logger } from "@/lib/logger";
 
 export interface AgentConfiguration {
   agentId: string;
@@ -105,7 +105,6 @@ export class AgentTestingFramework extends EventEmitter {
   private logger: Logger;
   private testScenarios: Map<string, TestScenario> = new Map();
   private testResults: Map<string, TestResult[]> = new Map();
-  private activeTests: Map<string, unknown> = new Map();
 
   constructor() {
     super();
