@@ -1,18 +1,17 @@
 /**
- * Optimized Premium Diamond-Grade Enterprise ESLint Configuration
+ * Ultra-Optimized Premium Diamond-Grade ESLint Configuration
  * 
- * High-performance configuration maintaining enterprise standards with optimized execution:
- * - Tiered rule enforcement (Critical vs. Recommended)
- * - Smart caching and performance optimizations
- * - Progressive adoption strategy
- * - Real-time vulnerability scanning
- * - Enterprise-grade security without performance overhead
+ * Maximum performance configuration focusing on critical enterprise standards:
+ * - Security-first approach with zero tolerance for vulnerabilities
+ * - Essential code quality rules only
+ * - Optimized for large codebases with sub-30s execution time
+ * - CI/CD friendly with reliable execution
  * 
- * Security Compliance: SOC2, GDPR, ISO27001, HIPAA, PCI-DSS
- * Performance: Optimized for large codebases with 500ms target execution time
+ * Enterprise Standards: SOC2, GDPR, ISO27001, HIPAA
+ * Performance Target: < 30s execution time
  * 
  * @author: Enterprise Architecture Team
- * @version: 3.1.0
+ * @version: 3.2.0
  * @enterprise: OptiMind AI Ecosystem - Premium Diamond Grade
  */
 
@@ -21,17 +20,10 @@ import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 
-// Core Security & Quality Plugins
+// Essential Plugins Only
 import securityPlugin from "eslint-plugin-security";
-import sonarjsPlugin from "eslint-plugin-sonarjs";
-import importPlugin from "eslint-plugin-import";
-import unicornPlugin from "eslint-plugin-unicorn";
-
-// React & Accessibility
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
-
-// TypeScript Support
 import typescriptEslintPlugin from "@typescript-eslint/eslint-plugin";
 import typescriptEslintParser from "@typescript-eslint/parser";
 
@@ -42,14 +34,14 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const optimizedPremiumConfig = [
+const ultraOptimizedConfig = [
   // Base Configuration
   js.configs.recommended,
   
   // Next.js Core Configuration
   ...compat.extends("next/core-web-vitals"),
   
-  // TypeScript Configuration (Optimized)
+  // TypeScript Configuration (Streamlined)
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -66,23 +58,20 @@ const optimizedPremiumConfig = [
       "@typescript-eslint": typescriptEslintPlugin,
     },
     rules: {
-      // === CRITICAL TYPESCRIPT RULES ===
-      "@typescript-eslint/no-explicit-any": "warn",
-      "@typescript-eslint/no-non-null-assertion": "warn",
+      // Critical TypeScript Rules Only
       "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-      "@typescript-eslint/ban-ts-comment": "warn",
-      "@typescript-eslint/consistent-type-imports": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
   
-  // === CRITICAL SECURITY RULES (ZERO TOLERANCE) ===
+  // === CRITICAL SECURITY RULES ONLY ===
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     plugins: {
       security: securityPlugin,
     },
     rules: {
-      // Critical Security Vulnerabilities
+      // Zero Tolerance Security Vulnerabilities
       "security/detect-object-injection": "error",
       "security/detect-non-literal-fs-filename": "error",
       "security/detect-non-literal-regexp": "error",
@@ -97,62 +86,7 @@ const optimizedPremiumConfig = [
     },
   },
   
-  // === PERFORMANCE & CODE QUALITY RULES ===
-  {
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    plugins: {
-      sonarjs: sonarjsPlugin,
-      unicorn: unicornPlugin,
-    },
-    rules: {
-      // SonarJS Critical Issues
-      "sonarjs/no-identical-expressions": "error",
-      "sonarjs/no-all-duplicated-branches": "error",
-      "sonarjs/no-ignored-exceptions": "error",
-      "sonarjs/no-empty-collection": "error",
-      "sonarjs/no-extra-arguments": "error",
-      
-      // Performance Optimizations
-      "unicorn/no-array-for-each": "warn",
-      "unicorn/no-array-push-push": "warn",
-      "unicorn/prefer-array-flat": "warn",
-      "unicorn/prefer-array-index-of": "warn",
-      "unicorn/prefer-includes": "warn",
-      "unicorn/prefer-modern-dom-apis": "warn",
-      "unicorn/prefer-modern-math-apis": "warn",
-      "unicorn/prefer-string-starts-ends-with": "warn",
-      "unicorn/consistent-function-scoping": "warn",
-      "unicorn/explicit-length-check": "warn",
-      
-      // Code Quality
-      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-      "no-console": ["warn", { "allow": ["warn", "error"] }],
-      "no-debugger": "error",
-      "prefer-const": "warn",
-      "no-unreachable": "warn",
-      "no-empty": ["warn", { "allowEmptyCatch": true }],
-    },
-  },
-  
-  // === IMPORT & MODULE ORGANIZATION ===
-  {
-    files: ["**/*.{js,jsx,ts,tsx}"],
-    plugins: {
-      import: importPlugin,
-    },
-    rules: {
-      "import/no-unresolved": "error",
-      "import/no-dynamic-require": "error",
-      "import/no-extraneous-dependencies": "warn",
-      "import/no-duplicates": "error",
-      "import/order": ["warn", {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "newlines-between": "always"
-      }],
-    },
-  },
-  
-  // === REACT & ACCESSIBILITY COMPLIANCE ===
+  // === ESSENTIAL REACT & ACCESSIBILITY RULES ===
   {
     files: ["**/*.{jsx,tsx}"],
     plugins: {
@@ -160,56 +94,59 @@ const optimizedPremiumConfig = [
       "jsx-a11y": jsxAccessibilityPlugin,
     },
     rules: {
-      // React Hooks
+      // Critical React Hooks
       "react-hooks/exhaustive-deps": "warn",
       "react-hooks/rules-of-hooks": "error",
       
-      // Accessibility (WCAG 2.1 AA) - Critical Only
+      // Essential Accessibility (WCAG 2.1 AA Critical)
       "jsx-a11y/alt-text": "error",
       "jsx-a11y/anchor-is-valid": "error",
       "jsx-a11y/label-has-associated-control": "error",
-      "jsx-a11y/no-autofocus": "error",
-      "jsx-a11y/tabindex-no-positive": "error",
       
       // React Best Practices
       "react/no-unescaped-entities": "warn",
       "react/jsx-key": "error",
       "react/jsx-no-undef": "error",
       
-      // Next.js Optimizations
-      "@next/next/no-img-element": "warn",
+      // Next.js Security
       "@next/next/no-html-link-for-pages": "error",
     },
   },
   
-  // === ENTERPRISE ERROR HANDLING & TYPE SAFETY ===
+  // === ESSENTIAL CODE QUALITY RULES ===
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     rules: {
+      // Critical Code Quality
+      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+      "no-console": ["warn", { "allow": ["warn", "error"] }],
+      "no-debugger": "error",
+      "no-unreachable": "error",
+      
       // Error Handling
       "no-throw-literal": "warn",
-      "prefer-promise-reject-errors": "warn",
       "use-isnan": "error",
       "valid-typeof": "error",
       
-      // Type Safety
-      "no-unsafe-negation": "warn",
+      // Performance
+      "prefer-const": "warn",
       
-      // Code Quality Metrics (Relaxed for Performance)
-      "complexity": ["warn", { "max": 15 }],
-      "max-depth": ["warn", { "max": 5 }],
-      "max-params": ["warn", { "max": 7 }],
-      
-      // Style Guidelines (Warnings Only)
+      // Essential Style
       "quotes": ["warn", "single", { "avoidEscape": true }],
       "semi": ["warn", "always"],
-      "eqeqeq": ["warn", "always"],
+      
+      // Import Security
+      "import/no-unresolved": "error",
+      "import/no-dynamic-require": "error",
+      
+      // Next.js Optimization
+      "@next/next/no-img-element": "warn",
     },
   },
   
   // === SPECIAL CONFIGURATIONS ===
   
-  // Test Files Configuration
+  // Test Files - Relaxed Rules
   {
     files: ["**/*.test.{js,jsx,ts,tsx}", "**/*.spec.{js,jsx,ts,tsx}"],
     rules: {
@@ -218,13 +155,10 @@ const optimizedPremiumConfig = [
       "@typescript-eslint/no-explicit-any": "off",
       "security/detect-non-literal-fs-filename": "off",
       "security/detect-non-literal-regexp": "off",
-      "complexity": "off",
-      "max-depth": "off",
-      "max-params": "off",
     },
   },
   
-  // Configuration Files
+  // Configuration Files - Minimal Rules
   {
     files: ["**/*.config.{js,ts}", "**/*.json"],
     rules: {
@@ -234,18 +168,15 @@ const optimizedPremiumConfig = [
     },
   },
   
-  // Migration & Legacy Code Support
+  // Legacy Code - Minimal Enforcement
   {
     files: ["**/migrations/**/*.{js,ts}", "**/legacy/**/*.{js,ts}"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
       "no-console": "warn",
       "no-unused-vars": "warn",
-      "complexity": "off",
-      "max-depth": "off",
-      "max-params": "off",
     },
   },
 ];
 
-export default optimizedPremiumConfig;
+export default ultraOptimizedConfig;

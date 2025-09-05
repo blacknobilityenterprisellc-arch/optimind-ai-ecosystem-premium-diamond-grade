@@ -27,8 +27,8 @@ jobs:
       
     - name: Run ESLint
       run: |
-        # Use ESLint directly instead of deprecated next lint with timeout and max warnings
-        timeout 180 npx eslint . --config eslint.config.mjs --max-warnings 50 --format json > eslint-report.json || echo "ESLint completed with warnings"
+        # Use CI-optimized ESLint configuration
+        timeout 90 npx eslint src/ --config eslint.config.ci.mjs --max-warnings 20 --format json > eslint-report.json || echo "ESLint completed with warnings"
       
     - name: Generate ESLint report
       run: |

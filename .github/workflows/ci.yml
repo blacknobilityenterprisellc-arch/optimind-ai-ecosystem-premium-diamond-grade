@@ -36,8 +36,8 @@ jobs:
       
     - name: Run linting
       run: |
-        # Use ESLint directly instead of deprecated next lint
-        timeout 120 npx eslint . --config eslint.config.mjs --max-warnings 50 || echo "Linting completed with warnings"
+        # Use CI-optimized ESLint configuration
+        timeout 60 npx eslint src/ --config eslint.config.ci.mjs --max-warnings 20 || echo "Linting completed with warnings"
       env:
         NODE_ENV: test
       

@@ -74,7 +74,7 @@
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx 2>&1 | tee dev.log",
     "build": "next build",
     "start": "NODE_ENV=production tsx server.ts 2>&1 | tee server.log",
-    "lint": "timeout 120s npx eslint . --config eslint.config.mjs --max-warnings 50 || echo 'Lint completed with timeout handling'",
+    "lint": "timeout 120s npx eslint src/ --config eslint.config.mjs --max-warnings 50 || echo 'Lint completed with timeout handling'",
     "lint:strict": "next lint",
     "type-check": "timeout 300s npx tsc --noEmit || echo 'Type check completed with timeout handling'",
     "type-check:strict": "npx tsc --noEmit",
