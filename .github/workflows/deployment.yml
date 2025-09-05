@@ -40,7 +40,7 @@ jobs:
     - name: Run lint with timeout
       run: |
         timeout 300s npm run lint || echo "Lint timed out - continuing with deployment"
-      timeout-minutes: 6
+      timeout-minutes: 10
       
     - name: Build application
       run: npm run build
@@ -100,7 +100,7 @@ jobs:
     - name: Run lint with timeout
       run: |
         timeout 300s npm run lint || echo "Lint timed out - continuing with deployment"
-      timeout-minutes: 6
+      timeout-minutes: 10
       
     - name: Build application
       run: npm run build

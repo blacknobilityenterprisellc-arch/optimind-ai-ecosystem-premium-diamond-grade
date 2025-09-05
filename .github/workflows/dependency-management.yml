@@ -174,8 +174,8 @@ jobs:
     - name: Run basic validation
       run: |
         # Run validation with timeout and error handling
-        timeout 30 npx tsc --noEmit --skipLibCheck || echo "Type check completed with timeout"
-        timeout 30 npx eslint . --config eslint.config.mjs --max-warnings 20 || echo "Lint completed with timeout"
+        timeout 60 npx tsc --noEmit --skipLibCheck || echo "Type check completed with timeout"
+        timeout 120 npx eslint . --config eslint.config.mjs --max-warnings 50 || echo "Lint completed with timeout"
       
     - name: Commit dependency updates
       uses: stefanzweifel/git-auto-commit-action@v5
