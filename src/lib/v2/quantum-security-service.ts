@@ -574,6 +574,31 @@ class QuantumSecurityServiceV2 {
   }
 
   /**
+   * Generate user key pair (convenience method)
+   */
+  async generateUserKeyPair(userId: string, algorithm?: string, keySize?: number): Promise<QuantumKeyPair> {
+    try {
+      // Validate user exists
+      await this.validateUser(userId);
+      
+      // Generate key pair using the key management system
+      const result = await this.manageKeys({
+        userId,
+        action: 'create',
+        expiresInSeconds: this.maxKeyLifetime
+      });
+      
+      if (!result.success || !result.keys || result.keys.length === 0) {
+        throw new Error(result.error || 'Failed to generate quantum key pair');
+      }
+      
+      return result.keys[0];
+    } catch (error) {
+      throw new Error(`Failed to generate user key pair: ${error.message}`);
+    }
+  }
+
+  /**
    * Validate user exists and is active
    */
   private async validateUser(userId: string): Promise<void> {

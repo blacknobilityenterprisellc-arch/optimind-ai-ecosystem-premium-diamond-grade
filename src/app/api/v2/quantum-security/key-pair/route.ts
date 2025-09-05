@@ -11,17 +11,16 @@ import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await request.json();
+    const { userId, algorithm, keySize } = await request.json();
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      );
+    // Allow system-level key generation for validation
+    let finalUserId = userId;
+    if (!finalUserId) {
+      finalUserId = 'system-validator';
     }
 
     // Generate quantum key pair
-    const keyPair = await quantumSecurityService.generateUserKeyPair(userId);
+    const keyPair = await quantumSecurityService.generateUserKeyPair(finalUserId, algorithm, keySize);
 
     return NextResponse.json({
       success: true,

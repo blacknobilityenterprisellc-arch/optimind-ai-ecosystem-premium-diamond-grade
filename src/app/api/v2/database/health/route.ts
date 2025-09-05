@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
     // Get database metrics
     const metrics = databaseManagerV2.getMetrics();
 
-    return NextResponse.json({
+    // Fix BigInt serialization
+    const responseData = {
       success: true,
       data: {
         health: {
@@ -35,13 +36,15 @@ export async function GET(request: NextRequest) {
           averageQueryTime: metrics.averageQueryTime,
           slowQueries: metrics.slowQueries,
           errors: metrics.errors,
-          uptime: Date.now() - metrics.uptime,
+          uptime: Number(metrics.uptime),
           lastBackup: metrics.lastBackup,
-          databaseSize: metrics.databaseSize
+          databaseSize: Number(metrics.databaseSize)
         }
       },
       message: 'Database health and metrics retrieved successfully'
-    });
+    };
+
+    return NextResponse.json(responseData);
 
   } catch (error) {
     console.error('Failed to get database health:', error);
