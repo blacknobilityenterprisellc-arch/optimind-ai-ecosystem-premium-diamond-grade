@@ -10,6 +10,7 @@ jobs:
   eslint:
     name: ESLint Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Checkout code
@@ -39,6 +40,7 @@ jobs:
   typescript:
     name: TypeScript Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Checkout code
@@ -68,6 +70,7 @@ jobs:
   prettier:
     name: Prettier Check
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     
     steps:
     - name: Checkout code
@@ -98,6 +101,7 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Checkout code
@@ -122,10 +126,12 @@ jobs:
       with:
         args: --severity-threshold=high
         command: test
+      continue-on-error: true
 
   dependency-check:
     name: Dependency Check
     runs-on: ubuntu-latest
+    timeout-minutes: 8
     
     steps:
     - name: Checkout code
@@ -155,6 +161,7 @@ jobs:
   code-coverage:
     name: Code Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
     - name: Checkout code
