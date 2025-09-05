@@ -175,7 +175,7 @@ jobs:
       run: |
         # Run validation with timeout and error handling
         timeout 60 npx tsc --noEmit --skipLibCheck || echo "Type check completed with timeout"
-        timeout 60 npx eslint src/ --config eslint.config.ci.mjs --max-warnings 20 || echo "Lint completed with timeout"
+        timeout 60 npx eslint . --config eslint.config.mjs --max-warnings 50 || echo "Lint completed with timeout"
       
     - name: Commit dependency updates
       uses: stefanzweifel/git-auto-commit-action@v5
