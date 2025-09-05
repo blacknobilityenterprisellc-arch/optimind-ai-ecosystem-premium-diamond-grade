@@ -1,0 +1,231 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = ".next"
+
+# Redirect rules for Next.js
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+# Function configuration for serverless functions
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Specific function configurations
+[functions."api/*"]
+  external_node_modules = ["@prisma/client", "zod", "bcryptjs"]
+
+[functions."api/v2/*"]
+  timeout = 30
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Environment variables (can be overridden in Netlify UI)
+[context.production.environment]
+  NODE_ENV = "production"
+  NEXT_PUBLIC_APP_URL = "https://your-netlify-site.netlify.app"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+  NEXT_PUBLIC_APP_URL = "https://deploy-preview-branch--your-netlify-site.netlify.app"
+
+[context.branch-deploy.environment]
+  NODE_ENV = "development"
+  NEXT_PUBLIC_APP_URL = "https://branch--your-netlify-site.netlify.app"
+
+# Edge functions configuration
+[edge_functions]
+  path = "/api/edge/*"
+  function = "edge-handler"
+
+# Redirects for API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# Static file caching
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Image optimization
+[[headers]]
+  for = "/*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/*.avif"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Security headers for API routes
+[[headers]]
+  for = "/api/auth/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    Pragma = "no-cache"
+    Expires = "0"
+
+[[headers]]
+  for = "/api/users/*"
+  [headers.values]
+    Cache-Control = "no-store"
+    Pragma = "no-cache"
+    Expires = "0"
+
+# Performance optimization headers
+[[headers]]
+  for = "/_next/image/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Custom error pages
+[[redirects]]
+  from = "/404"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/500"
+  to = "/500.html"
+  status = 500
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Trailing slash handling
+[[redirects]]
+  from = "/*/"
+  to = "/:splat"
+  status = 301
+
+# Force HTTPS
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+
+# API version redirects
+[[redirects]]
+  from = "/v1/*"
+  to = "/api/v1/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/v2/*"
+  to = "/api/v2/:splat"
+  status = 301
+
+# Legacy route redirects
+[[redirects]]
+  from = "/old-route/*"
+  to = "/new-route/:splat"
+  status = 301
+
+# Bot protection
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "index, follow"
+
+# CDN and caching configuration
+[context.production]
+  [context.production.environment]
+    NETLIFY_USE_YARN = "true"
+    NETLIFY_BUILD_CACHE = "true"
+
+# Development configuration
+[context.deploy-preview]
+  [context.deploy-preview.environment]
+    NETLIFY_USE_YARN = "true"
+    NETLIFY_BUILD_CACHE = "false"
+
+# Branch-specific configurations
+[context."main"]
+  [context."main".environment]
+    NODE_ENV = "production"
+
+[context."develop"]
+  [context."develop".environment]
+    NODE_ENV = "development"
+
+# Feature flags
+[context."feature/*"]
+  [context."feature/*".environment]
+    FEATURE_FLAG = "true"
+
+# Analytics and monitoring
+[context.production]
+  [context.production.environment]
+    ANALYTICS_ENABLED = "true"
+
+# Performance monitoring
+[context.production]
+  [context.production.environment]
+    PERFORMANCE_MONITORING = "true"
+
+# Error tracking
+[context.production]
+  [context.production.environment]
+    ERROR_TRACKING = "true"
