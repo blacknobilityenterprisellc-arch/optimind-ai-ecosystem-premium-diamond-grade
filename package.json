@@ -84,6 +84,8 @@
     "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
+    "validate-integrations": "tsx scripts/validate-integrations.ts",
+    "migrate-to-neon": "tsx scripts/migrate-to-neon.ts",
     "clean": "rm -rf .next dist build node_modules/.cache *.log",
     "clean:all": "rm -rf .next dist build node_modules package-lock.json *.log",
     "refresh": "npm run clean:all && npm install && npm run db:push && npm run db:generate",
@@ -189,5 +191,8 @@
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
     "typescript": "^5"
+  },
+  "optionalDependencies": {
+    "node-fetch": "^3.3.2"
   }
 }
