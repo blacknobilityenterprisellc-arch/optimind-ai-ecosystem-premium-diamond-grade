@@ -1,4 +1,4 @@
-import { secureStorage } from './secure-storage';
+import { secureStorage } from "./secure-storage";
 
 export interface StoredPhoto {
   id: string;
@@ -95,7 +95,9 @@ class OfflineStorage {
   }
 
   // Photo Management
-  async savePhoto(photo: Omit<StoredPhoto, "createdAt" | "updatedAt" | "syncStatus">): Promise<StoredPhoto> {
+  async savePhoto(
+    photo: Omit<StoredPhoto, "createdAt" | "updatedAt" | "syncStatus">,
+  ): Promise<StoredPhoto> {
     const storedPhoto: StoredPhoto = {
       ...photo,
       createdAt: new Date().toISOString(),
@@ -104,8 +106,8 @@ class OfflineStorage {
     };
 
     const photos = await this.getPhotos();
-    const existingIndex = photos.findIndex(p => p.id === photo.id);
-    
+    const existingIndex = photos.findIndex((p) => p.id === photo.id);
+
     if (existingIndex >= 0) {
       // Update existing photo
       photos[existingIndex] = { ...photos[existingIndex], ...storedPhoto };
@@ -122,9 +124,11 @@ class OfflineStorage {
 
   async getPhotos(): Promise<StoredPhoto[]> {
     if (typeof window === "undefined") return [];
-    
+
     try {
-      const stored = await secureStorage.getItem<StoredPhoto[]>(STORAGE_KEYS.PHOTOS);
+      const stored = await secureStorage.getItem<StoredPhoto[]>(
+        STORAGE_KEYS.PHOTOS,
+      );
       return stored || [];
     } catch (error) {
       console.error("Error loading photos from secure storage:", error);
@@ -134,7 +138,7 @@ class OfflineStorage {
 
   async setPhotos(photos: StoredPhoto[]): Promise<void> {
     if (typeof window === "undefined") return;
-    
+
     try {
       await secureStorage.setItem(STORAGE_KEYS.PHOTOS, photos);
     } catch (error) {
@@ -145,16 +149,16 @@ class OfflineStorage {
 
   async deletePhoto(photoId: string): Promise<void> {
     const photos = await this.getPhotos();
-    const photoToDelete = photos.find(p => p.id === photoId);
-    
+    const photoToDelete = photos.find((p) => p.id === photoId);
+
     if (photoToDelete) {
       // Remove from photos
-      const updatedPhotos = photos.filter(p => p.id !== photoId);
+      const updatedPhotos = photos.filter((p) => p.id !== photoId);
       await this.setPhotos(updatedPhotos);
-      
+
       // Add to sync queue
       await this.addToSyncQueue("delete", photoToDelete);
-      
+
       // Clean up object URL if it exists
       if (photoToDelete.url.startsWith("blob:")) {
         URL.revokeObjectURL(photoToDelete.url);
@@ -163,13 +167,15 @@ class OfflineStorage {
   }
 
   async updatePhotoStatus(
-    photoId: string, 
+    photoId: string,
     status: StoredPhoto["status"],
-    updates: Partial<Pick<StoredPhoto, "confidence" | "categories" | "scanDate">> = {}
+    updates: Partial<
+      Pick<StoredPhoto, "confidence" | "categories" | "scanDate">
+    > = {},
   ): Promise<void> {
     const photos = await this.getPhotos();
-    const photoIndex = photos.findIndex(p => p.id === photoId);
-    
+    const photoIndex = photos.findIndex((p) => p.id === photoId);
+
     if (photoIndex >= 0) {
       photos[photoIndex] = {
         ...photos[photoIndex],
@@ -178,16 +184,19 @@ class OfflineStorage {
         updatedAt: new Date().toISOString(),
         syncStatus: this.isOnline ? "synced" : "pending",
       };
-      
+
       await this.setPhotos(photos);
       await this.addToSyncQueue("update", photos[photoIndex]);
     }
   }
 
   // Sync Queue Management
-  private async addToSyncQueue(type: SyncQueueItem["type"], photo: StoredPhoto): Promise<void> {
+  private async addToSyncQueue(
+    type: SyncQueueItem["type"],
+    photo: StoredPhoto,
+  ): Promise<void> {
     if (typeof window === "undefined") return;
-    
+
     try {
       const queue = await this.getSyncQueue();
       const queueItem: SyncQueueItem = {
@@ -198,10 +207,10 @@ class OfflineStorage {
         timestamp: new Date().toISOString(),
         retryCount: 0,
       };
-      
+
       queue.push(queueItem);
       localStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, JSON.stringify(queue));
-      
+
       // Attempt immediate sync if online
       if (this.isOnline) {
         this.processSyncQueue();
@@ -213,9 +222,11 @@ class OfflineStorage {
 
   async getSyncQueue(): Promise<SyncQueueItem[]> {
     if (typeof window === "undefined") return [];
-    
+
     try {
-      const stored = await secureStorage.getItem<SyncQueueItem[]>(STORAGE_KEYS.SYNC_QUEUE);
+      const stored = await secureStorage.getItem<SyncQueueItem[]>(
+        STORAGE_KEYS.SYNC_QUEUE,
+      );
       return stored || [];
     } catch (error) {
       console.error("Error loading sync queue from secure storage:", error);
@@ -225,7 +236,7 @@ class OfflineStorage {
 
   async processSyncQueue(): Promise<void> {
     if (!this.isOnline) return;
-    
+
     const preferences = await this.getPreferences();
     if (preferences.syncOnWifiOnly && !this.isWifiConnection()) {
       return;
@@ -233,7 +244,7 @@ class OfflineStorage {
 
     const queue = await this.getSyncQueue();
     const processedItems: string[] = [];
-    
+
     for (const item of queue) {
       try {
         // Simulate API call - in real implementation, this would call your backend
@@ -241,16 +252,16 @@ class OfflineStorage {
         processedItems.push(item.id);
       } catch (error) {
         console.error(`Sync failed for item ${item.id}:`, error);
-        
+
         // Update retry count
         item.retryCount++;
         if (item.retryCount >= 3) {
           // Max retries reached, mark as failed
           processedItems.push(item.id);
-          
+
           // Update photo sync status
           const photos = await this.getPhotos();
-          const photo = photos.find(p => p.id === item.photoId);
+          const photo = photos.find((p) => p.id === item.photoId);
           if (photo) {
             photo.syncStatus = "failed";
             photo.lastSyncAttempt = new Date().toISOString();
@@ -259,19 +270,21 @@ class OfflineStorage {
         }
       }
     }
-    
+
     // Remove processed items from queue
-    const updatedQueue = queue.filter(item => !processedItems.includes(item.id));
+    const updatedQueue = queue.filter(
+      (item) => !processedItems.includes(item.id),
+    );
     await secureStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, updatedQueue);
   }
 
   private async syncToServer(item: SyncQueueItem): Promise<void> {
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     // In a real implementation, this would make actual API calls
     console.log(`Syncing ${item.type} operation for photo ${item.photoId}`);
-    
+
     // Simulate occasional failures for testing
     if (Math.random() < 0.1) {
       throw new Error("Network error");
@@ -281,9 +294,11 @@ class OfflineStorage {
   // User Preferences
   async getPreferences(): Promise<UserPreferences> {
     if (typeof window === "undefined") return DEFAULT_PREFERENCES;
-    
+
     try {
-      const stored = await secureStorage.getItem<UserPreferences>(STORAGE_KEYS.PREFERENCES);
+      const stored = await secureStorage.getItem<UserPreferences>(
+        STORAGE_KEYS.PREFERENCES,
+      );
       const preferences = stored || DEFAULT_PREFERENCES;
       return { ...DEFAULT_PREFERENCES, ...preferences };
     } catch (error) {
@@ -292,10 +307,12 @@ class OfflineStorage {
     }
   }
 
-  async savePreferences(preferences: Partial<UserPreferences>): Promise<UserPreferences> {
+  async savePreferences(
+    preferences: Partial<UserPreferences>,
+  ): Promise<UserPreferences> {
     const currentPrefs = await this.getPreferences();
     const updatedPrefs = { ...currentPrefs, ...preferences };
-    
+
     if (typeof window !== "undefined") {
       try {
         await secureStorage.setItem(STORAGE_KEYS.PREFERENCES, updatedPrefs);
@@ -303,24 +320,28 @@ class OfflineStorage {
         console.error("Error saving preferences to secure storage:", error);
       }
     }
-    
+
     return updatedPrefs;
   }
 
   // Storage Management
-  async getStorageUsage(): Promise<{ used: number; total: number; photos: number }> {
+  async getStorageUsage(): Promise<{
+    used: number;
+    total: number;
+    photos: number;
+  }> {
     const photos = await this.getPhotos();
     const syncQueue = await this.getSyncQueue();
     const preferences = await this.getPreferences();
-    
+
     // Calculate approximate storage usage
     const photosSize = JSON.stringify(photos).length;
     const queueSize = JSON.stringify(syncQueue).length;
     const prefsSize = JSON.stringify(preferences).length;
-    
+
     const totalSize = photosSize + queueSize + prefsSize;
     const maxSize = preferences.maxOfflineStorage * 1024 * 1024; // Convert MB to bytes
-    
+
     return {
       used: totalSize,
       total: maxSize,
@@ -331,28 +352,34 @@ class OfflineStorage {
   async cleanupStorage(): Promise<void> {
     const preferences = await this.getPreferences();
     const usage = await this.getStorageUsage();
-    
+
     if (usage.used > usage.total) {
       // Remove oldest photos until under limit
       const photos = await this.getPhotos();
-      const sortedPhotos = photos.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      
+      const sortedPhotos = photos.sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      );
+
       let currentUsage = usage.used;
       const photosToRemove: StoredPhoto[] = [];
-      
+
       for (const photo of sortedPhotos) {
-        if (currentUsage <= usage.total * 0.8) { // Clean up to 80% of limit
+        if (currentUsage <= usage.total * 0.8) {
+          // Clean up to 80% of limit
           break;
         }
-        
+
         photosToRemove.push(photo);
         currentUsage -= JSON.stringify(photo).length;
       }
-      
+
       // Remove photos from storage
-      const updatedPhotos = photos.filter(p => !photosToRemove.some(r => r.id === p.id));
+      const updatedPhotos = photos.filter(
+        (p) => !photosToRemove.some((r) => r.id === p.id),
+      );
       await this.setPhotos(updatedPhotos);
-      
+
       // Clean up object URLs
       for (const photo of photosToRemove) {
         if (photo.url.startsWith("blob:")) {
@@ -370,7 +397,7 @@ class OfflineStorage {
 
   async clearAllData(): Promise<void> {
     if (typeof window === "undefined") return;
-    
+
     try {
       for (const key of Object.values(STORAGE_KEYS)) {
         secureStorage.removeItem(key);
@@ -384,27 +411,34 @@ class OfflineStorage {
     const photos = await this.getPhotos();
     const syncQueue = await this.getSyncQueue();
     const preferences = await this.getPreferences();
-    
-    return JSON.stringify({
-      photos,
-      syncQueue,
-      preferences,
-      exportDate: new Date().toISOString(),
-    }, null, 2);
+
+    return JSON.stringify(
+      {
+        photos,
+        syncQueue,
+        preferences,
+        exportDate: new Date().toISOString(),
+      },
+      null,
+      2,
+    );
   }
 
   async importData(data: string): Promise<void> {
     try {
       const imported = JSON.parse(data);
-      
+
       if (imported.photos) {
         await this.setPhotos(imported.photos);
       }
-      
+
       if (imported.syncQueue) {
-        await secureStorage.setItem(STORAGE_KEYS.SYNC_QUEUE, imported.syncQueue);
+        await secureStorage.setItem(
+          STORAGE_KEYS.SYNC_QUEUE,
+          imported.syncQueue,
+        );
       }
-      
+
       if (imported.preferences) {
         await this.savePreferences(imported.preferences);
       }
@@ -423,7 +457,7 @@ import { useState, useEffect } from "react";
 
 export function useOfflineStorage() {
   const [isOnline, setIsOnline] = useState(
-    typeof navigator !== "undefined" ? navigator.onLine : true
+    typeof navigator !== "undefined" ? navigator.onLine : true,
   );
 
   useEffect(() => {

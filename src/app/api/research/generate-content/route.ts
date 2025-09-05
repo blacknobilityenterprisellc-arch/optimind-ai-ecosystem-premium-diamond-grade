@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
 
     if (!topic || !contentType) {
       return NextResponse.json(
-        { error: 'Topic and content type are required' },
-        { status: 400 }
+        { error: "Topic and content type are required" },
+        { status: 400 },
       );
     }
 
@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
     Generate a comprehensive ${contentType} about "${topic}" optimized for AEO/GEO (Answer Engine Optimization / Generative Engine Optimization).
 
     Content Requirements:
-    - Target Audience: ${targetAudience || 'general audience'}
-    - Tone: ${tone || 'professional and informative'}
+    - Target Audience: ${targetAudience || "general audience"}
+    - Tone: ${tone || "professional and informative"}
     - Focus on conversational, natural language that works well for voice search
     - Include structured data opportunities
     - Optimize for featured snippets and AI overviews
@@ -48,22 +48,23 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are an expert content creator specializing in AEO/GEO optimization. You create content that performs well in AI overviews, featured snippets, and voice search results.'
+          role: "system",
+          content:
+            "You are an expert content creator specializing in AEO/GEO optimization. You create content that performs well in AI overviews, featured snippets, and voice search results.",
         },
         {
-          role: 'user',
-          content: contentPrompt
-        }
+          role: "user",
+          content: contentPrompt,
+        },
       ],
       temperature: 0.7,
-      max_tokens: 3000
+      max_tokens: 3000,
     });
 
     const generatedContent = completion.choices[0]?.message?.content;
-    
+
     if (!generatedContent) {
-      throw new Error('No content generated from AI');
+      throw new Error("No content generated from AI");
     }
 
     return NextResponse.json({
@@ -73,21 +74,23 @@ export async function POST(request: NextRequest) {
         metadata: {
           topic,
           contentType,
-          tone: tone || 'professional',
-          targetAudience: targetAudience || 'general',
-          wordCount: generatedContent.split(' ').length,
-          generatedAt: new Date().toISOString()
-        }
+          tone: tone || "professional",
+          targetAudience: targetAudience || "general",
+          wordCount: generatedContent.split(" ").length,
+          generatedAt: new Date().toISOString(),
+        },
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Content generation error:', error);
+    console.error("Content generation error:", error);
     return NextResponse.json(
-      { error: 'Failed to generate content', details: error.message },
-      { error: 'Failed to generate content', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: "Failed to generate content", details: error.message },
+      {
+        error: "Failed to generate content",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

@@ -1,13 +1,13 @@
 "use client";
 
 import { useCallback, useState, useRef } from "react";
-import { 
-  Upload, 
-  Image as ImageIcon, 
-  FileImage, 
+import {
+  Upload,
+  Image as ImageIcon,
+  FileImage,
   X,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,11 +27,11 @@ interface DropZoneProps {
   acceptedTypes?: string[];
 }
 
-export function DropZone({ 
-  onFilesAdded, 
-  maxFiles = 50, 
+export function DropZone({
+  onFilesAdded,
+  maxFiles = 50,
   maxSize = 10 * 1024 * 1024, // 10MB
-  acceptedTypes = ["image/*"]
+  acceptedTypes = ["image/*"],
 }: DropZoneProps) {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -48,93 +48,99 @@ export function DropZone({
 
     // Check file type
     if (acceptedTypes.includes("image/*") && !file.type.startsWith("image/")) {
-        return `File ${file.name} is not a valid image type`;
-      }
+      return `File ${file.name} is not a valid image type`;
+    }
 
     return null;
   };
 
-  const handleFiles = useCallback((fileList: FileList) => {
-    const validFiles: File[] = [];
-    const errors: string[] = [];
+  const handleFiles = useCallback(
+    (fileList: FileList) => {
+      const validFiles: File[] = [];
+      const errors: string[] = [];
 
-    for (const file of Array.from(fileList)) {
-      const error = validateFile(file);
-      if (error) {
-        errors.push(error);
-      } else {
-        validFiles.push(file);
+      for (const file of Array.from(fileList)) {
+        const error = validateFile(file);
+        if (error) {
+          errors.push(error);
+        } else {
+          validFiles.push(file);
+        }
       }
-    }
 
-    // Show errors
-    if (errors.length > 0) {
-      for (const error of errors) {
+      // Show errors
+      if (errors.length > 0) {
+        for (const error of errors) {
+          toast({
+            title: "Upload Error",
+            description: error,
+            variant: "destructive",
+          });
+        }
+      }
+
+      // Check max files
+      if (files.length + validFiles.length > maxFiles) {
         toast({
           title: "Upload Error",
-          description: error,
+          description: `Too many files. Maximum ${maxFiles} files allowed`,
           variant: "destructive",
         });
+        return;
       }
-    }
 
-    // Check max files
-    if (files.length + validFiles.length > maxFiles) {
-      toast({
-        title: "Upload Error",
-        description: `Too many files. Maximum ${maxFiles} files allowed`,
-        variant: "destructive",
-      });
-      return;
-    }
+      if (validFiles.length > 0) {
+        const filesWithPreview = validFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          }),
+        );
 
-    if (validFiles.length > 0) {
-      const filesWithPreview = validFiles.map(file =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file)
-        })
-      );
+        setFiles((prev) => [...prev, ...filesWithPreview]);
 
-      setFiles(prev => [...prev, ...filesWithPreview]);
-      
-      // Simulate upload process
-      setIsUploading(true);
-      setUploadProgress(0);
+        // Simulate upload process
+        setIsUploading(true);
+        setUploadProgress(0);
 
-      const interval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsUploading(false);
-            
-            // Call the callback with the files
-            onFilesAdded(validFiles);
-            
-            // Clear the files after successful upload
-            setTimeout(() => setFiles([]), 1000);
-            
-            toast({
-              title: "Upload Complete",
-              description: `${validFiles.length} file(s) uploaded successfully`,
-            });
-            
-            return 100;
-          }
-          return prev + 10;
-        });
-      }, 200);
-    }
-  }, [files.length, maxFiles, maxSize, acceptedTypes, onFilesAdded, toast]);
+        const interval = setInterval(() => {
+          setUploadProgress((prev) => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setIsUploading(false);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragActive(false);
-    
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      handleFiles(files);
-    }
-  }, [handleFiles]);
+              // Call the callback with the files
+              onFilesAdded(validFiles);
+
+              // Clear the files after successful upload
+              setTimeout(() => setFiles([]), 1000);
+
+              toast({
+                title: "Upload Complete",
+                description: `${validFiles.length} file(s) uploaded successfully`,
+              });
+
+              return 100;
+            }
+            return prev + 10;
+          });
+        }, 200);
+      }
+    },
+    [files.length, maxFiles, maxSize, acceptedTypes, onFilesAdded, toast],
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragActive(false);
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        handleFiles(files);
+      }
+    },
+    [handleFiles],
+  );
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -146,16 +152,19 @@ export function DropZone({
     setIsDragActive(false);
   }, []);
 
-  const handleFileInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      handleFiles(files);
-    }
-    // Reset the input value so the same files can be selected again
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-  }, [handleFiles]);
+  const handleFileInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e.target.files;
+      if (files && files.length > 0) {
+        handleFiles(files);
+      }
+      // Reset the input value so the same files can be selected again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    },
+    [handleFiles],
+  );
 
   const handleClick = useCallback(() => {
     if (fileInputRef.current && !isUploading) {
@@ -164,7 +173,7 @@ export function DropZone({
   }, [isUploading]);
 
   const removeFile = (index: number) => {
-    setFiles(prev => {
+    setFiles((prev) => {
       const newFiles = [...prev];
       URL.revokeObjectURL(newFiles[index].preview);
       newFiles.splice(index, 1);
@@ -177,18 +186,21 @@ export function DropZone({
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return (
+      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    );
   };
 
   return (
     <div className="space-y-4">
       {/* Drop Zone */}
-      <Card 
+      <Card
         className={`
           transition-colors cursor-pointer
-          ${isDragActive 
-            ? "border-primary bg-primary/5" 
-            : "border-dashed border-2 border-muted-foreground/25 hover:border-muted-foreground/50"
+          ${
+            isDragActive
+              ? "border-primary bg-primary/5"
+              : "border-dashed border-2 border-muted-foreground/25 hover:border-muted-foreground/50"
           }
           ${isUploading ? "pointer-events-none opacity-50" : ""}
         `}
@@ -207,7 +219,7 @@ export function DropZone({
             onChange={handleFileInputChange}
             disabled={isUploading}
           />
-          
+
           {isUploading ? (
             <div className="space-y-4">
               <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
@@ -219,7 +231,10 @@ export function DropZone({
                   Please wait while we process your images
                 </p>
               </div>
-              <Progress value={uploadProgress} className="w-full max-w-xs mx-auto" />
+              <Progress
+                value={uploadProgress}
+                className="w-full max-w-xs mx-auto"
+              />
               <p className="text-xs text-muted-foreground">{uploadProgress}%</p>
             </div>
           ) : (
@@ -236,18 +251,24 @@ export function DropZone({
                   {isDragActive ? "Drop your images here" : "Upload Photos"}
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {isDragActive 
+                  {isDragActive
                     ? "Release to upload your photos"
-                    : "Drag & drop your photos here, or click to browse"
-                  }
+                    : "Drag & drop your photos here, or click to browse"}
                 </p>
               </div>
               <div className="flex flex-wrap justify-center gap-2 text-xs text-muted-foreground">
                 <Badge variant="outline">Max {maxFiles} files</Badge>
-                <Badge variant="outline">Max {formatFileSize(maxSize)} per file</Badge>
+                <Badge variant="outline">
+                  Max {formatFileSize(maxSize)} per file
+                </Badge>
                 <Badge variant="outline">Images only</Badge>
               </div>
-              <Button variant="outline" size="sm" className="mt-2" type="button">
+              <Button
+                variant="outline"
+                size="sm"
+                className="mt-2"
+                type="button"
+              >
                 <Upload className="w-4 h-4 mr-2" />
                 Choose Files
               </Button>
@@ -265,7 +286,7 @@ export function DropZone({
                 <h4 className="font-medium">Files to Upload</h4>
                 <Badge variant="secondary">{files.length} file(s)</Badge>
               </div>
-              
+
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {files.map((file, index) => (
                   <div key={index} className="relative group">
@@ -290,7 +311,9 @@ export function DropZone({
                       </div>
                     </div>
                     <div className="mt-2">
-                      <p className="text-xs font-medium truncate">{file.name}</p>
+                      <p className="text-xs font-medium truncate">
+                        {file.name}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         {formatFileSize(file.size)}
                       </p>
@@ -298,12 +321,16 @@ export function DropZone({
                   </div>
                 ))}
               </div>
-              
+
               {isUploading && (
                 <div className="mt-4 p-3 bg-muted rounded-lg">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Processing files...</span>
-                    <span className="text-xs text-muted-foreground">{uploadProgress}%</span>
+                    <span className="text-sm font-medium">
+                      Processing files...
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {uploadProgress}%
+                    </span>
                   </div>
                   <Progress value={uploadProgress} className="w-full" />
                 </div>

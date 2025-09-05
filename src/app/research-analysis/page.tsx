@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Brain, 
-  Search, 
-  Target, 
-  Database, 
-  BarChart3, 
-  TrendingUp, 
-  CheckCircle, 
+import {
+  Brain,
+  Search,
+  Target,
+  Database,
+  BarChart3,
+  TrendingUp,
+  CheckCircle,
   AlertTriangle,
   Zap,
   Crown,
@@ -1081,16 +1081,28 @@ import {
   FileUnlock as FileUnlockIcon50,
   FileSignature as FileSignatureIcon50,
   FileHeart as FileHeartIcon50,
-  FileWarning as FileWarningIcon50
+  FileWarning as FileWarningIcon50,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 
 // Import specialized components
@@ -1139,14 +1151,14 @@ interface MultimodalAnalysis {
   description: string;
   icon: React.ReactNode;
   capabilities: string[];
-  status: 'available' | 'beta' | 'coming-soon';
+  status: "available" | "beta" | "coming-soon";
 }
 
 interface AnalyticsMetric {
   name: string;
   value: string;
   change: string;
-  trend: 'up' | 'down';
+  trend: "up" | "down";
   target: string;
 }
 
@@ -1157,7 +1169,7 @@ export default function ResearchAnalysisPage() {
     query: "",
     category: "general",
     depth: "comprehensive",
-    sources: []
+    sources: [],
   });
   const [researchResults, setResearchResults] = useState<ResearchResult[]>([]);
 
@@ -1167,8 +1179,12 @@ export default function ResearchAnalysisPage() {
       accuracy: 95,
       speed: 85,
       cost: 90,
-      strengths: ["Excellent reasoning", "Creative output", "Large context window"],
-      weaknesses: ["Higher cost", "Slower response time"]
+      strengths: [
+        "Excellent reasoning",
+        "Creative output",
+        "Large context window",
+      ],
+      weaknesses: ["Higher cost", "Slower response time"],
     },
     {
       model: "Claude 3",
@@ -1176,7 +1192,7 @@ export default function ResearchAnalysisPage() {
       speed: 88,
       cost: 85,
       strengths: ["Fast responses", "Good reasoning", "Cost-effective"],
-      weaknesses: ["Smaller context", "Less creative"]
+      weaknesses: ["Smaller context", "Less creative"],
     },
     {
       model: "Gemini Pro",
@@ -1184,7 +1200,7 @@ export default function ResearchAnalysisPage() {
       speed: 92,
       cost: 80,
       strengths: ["Very fast", "Good for coding", "Multimodal"],
-      weaknesses: ["Less detailed", "Inconsistent quality"]
+      weaknesses: ["Less detailed", "Inconsistent quality"],
     },
     {
       model: "Llama 3",
@@ -1192,7 +1208,7 @@ export default function ResearchAnalysisPage() {
       speed: 95,
       cost: 75,
       strengths: ["Open source", "Fast", "Customizable"],
-      weaknesses: ["Lower accuracy", "Limited context"]
+      weaknesses: ["Lower accuracy", "Limited context"],
     },
     {
       model: "Mistral",
@@ -1200,8 +1216,8 @@ export default function ResearchAnalysisPage() {
       speed: 93,
       cost: 70,
       strengths: ["Multilingual", "Efficient", "Fast inference"],
-      weaknesses: ["Less creative", "Smaller model"]
-    }
+      weaknesses: ["Less creative", "Smaller model"],
+    },
   ];
 
   const researchStats: ResearchStats = {
@@ -1210,7 +1226,7 @@ export default function ResearchAnalysisPage() {
     processingSpeed: "2.3x faster",
     modelsUsed: 12,
     dataPoints: "1.2M",
-    insightsGenerated: 847
+    insightsGenerated: 847,
   };
 
   const recentAnalyses = [
@@ -1220,7 +1236,7 @@ export default function ResearchAnalysisPage() {
       type: "Market Research",
       createdAt: "2 hours ago",
       status: "completed",
-      insights: 156
+      insights: 156,
     },
     {
       id: "2",
@@ -1228,7 +1244,7 @@ export default function ResearchAnalysisPage() {
       type: "Competitive Intelligence",
       createdAt: "1 day ago",
       status: "completed",
-      insights: 89
+      insights: 89,
     },
     {
       id: "3",
@@ -1236,7 +1252,7 @@ export default function ResearchAnalysisPage() {
       type: "Content Analysis",
       createdAt: "3 days ago",
       status: "completed",
-      insights: 234
+      insights: 234,
     },
     {
       id: "4",
@@ -1244,7 +1260,7 @@ export default function ResearchAnalysisPage() {
       type: "User Research",
       createdAt: "4 days ago",
       status: "completed",
-      insights: 167
+      insights: 167,
     },
     {
       id: "5",
@@ -1252,7 +1268,7 @@ export default function ResearchAnalysisPage() {
       type: "Technical Analysis",
       createdAt: "5 days ago",
       status: "completed",
-      insights: 203
+      insights: 203,
     },
     {
       id: "6",
@@ -1260,8 +1276,8 @@ export default function ResearchAnalysisPage() {
       type: "Sentiment Analysis",
       createdAt: "1 week ago",
       status: "completed",
-      insights: 445
-    }
+      insights: 445,
+    },
   ];
 
   const multimodalAnalyses: MultimodalAnalysis[] = [
@@ -1270,131 +1286,210 @@ export default function ResearchAnalysisPage() {
       name: "Text Analysis",
       description: "Natural language processing and sentiment analysis",
       icon: <FileText className="w-5 h-5 text-blue-600" />,
-      capabilities: ["Sentiment Analysis", "Entity Recognition", "Topic Modeling", "Language Detection"],
-      status: "available"
+      capabilities: [
+        "Sentiment Analysis",
+        "Entity Recognition",
+        "Topic Modeling",
+        "Language Detection",
+      ],
+      status: "available",
     },
     {
       type: "image",
       name: "Image Recognition",
       description: "Object detection and visual content analysis",
       icon: <ImageIcon className="w-5 h-5 text-green-600" />,
-      capabilities: ["Object Detection", "Face Recognition", "Scene Analysis", "OCR"],
-      status: "available"
+      capabilities: [
+        "Object Detection",
+        "Face Recognition",
+        "Scene Analysis",
+        "OCR",
+      ],
+      status: "available",
     },
     {
       type: "audio",
       name: "Audio Processing",
       description: "Speech recognition and audio pattern analysis",
       icon: <Mic className="w-5 h-5 text-purple-600" />,
-      capabilities: ["Speech-to-Text", "Speaker Identification", "Audio Classification", "Noise Reduction"],
-      status: "available"
+      capabilities: [
+        "Speech-to-Text",
+        "Speaker Identification",
+        "Audio Classification",
+        "Noise Reduction",
+      ],
+      status: "available",
     },
     {
       type: "video",
       name: "Video Analysis",
       description: "Motion detection and video content understanding",
       icon: <Video className="w-5 h-5 text-red-600" />,
-      capabilities: ["Object Tracking", "Action Recognition", "Scene Understanding", "Video Summarization"],
-      status: "beta"
-    }
+      capabilities: [
+        "Object Tracking",
+        "Action Recognition",
+        "Scene Understanding",
+        "Video Summarization",
+      ],
+      status: "beta",
+    },
   ];
 
   const analyticsMetrics: AnalyticsMetric[] = [
-    { name: "Research Speed", value: "2.3x faster", change: "+12%", trend: "up", target: "3x faster" },
-    { name: "Data Accuracy", value: "94%", change: "+2%", trend: "up", target: "95%" },
-    { name: "Insight Quality", value: "92%", change: "+5%", trend: "up", target: "95%" },
-    { name: "Processing Time", value: "1.2s", change: "-0.3s", trend: "down", target: "<1s" },
-    { name: "Model Coverage", value: "12 models", change: "+2", trend: "up", target: "15 models" },
-    { name: "User Satisfaction", value: "96%", change: "+3%", trend: "up", target: "98%" }
+    {
+      name: "Research Speed",
+      value: "2.3x faster",
+      change: "+12%",
+      trend: "up",
+      target: "3x faster",
+    },
+    {
+      name: "Data Accuracy",
+      value: "94%",
+      change: "+2%",
+      trend: "up",
+      target: "95%",
+    },
+    {
+      name: "Insight Quality",
+      value: "92%",
+      change: "+5%",
+      trend: "up",
+      target: "95%",
+    },
+    {
+      name: "Processing Time",
+      value: "1.2s",
+      change: "-0.3s",
+      trend: "down",
+      target: "<1s",
+    },
+    {
+      name: "Model Coverage",
+      value: "12 models",
+      change: "+2",
+      trend: "up",
+      target: "15 models",
+    },
+    {
+      name: "User Satisfaction",
+      value: "96%",
+      change: "+3%",
+      trend: "up",
+      target: "98%",
+    },
   ];
 
   const handleResearch = async () => {
     if (!researchQuery.query.trim()) return;
 
     setIsResearching(true);
-    
+
     try {
-      const response = await fetch('/api/research/generate-content', {
-        method: 'POST',
+      const response = await fetch("/api/research/generate-content", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           query: researchQuery.query,
           category: researchQuery.category,
           depth: researchQuery.depth,
-          sources: researchQuery.sources
-        })
+          sources: researchQuery.sources,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to perform research');
+        throw new Error("Failed to perform research");
       }
 
       const data = await response.json();
-      
+
       const mockResults: ResearchResult[] = [
         {
           id: "1",
           title: "Market Overview",
-          content: data.content || "The AI market is experiencing unprecedented growth, with a projected CAGR of 37.3% from 2024 to 2030. Key drivers include increased adoption across industries, advancements in machine learning, and growing demand for automation solutions.",
-          sources: data.sources || ["Market Research Report 2025", "Industry Analysis", "Expert Interviews"],
+          content:
+            data.content ||
+            "The AI market is experiencing unprecedented growth, with a projected CAGR of 37.3% from 2024 to 2030. Key drivers include increased adoption across industries, advancements in machine learning, and growing demand for automation solutions.",
+          sources: data.sources || [
+            "Market Research Report 2025",
+            "Industry Analysis",
+            "Expert Interviews",
+          ],
           confidence: data.confidence || 94,
           category: researchQuery.category,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         {
           id: "2",
           title: "Competitive Landscape",
-          content: "The competitive landscape is dominated by major tech companies, but there's significant opportunity for specialized AI solutions. Key differentiators include model accuracy, speed, cost-effectiveness, and industry-specific expertise.",
+          content:
+            "The competitive landscape is dominated by major tech companies, but there's significant opportunity for specialized AI solutions. Key differentiators include model accuracy, speed, cost-effectiveness, and industry-specific expertise.",
           sources: ["Competitor Analysis", "Market Data", "Expert Opinions"],
           confidence: 87,
           category: "competitive",
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         {
           id: "3",
           title: "Technology Trends",
-          content: "Key technology trends include multimodal AI, edge computing integration, improved natural language understanding, and enhanced privacy-preserving machine learning techniques.",
-          sources: ["Technical Papers", "Patent Analysis", "Research Publications"],
+          content:
+            "Key technology trends include multimodal AI, edge computing integration, improved natural language understanding, and enhanced privacy-preserving machine learning techniques.",
+          sources: [
+            "Technical Papers",
+            "Patent Analysis",
+            "Research Publications",
+          ],
           confidence: 91,
           category: "technology",
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ];
 
       setResearchResults(mockResults);
     } catch (error) {
-      console.error('Research failed:', error);
+      console.error("Research failed:", error);
       // Fallback to mock data if API fails
       const mockResults: ResearchResult[] = [
         {
           id: "1",
           title: "Market Overview",
-          content: "The AI market is experiencing unprecedented growth, with a projected CAGR of 37.3% from 2024 to 2030. Key drivers include increased adoption across industries, advancements in machine learning, and growing demand for automation solutions.",
-          sources: ["Market Research Report 2025", "Industry Analysis", "Expert Interviews"],
+          content:
+            "The AI market is experiencing unprecedented growth, with a projected CAGR of 37.3% from 2024 to 2030. Key drivers include increased adoption across industries, advancements in machine learning, and growing demand for automation solutions.",
+          sources: [
+            "Market Research Report 2025",
+            "Industry Analysis",
+            "Expert Interviews",
+          ],
           confidence: 94,
           category: "market",
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         {
           id: "2",
           title: "Competitive Landscape",
-          content: "The competitive landscape is dominated by major tech companies, but there's significant opportunity for specialized AI solutions. Key differentiators include model accuracy, speed, cost-effectiveness, and industry-specific expertise.",
+          content:
+            "The competitive landscape is dominated by major tech companies, but there's significant opportunity for specialized AI solutions. Key differentiators include model accuracy, speed, cost-effectiveness, and industry-specific expertise.",
           sources: ["Competitor Analysis", "Market Data", "Expert Opinions"],
           confidence: 87,
           category: "competitive",
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         },
         {
           id: "3",
           title: "Technology Trends",
-          content: "Key technology trends include multimodal AI, edge computing integration, improved natural language understanding, and enhanced privacy-preserving machine learning techniques.",
-          sources: ["Technical Papers", "Patent Analysis", "Research Publications"],
+          content:
+            "Key technology trends include multimodal AI, edge computing integration, improved natural language understanding, and enhanced privacy-preserving machine learning techniques.",
+          sources: [
+            "Technical Papers",
+            "Patent Analysis",
+            "Research Publications",
+          ],
           confidence: 91,
           category: "technology",
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       ];
 
       setResearchResults(mockResults);
@@ -1404,27 +1499,41 @@ export default function ResearchAnalysisPage() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-600';
-    if (score >= 80) return 'text-blue-600';
-    if (score >= 70) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 90) return "text-green-600";
+    if (score >= 80) return "text-blue-600";
+    if (score >= 70) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'available': return 'text-green-600';
-      case 'beta': return 'text-yellow-600';
-      case 'coming-soon': return 'text-gray-600';
-      default: return 'text-gray-600';
+      case "available":
+        return "text-green-600";
+      case "beta":
+        return "text-yellow-600";
+      case "coming-soon":
+        return "text-gray-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'available': return <Badge className="text-xs bg-green-500 text-white">Available</Badge>;
-      case 'beta': return <Badge className="text-xs bg-yellow-500 text-white">Beta</Badge>;
-      case 'coming-soon': return <Badge className="text-xs bg-gray-500 text-white">Coming Soon</Badge>;
-      default: return <Badge className="text-xs bg-gray-500 text-white">Unknown</Badge>;
+      case "available":
+        return (
+          <Badge className="text-xs bg-green-500 text-white">Available</Badge>
+        );
+      case "beta":
+        return <Badge className="text-xs bg-yellow-500 text-white">Beta</Badge>;
+      case "coming-soon":
+        return (
+          <Badge className="text-xs bg-gray-500 text-white">Coming Soon</Badge>
+        );
+      default:
+        return (
+          <Badge className="text-xs bg-gray-500 text-white">Unknown</Badge>
+        );
     }
   };
 
@@ -1435,7 +1544,10 @@ export default function ResearchAnalysisPage() {
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
             <h1 className="text-3xl font-bold">AI Research & Analysis</h1>
-            <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Badge
+              variant="secondary"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            >
               <Brain className="w-3 h-3 mr-1" />
               Beta
             </Badge>
@@ -1491,7 +1603,9 @@ export default function ResearchAnalysisPage() {
                 <Target className="w-4 h-4 text-green-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{researchStats.avgAccuracy}%</p>
+                <p className="text-2xl font-bold">
+                  {researchStats.avgAccuracy}%
+                </p>
                 <p className="text-xs text-muted-foreground">Accuracy</p>
               </div>
             </div>
@@ -1504,7 +1618,9 @@ export default function ResearchAnalysisPage() {
                 <Lightbulb className="w-4 h-4 text-orange-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{researchStats.insightsGenerated}</p>
+                <p className="text-2xl font-bold">
+                  {researchStats.insightsGenerated}
+                </p>
                 <p className="text-xs text-muted-foreground">Insights</p>
               </div>
             </div>
@@ -1513,7 +1629,11 @@ export default function ResearchAnalysisPage() {
       </div>
 
       {/* Main Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="multi-model">Multi-Model</TabsTrigger>
           <TabsTrigger value="brand-tracking">Brand Tracking</TabsTrigger>
@@ -1532,7 +1652,8 @@ export default function ResearchAnalysisPage() {
                 <span>Multi-Model AI Analyzer</span>
               </CardTitle>
               <CardDescription>
-                Advanced analysis using multiple AI models for comprehensive insights and accuracy
+                Advanced analysis using multiple AI models for comprehensive
+                insights and accuracy
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1550,7 +1671,8 @@ export default function ResearchAnalysisPage() {
                 <span>Brand Mention Tracker</span>
               </CardTitle>
               <CardDescription>
-                Real-time brand monitoring and sentiment analysis across digital platforms
+                Real-time brand monitoring and sentiment analysis across digital
+                platforms
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1568,7 +1690,8 @@ export default function ResearchAnalysisPage() {
                 <span>AI-Powered Research Strategy</span>
               </CardTitle>
               <CardDescription>
-                Strategic research planning and execution with AI-powered recommendations
+                Strategic research planning and execution with AI-powered
+                recommendations
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1592,55 +1715,85 @@ export default function ResearchAnalysisPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Research Topic</label>
+                  <label className="text-sm font-medium mb-2 block">
+                    Research Topic
+                  </label>
                   <Textarea
                     placeholder="Enter your research question or topic..."
                     value={researchQuery.query}
-                    onChange={(e) => setResearchQuery(prev => ({ ...prev, query: e.target.value }))}
+                    onChange={(e) =>
+                      setResearchQuery((prev) => ({
+                        ...prev,
+                        query: e.target.value,
+                      }))
+                    }
                     className="min-h-[100px]"
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Category</label>
-                    <Select 
-                      value={researchQuery.category} 
-                      onValueChange={(value) => setResearchQuery(prev => ({ ...prev, category: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Category
+                    </label>
+                    <Select
+                      value={researchQuery.category}
+                      onValueChange={(value) =>
+                        setResearchQuery((prev) => ({
+                          ...prev,
+                          category: value,
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="general">General Research</SelectItem>
+                        <SelectItem value="general">
+                          General Research
+                        </SelectItem>
                         <SelectItem value="market">Market Analysis</SelectItem>
-                        <SelectItem value="competitive">Competitive Intelligence</SelectItem>
-                        <SelectItem value="technical">Technical Analysis</SelectItem>
-                        <SelectItem value="academic">Academic Research</SelectItem>
+                        <SelectItem value="competitive">
+                          Competitive Intelligence
+                        </SelectItem>
+                        <SelectItem value="technical">
+                          Technical Analysis
+                        </SelectItem>
+                        <SelectItem value="academic">
+                          Academic Research
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Research Depth</label>
-                    <Select 
-                      value={researchQuery.depth} 
-                      onValueChange={(value) => setResearchQuery(prev => ({ ...prev, depth: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Research Depth
+                    </label>
+                    <Select
+                      value={researchQuery.depth}
+                      onValueChange={(value) =>
+                        setResearchQuery((prev) => ({ ...prev, depth: value }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="quick">Quick Overview</SelectItem>
-                        <SelectItem value="standard">Standard Analysis</SelectItem>
-                        <SelectItem value="comprehensive">Comprehensive Deep Dive</SelectItem>
+                        <SelectItem value="standard">
+                          Standard Analysis
+                        </SelectItem>
+                        <SelectItem value="comprehensive">
+                          Comprehensive Deep Dive
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
-                
-                <Button 
-                  onClick={handleResearch} 
+
+                <Button
+                  onClick={handleResearch}
                   disabled={!researchQuery.query.trim() || isResearching}
                   className="w-full"
                 >
@@ -1668,10 +1821,15 @@ export default function ResearchAnalysisPage() {
               </CardHeader>
               <CardContent className="space-y-3 max-h-96 overflow-y-auto">
                 {recentAnalyses.map((analysis) => (
-                  <div key={analysis.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div
+                    key={analysis.id}
+                    className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                  >
                     <div className="flex-1">
                       <p className="font-medium text-sm">{analysis.title}</p>
-                      <p className="text-xs text-muted-foreground">{analysis.type} • {analysis.createdAt}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {analysis.type} • {analysis.createdAt}
+                      </p>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Badge variant="outline" className="text-xs">
@@ -1695,7 +1853,10 @@ export default function ResearchAnalysisPage() {
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center justify-between">
                       <span>{result.title}</span>
-                      <Badge variant="outline" className={`text-xs ${getScoreColor(result.confidence)}`}>
+                      <Badge
+                        variant="outline"
+                        className={`text-xs ${getScoreColor(result.confidence)}`}
+                      >
                         {result.confidence}% confidence
                       </Badge>
                     </CardTitle>
@@ -1704,12 +1865,18 @@ export default function ResearchAnalysisPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">{result.content}</p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {result.content}
+                    </p>
                     <div className="space-y-2">
                       <h4 className="text-xs font-medium">Sources:</h4>
                       <div className="flex flex-wrap gap-1">
                         {result.sources.map((source, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs">
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {source}
                           </Badge>
                         ))}
@@ -1731,7 +1898,8 @@ export default function ResearchAnalysisPage() {
                 <span>Multimodal Analysis</span>
               </CardTitle>
               <CardDescription>
-                Analyze text, images, audio, and video together for comprehensive insights
+                Analyze text, images, audio, and video together for
+                comprehensive insights
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -1740,30 +1908,43 @@ export default function ResearchAnalysisPage() {
                   <Card key={analysis.type} className="p-4">
                     <div className="flex items-center space-x-2 mb-2">
                       {analysis.icon}
-                      <span className="text-sm font-medium">{analysis.name}</span>
+                      <span className="text-sm font-medium">
+                        {analysis.name}
+                      </span>
                       {getStatusBadge(analysis.status)}
                     </div>
-                    <p className="text-xs text-muted-foreground mb-3">{analysis.description}</p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      {analysis.description}
+                    </p>
                     <div className="space-y-1">
                       <span className="text-xs font-medium">Capabilities:</span>
                       <ul className="text-xs text-muted-foreground space-y-1">
-                        {analysis.capabilities.slice(0, 3).map((capability, idx) => (
-                          <li key={idx} className="flex items-start space-x-1">
-                            <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span>{capability}</span>
-                          </li>
-                        ))}
+                        {analysis.capabilities
+                          .slice(0, 3)
+                          .map((capability, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start space-x-1"
+                            >
+                              <CheckCircle className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              <span>{capability}</span>
+                            </li>
+                          ))}
                       </ul>
                     </div>
                   </Card>
                 ))}
               </div>
-              
+
               <div className="flex items-center justify-center p-8 border-2 border-dashed border-muted-foreground/25 rounded-lg">
                 <div className="text-center space-y-2">
                   <Merge className="w-12 h-12 mx-auto text-muted-foreground" />
-                  <p className="text-lg font-medium">Multimodal Analysis Ready</p>
-                  <p className="text-sm text-muted-foreground">Upload files or connect data sources to begin analysis</p>
+                  <p className="text-lg font-medium">
+                    Multimodal Analysis Ready
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Upload files or connect data sources to begin analysis
+                  </p>
                   <Button className="mt-4">
                     <Upload className="w-4 h-4 mr-2" />
                     Start Multimodal Analysis
@@ -1792,33 +1973,45 @@ export default function ResearchAnalysisPage() {
                   <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                     <div className="flex items-center space-x-2">
                       <Brain className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium">AI Models Utilized</span>
+                      <span className="text-sm font-medium">
+                        AI Models Utilized
+                      </span>
                     </div>
-                    <Badge variant="outline">{researchStats.modelsUsed} Active</Badge>
+                    <Badge variant="outline">
+                      {researchStats.modelsUsed} Active
+                    </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
                     <div className="flex items-center space-x-2">
                       <Database className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium">Data Points Processed</span>
+                      <span className="text-sm font-medium">
+                        Data Points Processed
+                      </span>
                     </div>
                     <Badge variant="outline">{researchStats.dataPoints}</Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
                     <div className="flex items-center space-x-2">
                       <Target className="w-4 h-4 text-purple-600" />
                       <span className="text-sm font-medium">Accuracy Rate</span>
                     </div>
-                    <Badge variant="outline">{researchStats.avgAccuracy}%</Badge>
+                    <Badge variant="outline">
+                      {researchStats.avgAccuracy}%
+                    </Badge>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
                     <div className="flex items-center space-x-2">
                       <Lightbulb className="w-4 h-4 text-orange-600" />
-                      <span className="text-sm font-medium">Insights Generated</span>
+                      <span className="text-sm font-medium">
+                        Insights Generated
+                      </span>
                     </div>
-                    <Badge variant="outline">{researchStats.insightsGenerated}</Badge>
+                    <Badge variant="outline">
+                      {researchStats.insightsGenerated}
+                    </Badge>
                   </div>
                 </div>
               </CardContent>
@@ -1837,16 +2030,21 @@ export default function ResearchAnalysisPage() {
               <CardContent className="space-y-4">
                 <div className="space-y-3">
                   {analyticsMetrics.map((item) => (
-                    <div key={item.name} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                    <div
+                      key={item.name}
+                      className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                    >
                       <span className="text-sm font-medium">{item.name}</span>
                       <div className="flex items-center space-x-2">
-                        <span className={`text-sm ${item.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+                        <span
+                          className={`text-sm ${item.trend === "up" ? "text-green-600" : "text-red-600"}`}
+                        >
                           {item.value}
                         </span>
                         <Badge variant="outline" className="text-xs">
                           {item.change}
                         </Badge>
-                        {item.trend === 'up' ? (
+                        {item.trend === "up" ? (
                           <TrendingUp className="w-4 h-4 text-green-500" />
                         ) : (
                           <TrendingDown className="w-4 h-4 text-red-500" />
@@ -1855,7 +2053,7 @@ export default function ResearchAnalysisPage() {
                     </div>
                   ))}
                 </div>
-                
+
                 <Button className="w-full" variant="outline">
                   <BarChart3 className="w-4 h-4 mr-2" />
                   View Detailed Analytics

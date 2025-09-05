@@ -1,20 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 
-import { db } from '@/lib/db'
+import { db } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const projectId = searchParams.get('projectId')
-    const page = Number.parseInt(searchParams.get('page') || '1')
-    const limit = Number.parseInt(searchParams.get('limit') || '10')
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    const projectId = searchParams.get("projectId");
+    const page = Number.parseInt(searchParams.get("page") || "1");
+    const limit = Number.parseInt(searchParams.get("limit") || "10");
 
-    const skip = (page - 1) * limit
+    const skip = (page - 1) * limit;
 
-    const where: any = {}
-    if (userId) where.userId = userId
-    if (projectId) where.projectId = projectId
+    const where: any = {};
+    if (userId) where.userId = userId;
+    if (projectId) where.projectId = projectId;
 
     const [conversations, total] = await Promise.all([
       db.conversation.findMany({
@@ -25,29 +25,29 @@ export async function GET(request: NextRequest) {
               id: true,
               name: true,
               email: true,
-              avatar: true
-            }
+              avatar: true,
+            },
           },
           project: {
             select: {
               id: true,
-              name: true
-            }
+              name: true,
+            },
           },
           _count: {
             select: {
               messages: true,
               images: true,
-              searches: true
-            }
-          }
+              searches: true,
+            },
+          },
         },
-        orderBy: { updatedAt: 'desc' },
+        orderBy: { updatedAt: "desc" },
         skip,
-        take: limit
+        take: limit,
       }),
-      db.conversation.count({ where })
-    ])
+      db.conversation.count({ where }),
+    ]);
 
     return NextResponse.json({
       conversations,
@@ -55,27 +55,27 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        pages: Math.ceil(total / limit)
-      }
-    })
+        pages: Math.ceil(total / limit),
+      },
+    });
   } catch (error: any) {
-    console.error('Get conversations error:', error)
+    console.error("Get conversations error:", error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    )
+      { error: error.message || "Internal server error" },
+      { status: 500 },
+    );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { title, userId, projectId, model = 'gpt-4' } = await request.json()
+    const { title, userId, projectId, model = "gpt-4" } = await request.json();
 
     if (!title || !userId) {
       return NextResponse.json(
-        { error: 'Title and userId are required' },
-        { status: 400 }
-      )
+        { error: "Title and userId are required" },
+        { status: 400 },
+      );
     }
 
     const conversation = await db.conversation.create({
@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
         title,
         userId,
         projectId,
-        model
+        model,
       },
       include: {
         user: {
@@ -91,24 +91,24 @@ export async function POST(request: NextRequest) {
             id: true,
             name: true,
             email: true,
-            avatar: true
-          }
+            avatar: true,
+          },
         },
         project: {
           select: {
             id: true,
-            name: true
-          }
-        }
-      }
-    })
+            name: true,
+          },
+        },
+      },
+    });
 
-    return NextResponse.json(conversation, { status: 201 })
+    return NextResponse.json(conversation, { status: 201 });
   } catch (error: any) {
-    console.error('Create conversation error:', error)
+    console.error("Create conversation error:", error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    )
+      { error: error.message || "Internal server error" },
+      { status: 500 },
+    );
   }
 }

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Search, 
-  Filter, 
-  X, 
-  Calendar, 
-  TrendingUp, 
-  Users, 
+import {
+  Search,
+  Filter,
+  X,
+  Calendar,
+  TrendingUp,
+  Users,
   Target,
   Brain,
   FileText,
@@ -16,7 +16,7 @@ import {
   Video,
   Code,
   MessageSquare,
-  Palette
+  Palette,
 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ interface FilterOptions {
   type: string[];
   dateRange: string;
   sortBy: string;
-  sortOrder: 'asc' | 'desc';
+  sortOrder: "asc" | "desc";
 }
 
 interface SearchAndFilterProps {
@@ -39,54 +39,62 @@ interface SearchAndFilterProps {
   totalResults: number;
 }
 
-export default function SearchAndFilter({ 
-  onSearch, 
-  onFilter, 
-  onClearFilters, 
-  totalResults 
+export default function SearchAndFilter({
+  onSearch,
+  onFilter,
+  onClearFilters,
+  totalResults,
 }: SearchAndFilterProps) {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     status: [],
     type: [],
-    dateRange: 'all',
-    sortBy: 'timestamp',
-    sortOrder: 'desc'
+    dateRange: "all",
+    sortBy: "timestamp",
+    sortOrder: "desc",
   });
 
   const statusOptions = [
-    { value: 'success', label: 'Success', color: 'bg-green-100 text-green-800' },
-    { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-800' },
-    { value: 'error', label: 'Error', color: 'bg-red-100 text-red-800' },
-    { value: 'info', label: 'Info', color: 'bg-gray-100 text-gray-800' }
+    {
+      value: "success",
+      label: "Success",
+      color: "bg-green-100 text-green-800",
+    },
+    {
+      value: "in_progress",
+      label: "In Progress",
+      color: "bg-blue-100 text-blue-800",
+    },
+    { value: "error", label: "Error", color: "bg-red-100 text-red-800" },
+    { value: "info", label: "Info", color: "bg-gray-100 text-gray-800" },
   ];
 
   const typeOptions = [
-    { value: 'content', label: 'Content', icon: FileText },
-    { value: 'optimization', label: 'Optimization', icon: Target },
-    { value: 'research', label: 'Research', icon: Brain },
-    { value: 'image', label: 'Image', icon: ImageIcon },
-    { value: 'voice', label: 'Voice', icon: Mic },
-    { value: 'video', label: 'Video', icon: Video },
-    { value: 'code', label: 'Code', icon: Code },
-    { value: 'chat', label: 'Chat', icon: MessageSquare },
-    { value: 'design', label: 'Design', icon: Palette }
+    { value: "content", label: "Content", icon: FileText },
+    { value: "optimization", label: "Optimization", icon: Target },
+    { value: "research", label: "Research", icon: Brain },
+    { value: "image", label: "Image", icon: ImageIcon },
+    { value: "voice", label: "Voice", icon: Mic },
+    { value: "video", label: "Video", icon: Video },
+    { value: "code", label: "Code", icon: Code },
+    { value: "chat", label: "Chat", icon: MessageSquare },
+    { value: "design", label: "Design", icon: Palette },
   ];
 
   const dateRangeOptions = [
-    { value: 'all', label: 'All Time' },
-    { value: 'today', label: 'Today' },
-    { value: 'week', label: 'This Week' },
-    { value: 'month', label: 'This Month' },
-    { value: 'year', label: 'This Year' }
+    { value: "all", label: "All Time" },
+    { value: "today", label: "Today" },
+    { value: "week", label: "This Week" },
+    { value: "month", label: "This Month" },
+    { value: "year", label: "This Year" },
   ];
 
   const sortOptions = [
-    { value: 'timestamp', label: 'Date' },
-    { value: 'title', label: 'Title' },
-    { value: 'type', label: 'Type' },
-    { value: 'status', label: 'Status' }
+    { value: "timestamp", label: "Date" },
+    { value: "title", label: "Title" },
+    { value: "type", label: "Type" },
+    { value: "status", label: "Status" },
   ];
 
   const handleSearch = (value: string) => {
@@ -96,9 +104,9 @@ export default function SearchAndFilter({
 
   const handleStatusToggle = (status: string) => {
     const newStatuses = filters.status.includes(status)
-      ? filters.status.filter(s => s !== status)
+      ? filters.status.filter((s) => s !== status)
       : [...filters.status, status];
-    
+
     const newFilters = { ...filters, status: newStatuses };
     setFilters(newFilters);
     onFilter(newFilters);
@@ -106,9 +114,9 @@ export default function SearchAndFilter({
 
   const handleTypeToggle = (type: string) => {
     const newTypes = filters.type.includes(type)
-      ? filters.type.filter(t => t !== type)
+      ? filters.type.filter((t) => t !== type)
       : [...filters.type, type];
-    
+
     const newFilters = { ...filters, type: newTypes };
     setFilters(newFilters);
     onFilter(newFilters);
@@ -121,10 +129,13 @@ export default function SearchAndFilter({
   };
 
   const handleSortChange = (sortBy: string) => {
-    const newFilters = { 
-      ...filters, 
+    const newFilters = {
+      ...filters,
       sortBy,
-      sortOrder: filters.sortBy === sortBy && filters.sortOrder === 'desc' ? 'asc' : 'desc'
+      sortOrder:
+        filters.sortBy === sortBy && filters.sortOrder === "desc"
+          ? "asc"
+          : "desc",
     };
     setFilters(newFilters);
     onFilter(newFilters);
@@ -134,19 +145,20 @@ export default function SearchAndFilter({
     const resetFilters: FilterOptions = {
       status: [],
       type: [],
-      dateRange: 'all',
-      sortBy: 'timestamp',
-      sortOrder: 'desc'
+      dateRange: "all",
+      sortBy: "timestamp",
+      sortOrder: "desc",
     };
     setFilters(resetFilters);
-    setSearchQuery('');
+    setSearchQuery("");
     onClearFilters();
   };
 
-  const hasActiveFilters = filters.status.length > 0 || 
-                         filters.type.length > 0 || 
-                         filters.dateRange !== 'all' || 
-                         searchQuery;
+  const hasActiveFilters =
+    filters.status.length > 0 ||
+    filters.type.length > 0 ||
+    filters.dateRange !== "all" ||
+    searchQuery;
 
   return (
     <Card className="w-full">
@@ -171,14 +183,10 @@ export default function SearchAndFilter({
               onClick={() => setShowFilters(!showFilters)}
             >
               <Filter className="w-4 h-4 mr-2" />
-              {showFilters ? 'Hide' : 'Show'} Filters
+              {showFilters ? "Hide" : "Show"} Filters
             </Button>
             {hasActiveFilters && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleClearFilters}
-              >
+              <Button variant="outline" size="sm" onClick={handleClearFilters}>
                 <X className="w-4 h-4 mr-2" />
                 Clear
               </Button>
@@ -208,7 +216,11 @@ export default function SearchAndFilter({
                 {statusOptions.map((option) => (
                   <Badge
                     key={option.value}
-                    variant={filters.status.includes(option.value) ? "default" : "outline"}
+                    variant={
+                      filters.status.includes(option.value)
+                        ? "default"
+                        : "outline"
+                    }
                     className={`cursor-pointer ${
                       filters.status.includes(option.value) ? option.color : ""
                     }`}
@@ -229,7 +241,11 @@ export default function SearchAndFilter({
                   return (
                     <Badge
                       key={option.value}
-                      variant={filters.type.includes(option.value) ? "default" : "outline"}
+                      variant={
+                        filters.type.includes(option.value)
+                          ? "default"
+                          : "outline"
+                      }
                       className="cursor-pointer justify-center p-2"
                       onClick={() => handleTypeToggle(option.value)}
                     >
@@ -249,7 +265,11 @@ export default function SearchAndFilter({
                   {dateRangeOptions.map((option) => (
                     <Badge
                       key={option.value}
-                      variant={filters.dateRange === option.value ? "default" : "outline"}
+                      variant={
+                        filters.dateRange === option.value
+                          ? "default"
+                          : "outline"
+                      }
                       className="cursor-pointer"
                       onClick={() => handleDateRangeChange(option.value)}
                     >
@@ -266,14 +286,16 @@ export default function SearchAndFilter({
                   {sortOptions.map((option) => (
                     <Badge
                       key={option.value}
-                      variant={filters.sortBy === option.value ? "default" : "outline"}
+                      variant={
+                        filters.sortBy === option.value ? "default" : "outline"
+                      }
                       className="cursor-pointer"
                       onClick={() => handleSortChange(option.value)}
                     >
                       {option.label}
                       {filters.sortBy === option.value && (
                         <span className="ml-1">
-                          {filters.sortOrder === 'asc' ? '↑' : '↓'}
+                          {filters.sortOrder === "asc" ? "↑" : "↓"}
                         </span>
                       )}
                     </Badge>
@@ -290,42 +312,55 @@ export default function SearchAndFilter({
             {searchQuery && (
               <Badge variant="secondary" className="flex items-center">
                 Search: "{searchQuery}"
-                <X 
-                  className="w-3 h-3 ml-1 cursor-pointer" 
-                  onClick={() => handleSearch('')}
+                <X
+                  className="w-3 h-3 ml-1 cursor-pointer"
+                  onClick={() => handleSearch("")}
                 />
               </Badge>
             )}
             {filters.status.map((status) => {
-              const option = statusOptions.find(opt => opt.value === status);
+              const option = statusOptions.find((opt) => opt.value === status);
               return (
-                <Badge key={status} variant="secondary" className="flex items-center">
+                <Badge
+                  key={status}
+                  variant="secondary"
+                  className="flex items-center"
+                >
                   Status: {option?.label}
-                  <X 
-                    className="w-3 h-3 ml-1 cursor-pointer" 
+                  <X
+                    className="w-3 h-3 ml-1 cursor-pointer"
                     onClick={() => handleStatusToggle(status)}
                   />
                 </Badge>
               );
             })}
             {filters.type.map((type) => {
-              const option = typeOptions.find(opt => opt.value === type);
+              const option = typeOptions.find((opt) => opt.value === type);
               return (
-                <Badge key={type} variant="secondary" className="flex items-center">
+                <Badge
+                  key={type}
+                  variant="secondary"
+                  className="flex items-center"
+                >
                   Type: {option?.label}
-                  <X 
-                    className="w-3 h-3 ml-1 cursor-pointer" 
+                  <X
+                    className="w-3 h-3 ml-1 cursor-pointer"
                     onClick={() => handleTypeToggle(type)}
                   />
                 </Badge>
               );
             })}
-            {filters.dateRange !== 'all' && (
+            {filters.dateRange !== "all" && (
               <Badge variant="secondary" className="flex items-center">
-                Date: {dateRangeOptions.find(opt => opt.value === filters.dateRange)?.label}
-                <X 
-                  className="w-3 h-3 ml-1 cursor-pointer" 
-                  onClick={() => handleDateRangeChange('all')}
+                Date:{" "}
+                {
+                  dateRangeOptions.find(
+                    (opt) => opt.value === filters.dateRange,
+                  )?.label
+                }
+                <X
+                  className="w-3 h-3 ml-1 cursor-pointer"
+                  onClick={() => handleDateRangeChange("all")}
                 />
               </Badge>
             )}

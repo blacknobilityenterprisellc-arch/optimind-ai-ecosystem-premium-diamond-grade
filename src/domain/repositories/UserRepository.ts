@@ -1,17 +1,17 @@
 /**
  * Domain Repository Interface - UserRepository
- * 
+ *
  * Defines the contract for user data access operations.
  * This interface abstracts the data access layer and follows the repository pattern.
- * 
+ *
  * @version 1.0.0
  * @author OptiMind AI Team
  * @license MIT
  */
 
-import { User, UserRole, Permission } from '../entities/User';
-import { Email } from '../value-objects/Email';
-import { Money } from '../value-objects/Money';
+import { User, UserRole, Permission } from "../entities/User";
+import { Email } from "../value-objects/Email";
+import { Money } from "../value-objects/Money";
 
 export interface UserRepository {
   // CRUD operations
@@ -20,7 +20,7 @@ export interface UserRepository {
   findByEmail(email: Email): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
   delete(id: string): Promise<void>;
-  
+
   // Query operations
   findAll(options?: FindAllOptions): Promise<User[]>;
   findByRole(role: UserRole): Promise<User[]>;
@@ -28,31 +28,31 @@ export interface UserRepository {
   findActiveUsers(): Promise<User[]>;
   findLockedUsers(): Promise<User[]>;
   findUsersBySubscriptionPlan(plan: string): Promise<User[]>;
-  
+
   // Count operations
   count(): Promise<number>;
   countByRole(role: UserRole): Promise<number>;
   countActiveUsers(): Promise<number>;
   countLockedUsers(): Promise<number>;
-  
+
   // Pagination operations
   findPaginated(options: PaginationOptions): Promise<PaginatedResult<User>>;
-  
+
   // Search operations
   search(query: SearchQuery): Promise<User[]>;
-  
+
   // Subscription operations
   updateSubscription(userId: string, subscription: any): Promise<void>;
   cancelSubscription(userId: string): Promise<void>;
   reactivateSubscription(userId: string): Promise<void>;
-  
+
   // Security operations
   incrementLoginAttempts(userId: string): Promise<void>;
   resetLoginAttempts(userId: string): Promise<void>;
   lockUser(userId: string, lockUntil: Date): Promise<void>;
   unlockUser(userId: string): Promise<void>;
   updateLastLogin(userId: string): Promise<void>;
-  
+
   // Analytics operations
   getUserAnalytics(): Promise<UserAnalytics>;
   getSubscriptionAnalytics(): Promise<SubscriptionAnalytics>;
@@ -63,8 +63,8 @@ export interface UserRepository {
 export interface FindAllOptions {
   limit?: number;
   offset?: number;
-  orderBy?: 'createdAt' | 'updatedAt' | 'lastLogin' | 'username';
-  orderDirection?: 'asc' | 'desc';
+  orderBy?: "createdAt" | "updatedAt" | "lastLogin" | "username";
+  orderDirection?: "asc" | "desc";
   includeDeleted?: boolean;
 }
 
@@ -73,7 +73,7 @@ export interface PaginationOptions {
   page: number;
   limit: number;
   orderBy?: string;
-  orderDirection?: 'asc' | 'desc';
+  orderDirection?: "asc" | "desc";
   filters?: Record<string, any>;
 }
 
@@ -93,7 +93,7 @@ export interface PaginatedResult<T> {
 // Search query
 export interface SearchQuery {
   term: string;
-  fields?: ('username' | 'email' | 'firstName' | 'lastName' | 'bio')[];
+  fields?: ("username" | "email" | "firstName" | "lastName" | "bio")[];
   filters?: {
     role?: UserRole;
     isActive?: boolean;
@@ -177,13 +177,17 @@ export interface CachedUserRepository extends UserRepository {
 
 // Transaction support
 export interface UserRepositoryWithTransaction extends UserRepository {
-  withTransaction<T>(operation: (repo: UserRepository) => Promise<T>): Promise<T>;
+  withTransaction<T>(
+    operation: (repo: UserRepository) => Promise<T>,
+  ): Promise<T>;
 }
 
 // Bulk operations
 export interface UserRepositoryWithBulkOperations extends UserRepository {
   bulkCreate(users: User[]): Promise<void>;
-  bulkUpdate(updates: Array<{ id: string; updates: Partial<User> }>): Promise<void>;
+  bulkUpdate(
+    updates: Array<{ id: string; updates: Partial<User> }>,
+  ): Promise<void>;
   bulkDelete(ids: string[]): Promise<void>;
 }
 
@@ -200,5 +204,5 @@ export {
   UserRepositoryWithEvents,
   CachedUserRepository,
   UserRepositoryWithTransaction,
-  UserRepositoryWithBulkOperations
+  UserRepositoryWithBulkOperations,
 };

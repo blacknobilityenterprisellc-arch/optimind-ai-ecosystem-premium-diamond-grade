@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { 
-  FileText, 
-  Image as ImageIcon, 
-  Sparkles, 
-  Wand2, 
-  Download, 
-  Copy, 
+import {
+  FileText,
+  Image as ImageIcon,
+  Sparkles,
+  Wand2,
+  Download,
+  Copy,
   Share,
   Settings,
   BarChart3,
@@ -59,16 +59,28 @@ import {
   Flame,
   Gem,
   Crown as CrownIcon,
-  Sparkles as SparklesIcon
+  Sparkles as SparklesIcon,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { LoadingCard, LoadingSkeleton } from "@/components/ui/loading-spinner";
 import { useApi } from "@/hooks/use-api";
@@ -124,15 +136,17 @@ interface RecentProject {
 
 export default function ContentCreationPage() {
   const [activeTab, setActiveTab] = useState("text-content");
-  const [generatedContent, setGeneratedContent] = useState<GeneratedContent | null>(null);
-  const [generationRequest, setGenerationRequest] = useState<ContentGenerationRequest>({
-    topic: "",
-    contentType: "blog-post",
-    tone: "professional",
-    length: "medium",
-    targetAudience: "general",
-    keywords: []
-  });
+  const [generatedContent, setGeneratedContent] =
+    useState<GeneratedContent | null>(null);
+  const [generationRequest, setGenerationRequest] =
+    useState<ContentGenerationRequest>({
+      topic: "",
+      contentType: "blog-post",
+      tone: "professional",
+      length: "medium",
+      targetAudience: "general",
+      keywords: [],
+    });
   const [keywordInput, setKeywordInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -146,7 +160,7 @@ export default function ContentCreationPage() {
     totalDocuments: 523,
     processingSpeed: "2.3x faster",
     qualityScore: 94,
-    storageUsed: "2.4 GB"
+    storageUsed: "2.4 GB",
   };
 
   // Recent projects across all media types
@@ -158,16 +172,16 @@ export default function ContentCreationPage() {
       category: "text",
       createdAt: "2 hours ago",
       status: "completed",
-      qualityScore: 92
+      qualityScore: 92,
     },
     {
-      id: "2", 
+      id: "2",
       title: "Summer Campaign Email",
       type: "Email Campaign",
       category: "text",
       createdAt: "1 day ago",
       status: "completed",
-      qualityScore: 88
+      qualityScore: 88,
     },
     {
       id: "3",
@@ -176,7 +190,7 @@ export default function ContentCreationPage() {
       category: "text",
       createdAt: "3 days ago",
       status: "completed",
-      qualityScore: 95
+      qualityScore: 95,
     },
     {
       id: "4",
@@ -185,7 +199,7 @@ export default function ContentCreationPage() {
       category: "image",
       createdAt: "4 hours ago",
       status: "completed",
-      fileSize: "4.2 MB"
+      fileSize: "4.2 MB",
     },
     {
       id: "5",
@@ -194,7 +208,7 @@ export default function ContentCreationPage() {
       category: "video",
       createdAt: "1 day ago",
       status: "processing",
-      duration: "2:34"
+      duration: "2:34",
     },
     {
       id: "6",
@@ -203,7 +217,7 @@ export default function ContentCreationPage() {
       category: "audio",
       createdAt: "2 days ago",
       status: "completed",
-      duration: "0:30"
+      duration: "0:30",
     },
     {
       id: "7",
@@ -212,7 +226,7 @@ export default function ContentCreationPage() {
       category: "image",
       createdAt: "5 hours ago",
       status: "completed",
-      fileSize: "3.8 MB"
+      fileSize: "3.8 MB",
     },
     {
       id: "8",
@@ -221,8 +235,8 @@ export default function ContentCreationPage() {
       category: "image",
       createdAt: "6 hours ago",
       status: "completed",
-      fileSize: "2.1 MB"
-    }
+      fileSize: "2.1 MB",
+    },
   ];
 
   const contentTypes = [
@@ -235,7 +249,7 @@ export default function ContentCreationPage() {
     { value: "video-script", label: "Video Script", icon: Video },
     { value: "podcast-script", label: "Podcast Script", icon: Mic },
     { value: "ebook", label: "E-book", icon: FileEdit },
-    { value: "whitepaper", label: "Whitepaper", icon: FileText }
+    { value: "whitepaper", label: "Whitepaper", icon: FileText },
   ];
 
   const toneOptions = [
@@ -246,14 +260,14 @@ export default function ContentCreationPage() {
     { value: "conversational", label: "Conversational" },
     { value: "persuasive", label: "Persuasive" },
     { value: "humorous", label: "Humorous" },
-    { value: "inspirational", label: "Inspirational" }
+    { value: "inspirational", label: "Inspirational" },
   ];
 
   const lengthOptions = [
     { value: "short", label: "Short (200-500 words)" },
     { value: "medium", label: "Medium (500-1000 words)" },
     { value: "long", label: "Long (1000-2000 words)" },
-    { value: "comprehensive", label: "Comprehensive (2000+ words)" }
+    { value: "comprehensive", label: "Comprehensive (2000+ words)" },
   ];
 
   const audienceOptions = [
@@ -263,36 +277,42 @@ export default function ContentCreationPage() {
     { value: "advanced", label: "Advanced" },
     { value: "business", label: "Business Professionals" },
     { value: "technical", label: "Technical Users" },
-    { value: "creative", label: "Creative Professionals" }
+    { value: "creative", label: "Creative Professionals" },
   ];
 
   const handleGenerateContent = async () => {
     if (!generationRequest.topic.trim()) return;
 
     setIsGenerating(true);
-    
+
     try {
-      const data = await callApi('/api/content/generate', {
-        method: 'POST',
-        body: JSON.stringify({
-          topic: generationRequest.topic,
-          contentType: generationRequest.contentType,
-          tone: generationRequest.tone,
-          length: generationRequest.length,
-          targetAudience: generationRequest.targetAudience,
-          keywords: generationRequest.keywords
-        })
-      }, {
-        showSuccessToast: true,
-        successMessage: "Content generated successfully!",
-        showErrorToast: true,
-        errorMessage: "Failed to generate content"
-      });
-      
+      const data = await callApi(
+        "/api/content/generate",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            topic: generationRequest.topic,
+            contentType: generationRequest.contentType,
+            tone: generationRequest.tone,
+            length: generationRequest.length,
+            targetAudience: generationRequest.targetAudience,
+            keywords: generationRequest.keywords,
+          }),
+        },
+        {
+          showSuccessToast: true,
+          successMessage: "Content generated successfully!",
+          showErrorToast: true,
+          errorMessage: "Failed to generate content",
+        },
+      );
+
       const generatedContent: GeneratedContent = {
         id: Date.now().toString(),
         title: generationRequest.topic,
-        content: data.content || `# ${generationRequest.topic}
+        content:
+          data.content ||
+          `# ${generationRequest.topic}
 
 ## Introduction
 
@@ -329,13 +349,13 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
 *This content was generated by OptiMind AI's advanced content creation engine, designed to deliver high-quality, engaging content tailored to your specific needs.*`,
         type: generationRequest.contentType,
         createdAt: new Date().toISOString(),
-        wordCount: data.content ? data.content.split(' ').length : 287,
-        qualityScore: Math.floor(Math.random() * 15) + 85 // 85-99% quality score
+        wordCount: data.content ? data.content.split(" ").length : 287,
+        qualityScore: Math.floor(Math.random() * 15) + 85, // 85-99% quality score
       };
 
       setGeneratedContent(generatedContent);
     } catch (error) {
-      console.error('Content generation failed:', error);
+      console.error("Content generation failed:", error);
       // The error is already handled by the useApi hook with toast notifications
     } finally {
       setIsGenerating(false);
@@ -343,47 +363,63 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
   };
 
   const addKeyword = () => {
-    if (keywordInput.trim() && !generationRequest.keywords.includes(keywordInput.trim())) {
-      setGenerationRequest(prev => ({
+    if (
+      keywordInput.trim() &&
+      !generationRequest.keywords.includes(keywordInput.trim())
+    ) {
+      setGenerationRequest((prev) => ({
         ...prev,
-        keywords: [...prev.keywords, keywordInput.trim()]
+        keywords: [...prev.keywords, keywordInput.trim()],
       }));
       setKeywordInput("");
     }
   };
 
   const removeKeyword = (keyword: string) => {
-    setGenerationRequest(prev => ({
+    setGenerationRequest((prev) => ({
       ...prev,
-      keywords: prev.keywords.filter(k => k !== keyword)
+      keywords: prev.keywords.filter((k) => k !== keyword),
     }));
   };
 
   const getProjectIcon = (category: string) => {
     switch (category) {
-      case "text": return <FileText className="w-4 h-4" />;
-      case "image": return <ImageIcon className="w-4 h-4" />;
-      case "video": return <Video className="w-4 h-4" />;
-      case "audio": return <Mic className="w-4 h-4" />;
-      default: return <FileText className="w-4 h-4" />;
+      case "text":
+        return <FileText className="w-4 h-4" />;
+      case "image":
+        return <ImageIcon className="w-4 h-4" />;
+      case "video":
+        return <Video className="w-4 h-4" />;
+      case "audio":
+        return <Mic className="w-4 h-4" />;
+      default:
+        return <FileText className="w-4 h-4" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "completed": return "text-green-600";
-      case "processing": return "text-blue-600";
-      case "failed": return "text-red-600";
-      default: return "text-gray-600";
+      case "completed":
+        return "text-green-600";
+      case "processing":
+        return "text-blue-600";
+      case "failed":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "completed": return <CheckCircle className="w-4 h-4" />;
-      case "processing": return <Loader2 className="w-4 h-4 animate-spin" />;
-      case "failed": return <AlertCircle className="w-4 h-4" />;
-      default: return <CheckCircle className="w-4 h-4" />;
+      case "completed":
+        return <CheckCircle className="w-4 h-4" />;
+      case "processing":
+        return <Loader2 className="w-4 h-4 animate-spin" />;
+      case "failed":
+        return <AlertCircle className="w-4 h-4" />;
+      default:
+        return <CheckCircle className="w-4 h-4" />;
     }
   };
 
@@ -394,13 +430,17 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
             <h1 className="text-3xl font-bold">AI Content & Creation</h1>
-            <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Badge
+              variant="secondary"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            >
               <Sparkles className="w-3 h-3 mr-1" />
               Premium
             </Badge>
           </div>
           <p className="text-muted-foreground">
-            Generate high-quality content, images, and media with advanced AI technology
+            Generate high-quality content, images, and media with advanced AI
+            technology
           </p>
         </div>
         <div className="flex items-center space-x-2">
@@ -420,7 +460,9 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <FileText className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{mediaStats.totalDocuments}</p>
+                <p className="text-2xl font-bold">
+                  {mediaStats.totalDocuments}
+                </p>
                 <p className="text-xs text-muted-foreground">Documents</p>
               </div>
             </div>
@@ -459,8 +501,12 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <Crown className="w-4 h-4 text-orange-600" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{mediaStats.processingSpeed}</p>
-                <p className="text-xs text-muted-foreground">Processing Speed</p>
+                <p className="text-2xl font-bold">
+                  {mediaStats.processingSpeed}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Processing Speed
+                </p>
               </div>
             </div>
           </CardContent>
@@ -468,7 +514,11 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
       </div>
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="text-content">Text Content</TabsTrigger>
           <TabsTrigger value="art-generator">Art Generator</TabsTrigger>
@@ -496,19 +546,33 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Topic or Title</label>
+                    <label className="text-sm font-medium mb-2 block">
+                      Topic or Title
+                    </label>
                     <Input
                       placeholder="Enter your content topic..."
                       value={generationRequest.topic}
-                      onChange={(e) => setGenerationRequest(prev => ({ ...prev, topic: e.target.value }))}
+                      onChange={(e) =>
+                        setGenerationRequest((prev) => ({
+                          ...prev,
+                          topic: e.target.value,
+                        }))
+                      }
                     />
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Content Type</label>
-                    <Select 
-                      value={generationRequest.contentType} 
-                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, contentType: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Content Type
+                    </label>
+                    <Select
+                      value={generationRequest.contentType}
+                      onValueChange={(value) =>
+                        setGenerationRequest((prev) => ({
+                          ...prev,
+                          contentType: value,
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -527,10 +591,17 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Tone</label>
-                    <Select 
-                      value={generationRequest.tone} 
-                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, tone: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Tone
+                    </label>
+                    <Select
+                      value={generationRequest.tone}
+                      onValueChange={(value) =>
+                        setGenerationRequest((prev) => ({
+                          ...prev,
+                          tone: value,
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -546,10 +617,17 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Length</label>
-                    <Select 
-                      value={generationRequest.length} 
-                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, length: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Length
+                    </label>
+                    <Select
+                      value={generationRequest.length}
+                      onValueChange={(value) =>
+                        setGenerationRequest((prev) => ({
+                          ...prev,
+                          length: value,
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -565,17 +643,27 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Target Audience</label>
-                    <Select 
-                      value={generationRequest.targetAudience} 
-                      onValueChange={(value) => setGenerationRequest(prev => ({ ...prev, targetAudience: value }))}
+                    <label className="text-sm font-medium mb-2 block">
+                      Target Audience
+                    </label>
+                    <Select
+                      value={generationRequest.targetAudience}
+                      onValueChange={(value) =>
+                        setGenerationRequest((prev) => ({
+                          ...prev,
+                          targetAudience: value,
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         {audienceOptions.map((audience) => (
-                          <SelectItem key={audience.value} value={audience.value}>
+                          <SelectItem
+                            key={audience.value}
+                            value={audience.value}
+                          >
                             {audience.label}
                           </SelectItem>
                         ))}
@@ -584,13 +672,15 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Keywords</label>
+                    <label className="text-sm font-medium mb-2 block">
+                      Keywords
+                    </label>
                     <div className="flex space-x-2 mb-2">
                       <Input
                         placeholder="Add keyword..."
                         value={keywordInput}
                         onChange={(e) => setKeywordInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && addKeyword()}
+                        onKeyPress={(e) => e.key === "Enter" && addKeyword()}
                       />
                       <Button onClick={addKeyword} size="sm">
                         Add
@@ -598,9 +688,13 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {generationRequest.keywords.map((keyword) => (
-                        <Badge key={keyword} variant="secondary" className="text-xs">
+                        <Badge
+                          key={keyword}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {keyword}
-                          <button 
+                          <button
                             onClick={() => removeKeyword(keyword)}
                             className="ml-1 hover:text-destructive"
                           >
@@ -611,8 +705,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                     </div>
                   </div>
 
-                  <Button 
-                    onClick={handleGenerateContent} 
+                  <Button
+                    onClick={handleGenerateContent}
                     disabled={!generationRequest.topic.trim() || isGenerating}
                     className="w-full"
                     size="lg"
@@ -638,24 +732,31 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                   <CardTitle className="text-lg">Recent Projects</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 max-h-96 overflow-y-auto">
-                  {recentProjects.filter(p => p.category === 'text').map((project) => (
-                    <div key={project.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div className="flex-1">
-                        <p className="font-medium text-sm">{project.title}</p>
-                        <p className="text-xs text-muted-foreground">{project.type} • {project.createdAt}</p>
+                  {recentProjects
+                    .filter((p) => p.category === "text")
+                    .map((project) => (
+                      <div
+                        key={project.id}
+                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                      >
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">{project.title}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {project.type} • {project.createdAt}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {project.qualityScore && (
+                            <Badge variant="outline" className="text-xs">
+                              {project.qualityScore}%
+                            </Badge>
+                          )}
+                          <Button size="sm" variant="ghost">
+                            <FileText className="w-3 h-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        {project.qualityScore && (
-                          <Badge variant="outline" className="text-xs">
-                            {project.qualityScore}%
-                          </Badge>
-                        )}
-                        <Button size="sm" variant="ghost">
-                          <FileText className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </CardContent>
               </Card>
             </div>
@@ -668,7 +769,9 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                     <div>
                       <CardTitle>Generated Content</CardTitle>
                       <CardDescription>
-                        {generatedContent ? "Your AI-generated content is ready" : "Content will appear here after generation"}
+                        {generatedContent
+                          ? "Your AI-generated content is ready"
+                          : "Content will appear here after generation"}
                       </CardDescription>
                     </div>
                     {generatedContent && (
@@ -694,15 +797,21 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                         </div>
                       </div>
                       <div className="text-center space-y-2">
-                        <p className="text-lg font-medium">Generating Content...</p>
-                        <p className="text-sm text-muted-foreground">Our AI is crafting your content</p>
+                        <p className="text-lg font-medium">
+                          Generating Content...
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Our AI is crafting your content
+                        </p>
                         <Progress value={75} className="w-48" />
                       </div>
                     </div>
-                  ) : (generatedContent ? (
+                  ) : generatedContent ? (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <h3 className="text-xl font-semibold">{generatedContent.title}</h3>
+                        <h3 className="text-xl font-semibold">
+                          {generatedContent.title}
+                        </h3>
                         <div className="flex items-center space-x-2">
                           <Button size="sm" variant="outline">
                             <Copy className="w-4 h-4 mr-1" />
@@ -718,7 +827,7 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                           </Button>
                         </div>
                       </div>
-                      
+
                       <div className="prose prose-sm max-w-none bg-muted/30 p-6 rounded-lg border">
                         <div className="whitespace-pre-wrap text-sm leading-relaxed">
                           {generatedContent.content}
@@ -727,7 +836,12 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
 
                       <div className="flex items-center justify-between pt-4 border-t">
                         <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                          <span>Generated {new Date(generatedContent.createdAt).toLocaleString()}</span>
+                          <span>
+                            Generated{" "}
+                            {new Date(
+                              generatedContent.createdAt,
+                            ).toLocaleString()}
+                          </span>
                           <span>•</span>
                           <span>Type: {generatedContent.type}</span>
                         </div>
@@ -741,17 +855,22 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                     <div className="flex flex-col items-center justify-center h-96 space-y-4 text-muted-foreground">
                       <FileText className="w-16 h-16" />
                       <div className="text-center space-y-2">
-                        <p className="text-lg font-medium">No Content Generated Yet</p>
-                        <p className="text-sm">Fill in the form and click "Generate Content" to get started</p>
+                        <p className="text-lg font-medium">
+                          No Content Generated Yet
+                        </p>
+                        <p className="text-sm">
+                          Fill in the form and click "Generate Content" to get
+                          started
+                        </p>
                       </div>
                     </div>
-                  ))}
+                  )}
                 </CardContent>
               </Card>
             </div>
           </div>
         </TabsContent>
-        
+
         {/* AI Art Generator Tab */}
         <TabsContent value="art-generator" className="space-y-6">
           <Card>
@@ -761,7 +880,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Art Generator</span>
               </CardTitle>
               <CardDescription>
-                Create stunning artwork and images with advanced AI generation technology
+                Create stunning artwork and images with advanced AI generation
+                technology
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -779,7 +899,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Image Tools</span>
               </CardTitle>
               <CardDescription>
-                Organize, enhance, and manage your image library with AI-powered tools
+                Organize, enhance, and manage your image library with AI-powered
+                tools
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -797,7 +918,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Photo Restoration</span>
               </CardTitle>
               <CardDescription>
-                Restore and enhance old or damaged photos with advanced AI technology
+                Restore and enhance old or damaged photos with advanced AI
+                technology
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -815,7 +937,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Style Transfer</span>
               </CardTitle>
               <CardDescription>
-                Apply artistic styles to your images using advanced AI style transfer technology
+                Apply artistic styles to your images using advanced AI style
+                transfer technology
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -833,7 +956,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Background Generator</span>
               </CardTitle>
               <CardDescription>
-                Generate perfect backgrounds for your images, presentations, and designs
+                Generate perfect backgrounds for your images, presentations, and
+                designs
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -851,7 +975,8 @@ The future of ${generationRequest.topic.toLowerCase()} is bright, with continuou
                 <span>AI Premium Editor</span>
               </CardTitle>
               <CardDescription>
-                Advanced content editing with AI-powered enhancement and optimization tools
+                Advanced content editing with AI-powered enhancement and
+                optimization tools
               </CardDescription>
             </CardHeader>
             <CardContent>

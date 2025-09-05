@@ -1,19 +1,19 @@
 /**
  * OptiMind AI Ecosystem - Database Manager API v2.0
  * Premium Diamond Grade Database Management Endpoints
- * 
+ *
  * Database health monitoring and metrics
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { databaseManagerV2 } from '@/lib/v2/database-manager';
+import { databaseManagerV2 } from "@/lib/v2/database-manager";
 
 export async function GET(request: NextRequest) {
   try {
     // Get database health
     const health = await databaseManagerV2.getHealth();
-    
+
     // Get database metrics
     const metrics = databaseManagerV2.getMetrics();
 
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
           responseTime: health.responseTime,
           errorRate: health.errorRate,
           lastCheck: health.lastCheck,
-          issues: health.issues
+          issues: health.issues,
         },
         metrics: {
           totalConnections: metrics.totalConnections,
@@ -38,22 +38,21 @@ export async function GET(request: NextRequest) {
           errors: metrics.errors,
           uptime: Number(metrics.uptime),
           lastBackup: metrics.lastBackup,
-          databaseSize: Number(metrics.databaseSize)
-        }
+          databaseSize: Number(metrics.databaseSize),
+        },
       },
-      message: 'Database health and metrics retrieved successfully'
+      message: "Database health and metrics retrieved successfully",
     };
 
     return NextResponse.json(responseData);
-
   } catch (error) {
-    console.error('Failed to get database health:', error);
+    console.error("Failed to get database health:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to get database health',
-        details: error.message 
+      {
+        error: "Failed to get database health",
+        details: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

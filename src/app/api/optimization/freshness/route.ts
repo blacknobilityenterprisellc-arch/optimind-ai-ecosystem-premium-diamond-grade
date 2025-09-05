@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
 
     if (!content && !url) {
       return NextResponse.json(
-        { error: 'Content or URL is required' },
-        { status: 400 }
+        { error: "Content or URL is required" },
+        { status: 400 },
       );
     }
 
@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
     const freshnessPrompt = `
     Analyze the following content for freshness issues and outdated information:
 
-    ${content ? `Content: "${content}"` : ''}
-    ${url ? `URL: ${url}` : ''}
-    Content Type: ${contentType || 'general'}
+    ${content ? `Content: "${content}"` : ""}
+    ${url ? `URL: ${url}` : ""}
+    Content Type: ${contentType || "general"}
 
     Please analyze for:
     1. Outdated statistics or data points
@@ -71,22 +71,23 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are an expert content analyst specializing in content freshness and relevance. Analyze content for outdated information and provide actionable recommendations.'
+          role: "system",
+          content:
+            "You are an expert content analyst specializing in content freshness and relevance. Analyze content for outdated information and provide actionable recommendations.",
         },
         {
-          role: 'user',
-          content: freshnessPrompt
-        }
+          role: "user",
+          content: freshnessPrompt,
+        },
       ],
       temperature: 0.3,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
 
     const analysisContent = completion.choices[0]?.message?.content;
-    
+
     if (!analysisContent) {
-      throw new Error('No freshness analysis received from AI');
+      throw new Error("No freshness analysis received from AI");
     }
 
     // Parse the JSON response
@@ -94,7 +95,7 @@ export async function POST(request: NextRequest) {
     try {
       freshnessResult = JSON.parse(analysisContent);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       // Fallback response if JSON parsing fails
       freshnessResult = {
         freshnessScore: {
@@ -102,24 +103,26 @@ export async function POST(request: NextRequest) {
           contentAge: 70,
           dataFreshness: 80,
           linkHealth: 85,
-          trendRelevance: 65
+          trendRelevance: 65,
         },
-        issues: []
+        issues: [],
       };
     }
 
     return NextResponse.json({
       success: true,
       data: freshnessResult,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Content freshness analysis error:', error);
+    console.error("Content freshness analysis error:", error);
     return NextResponse.json(
-      { error: 'Failed to analyze content freshness', details: error.message },
-      { error: 'Failed to analyze content freshness', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: "Failed to analyze content freshness", details: error.message },
+      {
+        error: "Failed to analyze content freshness",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

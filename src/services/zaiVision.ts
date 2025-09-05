@@ -12,12 +12,12 @@
  *   const client = new ZaiClient({ apiKey: process.env.ZAI_API_KEY });
  *   const result = await zaiVisionAnalyze(client, imageBuffer, { temperature: 0.0 });
  */
-import Ajv, { JSONSchemaType } from 'ajv';
-import addFormats from 'ajv-formats';
+import Ajv, { JSONSchemaType } from "ajv";
+import addFormats from "ajv-formats";
 
-import { ModelResult, ModelLabel } from '../types/index';
+import { ModelResult, ModelLabel } from "../types/index";
 
-import { ZaiClient } from './zaiClient';
+import { ZaiClient } from "./zaiClient";
 
 addFormats(Ajv);
 
@@ -33,41 +33,41 @@ export interface VisionOptions {
 
 /** JSON schema we instruct the model to follow exactly */
 const visionSchema = {
-  type: 'object',
+  type: "object",
   properties: {
     labels: {
-      type: 'array',
+      type: "array",
       items: {
-        type: 'object',
+        type: "object",
         properties: {
-          label: { type: 'string' },
-          score: { type: 'number' },
+          label: { type: "string" },
+          score: { type: "number" },
           region: {
-            type: 'object',
+            type: "object",
             nullable: true,
             properties: {
-              x: { type: 'number' },
-              y: { type: 'number' },
-              width: { type: 'number' },
-              height: { type: 'number' },
+              x: { type: "number" },
+              y: { type: "number" },
+              width: { type: "number" },
+              height: { type: "number" },
             },
-            required: ['x', 'y', 'width', 'height'],
+            required: ["x", "y", "width", "height"],
           },
         },
-        required: ['label', 'score'],
+        required: ["label", "score"],
       },
     },
-    saliency_base64: { type: 'string', nullable: true },
+    saliency_base64: { type: "string", nullable: true },
     provenance: {
-      type: 'object',
+      type: "object",
       properties: {
-        model: { type: 'string' },
-        version: { type: 'string' },
+        model: { type: "string" },
+        version: { type: "string" },
       },
-      required: ['model'],
+      required: ["model"],
     },
   },
-  required: ['labels', 'provenance'],
+  required: ["labels", "provenance"],
   additionalProperties: true,
 } as const;
 
@@ -81,7 +81,7 @@ function safeJsonParse(s: string) {
   } catch {
     // attempt to extract first {...}
     const m = s.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error('Unable to parse JSON from model output');
+    if (!m) throw new Error("Unable to parse JSON from model output");
     return JSON.parse(m[0]);
   }
 }
@@ -114,10 +114,10 @@ Return labels sorted by descending score.
 export async function zaiVisionAnalyze(
   client: ZaiClient,
   imageBuffer: Buffer,
-  opts?: VisionOptions
+  opts?: VisionOptions,
 ): Promise<ModelResult> {
   const options: VisionOptions = {
-    model: process.env.ZAI_VISION_MODEL || 'GLM-4.5V',
+    model: process.env.ZAI_VISION_MODEL || "GLM-4.5V",
     temperature: 0,
     max_tokens: 1200,
     includeSaliencyBase64: false,
@@ -126,18 +126,18 @@ export async function zaiVisionAnalyze(
   };
 
   // encode the image as base64 for the request; if your provider supports multipart or binary, adapt accordingly.
-  const imageB64 = imageBuffer.toString('base64');
+  const imageB64 = imageBuffer.toString("base64");
   const promptParts = buildVisionPrompt(options);
 
   const payload = {
     model: options.model,
     inputs: [
       {
-        modality: 'image',
+        modality: "image",
         content_base64: imageB64,
       },
       {
-        modality: 'text',
+        modality: "text",
         content: `${promptParts.system}\n\n${promptParts.user}`,
       },
     ],
@@ -145,7 +145,7 @@ export async function zaiVisionAnalyze(
       temperature: options.temperature,
       max_tokens: options.max_tokens,
       // instruct the model to disable verbose content; provider-specific parameter names may vary
-      output_format: 'json',
+      output_format: "json",
       // We ask the model to respond with the JSON body only
     },
   };
@@ -168,7 +168,10 @@ export async function zaiVisionAnalyze(
       // best-effort: return empty labels
       parsed = { labels: [], provenance: { model: options.model } };
     } else {
-      throw new Error('[zaiVisionAnalyze] failed to parse model JSON: ' + (err as Error).message);
+      throw new Error(
+        "[zaiVisionAnalyze] failed to parse model JSON: " +
+          (err as Error).message,
+      );
     }
   }
 
@@ -177,9 +180,14 @@ export async function zaiVisionAnalyze(
   if (!valid) {
     if (options.allowLenientParse) {
       // log and fallback
-      console.warn('[zaiVisionAnalyze] schema validation failed - falling back', validateVision.errors);
+      console.warn(
+        "[zaiVisionAnalyze] schema validation failed - falling back",
+        validateVision.errors,
+      );
     } else {
-      throw new Error(`[zaiVisionAnalyze] schema validation failed: ${JSON.stringify(validateVision.errors)}`);
+      throw new Error(
+        `[zaiVisionAnalyze] schema validation failed: ${JSON.stringify(validateVision.errors)}`,
+      );
     }
   }
 
@@ -187,12 +195,14 @@ export async function zaiVisionAnalyze(
   const labels: ModelLabel[] = (parsed.labels || []).map((l: any) => ({
     label: String(l.label),
     score: Number(l.score),
-    region: l.region ? { 
-      x: Number(l.region.x), 
-      y: Number(l.region.y), 
-      width: Number(l.region.width), 
-      height: Number(l.region.height) 
-    } : undefined,
+    region: l.region
+      ? {
+          x: Number(l.region.x),
+          y: Number(l.region.y),
+          width: Number(l.region.width),
+          height: Number(l.region.height),
+        }
+      : undefined,
   }));
 
   const modelResult: ModelResult = {
@@ -200,7 +210,7 @@ export async function zaiVisionAnalyze(
     modelVersion: parsed.provenance?.version || undefined,
     labels,
     rawOutput: parsed,
-    latencyMs: typeof resp?.latencyMs === 'number' ? resp.latencyMs : undefined,
+    latencyMs: typeof resp?.latencyMs === "number" ? resp.latencyMs : undefined,
     saliencyUrl: undefined, // if parsed.saliency_base64 present, handle storage upload outside this function
   };
 

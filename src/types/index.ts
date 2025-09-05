@@ -1,10 +1,10 @@
 /**
  * Diamond-Grade Type Definitions for OptiMind AI Ecosystem
- * 
+ *
  * This file contains comprehensive type definitions that ensure
  * type safety across the entire application with strict typing
  * and proper validation.
- * 
+ *
  * @version 1.0.0
  * @author OptiMind AI Team
  * @license MIT
@@ -33,15 +33,15 @@ export interface AIModel {
   capabilities: string[];
   maxTokens: number;
   cost: number;
-  category: 'premium' | 'balanced' | 'fast' | 'specialized';
-  status: 'active' | 'beta' | 'deprecated' | 'coming-soon';
+  category: "premium" | "balanced" | "fast" | "specialized";
+  status: "active" | "beta" | "deprecated" | "coming-soon";
   description?: string;
   parameters?: Record<string, any>;
 }
 
 export interface AIRequest {
   messages: Array<{
-    role: 'system' | 'user' | 'assistant';
+    role: "system" | "user" | "assistant";
     content: string;
     metadata?: Record<string, any>;
   }>;
@@ -66,7 +66,7 @@ export interface AIResponse {
     totalTokens: number;
   };
   cost: number;
-  finishReason: 'stop' | 'length' | 'content_filter' | 'tool_calls';
+  finishReason: "stop" | "length" | "content_filter" | "tool_calls";
   metadata?: Record<string, any>;
   timestamp: Date;
 }
@@ -76,8 +76,14 @@ export interface Content extends AuditEntity {
   title: string;
   description: string;
   body: string;
-  type: 'blog' | 'article' | 'product-description' | 'social-media' | 'email' | 'documentation';
-  status: 'draft' | 'published' | 'archived' | 'deleted';
+  type:
+    | "blog"
+    | "article"
+    | "product-description"
+    | "social-media"
+    | "email"
+    | "documentation";
+  status: "draft" | "published" | "archived" | "deleted";
   author: string;
   tags: string[];
   metadata: {
@@ -109,7 +115,7 @@ export interface User extends AuditEntity {
   username: string;
   firstName: string;
   lastName: string;
-  role: 'admin' | 'user' | 'moderator' | 'analyst';
+  role: "admin" | "user" | "moderator" | "analyst";
   permissions: Permission[];
   profile: {
     avatar?: string;
@@ -128,12 +134,12 @@ export interface User extends AuditEntity {
 
 export interface Permission {
   resource: string;
-  action: 'create' | 'read' | 'update' | 'delete' | 'execute';
+  action: "create" | "read" | "update" | "delete" | "execute";
   conditions?: Record<string, any>;
 }
 
 export interface UserPreferences {
-  theme: 'light' | 'dark' | 'auto';
+  theme: "light" | "dark" | "auto";
   language: string;
   timezone: string;
   notifications: NotificationPreferences;
@@ -151,11 +157,11 @@ export interface NotificationPreferences {
   email: boolean;
   push: boolean;
   sms: boolean;
-  frequency: 'immediate' | 'daily' | 'weekly' | 'monthly';
+  frequency: "immediate" | "daily" | "weekly" | "monthly";
 }
 
 export interface PrivacySettings {
-  profileVisibility: 'public' | 'private' | 'friends';
+  profileVisibility: "public" | "private" | "friends";
   dataCollection: boolean;
   analytics: boolean;
   marketing: boolean;
@@ -192,9 +198,9 @@ export interface AnalyticsSettings {
 // Subscription Types
 export interface Subscription extends AuditEntity {
   userId: string;
-  plan: 'free' | 'basic' | 'premium' | 'enterprise';
-  status: 'active' | 'cancelled' | 'expired' | 'suspended';
-  billingCycle: 'monthly' | 'yearly';
+  plan: "free" | "basic" | "premium" | "enterprise";
+  status: "active" | "cancelled" | "expired" | "suspended";
+  billingCycle: "monthly" | "yearly";
   currentPeriod: {
     start: Date;
     end: Date;
@@ -224,7 +230,7 @@ export interface SubscriptionUsage {
 
 export interface PaymentMethod {
   id: string;
-  type: 'credit_card' | 'paypal' | 'bank_transfer';
+  type: "credit_card" | "paypal" | "bank_transfer";
   last4?: string;
   expiryMonth?: number;
   expiryYear?: number;
@@ -265,29 +271,45 @@ export interface AnalyticsData {
 // Security Types
 export interface SecurityEvent {
   id: string;
-  type: 'login' | 'logout' | 'failed_login' | 'password_change' | 'permission_change' | 'data_access';
+  type:
+    | "login"
+    | "logout"
+    | "failed_login"
+    | "password_change"
+    | "permission_change"
+    | "data_access";
   userId?: string;
   ipAddress: string;
   userAgent: string;
   timestamp: Date;
   details: Record<string, any>;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: "low" | "medium" | "high" | "critical";
 }
 
 export interface SecurityAlert {
   id: string;
-  type: 'suspicious_activity' | 'brute_force' | 'data_breach' | 'malware' | 'phishing';
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  type:
+    | "suspicious_activity"
+    | "brute_force"
+    | "data_breach"
+    | "malware"
+    | "phishing";
+  severity: "low" | "medium" | "high" | "critical";
   description: string;
   affectedResources: string[];
   timestamp: Date;
-  status: 'open' | 'investigating' | 'resolved' | 'false_positive';
+  status: "open" | "investigating" | "resolved" | "false_positive";
   actions: SecurityAction[];
 }
 
 export interface SecurityAction {
   id: string;
-  type: 'block_ip' | 'lock_account' | 'force_logout' | 'notify_admin' | 'quarantine_data';
+  type:
+    | "block_ip"
+    | "lock_account"
+    | "force_logout"
+    | "notify_admin"
+    | "quarantine_data";
   timestamp: Date;
   executed: boolean;
   result?: string;
@@ -333,8 +355,8 @@ export interface WebSocketMessage {
 }
 
 export interface RealTimeUpdate {
-  type: 'content' | 'analytics' | 'security' | 'system';
-  action: 'create' | 'update' | 'delete';
+  type: "content" | "analytics" | "security" | "system";
+  action: "create" | "update" | "delete";
   data: any;
   timestamp: Date;
 }
@@ -348,7 +370,10 @@ export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
-export type ApiHandler<T = any> = (req: Request, res: Response) => Promise<ApiResponse<T>>;
+export type ApiHandler<T = any> = (
+  req: Request,
+  res: Response,
+) => Promise<ApiResponse<T>>;
 
 export type EventHandler<T = any> = (event: T) => Promise<void> | void;
 
@@ -358,45 +383,48 @@ export class ApplicationError extends Error {
     message: string,
     public code: string,
     public statusCode: number = 500,
-    public details?: Record<string, any>
+    public details?: Record<string, any>,
   ) {
     super(message);
-    this.name = 'ApplicationError';
+    this.name = "ApplicationError";
   }
 }
 
 export class ValidationError extends ApplicationError {
-  constructor(message: string, public field?: string) {
-    super(message, 'VALIDATION_ERROR', 400, { field });
-    this.name = 'ValidationError';
+  constructor(
+    message: string,
+    public field?: string,
+  ) {
+    super(message, "VALIDATION_ERROR", 400, { field });
+    this.name = "ValidationError";
   }
 }
 
 export class AuthenticationError extends ApplicationError {
-  constructor(message: string = 'Authentication failed') {
-    super(message, 'AUTHENTICATION_ERROR', 401);
-    this.name = 'AuthenticationError';
+  constructor(message: string = "Authentication failed") {
+    super(message, "AUTHENTICATION_ERROR", 401);
+    this.name = "AuthenticationError";
   }
 }
 
 export class AuthorizationError extends ApplicationError {
-  constructor(message: string = 'Authorization failed') {
-    super(message, 'AUTHORIZATION_ERROR', 403);
-    this.name = 'AuthorizationError';
+  constructor(message: string = "Authorization failed") {
+    super(message, "AUTHORIZATION_ERROR", 403);
+    this.name = "AuthorizationError";
   }
 }
 
 export class NotFoundError extends ApplicationError {
   constructor(resource: string) {
-    super(`${resource} not found`, 'NOT_FOUND_ERROR', 404, { resource });
-    this.name = 'NotFoundError';
+    super(`${resource} not found`, "NOT_FOUND_ERROR", 404, { resource });
+    this.name = "NotFoundError";
   }
 }
 
 export class RateLimitError extends ApplicationError {
-  constructor(message: string = 'Rate limit exceeded') {
-    super(message, 'RATE_LIMIT_ERROR', 429);
-    this.name = 'RateLimitError';
+  constructor(message: string = "Rate limit exceeded") {
+    super(message, "RATE_LIMIT_ERROR", 429);
+    this.name = "RateLimitError";
   }
 }
 
@@ -405,7 +433,7 @@ export interface AppConfig {
   app: {
     name: string;
     version: string;
-    environment: 'development' | 'staging' | 'production';
+    environment: "development" | "staging" | "production";
     debug: boolean;
   };
   database: {
@@ -439,6 +467,6 @@ export interface AppConfig {
 }
 
 // Export all types for easy importing
-export * from './utils';
-export * from './hooks';
-export * from './services';
+export * from "./utils";
+export * from "./hooks";
+export * from "./services";

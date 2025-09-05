@@ -1,7 +1,7 @@
 // Blockchain Storage Service for Premium Features
 export interface BlockchainStorageConfig {
-  provider: 'ethereum' | 'polygon' | 'binance' | 'arbitrum';
-  network: 'mainnet' | 'testnet' | 'devnet';
+  provider: "ethereum" | "polygon" | "binance" | "arbitrum";
+  network: "mainnet" | "testnet" | "devnet";
   contractAddress?: string;
   privateKey?: string;
   infuraApiKey?: string;
@@ -39,15 +39,17 @@ export class BlockchainStorage {
   async initialize(): Promise<boolean> {
     try {
       // Simulate blockchain initialization
-      console.log(`Initializing blockchain storage on ${this.config.provider} ${this.config.network}`);
-      
+      console.log(
+        `Initializing blockchain storage on ${this.config.provider} ${this.config.network}`,
+      );
+
       // In a real implementation, this would connect to Web3 provider
       // For demo purposes, we'll simulate successful initialization
       this.isInitialized = true;
-      
+
       return true;
     } catch (error) {
-      console.error('Failed to initialize blockchain storage:', error);
+      console.error("Failed to initialize blockchain storage:", error);
       return false;
     }
   }
@@ -55,7 +57,7 @@ export class BlockchainStorage {
   async storePhotoAsNFT(
     imageData: string | ArrayBuffer,
     metadata: NFTMetadata,
-    ownerAddress: string
+    ownerAddress: string,
   ): Promise<StorageResult> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -63,28 +65,29 @@ export class BlockchainStorage {
 
     try {
       // Simulate NFT minting process
-      console.log('Minting NFT with metadata:', metadata);
-      
+      console.log("Minting NFT with metadata:", metadata);
+
       // Simulate blockchain transaction
       const transactionHash = `0x${Math.random().toString(16).slice(2, 66)}`;
       const blockNumber = Math.floor(Math.random() * 1000000) + 18000000;
       const gasUsed = Math.floor(Math.random() * 50000) + 100000;
 
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       return {
         success: true,
         transactionHash,
         blockNumber,
         gasUsed,
-        metadata
+        metadata,
       };
     } catch (error) {
-      console.error('Failed to store photo as NFT:', error);
+      console.error("Failed to store photo as NFT:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
@@ -92,33 +95,36 @@ export class BlockchainStorage {
   async transferNFT(
     tokenId: string,
     fromAddress: string,
-    toAddress: string
+    toAddress: string,
   ): Promise<StorageResult> {
     if (!this.isInitialized) {
       await this.initialize();
     }
 
     try {
-      console.log(`Transferring NFT ${tokenId} from ${fromAddress} to ${toAddress}`);
-      
+      console.log(
+        `Transferring NFT ${tokenId} from ${fromAddress} to ${toAddress}`,
+      );
+
       // Simulate transfer transaction
       const transactionHash = `0x${Math.random().toString(16).slice(2, 66)}`;
       const blockNumber = Math.floor(Math.random() * 1000000) + 18000000;
       const gasUsed = Math.floor(Math.random() * 30000) + 50000;
 
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       return {
         success: true,
         transactionHash,
         blockNumber,
-        gasUsed
+        gasUsed,
       };
     } catch (error) {
-      console.error('Failed to transfer NFT:', error);
+      console.error("Failed to transfer NFT:", error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       };
     }
   }
@@ -131,37 +137,39 @@ export class BlockchainStorage {
     try {
       // Simulate fetching NFT metadata
       console.log(`Fetching metadata for NFT ${tokenId}`);
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Return mock metadata for demo
       return {
         name: `PhotoGuard Pro NFT #${tokenId}`,
-        description: 'Premium photo secured and stored on blockchain',
-        image: 'https://via.placeholder.com/400x400',
+        description: "Premium photo secured and stored on blockchain",
+        image: "https://via.placeholder.com/400x400",
         attributes: [
-          { trait_type: 'Security Level', value: 'Maximum' },
-          { trait_type: 'Storage Type', value: 'Blockchain' },
-          { trait_type: 'Encryption', value: 'AES-256' },
-          { trait_type: 'AI Analysis', value: 'Advanced' }
+          { trait_type: "Security Level", value: "Maximum" },
+          { trait_type: "Storage Type", value: "Blockchain" },
+          { trait_type: "Encryption", value: "AES-256" },
+          { trait_type: "AI Analysis", value: "Advanced" },
         ],
-        external_url: `https://photoguard.pro/nft/${tokenId}`
+        external_url: `https://photoguard.pro/nft/${tokenId}`,
       };
     } catch (error) {
-      console.error('Failed to get NFT metadata:', error);
+      console.error("Failed to get NFT metadata:", error);
       return null;
     }
   }
 
-  async getOwnerNFTs(ownerAddress: string): Promise<Array<{ tokenId: string; metadata: NFTMetadata }>> {
+  async getOwnerNFTs(
+    ownerAddress: string,
+  ): Promise<Array<{ tokenId: string; metadata: NFTMetadata }>> {
     if (!this.isInitialized) {
       await this.initialize();
     }
 
     try {
       console.log(`Fetching NFTs for owner ${ownerAddress}`);
-      
-      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Return mock NFTs for demo
       const mockNFTs = [];
@@ -171,13 +179,13 @@ export class BlockchainStorage {
         const tokenId = Math.floor(Math.random() * 10000).toString();
         mockNFTs.push({
           tokenId,
-          metadata: await this.getNFTMetadata(tokenId)!
+          metadata: await this.getNFTMetadata(tokenId)!,
         });
       }
 
       return mockNFTs;
     } catch (error) {
-      console.error('Failed to get owner NFTs:', error);
+      console.error("Failed to get owner NFTs:", error);
       return [];
     }
   }
@@ -191,14 +199,14 @@ export class BlockchainStorage {
     blockNumber: number;
     gasPrice: number;
     network: string;
-    status: 'online' | 'offline';
+    status: "online" | "offline";
   }> {
     // Simulate network stats
     return {
       blockNumber: Math.floor(Math.random() * 1000000) + 18000000,
       gasPrice: Math.floor(Math.random() * 50) + 20,
       network: this.config.provider,
-      status: 'online'
+      status: "online",
     };
   }
 
@@ -212,12 +220,14 @@ export class BlockchainStorage {
 }
 
 // Factory function to create blockchain storage instance
-export function createBlockchainStorage(config: BlockchainStorageConfig): BlockchainStorage {
+export function createBlockchainStorage(
+  config: BlockchainStorageConfig,
+): BlockchainStorage {
   return new BlockchainStorage(config);
 }
 
 // React hook for blockchain storage
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 export function useBlockchainStorage(config: BlockchainStorageConfig) {
   const [storage, setStorage] = useState<BlockchainStorage | null>(null);
@@ -230,18 +240,18 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
       try {
         setIsLoading(true);
         setError(null);
-        
+
         const blockchainStorage = createBlockchainStorage(config);
         const initialized = await blockchainStorage.initialize();
-        
+
         if (initialized) {
           setStorage(blockchainStorage);
           setIsReady(true);
         } else {
-          setError('Failed to initialize blockchain storage');
+          setError("Failed to initialize blockchain storage");
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setIsLoading(false);
       }
@@ -250,41 +260,49 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
     initializeStorage();
   }, [config]);
 
-  const storePhotoAsNFT = useCallback(async (
-    imageData: string | ArrayBuffer,
-    metadata: NFTMetadata,
-    ownerAddress: string
-  ) => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
-    return await storage.storePhotoAsNFT(imageData, metadata, ownerAddress);
-  }, [storage]);
+  const storePhotoAsNFT = useCallback(
+    async (
+      imageData: string | ArrayBuffer,
+      metadata: NFTMetadata,
+      ownerAddress: string,
+    ) => {
+      if (!storage) throw new Error("Blockchain storage not initialized");
+      return await storage.storePhotoAsNFT(imageData, metadata, ownerAddress);
+    },
+    [storage],
+  );
 
-  const transferNFT = useCallback(async (
-    tokenId: string,
-    fromAddress: string,
-    toAddress: string
-  ) => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
-    return await storage.transferNFT(tokenId, fromAddress, toAddress);
-  }, [storage]);
+  const transferNFT = useCallback(
+    async (tokenId: string, fromAddress: string, toAddress: string) => {
+      if (!storage) throw new Error("Blockchain storage not initialized");
+      return await storage.transferNFT(tokenId, fromAddress, toAddress);
+    },
+    [storage],
+  );
 
-  const getNFTMetadata = useCallback(async (tokenId: string) => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
-    return await storage.getNFTMetadata(tokenId);
-  }, [storage]);
+  const getNFTMetadata = useCallback(
+    async (tokenId: string) => {
+      if (!storage) throw new Error("Blockchain storage not initialized");
+      return await storage.getNFTMetadata(tokenId);
+    },
+    [storage],
+  );
 
-  const getOwnerNFTs = useCallback(async (ownerAddress: string) => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
-    return await storage.getOwnerNFTs(ownerAddress);
-  }, [storage]);
+  const getOwnerNFTs = useCallback(
+    async (ownerAddress: string) => {
+      if (!storage) throw new Error("Blockchain storage not initialized");
+      return await storage.getOwnerNFTs(ownerAddress);
+    },
+    [storage],
+  );
 
   const getGasEstimate = useCallback(async () => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
+    if (!storage) throw new Error("Blockchain storage not initialized");
     return await storage.getGasEstimate();
   }, [storage]);
 
   const getNetworkStats = useCallback(async () => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
+    if (!storage) throw new Error("Blockchain storage not initialized");
     return await storage.getNetworkStats();
   }, [storage]);
 
@@ -298,6 +316,6 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
     getNFTMetadata,
     getOwnerNFTs,
     getGasEstimate,
-    getNetworkStats
+    getNetworkStats,
   };
 }

@@ -1,4 +1,4 @@
-import ZAI from 'z-ai-web-dev-sdk';
+import ZAI from "z-ai-web-dev-sdk";
 
 export interface AIModel {
   id: string;
@@ -40,55 +40,76 @@ export class AIService {
   // Available AI Models
   public static readonly MODELS: AIModel[] = [
     {
-      id: 'glm-4.5v',
-      name: 'GLM-4.5V',
-      description: 'Advanced vision and spatial reasoning model',
-      capabilities: ['image-analysis', 'visual-reasoning', 'multimodal', 'code-generation'],
+      id: "glm-4.5v",
+      name: "GLM-4.5V",
+      description: "Advanced vision and spatial reasoning model",
+      capabilities: [
+        "image-analysis",
+        "visual-reasoning",
+        "multimodal",
+        "code-generation",
+      ],
       maxTokens: 8192,
       supportsVision: true,
       supportsCode: true,
-      supportsMultimodal: true
+      supportsMultimodal: true,
     },
     {
-      id: 'glm-4.5-flagship',
-      name: 'GLM-4.5 Flagship',
-      description: 'Superintelligence with universal comprehension',
-      capabilities: ['text-generation', 'reasoning', 'code-generation', 'analysis', 'translation'],
+      id: "glm-4.5-flagship",
+      name: "GLM-4.5 Flagship",
+      description: "Superintelligence with universal comprehension",
+      capabilities: [
+        "text-generation",
+        "reasoning",
+        "code-generation",
+        "analysis",
+        "translation",
+      ],
       maxTokens: 16384,
       supportsVision: false,
       supportsCode: true,
-      supportsMultimodal: false
+      supportsMultimodal: false,
     },
     {
-      id: 'glm-4.5-auto-think',
-      name: 'GLM-4.5 Auto Think',
-      description: 'Self-reflection and meta-cognition model',
-      capabilities: ['self-reflection', 'meta-cognition', 'complex-reasoning', 'planning'],
+      id: "glm-4.5-auto-think",
+      name: "GLM-4.5 Auto Think",
+      description: "Self-reflection and meta-cognition model",
+      capabilities: [
+        "self-reflection",
+        "meta-cognition",
+        "complex-reasoning",
+        "planning",
+      ],
       maxTokens: 8192,
       supportsVision: false,
       supportsCode: true,
-      supportsMultimodal: false
+      supportsMultimodal: false,
     },
     {
-      id: 'air',
-      name: 'AIR',
-      description: 'Advanced intelligence reasoning and causal inference',
-      capabilities: ['causal-reasoning', 'inference', 'analysis', 'prediction'],
+      id: "air",
+      name: "AIR",
+      description: "Advanced intelligence reasoning and causal inference",
+      capabilities: ["causal-reasoning", "inference", "analysis", "prediction"],
       maxTokens: 8192,
       supportsVision: false,
       supportsCode: true,
-      supportsMultimodal: false
+      supportsMultimodal: false,
     },
     {
-      id: 'glm-4.5-full-stack',
-      name: 'GLM-4.5 Full Stack',
-      description: 'Cross-domain integration expertise',
-      capabilities: ['full-stack-development', 'system-design', 'architecture', 'integration'],
+      id: "glm-4.5-full-stack",
+      name: "GLM-4.5 Full Stack",
+      description: "Cross-domain integration expertise",
+      capabilities: [
+        "full-stack-development",
+        "system-design",
+        "architecture",
+        "integration",
+      ],
       maxTokens: 16384,
       supportsVision: false,
       supportsCode: true,
-      supportsMultimodal: false
-    }
+      supportsMultimodal: false,
+    },
   ];
 
   async initialize(): Promise<void> {
@@ -98,8 +119,8 @@ export class AIService {
       this.zai = await ZAI.create();
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize ZAI:', error);
-      throw new Error('AI service initialization failed');
+      console.error("Failed to initialize ZAI:", error);
+      throw new Error("AI service initialization failed");
     }
   }
 
@@ -107,7 +128,7 @@ export class AIService {
     await this.initialize();
 
     try {
-      const model = request.model || 'glm-4.5-flagship';
+      const model = request.model || "glm-4.5-flagship";
       const messages = this.buildMessages(request);
 
       const completion = await this.zai.chat.completions.create({
@@ -118,86 +139,91 @@ export class AIService {
       });
 
       return {
-        content: completion.choices[0]?.message?.content || '',
+        content: completion.choices[0]?.message?.content || "",
         model,
         usage: {
           promptTokens: completion.usage?.prompt_tokens || 0,
           completionTokens: completion.usage?.completion_tokens || 0,
-          totalTokens: completion.usage?.total_tokens || 0
+          totalTokens: completion.usage?.total_tokens || 0,
         },
         confidence: this.calculateConfidence(completion),
         metadata: {
           timestamp: new Date().toISOString(),
-          modelInfo: AIService.MODELS.find(m => m.id === model)
-        }
+          modelInfo: AIService.MODELS.find((m) => m.id === model),
+        },
       };
     } catch (error) {
-      console.error('AI generation error:', error);
-      throw new Error('Failed to generate AI response');
+      console.error("AI generation error:", error);
+      throw new Error("Failed to generate AI response");
     }
   }
 
-  async analyzeImage(imageBase64: string, prompt?: string): Promise<AIResponse> {
+  async analyzeImage(
+    imageBase64: string,
+    prompt?: string,
+  ): Promise<AIResponse> {
     await this.initialize();
 
     try {
       const messages = [
         {
-          role: 'user',
+          role: "user",
           content: [
             {
-              type: 'text',
-              text: prompt || 'Analyze this image in detail.'
+              type: "text",
+              text: prompt || "Analyze this image in detail.",
             },
             {
-              type: 'image_url',
+              type: "image_url",
               image_url: {
-                url: `data:image/jpeg;base64,${imageBase64}`
-              }
-            }
-          ]
-        }
+                url: `data:image/jpeg;base64,${imageBase64}`,
+              },
+            },
+          ],
+        },
       ];
 
       const completion = await this.zai.chat.completions.create({
         messages,
-        model: 'glm-4.5v',
+        model: "glm-4.5v",
         temperature: 0.3,
         max_tokens: 2048,
       });
 
       return {
-        content: completion.choices[0]?.message?.content || '',
-        model: 'glm-4.5v',
+        content: completion.choices[0]?.message?.content || "",
+        model: "glm-4.5v",
         usage: {
           promptTokens: completion.usage?.prompt_tokens || 0,
           completionTokens: completion.usage?.completion_tokens || 0,
-          totalTokens: completion.usage?.total_tokens || 0
+          totalTokens: completion.usage?.total_tokens || 0,
         },
         confidence: this.calculateConfidence(completion),
         metadata: {
           timestamp: new Date().toISOString(),
-          analysisType: 'image_analysis'
-        }
+          analysisType: "image_analysis",
+        },
       };
     } catch (error) {
-      console.error('Image analysis error:', error);
-      throw new Error('Failed to analyze image');
+      console.error("Image analysis error:", error);
+      throw new Error("Failed to analyze image");
     }
   }
 
-  async generateCode(request: AIRequest & { language?: string }): Promise<AIResponse> {
+  async generateCode(
+    request: AIRequest & { language?: string },
+  ): Promise<AIResponse> {
     await this.initialize();
 
-    const systemPrompt = `You are an expert programmer. Generate clean, efficient, and well-documented code${request.language ? ` in ${request.language}` : ''}. Include explanations and best practices.`;
+    const systemPrompt = `You are an expert programmer. Generate clean, efficient, and well-documented code${request.language ? ` in ${request.language}` : ""}. Include explanations and best practices.`;
 
     try {
       const messages = this.buildMessages({
         ...request,
-        systemPrompt
+        systemPrompt,
       });
 
-      const model = request.model || 'glm-4.5-full-stack';
+      const model = request.model || "glm-4.5-full-stack";
       const completion = await this.zai.chat.completions.create({
         messages,
         model,
@@ -206,27 +232,30 @@ export class AIService {
       });
 
       return {
-        content: completion.choices[0]?.message?.content || '',
+        content: completion.choices[0]?.message?.content || "",
         model,
         usage: {
           promptTokens: completion.usage?.prompt_tokens || 0,
           completionTokens: completion.usage?.completion_tokens || 0,
-          totalTokens: completion.usage?.total_tokens || 0
+          totalTokens: completion.usage?.total_tokens || 0,
         },
         confidence: this.calculateConfidence(completion),
         metadata: {
           timestamp: new Date().toISOString(),
           language: request.language,
-          analysisType: 'code_generation'
-        }
+          analysisType: "code_generation",
+        },
       };
     } catch (error) {
-      console.error('Code generation error:', error);
-      throw new Error('Failed to generate code');
+      console.error("Code generation error:", error);
+      throw new Error("Failed to generate code");
     }
   }
 
-  async ensembleAnalysis(request: AIRequest, models: string[] = ['glm-4.5-flagship', 'air', 'glm-4.5-auto-think']): Promise<AIResponse[]> {
+  async ensembleAnalysis(
+    request: AIRequest,
+    models: string[] = ["glm-4.5-flagship", "air", "glm-4.5-auto-think"],
+  ): Promise<AIResponse[]> {
     const responses: AIResponse[] = [];
 
     for (const model of models) {
@@ -234,7 +263,7 @@ export class AIService {
         const response = await this.generateText({
           ...request,
           model,
-          temperature: 0.1 // Lower temperature for consistency
+          temperature: 0.1, // Lower temperature for consistency
         });
         responses.push(response);
       } catch (error) {
@@ -250,23 +279,23 @@ export class AIService {
 
     if (request.systemPrompt) {
       messages.push({
-        role: 'system',
-        content: request.systemPrompt
+        role: "system",
+        content: request.systemPrompt,
       });
     }
 
     if (request.context) {
       for (const [index, context] of request.context.entries()) {
         messages.push({
-          role: index % 2 === 0 ? 'user' : 'assistant',
-          content: context
+          role: index % 2 === 0 ? "user" : "assistant",
+          content: context,
         });
       }
     }
 
     messages.push({
-      role: 'user',
-      content: request.prompt
+      role: "user",
+      content: request.prompt,
     });
 
     return messages;
@@ -276,14 +305,17 @@ export class AIService {
     // Simple confidence calculation based on various factors
     const baseConfidence = 0.8;
     const usage = completion.usage;
-    
+
     if (!usage) return baseConfidence;
-    
+
     // Adjust confidence based on token usage
     const tokenRatio = usage.completion_tokens / usage.total_tokens;
     const tokenConfidence = Math.min(1, tokenRatio * 1.5);
-    
-    return Math.max(0.1, Math.min(1, baseConfidence + (tokenConfidence - 0.5) * 0.3));
+
+    return Math.max(
+      0.1,
+      Math.min(1, baseConfidence + (tokenConfidence - 0.5) * 0.3),
+    );
   }
 
   getAvailableModels(): AIModel[] {
@@ -291,7 +323,7 @@ export class AIService {
   }
 
   getModelById(id: string): AIModel | undefined {
-    return AIService.MODELS.find(model => model.id === id);
+    return AIService.MODELS.find((model) => model.id === id);
   }
 }
 

@@ -4,10 +4,10 @@
  * Handles storing analysis results, failures, and review items
  */
 
-import { AnalysisType, ReviewPriority, ReviewStatus } from '@prisma/client';
+import { AnalysisType, ReviewPriority, ReviewStatus } from "@prisma/client";
 
-import { db } from '@/lib/db';
-import { ModelResult, ConsensusResult } from '@/types';
+import { db } from "@/lib/db";
+import { ModelResult, ConsensusResult } from "@/types";
 
 export interface PersistAnalysisInput {
   type: AnalysisType;
@@ -49,7 +49,7 @@ export async function persistAnalysisResult(input: PersistAnalysisInput) {
     }
 
     // Log the analysis event
-    await logAuditEvent('analysis_completed', {
+    await logAuditEvent("analysis_completed", {
       inputRef: input.inputRef,
       type: input.type,
       reviewNeeded: input.reviewNeeded,
@@ -58,7 +58,7 @@ export async function persistAnalysisResult(input: PersistAnalysisInput) {
 
     return analysis;
   } catch (error) {
-    console.error('[moderationPersistence] Failed to persist analysis:', error);
+    console.error("[moderationPersistence] Failed to persist analysis:", error);
     throw new Error(`Failed to persist analysis: ${(error as Error).message}`);
   }
 }
@@ -66,15 +66,21 @@ export async function persistAnalysisResult(input: PersistAnalysisInput) {
 /**
  * Flag an analysis as failed and persist the failure for auditing
  */
-export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailureInput) {
+export async function flagAnalysisAsFailed(
+  inputRef: string,
+  failure: FlagFailureInput,
+) {
   try {
     const failedAnalysis = await db.moderationAnalysis.create({
       data: {
         inputRef: inputRef,
         type: AnalysisType.CONSENSUS, // Use consensus as the fallback type
-        labels: [{ label: 'analysis_failed', score: 1 }],
-        reasons: [`Analysis failed: ${failure.error}`, ...(failure.details ? [failure.details] : [])],
-        provenance: { model: 'system', version: '1.0' },
+        labels: [{ label: "analysis_failed", score: 1 }],
+        reasons: [
+          `Analysis failed: ${failure.error}`,
+          ...(failure.details ? [failure.details] : []),
+        ],
+        provenance: { model: "system", version: "1.0" },
         rawOutput: {
           error: failure.error,
           details: failure.details,
@@ -86,13 +92,18 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
     });
 
     // Create a high-priority review item for failures
-    await createReviewItem(inputRef, [{ label: 'analysis_failed', score: 1 }], [
-      `Analysis failed: ${failure.error}`,
-      ...(failure.details ? [failure.details] : [])
-    ], ReviewPriority.HIGH);
+    await createReviewItem(
+      inputRef,
+      [{ label: "analysis_failed", score: 1 }],
+      [
+        `Analysis failed: ${failure.error}`,
+        ...(failure.details ? [failure.details] : []),
+      ],
+      ReviewPriority.HIGH,
+    );
 
     // Log the failure event
-    await logAuditEvent('analysis_failed', {
+    await logAuditEvent("analysis_failed", {
       inputRef,
       error: failure.error,
       details: failure.details,
@@ -102,8 +113,13 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
 
     return failedAnalysis;
   } catch (error) {
-    console.error('[moderationPersistence] Failed to flag analysis as failed:', error);
-    throw new Error(`Failed to flag analysis failure: ${(error as Error).message}`);
+    console.error(
+      "[moderationPersistence] Failed to flag analysis as failed:",
+      error,
+    );
+    throw new Error(
+      `Failed to flag analysis failure: ${(error as Error).message}`,
+    );
   }
 }
 
@@ -114,12 +130,12 @@ async function createReviewItem(
   imageId: string,
   labels: Array<{ label: string; score: number }>,
   reasons: string[],
-  priority: ReviewPriority = ReviewPriority.MEDIUM
+  priority: ReviewPriority = ReviewPriority.MEDIUM,
 ) {
   try {
     // Determine priority based on labels and scores
     const calculatedPriority = calculateReviewPriority(labels, reasons);
-    
+
     const reviewItem = await db.reviewItem.create({
       data: {
         imageId,
@@ -134,7 +150,7 @@ async function createReviewItem(
     });
 
     // Log review item creation
-    await logAuditEvent('review_item_created', {
+    await logAuditEvent("review_item_created", {
       imageId,
       reviewItemId: reviewItem.id,
       priority: calculatedPriority,
@@ -143,8 +159,13 @@ async function createReviewItem(
 
     return reviewItem;
   } catch (error) {
-    console.error('[moderationPersistence] Failed to create review item:', error);
-    throw new Error(`Failed to create review item: ${(error as Error).message}`);
+    console.error(
+      "[moderationPersistence] Failed to create review item:",
+      error,
+    );
+    throw new Error(
+      `Failed to create review item: ${(error as Error).message}`,
+    );
   }
 }
 
@@ -153,12 +174,17 @@ async function createReviewItem(
  */
 function calculateReviewPriority(
   labels: Array<{ label: string; score: number }>,
-  reasons: string[]
+  reasons: string[],
 ): ReviewPriority {
   // Check for critical labels
-  const criticalLabels = ['child_exposed', 'sexual_nudity', 'deepfake_suspected', 'violence'];
-  const hasCriticalLabel = labels.some(l => 
-    criticalLabels.includes(l.label) && l.score >= 0.6
+  const criticalLabels = [
+    "child_exposed",
+    "sexual_nudity",
+    "deepfake_suspected",
+    "violence",
+  ];
+  const hasCriticalLabel = labels.some(
+    (l) => criticalLabels.includes(l.label) && l.score >= 0.6,
   );
 
   if (hasCriticalLabel) {
@@ -166,9 +192,9 @@ function calculateReviewPriority(
   }
 
   // Check for high-confidence sensitive content
-  const sensitiveLabels = ['suggestive', 'partial_nudity', 'hate_symbols'];
-  const hasHighConfidenceSensitive = labels.some(l => 
-    sensitiveLabels.includes(l.label) && l.score >= 0.8
+  const sensitiveLabels = ["suggestive", "partial_nudity", "hate_symbols"];
+  const hasHighConfidenceSensitive = labels.some(
+    (l) => sensitiveLabels.includes(l.label) && l.score >= 0.8,
   );
 
   if (hasHighConfidenceSensitive) {
@@ -176,7 +202,9 @@ function calculateReviewPriority(
   }
 
   // Check for analysis failures
-  const hasFailure = reasons.some(r => r.includes('failed') || r.includes('error'));
+  const hasFailure = reasons.some(
+    (r) => r.includes("failed") || r.includes("error"),
+  );
   if (hasFailure) {
     return ReviewPriority.HIGH;
   }
@@ -188,16 +216,18 @@ function calculateReviewPriority(
 /**
  * Calculate severity score for review metadata
  */
-function calculateSeverity(labels: Array<{ label: string; score: number }>): number {
+function calculateSeverity(
+  labels: Array<{ label: string; score: number }>,
+): number {
   const severityWeights: Record<string, number> = {
-    'child_exposed': 1,
-    'sexual_nudity': 0.9,
-    'deepfake_suspected': 0.85,
-    'violence': 0.8,
-    'hate_symbols': 0.75,
-    'suggestive': 0.6,
-    'partial_nudity': 0.5,
-    'analysis_failed': 0.7,
+    child_exposed: 1,
+    sexual_nudity: 0.9,
+    deepfake_suspected: 0.85,
+    violence: 0.8,
+    hate_symbols: 0.75,
+    suggestive: 0.6,
+    partial_nudity: 0.5,
+    analysis_failed: 0.7,
   };
 
   let maxSeverity = 0;
@@ -218,12 +248,12 @@ async function logAuditEvent(event: string, payload: any, actor?: string) {
     await db.auditLog.create({
       data: {
         event,
-        actor: actor || 'system',
+        actor: actor || "system",
         payload,
       },
     });
   } catch (error) {
-    console.error('[moderationPersistence] Failed to log audit event:', error);
+    console.error("[moderationPersistence] Failed to log audit event:", error);
     // Don't throw here - audit logging failures shouldn't break the main flow
   }
 }
@@ -235,12 +265,12 @@ export async function getAnalysisHistory(inputRef: string) {
   try {
     const analyses = await db.moderationAnalysis.findMany({
       where: { inputRef },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     const reviewItems = await db.reviewItem.findMany({
       where: { imageId: inputRef },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
 
     return {
@@ -248,20 +278,27 @@ export async function getAnalysisHistory(inputRef: string) {
       reviewItems,
     };
   } catch (error) {
-    console.error('[moderationPersistence] Failed to get analysis history:', error);
-    throw new Error(`Failed to get analysis history: ${(error as Error).message}`);
+    console.error(
+      "[moderationPersistence] Failed to get analysis history:",
+      error,
+    );
+    throw new Error(
+      `Failed to get analysis history: ${(error as Error).message}`,
+    );
   }
 }
 
 /**
  * Get pending review items with optional filtering
  */
-export async function getPendingReviewItems(options: {
-  priority?: ReviewPriority;
-  assignedTo?: string;
-  limit?: number;
-  offset?: number;
-} = {}) {
+export async function getPendingReviewItems(
+  options: {
+    priority?: ReviewPriority;
+    assignedTo?: string;
+    limit?: number;
+    offset?: number;
+  } = {},
+) {
   try {
     const { priority, assignedTo, limit = 50, offset = 0 } = options;
 
@@ -271,18 +308,20 @@ export async function getPendingReviewItems(options: {
 
     const items = await db.reviewItem.findMany({
       where,
-      orderBy: [
-        { priority: 'desc' },
-        { createdAt: 'asc' },
-      ],
+      orderBy: [{ priority: "desc" }, { createdAt: "asc" }],
       take: limit,
       skip: offset,
     });
 
     return items;
   } catch (error) {
-    console.error('[moderationPersistence] Failed to get pending review items:', error);
-    throw new Error(`Failed to get pending review items: ${(error as Error).message}`);
+    console.error(
+      "[moderationPersistence] Failed to get pending review items:",
+      error,
+    );
+    throw new Error(
+      `Failed to get pending review items: ${(error as Error).message}`,
+    );
   }
 }
 
@@ -298,7 +337,7 @@ export async function updateReviewItem(
     reviewNotes?: string;
     completedAt?: Date;
   },
-  actor?: string
+  actor?: string,
 ) {
   try {
     const updatedItem = await db.reviewItem.update({
@@ -310,7 +349,7 @@ export async function updateReviewItem(
     if (updates.reviewDecision) {
       const analysis = await db.moderationAnalysis.findFirst({
         where: { inputRef: updatedItem.imageId },
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       });
 
       if (analysis) {
@@ -327,7 +366,7 @@ export async function updateReviewItem(
     }
 
     // Log the review update
-    await logAuditEvent('review_item_updated', {
+    await logAuditEvent("review_item_updated", {
       reviewId,
       updates,
       actor,
@@ -335,7 +374,12 @@ export async function updateReviewItem(
 
     return updatedItem;
   } catch (error) {
-    console.error('[moderationPersistence] Failed to update review item:', error);
-    throw new Error(`Failed to update review item: ${(error as Error).message}`);
+    console.error(
+      "[moderationPersistence] Failed to update review item:",
+      error,
+    );
+    throw new Error(
+      `Failed to update review item: ${(error as Error).message}`,
+    );
   }
 }

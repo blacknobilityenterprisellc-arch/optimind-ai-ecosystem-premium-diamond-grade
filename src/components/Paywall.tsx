@@ -1,19 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  X, 
-  Shield, 
-  Zap, 
-  Infinity, 
-  Crown, 
+import {
+  X,
+  Shield,
+  Zap,
+  Infinity,
+  Crown,
   Star,
   CheckCircle,
   Sparkles,
   Lock,
   Cloud,
   Brain,
-  Palette
+  Palette,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,13 +41,15 @@ interface SubscriptionPlan {
   highlighted?: boolean;
 }
 
-export function Paywall({ 
-  isOpen, 
-  onClose, 
-  onSubscribe, 
-  hasFreeTrial = true 
+export function Paywall({
+  isOpen,
+  onClose,
+  onSubscribe,
+  hasFreeTrial = true,
 }: PaywallProps) {
-  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "annual" | "lifetime">("annual");
+  const [selectedPlan, setSelectedPlan] = useState<
+    "monthly" | "annual" | "lifetime"
+  >("annual");
 
   const plans: SubscriptionPlan[] = [
     {
@@ -61,8 +63,8 @@ export function Paywall({
         "Advanced editing suite",
         "Secure vault with biometric auth",
         "Premium themes & customization",
-        "Priority customer support"
-      ]
+        "Priority customer support",
+      ],
     },
     {
       id: "annual",
@@ -77,10 +79,10 @@ export function Paywall({
         "Advanced AI emotion recognition",
         "Private sharing links",
         "Custom AI model training",
-        "Early access to new features"
+        "Early access to new features",
       ],
       popular: true,
-      highlighted: true
+      highlighted: true,
     },
     {
       id: "lifetime",
@@ -94,9 +96,9 @@ export function Paywall({
         "All future updates included",
         "Exclusive premium themes",
         "VIP customer support",
-        "Special lifetime-only features"
-      ]
-    }
+        "Special lifetime-only features",
+      ],
+    },
   ];
 
   if (!isOpen) return null;
@@ -120,18 +122,19 @@ export function Paywall({
             <div className="relative p-8 text-center bg-gradient-to-r from-yellow-400/20 via-yellow-500/20 to-orange-500/20">
               {/* Background glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 via-yellow-500/10 to-orange-500/10 blur-3xl" />
-              
+
               <div className="relative z-10">
                 <div className="flex justify-center mb-4">
                   <PremiumBadge size="lg" text="PREMIUM" />
                 </div>
-                
+
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 bg-clip-text text-transparent">
                   Unlock Premium Features
                 </h1>
-                
+
                 <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
-                  Experience infinite space, intelligent control, and unbreakable security for your precious memories
+                  Experience infinite space, intelligent control, and
+                  unbreakable security for your precious memories
                 </p>
 
                 {hasFreeTrial && (
@@ -153,7 +156,9 @@ export function Paywall({
                     <Infinity className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Unlimited Storage</h3>
-                  <p className="text-sm text-gray-400">Endless encrypted cloud space for all your photos</p>
+                  <p className="text-sm text-gray-400">
+                    Endless encrypted cloud space for all your photos
+                  </p>
                 </div>
 
                 <div className="text-center">
@@ -161,7 +166,9 @@ export function Paywall({
                     <Brain className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">AI Organization</h3>
-                  <p className="text-sm text-gray-400">Smart tagging, face recognition, and emotion detection</p>
+                  <p className="text-sm text-gray-400">
+                    Smart tagging, face recognition, and emotion detection
+                  </p>
                 </div>
 
                 <div className="text-center">
@@ -169,7 +176,9 @@ export function Paywall({
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Military Security</h3>
-                  <p className="text-sm text-gray-400">End-to-end encryption with biometric protection</p>
+                  <p className="text-sm text-gray-400">
+                    End-to-end encryption with biometric protection
+                  </p>
                 </div>
 
                 <div className="text-center">
@@ -177,7 +186,9 @@ export function Paywall({
                     <Palette className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-semibold mb-2">Premium Themes</h3>
-                  <p className="text-sm text-gray-400">Exclusive themes and customization options</p>
+                  <p className="text-sm text-gray-400">
+                    Exclusive themes and customization options
+                  </p>
                 </div>
               </div>
 
@@ -196,7 +207,9 @@ export function Paywall({
                   >
                     {plan.popular && (
                       <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-center py-2">
-                        <span className="text-sm font-bold text-white">MOST POPULAR</span>
+                        <span className="text-sm font-bold text-white">
+                          MOST POPULAR
+                        </span>
                       </div>
                     )}
 
@@ -204,12 +217,17 @@ export function Paywall({
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                         <div className="flex items-baseline justify-center gap-1">
-                          <span className="text-3xl font-bold">{plan.price}</span>
+                          <span className="text-3xl font-bold">
+                            {plan.price}
+                          </span>
                           <span className="text-gray-400">{plan.period}</span>
                         </div>
                         {plan.originalPrice && (
                           <div className="mt-2">
-                            <span className="text-sm text-gray-400 line-through">{plan.originalPrice}{plan.period}</span>
+                            <span className="text-sm text-gray-400 line-through">
+                              {plan.originalPrice}
+                              {plan.period}
+                            </span>
                             <Badge className="ml-2 bg-green-500/20 text-green-400 border-green-500/50">
                               {plan.savings}
                             </Badge>
@@ -221,7 +239,9 @@ export function Paywall({
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm text-gray-300">{feature}</span>
+                            <span className="text-sm text-gray-300">
+                              {feature}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -233,7 +253,9 @@ export function Paywall({
                         requireAuth={plan.id === "lifetime"}
                         onAuthSuccess={() => {
                           // Additional auth success handling for lifetime plan
-                          console.log("Lifetime plan authentication successful");
+                          console.log(
+                            "Lifetime plan authentication successful",
+                          );
                         }}
                       >
                         {hasFreeTrial ? "Start Free Trial" : "Subscribe Now"}
@@ -261,8 +283,9 @@ export function Paywall({
                 </div>
 
                 <p className="text-xs text-gray-500">
-                  By subscribing, you agree to our Terms of Service and Privacy Policy. 
-                  Subscription will automatically renew unless canceled at least 24 hours before the end of the current period.
+                  By subscribing, you agree to our Terms of Service and Privacy
+                  Policy. Subscription will automatically renew unless canceled
+                  at least 24 hours before the end of the current period.
                 </p>
               </div>
             </div>

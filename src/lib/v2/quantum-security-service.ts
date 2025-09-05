@@ -1,17 +1,27 @@
 /**
  * OptiMind AI Ecosystem - Quantum Security Service v2.0
  * Premium Diamond Grade Quantum Security Service Layer
- * 
+ *
  * This service provides high-level quantum security operations with
  * enterprise-grade authentication, authorization, and audit logging.
  */
 
-import { prisma } from '@/lib/db';
+import { prisma } from "@/lib/db";
 
-import { quantumSecurityV2, type QuantumKeyPair, type QuantumSecureMessage } from './quantum-security';
+import {
+  quantumSecurityV2,
+  type QuantumKeyPair,
+  type QuantumSecureMessage,
+} from "./quantum-security";
 
 export interface QuantumSecurityRequest {
-  operation: 'generate_keys' | 'encrypt' | 'decrypt' | 'sign' | 'verify' | 'hash';
+  operation:
+    | "generate_keys"
+    | "encrypt"
+    | "decrypt"
+    | "sign"
+    | "verify"
+    | "hash";
   data?: string;
   keyId?: string;
   userId: string;
@@ -30,7 +40,7 @@ export interface QuantumSecurityResponse {
 
 export interface QuantumKeyManagementRequest {
   userId: string;
-  action: 'create' | 'rotate' | 'revoke' | 'list';
+  action: "create" | "rotate" | "revoke" | "list";
   keyId?: string;
   expiresInSeconds?: number;
 }
@@ -46,41 +56,43 @@ export interface QuantumAuditRequest {
 }
 
 class QuantumSecurityServiceV2 {
-  private readonly serviceName = 'QuantumSecurityServiceV2';
+  private readonly serviceName = "QuantumSecurityServiceV2";
   private readonly maxKeyLifetime = 86400; // 24 hours
   private readonly maxAuditEntries = 10000;
 
   /**
    * Execute quantum security operation
    */
-  async executeOperation(request: QuantumSecurityRequest): Promise<QuantumSecurityResponse> {
+  async executeOperation(
+    request: QuantumSecurityRequest,
+  ): Promise<QuantumSecurityResponse> {
     const startTime = Date.now();
-    
+
     try {
       // Validate user authentication
       await this.validateUser(request.userId);
-      
+
       // Execute operation
       let result: any;
       const operationSuccess = true;
-      
+
       switch (request.operation) {
-        case 'generate_keys':
+        case "generate_keys":
           result = await this.handleKeyGeneration(request);
           break;
-        case 'encrypt':
+        case "encrypt":
           result = await this.handleEncryption(request);
           break;
-        case 'decrypt':
+        case "decrypt":
           result = await this.handleDecryption(request);
           break;
-        case 'sign':
+        case "sign":
           result = await this.handleSigning(request);
           break;
-        case 'verify':
+        case "verify":
           result = await this.handleVerification(request);
           break;
-        case 'hash':
+        case "hash":
           result = await this.handleHashing(request);
           break;
         default:
@@ -91,13 +103,13 @@ class QuantumSecurityServiceV2 {
       await this.logAudit({
         userId: request.userId,
         operation: request.operation,
-        resource: 'quantum_security',
+        resource: "quantum_security",
         success: true,
         details: {
           ...request.metadata,
           executionTime: Date.now() - startTime,
-          result: typeof result === 'object' ? 'success' : result
-        }
+          result: typeof result === "object" ? "success" : result,
+        },
       });
 
       return {
@@ -105,21 +117,20 @@ class QuantumSecurityServiceV2 {
         data: result,
         timestamp: new Date(),
         operation: request.operation,
-        quantumResistant: true
+        quantumResistant: true,
       };
-
     } catch (error) {
       // Log failed operation
       await this.logAudit({
         userId: request.userId,
         operation: request.operation,
-        resource: 'quantum_security',
+        resource: "quantum_security",
         success: false,
         details: {
           ...request.metadata,
           error: error.message,
-          executionTime: Date.now() - startTime
-        }
+          executionTime: Date.now() - startTime,
+        },
       });
 
       return {
@@ -127,7 +138,7 @@ class QuantumSecurityServiceV2 {
         error: error.message,
         timestamp: new Date(),
         operation: request.operation,
-        quantumResistant: true
+        quantumResistant: true,
       };
     }
   }
@@ -135,10 +146,12 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle key generation
    */
-  private async handleKeyGeneration(request: QuantumSecurityRequest): Promise<QuantumKeyPair> {
+  private async handleKeyGeneration(
+    request: QuantumSecurityRequest,
+  ): Promise<QuantumKeyPair> {
     const keyPair = await quantumSecurityV2.generateQuantumKeyPair(
       request.userId,
-      request.metadata?.expiresInSeconds || this.maxKeyLifetime
+      request.metadata?.expiresInSeconds || this.maxKeyLifetime,
     );
 
     // Store key metadata in database
@@ -146,15 +159,15 @@ class QuantumSecurityServiceV2 {
       data: {
         userId: request.userId,
         keyId: keyPair.keyId,
-        keyType: 'QUANTUM',
+        keyType: "QUANTUM",
         publicKey: keyPair.publicKey,
         expiresAt: keyPair.expiresAt,
         metadata: {
-          algorithm: 'lattice-based',
-          strength: '256-bit',
-          ...request.metadata
-        }
-      }
+          algorithm: "lattice-based",
+          strength: "256-bit",
+          ...request.metadata,
+        },
+      },
     });
 
     return keyPair;
@@ -163,13 +176,15 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle encryption
    */
-  private async handleEncryption(request: QuantumSecurityRequest): Promise<QuantumSecureMessage> {
+  private async handleEncryption(
+    request: QuantumSecurityRequest,
+  ): Promise<QuantumSecureMessage> {
     if (!request.data) {
-      throw new Error('Data is required for encryption');
+      throw new Error("Data is required for encryption");
     }
-    
+
     if (!request.keyId) {
-      throw new Error('Key ID is required for encryption');
+      throw new Error("Key ID is required for encryption");
     }
 
     // Validate key exists and belongs to user
@@ -178,7 +193,7 @@ class QuantumSecurityServiceV2 {
     const secureMessage = await quantumSecurityV2.encryptQuantumSecure(
       request.data,
       request.keyId,
-      request.userId
+      request.userId,
     );
 
     return secureMessage;
@@ -187,21 +202,24 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle decryption
    */
-  private async handleDecryption(request: QuantumSecurityRequest): Promise<string> {
+  private async handleDecryption(
+    request: QuantumSecurityRequest,
+  ): Promise<string> {
     if (!request.data) {
-      throw new Error('Encrypted data is required for decryption');
+      throw new Error("Encrypted data is required for decryption");
     }
 
-    const secureMessage: QuantumSecureMessage = typeof request.data === 'string' 
-      ? JSON.parse(request.data) 
-      : request.data;
+    const secureMessage: QuantumSecureMessage =
+      typeof request.data === "string"
+        ? JSON.parse(request.data)
+        : request.data;
 
     // Validate key exists and belongs to user
     await this.validateKeyOwnership(secureMessage.keyId, request.userId);
 
     const decrypted = await quantumSecurityV2.decryptQuantumSecure(
       secureMessage,
-      request.userId
+      request.userId,
     );
 
     return decrypted;
@@ -210,13 +228,15 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle signing
    */
-  private async handleSigning(request: QuantumSecurityRequest): Promise<string> {
+  private async handleSigning(
+    request: QuantumSecurityRequest,
+  ): Promise<string> {
     if (!request.data) {
-      throw new Error('Data is required for signing');
+      throw new Error("Data is required for signing");
     }
-    
+
     if (!request.keyId) {
-      throw new Error('Key ID is required for signing');
+      throw new Error("Key ID is required for signing");
     }
 
     // Validate key exists and belongs to user
@@ -225,7 +245,7 @@ class QuantumSecurityServiceV2 {
     const signature = await quantumSecurityV2.quantumSign(
       request.data,
       request.keyId,
-      request.userId
+      request.userId,
     );
 
     return signature;
@@ -234,17 +254,19 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle verification
    */
-  private async handleVerification(request: QuantumSecurityRequest): Promise<boolean> {
+  private async handleVerification(
+    request: QuantumSecurityRequest,
+  ): Promise<boolean> {
     if (!request.data) {
-      throw new Error('Data is required for verification');
+      throw new Error("Data is required for verification");
     }
-    
+
     if (!request.signature) {
-      throw new Error('Signature is required for verification');
+      throw new Error("Signature is required for verification");
     }
-    
+
     if (!request.keyId) {
-      throw new Error('Key ID is required for verification');
+      throw new Error("Key ID is required for verification");
     }
 
     // Validate key exists and belongs to user
@@ -254,7 +276,7 @@ class QuantumSecurityServiceV2 {
       request.data,
       request.signature,
       request.keyId,
-      request.userId
+      request.userId,
     );
 
     return isValid;
@@ -263,14 +285,16 @@ class QuantumSecurityServiceV2 {
   /**
    * Handle hashing
    */
-  private async handleHashing(request: QuantumSecurityRequest): Promise<{ hash: string; salt: string }> {
+  private async handleHashing(
+    request: QuantumSecurityRequest,
+  ): Promise<{ hash: string; salt: string }> {
     if (!request.data) {
-      throw new Error('Data is required for hashing');
+      throw new Error("Data is required for hashing");
     }
 
     const hashResult = await quantumSecurityV2.quantumHash(
       request.data,
-      request.metadata?.salt
+      request.metadata?.salt,
     );
 
     return hashResult;
@@ -290,115 +314,116 @@ class QuantumSecurityServiceV2 {
       await this.validateUser(request.userId);
 
       switch (request.action) {
-        case 'create':
+        case "create":
           const newKey = await quantumSecurityV2.generateQuantumKeyPair(
             request.userId,
-            request.expiresInSeconds || this.maxKeyLifetime
+            request.expiresInSeconds || this.maxKeyLifetime,
           );
-          
+
           // Store in database
           await prisma.securityKey.create({
             data: {
               userId: request.userId,
               keyId: newKey.keyId,
-              keyType: 'QUANTUM',
+              keyType: "QUANTUM",
               publicKey: newKey.publicKey,
               expiresAt: newKey.expiresAt,
               metadata: {
-                algorithm: 'lattice-based',
-                strength: '256-bit',
-                action: 'create'
-              }
-            }
+                algorithm: "lattice-based",
+                strength: "256-bit",
+                action: "create",
+              },
+            },
           });
 
           return {
             success: true,
             keys: [newKey],
-            message: 'Quantum key pair created successfully'
+            message: "Quantum key pair created successfully",
           };
 
-        case 'rotate':
+        case "rotate":
           // Revoke old key and create new one
           if (request.keyId) {
             await this.revokeKey(request.keyId, request.userId);
           }
-          
+
           const rotatedKey = await quantumSecurityV2.generateQuantumKeyPair(
             request.userId,
-            request.expiresInSeconds || this.maxKeyLifetime
+            request.expiresInSeconds || this.maxKeyLifetime,
           );
-          
+
           // Store new key in database
           await prisma.securityKey.create({
             data: {
               userId: request.userId,
               keyId: rotatedKey.keyId,
-              keyType: 'QUANTUM',
+              keyType: "QUANTUM",
               publicKey: rotatedKey.publicKey,
               expiresAt: rotatedKey.expiresAt,
               metadata: {
-                algorithm: 'lattice-based',
-                strength: '256-bit',
-                action: 'rotate',
-                oldKeyId: request.keyId
-              }
-            }
+                algorithm: "lattice-based",
+                strength: "256-bit",
+                action: "rotate",
+                oldKeyId: request.keyId,
+              },
+            },
           });
 
           return {
             success: true,
             keys: [rotatedKey],
-            message: 'Quantum key pair rotated successfully'
+            message: "Quantum key pair rotated successfully",
           };
 
-        case 'revoke':
+        case "revoke":
           if (!request.keyId) {
-            throw new Error('Key ID is required for revocation');
+            throw new Error("Key ID is required for revocation");
           }
-          
+
           await this.revokeKey(request.keyId, request.userId);
-          
+
           return {
             success: true,
-            message: 'Quantum key pair revoked successfully'
+            message: "Quantum key pair revoked successfully",
           };
 
-        case 'list':
+        case "list":
           const userKeys = await prisma.securityKey.findMany({
             where: {
               userId: request.userId,
-              keyType: 'QUANTUM',
-              isActive: true
+              keyType: "QUANTUM",
+              isActive: true,
             },
             orderBy: {
-              createdAt: 'desc'
-            }
+              createdAt: "desc",
+            },
           });
 
           // Convert to QuantumKeyPair format (without private keys)
-          const keyPairs: QuantumKeyPair[] = userKeys.map(key => ({
+          const keyPairs: QuantumKeyPair[] = userKeys.map((key) => ({
             publicKey: key.publicKey,
-            privateKey: '[REDACTED]',
+            privateKey: "[REDACTED]",
             keyId: key.keyId,
             createdAt: key.createdAt,
-            expiresAt: key.expiresAt
+            expiresAt: key.expiresAt,
           }));
 
           return {
             success: true,
             keys: keyPairs,
-            message: `Found ${keyPairs.length} quantum key pairs`
+            message: `Found ${keyPairs.length} quantum key pairs`,
           };
 
         default:
-          throw new Error(`Unsupported key management action: ${request.action}`);
+          throw new Error(
+            `Unsupported key management action: ${request.action}`,
+          );
       }
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -411,22 +436,25 @@ class QuantumSecurityServiceV2 {
       where: {
         keyId,
         userId,
-        isActive: true
+        isActive: true,
       },
       data: {
         isActive: false,
         metadata: {
           revokedAt: new Date(),
-          reason: 'user_revocation'
-        }
-      }
+          reason: "user_revocation",
+        },
+      },
     });
   }
 
   /**
    * Get quantum security audit log
    */
-  async getAuditLog(userId?: string, limit: number = 100): Promise<{
+  async getAuditLog(
+    userId?: string,
+    limit: number = 100,
+  ): Promise<{
     success: boolean;
     audits?: any[];
     total: number;
@@ -441,14 +469,14 @@ class QuantumSecurityServiceV2 {
       const audits = await prisma.auditLog.findMany({
         where: userId ? { userId } : {},
         orderBy: {
-          timestamp: 'desc'
+          timestamp: "desc",
         },
-        take: limit
+        take: limit,
       });
 
       return {
         success: true,
-        audits: audits.map(audit => ({
+        audits: audits.map((audit) => ({
           id: audit.id,
           operation: audit.operation,
           userId: audit.userId,
@@ -457,15 +485,14 @@ class QuantumSecurityServiceV2 {
           success: audit.success,
           details: audit.details,
           ipAddress: audit.ipAddress,
-          userAgent: audit.userAgent
+          userAgent: audit.userAgent,
         })),
-        total: audits.length
+        total: audits.length,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -492,32 +519,36 @@ class QuantumSecurityServiceV2 {
 
       // Get quantum security metrics
       const quantumMetrics = quantumSecurityV2.getSecurityMetrics();
-      
-      // Get database metrics
-      const [totalKeys, totalOperations, successfulOperations] = await Promise.all([
-        prisma.securityKey.count({
-          where: {
-            ...(userId && { userId }),
-            keyType: 'QUANTUM',
-            isActive: true
-          }
-        }),
-        prisma.auditLog.count({
-          where: {
-            ...(userId && { userId }),
-            operation: { startsWith: 'quantum_' }
-          }
-        }),
-        prisma.auditLog.count({
-          where: {
-            ...(userId && { userId }),
-            operation: { startsWith: 'quantum_' },
-            success: true
-          }
-        })
-      ]);
 
-      const successRate = totalOperations > 0 ? (successfulOperations / totalOperations) * 100 : 0;
+      // Get database metrics
+      const [totalKeys, totalOperations, successfulOperations] =
+        await Promise.all([
+          prisma.securityKey.count({
+            where: {
+              ...(userId && { userId }),
+              keyType: "QUANTUM",
+              isActive: true,
+            },
+          }),
+          prisma.auditLog.count({
+            where: {
+              ...(userId && { userId }),
+              operation: { startsWith: "quantum_" },
+            },
+          }),
+          prisma.auditLog.count({
+            where: {
+              ...(userId && { userId }),
+              operation: { startsWith: "quantum_" },
+              success: true,
+            },
+          }),
+        ]);
+
+      const successRate =
+        totalOperations > 0
+          ? (successfulOperations / totalOperations) * 100
+          : 0;
 
       return {
         success: true,
@@ -526,14 +557,13 @@ class QuantumSecurityServiceV2 {
           totalOperations,
           successRate,
           quantumResistance: quantumMetrics.quantumResistance,
-          averageResponseTime: 0 // Would need to calculate from audit logs
-        }
+          averageResponseTime: 0, // Would need to calculate from audit logs
+        },
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -543,7 +573,7 @@ class QuantumSecurityServiceV2 {
    */
   async healthCheck(): Promise<{
     success: boolean;
-    status: 'healthy' | 'degraded' | 'unhealthy';
+    status: "healthy" | "degraded" | "unhealthy";
     checks?: {
       keyGeneration: boolean;
       encryption: boolean;
@@ -561,14 +591,13 @@ class QuantumSecurityServiceV2 {
         success: true,
         status: healthCheck.status,
         checks: healthCheck.checks,
-        metrics: healthCheck.metrics
+        metrics: healthCheck.metrics,
       };
-
     } catch (error) {
       return {
         success: false,
-        status: 'unhealthy',
-        error: error.message
+        status: "unhealthy",
+        error: error.message,
       };
     }
   }
@@ -576,22 +605,26 @@ class QuantumSecurityServiceV2 {
   /**
    * Generate user key pair (convenience method)
    */
-  async generateUserKeyPair(userId: string, algorithm?: string, keySize?: number): Promise<QuantumKeyPair> {
+  async generateUserKeyPair(
+    userId: string,
+    algorithm?: string,
+    keySize?: number,
+  ): Promise<QuantumKeyPair> {
     try {
       // Validate user exists
       await this.validateUser(userId);
-      
+
       // Generate key pair using the key management system
       const result = await this.manageKeys({
         userId,
-        action: 'create',
-        expiresInSeconds: this.maxKeyLifetime
+        action: "create",
+        expiresInSeconds: this.maxKeyLifetime,
       });
-      
+
       if (!result.success || !result.keys || result.keys.length === 0) {
-        throw new Error(result.error || 'Failed to generate quantum key pair');
+        throw new Error(result.error || "Failed to generate quantum key pair");
       }
-      
+
       return result.keys[0];
     } catch (error) {
       throw new Error(`Failed to generate user key pair: ${error.message}`);
@@ -603,37 +636,40 @@ class QuantumSecurityServiceV2 {
    */
   private async validateUser(userId: string): Promise<void> {
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     if (!user.isActive) {
-      throw new Error('User account is not active');
+      throw new Error("User account is not active");
     }
   }
 
   /**
    * Validate key ownership
    */
-  private async validateKeyOwnership(keyId: string, userId: string): Promise<void> {
+  private async validateKeyOwnership(
+    keyId: string,
+    userId: string,
+  ): Promise<void> {
     const key = await prisma.securityKey.findFirst({
       where: {
         keyId,
         userId,
-        keyType: 'QUANTUM',
-        isActive: true
-      }
+        keyType: "QUANTUM",
+        isActive: true,
+      },
     });
 
     if (!key) {
-      throw new Error('Quantum key not found or access denied');
+      throw new Error("Quantum key not found or access denied");
     }
 
     if (new Date() > key.expiresAt) {
-      throw new Error('Quantum key has expired');
+      throw new Error("Quantum key has expired");
     }
   }
 
@@ -650,9 +686,9 @@ class QuantumSecurityServiceV2 {
           success: audit.success,
           details: audit.details || {},
           timestamp: audit.startTime || new Date(),
-          ipAddress: '127.0.0.1', // Would get from request context
-          userAgent: 'QuantumSecurityService/2.0'
-        }
+          ipAddress: "127.0.0.1", // Would get from request context
+          userAgent: "QuantumSecurityService/2.0",
+        },
       });
 
       // Clean up old audit entries if needed
@@ -661,14 +697,13 @@ class QuantumSecurityServiceV2 {
         await prisma.auditLog.deleteMany({
           where: {
             timestamp: {
-              lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) // Keep last 30 days
-            }
-          }
+              lt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Keep last 30 days
+            },
+          },
         });
       }
-
     } catch (error) {
-      console.error('Failed to log quantum security audit:', error);
+      console.error("Failed to log quantum security audit:", error);
     }
   }
 
@@ -684,17 +719,17 @@ class QuantumSecurityServiceV2 {
       const result = await prisma.securityKey.updateMany({
         where: {
           expiresAt: {
-            lt: new Date()
+            lt: new Date(),
           },
-          isActive: true
+          isActive: true,
         },
         data: {
           isActive: false,
           metadata: {
             cleanedAt: new Date(),
-            reason: 'expired'
-          }
-        }
+            reason: "expired",
+          },
+        },
       });
 
       // Also cleanup in-memory keys
@@ -702,13 +737,12 @@ class QuantumSecurityServiceV2 {
 
       return {
         success: true,
-        cleanedKeys: result.count
+        cleanedKeys: result.count,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -718,11 +752,11 @@ class QuantumSecurityServiceV2 {
 export const quantumSecurityServiceV2 = new QuantumSecurityServiceV2();
 
 // Export types and utilities
-export type { 
-  QuantumSecurityRequest, 
-  QuantumSecurityResponse, 
-  QuantumKeyManagementRequest, 
-  QuantumAuditRequest 
+export type {
+  QuantumSecurityRequest,
+  QuantumSecurityResponse,
+  QuantumKeyManagementRequest,
+  QuantumAuditRequest,
 };
 
 // Export utility functions

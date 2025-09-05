@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { zaiApiService } from '@/lib/zai-api-service';
+import { zaiApiService } from "@/lib/zai-api-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,18 +12,16 @@ export async function POST(request: NextRequest) {
       const lastMessage = messages[messages.length - 1];
       const prompt = lastMessage.content;
 
-      const result = await zaiApiService.generateCompletion(
-        prompt,
-        'air',
-        { customPrompt }
-      );
+      const result = await zaiApiService.generateCompletion(prompt, "air", {
+        customPrompt,
+      });
 
       return NextResponse.json({
         id: result.id,
         model: result.model,
         content: result.content,
         usage: result.usage,
-        timestamp: result.timestamp
+        timestamp: result.timestamp,
       });
     }
 
@@ -32,8 +30,8 @@ export async function POST(request: NextRequest) {
       const result = await zaiApiService.analyzeWithModel({
         imageBase64,
         analysisType,
-        modelId: 'air',
-        customPrompt
+        modelId: "air",
+        customPrompt,
       });
 
       return NextResponse.json(result);
@@ -41,15 +39,14 @@ export async function POST(request: NextRequest) {
 
     // If neither format is provided, return error
     return NextResponse.json(
-      { error: 'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.' },
-      { status: 400 }
+      {
+        error:
+          'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.',
+      },
+      { status: 400 },
     );
-
   } catch (error) {
-    console.error('AIR analysis failed:', error);
-    return NextResponse.json(
-      { error: 'AIR analysis failed' },
-      { status: 500 }
-    );
+    console.error("AIR analysis failed:", error);
+    return NextResponse.json({ error: "AIR analysis failed" }, { status: 500 });
   }
 }

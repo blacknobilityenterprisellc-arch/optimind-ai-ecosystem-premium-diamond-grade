@@ -1,16 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const formData = await request.formData()
-    const file = formData.get('file') as File
-    const type = formData.get('type') as string
+    const formData = await request.formData();
+    const file = formData.get("file") as File;
+    const type = formData.get("type") as string;
 
     if (!file) {
-      return NextResponse.json(
-        { error: 'No file provided' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     // Mock upload response
@@ -19,21 +16,21 @@ export async function POST(request: NextRequest) {
       filename: file.name,
       size: file.size,
       type: file.type,
-      status: 'uploaded',
+      status: "uploaded",
       url: `/uploads/${file.name}`,
       analysis: {
-        status: 'pending',
-        progress: 0
+        status: "pending",
+        progress: 0,
       },
-      uploadedAt: new Date().toISOString()
-    }
+      uploadedAt: new Date().toISOString(),
+    };
 
-    return NextResponse.json(uploadResult)
+    return NextResponse.json(uploadResult);
   } catch (error: any) {
-    console.error('Upload error:', error)
+    console.error("Upload error:", error);
     return NextResponse.json(
-      { error: error.message || 'Failed to upload file' },
-      { status: 500 }
-    )
+      { error: error.message || "Failed to upload file" },
+      { status: 500 },
+    );
   }
 }

@@ -1,15 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 export async function POST(request: NextRequest) {
   try {
     const { topic, contentType, targetAudience } = await request.json();
 
     if (!topic) {
-      return NextResponse.json(
-        { error: 'Topic is required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Topic is required" }, { status: 400 });
     }
 
     const zai = await ZAI.create();
@@ -19,8 +16,8 @@ export async function POST(request: NextRequest) {
     Generate conversational keyword clusters for the topic: "${topic}"
 
     Context:
-    - Content Type: ${contentType || 'general content'}
-    - Target Audience: ${targetAudience || 'general audience'}
+    - Content Type: ${contentType || "general content"}
+    - Target Audience: ${targetAudience || "general audience"}
 
     Focus on conversational, long-tail keywords that people would use in:
     1. Voice search queries
@@ -55,22 +52,23 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are an expert in keyword research and conversational search optimization. Specialize in identifying long-tail, conversational keywords that perform well in voice search and AI interactions.'
+          role: "system",
+          content:
+            "You are an expert in keyword research and conversational search optimization. Specialize in identifying long-tail, conversational keywords that perform well in voice search and AI interactions.",
         },
         {
-          role: 'user',
-          content: keywordPrompt
-        }
+          role: "user",
+          content: keywordPrompt,
+        },
       ],
       temperature: 0.4,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
 
     const keywordContent = completion.choices[0]?.message?.content;
-    
+
     if (!keywordContent) {
-      throw new Error('No keyword clusters generated from AI');
+      throw new Error("No keyword clusters generated from AI");
     }
 
     // Parse the JSON response
@@ -78,25 +76,27 @@ export async function POST(request: NextRequest) {
     try {
       keywordResult = JSON.parse(keywordContent);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       // Fallback response if JSON parsing fails
       keywordResult = {
-        clusters: []
+        clusters: [],
       };
     }
 
     return NextResponse.json({
       success: true,
       data: keywordResult,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Keyword cluster generation error:', error);
+    console.error("Keyword cluster generation error:", error);
     return NextResponse.json(
-      { error: 'Failed to generate keyword clusters', details: error.message },
-      { error: 'Failed to generate keyword clusters', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: "Failed to generate keyword clusters", details: error.message },
+      {
+        error: "Failed to generate keyword clusters",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

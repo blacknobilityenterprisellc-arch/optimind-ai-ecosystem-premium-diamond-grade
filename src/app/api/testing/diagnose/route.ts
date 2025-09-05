@@ -1,17 +1,17 @@
 /**
  * OptiTest AI - Intelligent Fault Detection & Diagnosis API
  * Diamond-Grade Testing Ecosystem
- * 
+ *
  * API endpoint for AI-powered fault detection, root cause analysis,
  * and intelligent diagnosis of testing issues and system failures.
- * 
+ *
  * @author: J.P.H./Jocely P. Honore - CEO/Owner/Lead Visionary/Vibe Coder
  * @version: 1.0.0
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 interface DiagnosisRequest {
   systemData: {
@@ -23,17 +23,17 @@ interface DiagnosisRequest {
   context: {
     environment: string;
     timeRange: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
+    severity: "low" | "medium" | "high" | "critical";
   };
-  analysisType: 'real-time' | 'historical' | 'predictive';
+  analysisType: "real-time" | "historical" | "predictive";
 }
 
 interface DiagnosisResponse {
-  status: 'success' | 'error' | 'partial';
+  status: "success" | "error" | "partial";
   diagnosis: {
     faultDetected: boolean;
     faultType: string;
-    severity: 'low' | 'medium' | 'high' | 'critical';
+    severity: "low" | "medium" | "high" | "critical";
     confidence: number;
     rootCauses: string[];
     affectedComponents: string[];
@@ -65,20 +65,20 @@ interface DiagnosisResponse {
 export async function POST(request: NextRequest) {
   try {
     const body: DiagnosisRequest = await request.json();
-    
+
     // Validate input
     if (!body.systemData || !body.context || !body.analysisType) {
       return NextResponse.json(
-        { error: 'Missing required fields: systemData, context, analysisType' },
-        { status: 400 }
+        { error: "Missing required fields: systemData, context, analysisType" },
+        { status: 400 },
       );
     }
 
     const startTime = Date.now();
-    
+
     // Initialize ZAI SDK
     const zai = await ZAI.create();
-    
+
     // Generate intelligent diagnosis prompt
     const diagnosisPrompt = `
 You are the OptiTest AI Controller, specializing in intelligent fault detection and diagnosis.
@@ -119,97 +119,97 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are the OptiTest AI Controller, an expert in intelligent fault detection, root cause analysis, and system diagnosis with deep knowledge of testing frameworks and system architecture.'
+          role: "system",
+          content:
+            "You are the OptiTest AI Controller, an expert in intelligent fault detection, root cause analysis, and system diagnosis with deep knowledge of testing frameworks and system architecture.",
         },
         {
-          role: 'user',
-          content: diagnosisPrompt
-        }
+          role: "user",
+          content: diagnosisPrompt,
+        },
       ],
       temperature: 0.1,
-      max_tokens: 8192
+      max_tokens: 8192,
     });
 
     const analysisTime = Date.now() - startTime;
-    
+
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       aiResponse = {
         diagnosis: {
           faultDetected: false,
-          faultType: 'Unknown',
-          severity: 'low',
+          faultType: "Unknown",
+          severity: "low",
           confidence: 0,
-          rootCauses: ['AI response parsing failed'],
-          affectedComponents: []
+          rootCauses: ["AI response parsing failed"],
+          affectedComponents: [],
         },
         analysis: {
           patterns: [],
           anomalies: [],
           correlations: [],
-          trends: []
+          trends: [],
         },
         recommendations: {
-          immediate: ['Manual system review required'],
-          shortTerm: ['Investigate AI diagnosis system'],
-          longTerm: ['Improve AI response parsing']
+          immediate: ["Manual system review required"],
+          shortTerm: ["Investigate AI diagnosis system"],
+          longTerm: ["Improve AI response parsing"],
         },
         predictions: {
           likelihoodOfRecurrence: 0,
-          estimatedImpact: 'Minimal',
+          estimatedImpact: "Minimal",
           preventionStrategies: [],
-          monitoringSuggestions: []
-        }
+          monitoringSuggestions: [],
+        },
       };
     }
 
     const response: DiagnosisResponse = {
-      status: 'success',
+      status: "success",
       diagnosis: aiResponse.diagnosis,
       analysis: aiResponse.analysis,
       recommendations: aiResponse.recommendations,
       predictions: aiResponse.predictions,
       metrics: {
         ...aiResponse.metrics,
-        analysisTime
-      }
+        analysisTime,
+      },
     };
 
     return NextResponse.json(response);
-
   } catch (error) {
-    console.error('Diagnosis error:', error);
+    console.error("Diagnosis error:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to perform diagnosis',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        status: 'error'
+      {
+        error: "Failed to perform diagnosis",
+        details: error instanceof Error ? error.message : "Unknown error",
+        status: "error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: 'OptiTest AI Fault Detection & Diagnosis API',
-    version: '1.0.0',
+    message: "OptiTest AI Fault Detection & Diagnosis API",
+    version: "1.0.0",
     endpoints: {
-      'POST /api/testing/diagnose': 'Perform intelligent fault diagnosis',
-      'GET /api/testing/diagnose/status': 'Get diagnosis system status'
+      "POST /api/testing/diagnose": "Perform intelligent fault diagnosis",
+      "GET /api/testing/diagnose/status": "Get diagnosis system status",
     },
     capabilities: [
-      'Real-time fault detection',
-      'Root cause analysis',
-      'Pattern recognition',
-      'Anomaly detection',
-      'Predictive diagnostics',
-      'Intelligent recommendations'
-    ]
+      "Real-time fault detection",
+      "Root cause analysis",
+      "Pattern recognition",
+      "Anomaly detection",
+      "Predictive diagnostics",
+      "Intelligent recommendations",
+    ],
   });
 }

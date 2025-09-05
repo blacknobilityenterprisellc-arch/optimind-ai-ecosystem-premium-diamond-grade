@@ -1,16 +1,22 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Loader2, Wand2, CheckCircle, AlertTriangle, Info } from 'lucide-react';
+import { useState } from "react";
+import { Loader2, Wand2, CheckCircle, AlertTriangle, Info } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FormField {
   name: string;
@@ -39,45 +45,71 @@ interface SmartFormProps {
 
 export function SmartForm({ className }: SmartFormProps) {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    company: '',
-    website: ''
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+    company: "",
+    website: "",
   });
 
-  const [enhancementType, setEnhancementType] = useState('professional');
-  const [enhancedText, setEnhancedText] = useState('');
-  const [validationResults, setValidationResults] = useState<ValidationResults | null>(null);
+  const [enhancementType, setEnhancementType] = useState("professional");
+  const [enhancedText, setEnhancedText] = useState("");
+  const [validationResults, setValidationResults] =
+    useState<ValidationResults | null>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [enhancementInfo, setEnhancementInfo] = useState<{
     model: string;
     cost: number;
-    usage: { promptTokens: number; completionTokens: number; totalTokens: number };
+    usage: {
+      promptTokens: number;
+      completionTokens: number;
+      totalTokens: number;
+    };
   } | null>(null);
 
   const formFields: FormField[] = [
-    { name: 'name', value: formData.name, type: 'text', required: true },
-    { name: 'email', value: formData.email, type: 'email', required: true, validation: 'email format' },
-    { name: 'phone', value: formData.phone, type: 'tel', validation: 'phone format' },
-    { name: 'message', value: formData.message, type: 'textarea', required: true },
-    { name: 'company', value: formData.company, type: 'text' },
-    { name: 'website', value: formData.website, type: 'url', validation: 'url format' }
+    { name: "name", value: formData.name, type: "text", required: true },
+    {
+      name: "email",
+      value: formData.email,
+      type: "email",
+      required: true,
+      validation: "email format",
+    },
+    {
+      name: "phone",
+      value: formData.phone,
+      type: "tel",
+      validation: "phone format",
+    },
+    {
+      name: "message",
+      value: formData.message,
+      type: "textarea",
+      required: true,
+    },
+    { name: "company", value: formData.company, type: "text" },
+    {
+      name: "website",
+      value: formData.website,
+      type: "url",
+      validation: "url format",
+    },
   ];
 
   const enhancementTypes = [
-    { value: 'grammar', label: 'Grammar & Spelling' },
-    { value: 'clarity', label: 'Clarity & Readability' },
-    { value: 'professional', label: 'Professional Tone' },
-    { value: 'creative', label: 'Creative Writing' },
-    { value: 'concise', label: 'More Concise' },
-    { value: 'expand', label: 'More Detailed' }
+    { value: "grammar", label: "Grammar & Spelling" },
+    { value: "clarity", label: "Clarity & Readability" },
+    { value: "professional", label: "Professional Tone" },
+    { value: "creative", label: "Creative Writing" },
+    { value: "concise", label: "More Concise" },
+    { value: "expand", label: "More Detailed" },
   ];
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const enhanceText = async (text: string) => {
@@ -85,31 +117,31 @@ export function SmartForm({ className }: SmartFormProps) {
 
     setIsEnhancing(true);
     try {
-      const response = await fetch('/api/enhance-text', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/enhance-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text,
           enhancement: enhancementType,
-          context: 'Form field enhancement for better user experience'
+          context: "Form field enhancement for better user experience",
         }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setEnhancedText(data.enhancedText);
         setEnhancementInfo({
           model: data.model,
           cost: data.cost,
-          usage: data.usage
+          usage: data.usage,
         });
       } else {
-        alert('Failed to enhance text: ' + data.error);
+        alert("Failed to enhance text: " + data.error);
       }
     } catch (error) {
-      console.error('Error enhancing text:', error);
-      alert('Error enhancing text');
+      console.error("Error enhancing text:", error);
+      alert("Error enhancing text");
     } finally {
       setIsEnhancing(false);
     }
@@ -118,40 +150,40 @@ export function SmartForm({ className }: SmartFormProps) {
   const validateForm = async () => {
     setIsValidating(true);
     try {
-      const response = await fetch('/api/validate-form', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/validate-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           fields: formFields,
-          formType: 'contact',
-          context: 'Contact form for business inquiries'
+          formType: "contact",
+          context: "Contact form for business inquiries",
         }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setValidationResults(data.validationResults);
       } else {
-        alert('Failed to validate form: ' + data.error);
+        alert("Failed to validate form: " + data.error);
       }
     } catch (error) {
-      console.error('Error validating form:', error);
-      alert('Error validating form');
+      console.error("Error validating form:", error);
+      alert("Error validating form");
     } finally {
       setIsValidating(false);
     }
   };
 
   const applyEnhancedText = (field: string) => {
-    setFormData(prev => ({ ...prev, [field]: enhancedText }));
-    setEnhancedText('');
+    setFormData((prev) => ({ ...prev, [field]: enhancedText }));
+    setEnhancedText("");
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
   return (
@@ -176,10 +208,12 @@ export function SmartForm({ className }: SmartFormProps) {
                     <Input
                       placeholder="Your full name"
                       value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => enhanceText(formData.name)}
                       disabled={isEnhancing || !formData.name}
@@ -195,10 +229,12 @@ export function SmartForm({ className }: SmartFormProps) {
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => enhanceText(formData.email)}
                       disabled={isEnhancing || !formData.email}
@@ -217,10 +253,12 @@ export function SmartForm({ className }: SmartFormProps) {
                       type="tel"
                       placeholder="+1 (555) 123-4567"
                       value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("phone", e.target.value)
+                      }
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => enhanceText(formData.phone)}
                       disabled={isEnhancing || !formData.phone}
@@ -235,10 +273,12 @@ export function SmartForm({ className }: SmartFormProps) {
                     <Input
                       placeholder="Your company name"
                       value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("company", e.target.value)
+                      }
                     />
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => enhanceText(formData.company)}
                       disabled={isEnhancing || !formData.company}
@@ -256,10 +296,12 @@ export function SmartForm({ className }: SmartFormProps) {
                     type="url"
                     placeholder="https://yourcompany.com"
                     value={formData.website}
-                    onChange={(e) => handleInputChange('website', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("website", e.target.value)
+                    }
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => enhanceText(formData.website)}
                     disabled={isEnhancing || !formData.website}
@@ -275,11 +317,13 @@ export function SmartForm({ className }: SmartFormProps) {
                   <Textarea
                     placeholder="Your message..."
                     value={formData.message}
-                    onChange={(e) => handleInputChange('message', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("message", e.target.value)
+                    }
                     rows={4}
                   />
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => enhanceText(formData.message)}
                     disabled={isEnhancing || !formData.message}
@@ -297,7 +341,7 @@ export function SmartForm({ className }: SmartFormProps) {
                       Validating...
                     </>
                   ) : (
-                    'Validate Form'
+                    "Validate Form"
                   )}
                 </Button>
                 <Button variant="outline">Submit Form</Button>
@@ -314,7 +358,10 @@ export function SmartForm({ className }: SmartFormProps) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Enhancement Type</label>
-                <Select value={enhancementType} onValueChange={setEnhancementType}>
+                <Select
+                  value={enhancementType}
+                  onValueChange={setEnhancementType}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -332,14 +379,14 @@ export function SmartForm({ className }: SmartFormProps) {
                 <label className="text-sm font-medium">Text to Enhance</label>
                 <Textarea
                   placeholder="Enter text to enhance..."
-                  value={enhancedText || ''}
+                  value={enhancedText || ""}
                   onChange={(e) => setEnhancedText(e.target.value)}
                   rows={4}
                 />
               </div>
 
-              <Button 
-                onClick={() => enhanceText(enhancedText)} 
+              <Button
+                onClick={() => enhanceText(enhancedText)}
                 disabled={isEnhancing || !enhancedText}
                 className="w-full"
               >
@@ -359,21 +406,28 @@ export function SmartForm({ className }: SmartFormProps) {
               {enhancedText && enhancementInfo && (
                 <div className="space-y-2">
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">Model: {enhancementInfo.model}</Badge>
-                    <Badge variant="secondary">Cost: ${enhancementInfo.cost.toFixed(4)}</Badge>
-                    <Badge variant="secondary">Tokens: {enhancementInfo.usage.totalTokens}</Badge>
+                    <Badge variant="secondary">
+                      Model: {enhancementInfo.model}
+                    </Badge>
+                    <Badge variant="secondary">
+                      Cost: ${enhancementInfo.cost.toFixed(4)}
+                    </Badge>
+                    <Badge variant="secondary">
+                      Tokens: {enhancementInfo.usage.totalTokens}
+                    </Badge>
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">Enhanced Text</label>
                     <div className="p-4 border rounded-md bg-muted">
                       <p className="whitespace-pre-wrap">{enhancedText}</p>
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => {
                         // Apply to the most recently edited field
-                        const lastField = Object.keys(formData).reduce((a, b) => 
-                          formData[a as keyof typeof formData] ? a : b
+                        const lastField = Object.keys(formData).reduce(
+                          (a, b) =>
+                            formData[a as keyof typeof formData] ? a : b,
                         );
                         applyEnhancedText(lastField);
                       }}
@@ -397,18 +451,28 @@ export function SmartForm({ className }: SmartFormProps) {
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
                     <div className="text-2xl font-bold">
-                      Score: <span className={getScoreColor(validationResults.overallScore)}>
+                      Score:{" "}
+                      <span
+                        className={getScoreColor(
+                          validationResults.overallScore,
+                        )}
+                      >
                         {validationResults.overallScore}/100
                       </span>
                     </div>
                     <div className="flex-1">
                       <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
+                        <div
                           className={`h-2 rounded-full ${
-                            validationResults.overallScore >= 80 ? 'bg-green-500' :
-                            (validationResults.overallScore >= 60 ? 'bg-yellow-500' : 'bg-red-500')
+                            validationResults.overallScore >= 80
+                              ? "bg-green-500"
+                              : validationResults.overallScore >= 60
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
                           }`}
-                          style={{ width: `${validationResults.overallScore}%` }}
+                          style={{
+                            width: `${validationResults.overallScore}%`,
+                          }}
                         ></div>
                       </div>
                     </div>
@@ -416,7 +480,9 @@ export function SmartForm({ className }: SmartFormProps) {
 
                   <Alert>
                     <Info className="h-4 w-4" />
-                    <AlertDescription>{validationResults.summary}</AlertDescription>
+                    <AlertDescription>
+                      {validationResults.summary}
+                    </AlertDescription>
                   </Alert>
 
                   <div className="space-y-3">
@@ -433,7 +499,9 @@ export function SmartForm({ className }: SmartFormProps) {
                         </div>
                         {field.issues.length > 0 && (
                           <div className="space-y-1">
-                            <span className="text-sm font-medium text-red-600">Issues:</span>
+                            <span className="text-sm font-medium text-red-600">
+                              Issues:
+                            </span>
                             <ul className="text-sm text-red-600 list-disc list-inside">
                               {field.issues.map((issue, i) => (
                                 <li key={i}>{issue}</li>
@@ -443,7 +511,9 @@ export function SmartForm({ className }: SmartFormProps) {
                         )}
                         {field.suggestions.length > 0 && (
                           <div className="space-y-1">
-                            <span className="text-sm font-medium text-blue-600">Suggestions:</span>
+                            <span className="text-sm font-medium text-blue-600">
+                              Suggestions:
+                            </span>
                             <ul className="text-sm text-blue-600 list-disc list-inside">
                               {field.suggestions.map((suggestion, i) => (
                                 <li key={i}>{suggestion}</li>
@@ -453,8 +523,12 @@ export function SmartForm({ className }: SmartFormProps) {
                         )}
                         {field.improvedValue && (
                           <div className="mt-2">
-                            <span className="text-sm font-medium text-green-600">Improved Value:</span>
-                            <p className="text-sm bg-green-50 p-2 rounded mt-1">{field.improvedValue}</p>
+                            <span className="text-sm font-medium text-green-600">
+                              Improved Value:
+                            </span>
+                            <p className="text-sm bg-green-50 p-2 rounded mt-1">
+                              {field.improvedValue}
+                            </p>
                           </div>
                         )}
                       </div>
@@ -474,7 +548,8 @@ export function SmartForm({ className }: SmartFormProps) {
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  No validation results yet. Click "Validate Form" to analyze your form data.
+                  No validation results yet. Click "Validate Form" to analyze
+                  your form data.
                 </div>
               )}
             </CardContent>

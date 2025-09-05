@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { 
-  BarChart3, 
-  PieChart, 
-  TrendingUp, 
-  Loader2, 
+import { useState } from "react";
+import {
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  Loader2,
   Download,
   Copy,
   FileText,
@@ -14,16 +14,22 @@ import {
   Activity,
   Target,
   Brain,
-  Lightbulb
-} from 'lucide-react';
+  Lightbulb,
+} from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DataAnalysisProps {
   className?: string;
@@ -41,18 +47,44 @@ interface AnalysisResult {
 }
 
 export function DataAnalysis({ className }: DataAnalysisProps) {
-  const [dataInput, setDataInput] = useState('');
-  const [analysisType, setAnalysisType] = useState('general');
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [dataInput, setDataInput] = useState("");
+  const [analysisType, setAnalysisType] = useState("general");
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(
+    null,
+  );
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const analysisTypes = [
-    { value: 'general', label: 'General Analysis', icon: <BarChart3 className="h-4 w-4" /> },
-    { value: 'trends', label: 'Trend Analysis', icon: <TrendingUp className="h-4 w-4" /> },
-    { value: 'patterns', label: 'Pattern Recognition', icon: <Activity className="h-4 w-4" /> },
-    { value: 'insights', label: 'Business Insights', icon: <Brain className="h-4 w-4" /> },
-    { value: 'recommendations', label: 'Recommendations', icon: <Lightbulb className="h-4 w-4" /> },
-    { value: 'forecasting', label: 'Forecasting', icon: <Target className="h-4 w-4" /> }
+    {
+      value: "general",
+      label: "General Analysis",
+      icon: <BarChart3 className="h-4 w-4" />,
+    },
+    {
+      value: "trends",
+      label: "Trend Analysis",
+      icon: <TrendingUp className="h-4 w-4" />,
+    },
+    {
+      value: "patterns",
+      label: "Pattern Recognition",
+      icon: <Activity className="h-4 w-4" />,
+    },
+    {
+      value: "insights",
+      label: "Business Insights",
+      icon: <Brain className="h-4 w-4" />,
+    },
+    {
+      value: "recommendations",
+      label: "Recommendations",
+      icon: <Lightbulb className="h-4 w-4" />,
+    },
+    {
+      value: "forecasting",
+      label: "Forecasting",
+      icon: <Target className="h-4 w-4" />,
+    },
   ];
 
   const dataTemplates = {
@@ -99,41 +131,41 @@ Top Pages:
 - About Us: 8,450 visits
 - Contact: 3,200 visits
 
-Error Rate: 1.2%`
+Error Rate: 1.2%`,
   };
 
   const analyzeData = async () => {
     if (!dataInput.trim()) {
-      alert('Please provide data to analyze');
+      alert("Please provide data to analyze");
       return;
     }
 
     setIsAnalyzing(true);
     try {
-      const response = await fetch('/api/analyze-data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/analyze-data", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           data: dataInput,
-          analysisType
+          analysisType,
         }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setAnalysisResult({
           content: data.analysis,
           model: data.model,
           cost: data.cost,
-          usage: data.usage
+          usage: data.usage,
         });
       } else {
-        alert('Failed to analyze data: ' + data.error);
+        alert("Failed to analyze data: " + data.error);
       }
     } catch (error) {
-      console.error('Error analyzing data:', error);
-      alert('Error analyzing data');
+      console.error("Error analyzing data:", error);
+      alert("Error analyzing data");
     } finally {
       setIsAnalyzing(false);
     }
@@ -149,10 +181,10 @@ Error Rate: 1.2%`
 
   const downloadAnalysis = () => {
     if (!analysisResult) return;
-    
-    const blob = new Blob([analysisResult.content], { type: 'text/plain' });
+
+    const blob = new Blob([analysisResult.content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `data_analysis_${analysisType}.txt`;
     document.body.appendChild(a);
@@ -162,7 +194,7 @@ Error Rate: 1.2%`
   };
 
   const getAnalysisIcon = (type: string) => {
-    const analysisTypeInfo = analysisTypes.find(t => t.value === type);
+    const analysisTypeInfo = analysisTypes.find((t) => t.value === type);
     return analysisTypeInfo?.icon || <BarChart3 className="h-4 w-4" />;
   };
 
@@ -201,15 +233,27 @@ Error Rate: 1.2%`
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium">Data Input *</label>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => loadTemplate('sales')}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadTemplate("sales")}
+                >
                   <DollarSign className="h-4 w-4 mr-1" />
                   Sales
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => loadTemplate('users')}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadTemplate("users")}
+                >
                   <Users className="h-4 w-4 mr-1" />
                   Users
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => loadTemplate('performance')}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => loadTemplate("performance")}
+                >
                   <Activity className="h-4 w-4 mr-1" />
                   Performance
                 </Button>
@@ -227,20 +271,28 @@ Error Rate: 1.2%`
           <div className="bg-muted p-3 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               {getAnalysisIcon(analysisType)}
-              <span className="font-medium">{analysisTypes.find(t => t.value === analysisType)?.label}</span>
+              <span className="font-medium">
+                {analysisTypes.find((t) => t.value === analysisType)?.label}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
-              {analysisType === 'general' && 'Comprehensive analysis of your data with key insights and patterns.'}
-              {analysisType === 'trends' && 'Identify trends and patterns in your data over time.'}
-              {analysisType === 'patterns' && 'Discover hidden patterns and correlations in your data.'}
-              {analysisType === 'insights' && 'Extract actionable business insights from your data.'}
-              {analysisType === 'recommendations' && 'Get data-driven recommendations for improvement.'}
-              {analysisType === 'forecasting' && 'Predict future trends based on historical data.'}
+              {analysisType === "general" &&
+                "Comprehensive analysis of your data with key insights and patterns."}
+              {analysisType === "trends" &&
+                "Identify trends and patterns in your data over time."}
+              {analysisType === "patterns" &&
+                "Discover hidden patterns and correlations in your data."}
+              {analysisType === "insights" &&
+                "Extract actionable business insights from your data."}
+              {analysisType === "recommendations" &&
+                "Get data-driven recommendations for improvement."}
+              {analysisType === "forecasting" &&
+                "Predict future trends based on historical data."}
             </p>
           </div>
 
-          <Button 
-            onClick={analyzeData} 
+          <Button
+            onClick={analyzeData}
             disabled={isAnalyzing || !dataInput.trim()}
             className="w-full"
           >
@@ -268,7 +320,11 @@ Error Rate: 1.2%`
                 Analysis Results
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => copyToClipboard(analysisResult.content)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(analysisResult.content)}
+                >
                   <Copy className="h-4 w-4" />
                 </Button>
                 <Button variant="outline" size="sm" onClick={downloadAnalysis}>
@@ -278,14 +334,20 @@ Error Rate: 1.2%`
             </CardTitle>
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">Model: {analysisResult.model}</Badge>
-              <Badge variant="secondary">Cost: ${analysisResult.cost.toFixed(4)}</Badge>
-              <Badge variant="secondary">Tokens: {analysisResult.usage.totalTokens}</Badge>
+              <Badge variant="secondary">
+                Cost: ${analysisResult.cost.toFixed(4)}
+              </Badge>
+              <Badge variant="secondary">
+                Tokens: {analysisResult.usage.totalTokens}
+              </Badge>
             </div>
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[500px] w-full">
               <div className="prose prose-sm max-w-none">
-                <div className="whitespace-pre-wrap">{analysisResult.content}</div>
+                <div className="whitespace-pre-wrap">
+                  {analysisResult.content}
+                </div>
               </div>
             </ScrollArea>
           </CardContent>
@@ -306,7 +368,9 @@ Error Rate: 1.2%`
               <div
                 key={type.value}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                  analysisType === type.value ? 'border-primary bg-primary/5' : 'hover:bg-muted'
+                  analysisType === type.value
+                    ? "border-primary bg-primary/5"
+                    : "hover:bg-muted"
                 }`}
                 onClick={() => setAnalysisType(type.value)}
               >
@@ -315,12 +379,18 @@ Error Rate: 1.2%`
                   <span className="font-medium">{type.label}</span>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {type.value === 'general' && 'Comprehensive data analysis with key insights'}
-                  {type.value === 'trends' && 'Identify trends and patterns over time'}
-                  {type.value === 'patterns' && 'Discover hidden correlations and patterns'}
-                  {type.value === 'insights' && 'Extract actionable business insights'}
-                  {type.value === 'recommendations' && 'Get data-driven recommendations'}
-                  {type.value === 'forecasting' && 'Predict future trends and outcomes'}
+                  {type.value === "general" &&
+                    "Comprehensive data analysis with key insights"}
+                  {type.value === "trends" &&
+                    "Identify trends and patterns over time"}
+                  {type.value === "patterns" &&
+                    "Discover hidden correlations and patterns"}
+                  {type.value === "insights" &&
+                    "Extract actionable business insights"}
+                  {type.value === "recommendations" &&
+                    "Get data-driven recommendations"}
+                  {type.value === "forecasting" &&
+                    "Predict future trends and outcomes"}
                 </p>
               </div>
             ))}

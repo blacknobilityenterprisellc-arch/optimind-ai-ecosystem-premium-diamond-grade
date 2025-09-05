@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { 
+import {
   Calendar,
   Clock,
   AlertTriangle,
@@ -12,10 +12,16 @@ import {
   FileText,
   BarChart3,
   Target,
-  Zap
+  Zap,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -25,8 +31,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface FreshnessIssue {
   id: string;
-  type: 'outdated_statistics' | 'broken_links' | 'missing_trends' | 'old_references' | 'expired_information';
-  severity: 'high' | 'medium' | 'low';
+  type:
+    | "outdated_statistics"
+    | "broken_links"
+    | "missing_trends"
+    | "old_references"
+    | "expired_information";
+  severity: "high" | "medium" | "low";
   description: string;
   location: string;
   suggestion: string;
@@ -45,7 +56,9 @@ export default function ContentFreshnessDetector() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [contentUrl, setContentUrl] = useState("");
   const [contentText, setContentText] = useState("");
-  const [freshnessScore, setFreshnessScore] = useState<FreshnessScore | null>(null);
+  const [freshnessScore, setFreshnessScore] = useState<FreshnessScore | null>(
+    null,
+  );
   const [issues, setIssues] = useState<FreshnessIssue[]>([]);
 
   // Mock data for demonstration
@@ -54,7 +67,7 @@ export default function ContentFreshnessDetector() {
     contentAge: 68,
     dataFreshness: 82,
     linkHealth: 91,
-    trendRelevance: 55
+    trendRelevance: 55,
   };
 
   const mockIssues: FreshnessIssue[] = [
@@ -66,7 +79,7 @@ export default function ContentFreshnessDetector() {
       location: "Section 2: Voice Search Trends",
       suggestion: "Update with 2024 voice search statistics and trends",
       suggestion: "Update with 2025 voice search statistics and trends",
-      impact: 85
+      impact: 85,
     },
     {
       id: "2",
@@ -74,8 +87,9 @@ export default function ContentFreshnessDetector() {
       severity: "medium",
       description: "No mention of AI assistant optimization",
       location: "Main content",
-      suggestion: "Add section on optimizing for AI assistants like ChatGPT and Claude",
-      impact: 70
+      suggestion:
+        "Add section on optimizing for AI assistants like ChatGPT and Claude",
+      impact: 70,
     },
     {
       id: "3",
@@ -84,7 +98,7 @@ export default function ContentFreshnessDetector() {
       description: "References to deprecated Google features",
       location: "Section 4: Implementation",
       suggestion: "Update references to current Google Search features",
-      impact: 60
+      impact: 60,
     },
     {
       id: "4",
@@ -93,13 +107,13 @@ export default function ContentFreshnessDetector() {
       description: "One external link returns 404 error",
       location: "Resources section",
       suggestion: "Remove or replace broken link with current resource",
-      impact: 30
-    }
+      impact: 30,
+    },
   ];
 
   const handleAnalyzeFreshness = async () => {
     if (!contentUrl && !contentText) return;
-    
+
     setIsAnalyzing(true);
     // Simulate API call
     setTimeout(() => {
@@ -111,30 +125,44 @@ export default function ContentFreshnessDetector() {
 
   const getIssueIcon = (type: string) => {
     switch (type) {
-      case 'outdated_statistics': return <BarChart3 className="w-4 h-4 text-red-500" />;
-      case 'broken_links': return <Target className="w-4 h-4 text-orange-500" />;
-      case 'missing_trends': return <TrendingUp className="w-4 h-4 text-blue-500" />;
-      case 'old_references': return <FileText className="w-4 h-4 text-yellow-500" />;
-      case 'expired_information': return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      default: return <AlertTriangle className="w-4 h-4 text-gray-500" />;
+      case "outdated_statistics":
+        return <BarChart3 className="w-4 h-4 text-red-500" />;
+      case "broken_links":
+        return <Target className="w-4 h-4 text-orange-500" />;
+      case "missing_trends":
+        return <TrendingUp className="w-4 h-4 text-blue-500" />;
+      case "old_references":
+        return <FileText className="w-4 h-4 text-yellow-500" />;
+      case "expired_information":
+        return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      default:
+        return <AlertTriangle className="w-4 h-4 text-gray-500" />;
     }
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case 'high': return 'text-red-600';
-      case 'medium': return 'text-yellow-600';
-      case 'low': return 'text-green-600';
-      default: return 'text-gray-600';
+      case "high":
+        return "text-red-600";
+      case "medium":
+        return "text-yellow-600";
+      case "low":
+        return "text-green-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getSeverityBadge = (severity: string) => {
     switch (severity) {
-      case 'high': return 'destructive';
-      case 'medium': return 'default';
-      case 'low': return 'secondary';
-      default: return 'outline';
+      case "high":
+        return "destructive";
+      case "medium":
+        return "default";
+      case "low":
+        return "secondary";
+      default:
+        return "outline";
     }
   };
 
@@ -158,7 +186,8 @@ export default function ContentFreshnessDetector() {
             Analyze Content Freshness
           </CardTitle>
           <CardDescription>
-            Enter your content URL or paste content text to analyze for freshness issues
+            Enter your content URL or paste content text to analyze for
+            freshness issues
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -167,10 +196,12 @@ export default function ContentFreshnessDetector() {
               <TabsTrigger value="url">URL Analysis</TabsTrigger>
               <TabsTrigger value="text">Text Analysis</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="url" className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Content URL</label>
+                <label className="text-sm font-medium mb-2 block">
+                  Content URL
+                </label>
                 <Input
                   placeholder="https://example.com/your-content"
                   value={contentUrl}
@@ -178,10 +209,12 @@ export default function ContentFreshnessDetector() {
                 />
               </div>
             </TabsContent>
-            
+
             <TabsContent value="text" className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Content Text</label>
+                <label className="text-sm font-medium mb-2 block">
+                  Content Text
+                </label>
                 <Textarea
                   placeholder="Paste your content here for analysis..."
                   value={contentText}
@@ -191,9 +224,9 @@ export default function ContentFreshnessDetector() {
               </div>
             </TabsContent>
           </Tabs>
-          
-          <Button 
-            onClick={handleAnalyzeFreshness} 
+
+          <Button
+            onClick={handleAnalyzeFreshness}
             disabled={(!contentUrl && !contentText) || isAnalyzing}
             className="w-full"
           >
@@ -225,34 +258,75 @@ export default function ContentFreshnessDetector() {
             <CardContent className="space-y-6">
               <div className="text-center">
                 <div className="text-4xl font-bold mb-2">
-                  <span className={freshnessScore.overall >= 80 ? 'text-green-600' : (freshnessScore.overall >= 60 ? 'text-yellow-600' : 'text-red-600')}>
+                  <span
+                    className={
+                      freshnessScore.overall >= 80
+                        ? "text-green-600"
+                        : freshnessScore.overall >= 60
+                          ? "text-yellow-600"
+                          : "text-red-600"
+                    }
+                  >
                     {freshnessScore.overall}%
                   </span>
                 </div>
-                <div className="text-sm text-muted-foreground">Overall Freshness Score</div>
-                <Progress value={freshnessScore.overall} className="max-w-md mx-auto mt-2" />
+                <div className="text-sm text-muted-foreground">
+                  Overall Freshness Score
+                </div>
+                <Progress
+                  value={freshnessScore.overall}
+                  className="max-w-md mx-auto mt-2"
+                />
               </div>
 
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{freshnessScore.contentAge}%</div>
-                  <div className="text-sm text-muted-foreground">Content Age</div>
-                  <Progress value={freshnessScore.contentAge} className="mt-1" />
+                  <div className="text-2xl font-bold text-blue-600">
+                    {freshnessScore.contentAge}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Content Age
+                  </div>
+                  <Progress
+                    value={freshnessScore.contentAge}
+                    className="mt-1"
+                  />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{freshnessScore.dataFreshness}%</div>
-                  <div className="text-sm text-muted-foreground">Data Freshness</div>
-                  <Progress value={freshnessScore.dataFreshness} className="mt-1" />
+                  <div className="text-2xl font-bold text-green-600">
+                    {freshnessScore.dataFreshness}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Data Freshness
+                  </div>
+                  <Progress
+                    value={freshnessScore.dataFreshness}
+                    className="mt-1"
+                  />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{freshnessScore.linkHealth}%</div>
-                  <div className="text-sm text-muted-foreground">Link Health</div>
-                  <Progress value={freshnessScore.linkHealth} className="mt-1" />
+                  <div className="text-2xl font-bold text-purple-600">
+                    {freshnessScore.linkHealth}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Link Health
+                  </div>
+                  <Progress
+                    value={freshnessScore.linkHealth}
+                    className="mt-1"
+                  />
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">{freshnessScore.trendRelevance}%</div>
-                  <div className="text-sm text-muted-foreground">Trend Relevance</div>
-                  <Progress value={freshnessScore.trendRelevance} className="mt-1" />
+                  <div className="text-2xl font-bold text-orange-600">
+                    {freshnessScore.trendRelevance}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Trend Relevance
+                  </div>
+                  <Progress
+                    value={freshnessScore.trendRelevance}
+                    className="mt-1"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -285,14 +359,20 @@ export default function ContentFreshnessDetector() {
                           Impact: {issue.impact}%
                         </div>
                       </div>
-                      
-                      <h4 className="font-semibold mb-2">{issue.description}</h4>
+
+                      <h4 className="font-semibold mb-2">
+                        {issue.description}
+                      </h4>
                       <div className="text-sm text-muted-foreground mb-2">
                         Location: {issue.location}
                       </div>
                       <div className="bg-blue-50 p-3 rounded-lg">
-                        <div className="text-sm font-medium text-blue-800 mb-1">Suggestion:</div>
-                        <div className="text-sm text-blue-700">{issue.suggestion}</div>
+                        <div className="text-sm font-medium text-blue-800 mb-1">
+                          Suggestion:
+                        </div>
+                        <div className="text-sm text-blue-700">
+                          {issue.suggestion}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -314,24 +394,34 @@ export default function ContentFreshnessDetector() {
                 <div className="space-y-3">
                   <h4 className="font-semibold">High Priority Actions</h4>
                   <div className="space-y-2">
-                    {issues.filter(i => i.severity === 'high').map((issue) => (
-                      <div key={issue.id} className="flex items-center gap-2 p-2 bg-red-50 rounded">
-                        <AlertTriangle className="w-4 h-4 text-red-500" />
-                        <span className="text-sm">{issue.description}</span>
-                      </div>
-                    ))}
+                    {issues
+                      .filter((i) => i.severity === "high")
+                      .map((issue) => (
+                        <div
+                          key={issue.id}
+                          className="flex items-center gap-2 p-2 bg-red-50 rounded"
+                        >
+                          <AlertTriangle className="w-4 h-4 text-red-500" />
+                          <span className="text-sm">{issue.description}</span>
+                        </div>
+                      ))}
                   </div>
                 </div>
-                
+
                 <div className="space-y-3">
                   <h4 className="font-semibold">Medium Priority Actions</h4>
                   <div className="space-y-2">
-                    {issues.filter(i => i.severity === 'medium').map((issue) => (
-                      <div key={issue.id} className="flex items-center gap-2 p-2 bg-yellow-50 rounded">
-                        <Clock className="w-4 h-4 text-yellow-500" />
-                        <span className="text-sm">{issue.description}</span>
-                      </div>
-                    ))}
+                    {issues
+                      .filter((i) => i.severity === "medium")
+                      .map((issue) => (
+                        <div
+                          key={issue.id}
+                          className="flex items-center gap-2 p-2 bg-yellow-50 rounded"
+                        >
+                          <Clock className="w-4 h-4 text-yellow-500" />
+                          <span className="text-sm">{issue.description}</span>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </div>

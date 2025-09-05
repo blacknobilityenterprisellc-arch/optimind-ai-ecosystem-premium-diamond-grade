@@ -1,17 +1,17 @@
 /**
  * Premium Diamond Grade Dashboard Header Component
- * 
+ *
  * Enterprise-grade header with real-time status indicators
  * and premium branding elements.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 1.0.0
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Gem, Wifi, WifiOff } from "lucide-react";
 
@@ -37,7 +37,11 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ isConnected }) => {
           Premium Diamond
         </Badge>
         <Badge variant={isConnected ? "default" : "secondary"}>
-          {isConnected ? <Wifi className="h-3 w-3 mr-1" /> : <WifiOff className="h-3 w-3 mr-1" />}
+          {isConnected ? (
+            <Wifi className="h-3 w-3 mr-1" />
+          ) : (
+            <WifiOff className="h-3 w-3 mr-1" />
+          )}
           {isConnected ? "Real-time" : "Offline"}
         </Badge>
       </div>

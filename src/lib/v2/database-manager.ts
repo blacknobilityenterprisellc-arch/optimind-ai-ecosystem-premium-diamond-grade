@@ -1,17 +1,17 @@
 /**
  * OptiMind AI Ecosystem - Database Manager v2.0
  * Premium Diamond Grade Database Management System
- * 
+ *
  * This implementation provides advanced database management capabilities including
  * connection pooling, query optimization, backup/restore, and performance monitoring.
  */
 
-import { exec } from 'child_process';
-import { promisify } from 'util';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { exec } from "child_process";
+import { promisify } from "util";
+import * as fs from "fs/promises";
+import * as path from "path";
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
 const execAsync = promisify(exec);
 
@@ -19,7 +19,7 @@ export interface DatabaseConfig {
   maxConnections: number;
   connectionTimeout: number;
   queryTimeout: number;
-  logLevel: 'info' | 'warn' | 'error' | 'debug';
+  logLevel: "info" | "warn" | "error" | "debug";
   enableMetrics: boolean;
   backupPath: string;
   autoBackup: boolean;
@@ -52,13 +52,13 @@ export interface BackupInfo {
   timestamp: Date;
   size: number;
   path: string;
-  status: 'created' | 'uploading' | 'completed' | 'failed';
+  status: "created" | "uploading" | "completed" | "failed";
   checksum: string;
   metadata: any;
 }
 
 export interface DatabaseHealth {
-  status: 'healthy' | 'degraded' | 'unhealthy';
+  status: "healthy" | "degraded" | "unhealthy";
   connections: number;
   responseTime: number;
   errorRate: number;
@@ -83,12 +83,12 @@ class DatabaseManagerV2 {
       maxConnections: 20,
       connectionTimeout: 30000,
       queryTimeout: 10000,
-      logLevel: 'info',
+      logLevel: "info",
       enableMetrics: true,
-      backupPath: './backups',
+      backupPath: "./backups",
       autoBackup: true,
       backupInterval: 86400, // 24 hours
-      ...config
+      ...config,
     };
 
     this.metrics = {
@@ -100,11 +100,14 @@ class DatabaseManagerV2 {
       errors: 0,
       uptime: Date.now(),
       lastBackup: null,
-      databaseSize: 0
+      databaseSize: 0,
     };
 
     this.prisma = new PrismaClient({
-      log: this.config.logLevel === 'debug' ? ['query', 'info', 'warn', 'error'] : ['error']
+      log:
+        this.config.logLevel === "debug"
+          ? ["query", "info", "warn", "error"]
+          : ["error"],
     });
 
     this.initialize();
@@ -132,9 +135,9 @@ class DatabaseManagerV2 {
       // Load backup history
       await this.loadBackupHistory();
 
-      console.log('Database Manager initialized successfully');
+      console.log("Database Manager initialized successfully");
     } catch (error) {
-      console.error('Database Manager initialization failed:', error);
+      console.error("Database Manager initialization failed:", error);
       throw error;
     }
   }
@@ -176,28 +179,28 @@ class DatabaseManagerV2 {
   private async loadBackupHistory(): Promise<void> {
     try {
       const backupFiles = await fs.readdir(this.config.backupPath);
-      
+
       for (const file of backupFiles) {
-        if (file.endsWith('.sql') || file.endsWith('.backup')) {
+        if (file.endsWith(".sql") || file.endsWith(".backup")) {
           const filePath = path.join(this.config.backupPath, file);
           const stats = await fs.stat(filePath);
-          
+
           this.backupHistory.push({
             id: this.generateId(),
             timestamp: stats.mtime.toISOString(),
             size: stats.size,
             path: filePath,
-            status: 'completed',
+            status: "completed",
             checksum: await this.calculateChecksum(filePath),
             metadata: {
               filename: file,
-              created: stats.birthtime.toISOString()
-            }
+              created: stats.birthtime.toISOString(),
+            },
           });
         }
       }
     } catch (error) {
-      console.error('Failed to load backup history:', error);
+      console.error("Failed to load backup history:", error);
     }
   }
 
@@ -207,13 +210,13 @@ class DatabaseManagerV2 {
   async executeQuery<T = any>(
     query: string,
     params: any[] = [],
-    options?: { timeout?: number; transaction?: boolean }
+    options?: { timeout?: number; transaction?: boolean },
   ): Promise<QueryResult<T>> {
     const startTime = Date.now();
-    
+
     try {
       let result: T;
-      
+
       if (options?.transaction) {
         result = await this.prisma.$transaction(async (tx) => {
           return await tx.$queryRawUnsafe(query, ...params);
@@ -223,10 +226,10 @@ class DatabaseManagerV2 {
       }
 
       const executionTime = Date.now() - startTime;
-      
+
       // Update metrics
       this.updateQueryMetrics(executionTime, true);
-      
+
       // Log query history
       this.logQuery(query, executionTime, true);
 
@@ -235,14 +238,14 @@ class DatabaseManagerV2 {
         executionTime,
         rowCount: Array.isArray(result) ? result.length : 1,
         success: true,
-        query
+        query,
       };
     } catch (error) {
       const executionTime = Date.now() - startTime;
-      
+
       // Update metrics
       this.updateQueryMetrics(executionTime, false);
-      
+
       // Log query history
       this.logQuery(query, executionTime, false, error.message);
 
@@ -252,7 +255,7 @@ class DatabaseManagerV2 {
         rowCount: 0,
         success: false,
         error: error.message,
-        query
+        query,
       };
     }
   }
@@ -262,11 +265,13 @@ class DatabaseManagerV2 {
    */
   private updateQueryMetrics(executionTime: number, success: boolean): void {
     this.metrics.totalQueries++;
-    this.metrics.averageQueryTime = 
-      (this.metrics.averageQueryTime * (this.metrics.totalQueries - 1) + executionTime) / 
+    this.metrics.averageQueryTime =
+      (this.metrics.averageQueryTime * (this.metrics.totalQueries - 1) +
+        executionTime) /
       this.metrics.totalQueries;
 
-    if (executionTime > 5000) { // Slow query threshold (5 seconds)
+    if (executionTime > 5000) {
+      // Slow query threshold (5 seconds)
       this.metrics.slowQueries++;
     }
 
@@ -278,13 +283,18 @@ class DatabaseManagerV2 {
   /**
    * Log query to history
    */
-  private logQuery(query: string, executionTime: number, success: boolean, error?: string): void {
+  private logQuery(
+    query: string,
+    executionTime: number,
+    success: boolean,
+    error?: string,
+  ): void {
     this.queryHistory.push({
       query,
       executionTime,
       success,
       error,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Keep only last 1000 queries
@@ -313,13 +323,15 @@ class DatabaseManagerV2 {
   async createBackup(): Promise<BackupInfo> {
     const backupId = this.generateId();
     const timestamp = new Date();
-    const filename = `backup_${timestamp.toISOString().replace(/[:.]/g, '-')}.sql`;
+    const filename = `backup_${timestamp.toISOString().replace(/[:.]/g, "-")}.sql`;
     const filePath = path.join(this.config.backupPath, filename);
 
     try {
       // Create backup using sqlite3 command
-      const { stdout } = await execAsync(`sqlite3 ./dev.db ".backup ${filePath}"`);
-      
+      const { stdout } = await execAsync(
+        `sqlite3 ./dev.db ".backup ${filePath}"`,
+      );
+
       const stats = await fs.stat(filePath);
       const checksum = await this.calculateChecksum(filePath);
 
@@ -328,13 +340,13 @@ class DatabaseManagerV2 {
         timestamp: timestamp.toISOString(),
         size: stats.size,
         path: filePath,
-        status: 'completed',
+        status: "completed",
         checksum,
         metadata: {
           filename,
-          method: 'sqlite3_backup',
-          output: stdout
-        }
+          method: "sqlite3_backup",
+          output: stdout,
+        },
       };
 
       this.backupHistory.push(backupInfo);
@@ -346,22 +358,22 @@ class DatabaseManagerV2 {
 
       return backupInfo;
     } catch (error) {
-      console.error('Backup creation failed:', error);
-      
+      console.error("Backup creation failed:", error);
+
       const backupInfo: BackupInfo = {
         id: backupId,
         timestamp: timestamp.toISOString(),
         size: 0,
         path: filePath,
-        status: 'failed',
-        checksum: '',
+        status: "failed",
+        checksum: "",
         metadata: {
-          error: error.message
-        }
+          error: error.message,
+        },
       };
 
       this.backupHistory.push(backupInfo);
-      
+
       throw error;
     }
   }
@@ -370,14 +382,14 @@ class DatabaseManagerV2 {
    * Restore database from backup
    */
   async restoreDatabase(backupId: string): Promise<void> {
-    const backup = this.backupHistory.find(b => b.id === backupId);
-    
+    const backup = this.backupHistory.find((b) => b.id === backupId);
+
     if (!backup) {
-      throw new Error('Backup not found');
+      throw new Error("Backup not found");
     }
 
-    if (backup.status !== 'completed') {
-      throw new Error('Backup is not completed and cannot be restored');
+    if (backup.status !== "completed") {
+      throw new Error("Backup is not completed and cannot be restored");
     }
 
     try {
@@ -389,7 +401,7 @@ class DatabaseManagerV2 {
 
       console.log(`Database restored successfully from backup: ${backupId}`);
     } catch (error) {
-      console.error('Database restore failed:', error);
+      console.error("Database restore failed:", error);
       throw error;
     }
   }
@@ -400,27 +412,29 @@ class DatabaseManagerV2 {
   private async cleanupOldBackups(): Promise<void> {
     try {
       const backupFiles = await fs.readdir(this.config.backupPath);
-      
+
       // Sort files by modification time
       const sortedFiles = await Promise.all(
         backupFiles
-          .filter(file => file.endsWith('.sql') || file.endsWith('.backup'))
-          .map(async file => {
+          .filter((file) => file.endsWith(".sql") || file.endsWith(".backup"))
+          .map(async (file) => {
             const filePath = path.join(this.config.backupPath, file);
             const stats = await fs.stat(filePath);
             return { file, path: filePath, mtime: stats.mtime };
-          })
-      ).then(files => files.sort((a, b) => b.mtime.getTime() - a.mtime.getTime()));
+          }),
+      ).then((files) =>
+        files.sort((a, b) => b.mtime.getTime() - a.mtime.getTime()),
+      );
 
       // Keep only last 10 backups
       const filesToDelete = sortedFiles.slice(10);
-      
+
       for (const file of filesToDelete) {
         await fs.unlink(file.path);
         console.log(`Deleted old backup: ${file.file}`);
       }
     } catch (error) {
-      console.error('Backup cleanup failed:', error);
+      console.error("Backup cleanup failed:", error);
     }
   }
 
@@ -428,18 +442,20 @@ class DatabaseManagerV2 {
    * Calculate file checksum
    */
   private async calculateChecksum(filePath: string): Promise<string> {
-    const crypto = await import('crypto');
-    const hash = crypto.createHash('sha256');
+    const crypto = await import("crypto");
+    const hash = crypto.createHash("sha256");
     const data = await fs.readFile(filePath);
     hash.update(data);
-    return hash.digest('hex');
+    return hash.digest("hex");
   }
 
   /**
    * Get backup history
    */
   getBackupHistory(): BackupInfo[] {
-    return [...this.backupHistory].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return [...this.backupHistory].sort(
+      (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
+    );
   }
 
   /**
@@ -448,46 +464,54 @@ class DatabaseManagerV2 {
   private async performHealthCheck(): Promise<void> {
     try {
       const startTime = Date.now();
-      
+
       // Test database connection
       await this.testConnection();
-      
+
       // Check database size
       const sizeResult = await this.executeQuery<{ size: number }>(
-        'SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()'
+        "SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()",
       );
-      
+
       this.metrics.databaseSize = sizeResult.data[0]?.size || 0;
-      
+
       // Check for slow queries
-      const slowQueries = this.queryHistory.filter(q => q.executionTime > 5000);
-      
+      const slowQueries = this.queryHistory.filter(
+        (q) => q.executionTime > 5000,
+      );
+
       // Check error rate
-      const errorRate = this.metrics.totalQueries > 0 
-        ? (this.metrics.errors / this.metrics.totalQueries) * 100 
-        : 0;
+      const errorRate =
+        this.metrics.totalQueries > 0
+          ? (this.metrics.errors / this.metrics.totalQueries) * 100
+          : 0;
 
       const issues: string[] = [];
-      if (errorRate > 5) issues.push('High error rate');
-      if (slowQueries.length > 10) issues.push('Multiple slow queries detected');
-      if (!this.isHealthy) issues.push('Database connection issues');
+      if (errorRate > 5) issues.push("High error rate");
+      if (slowQueries.length > 10)
+        issues.push("Multiple slow queries detected");
+      if (!this.isHealthy) issues.push("Database connection issues");
 
       const health: DatabaseHealth = {
-        status: issues.length === 0 ? 'healthy' : (issues.length < 3 ? 'degraded' : 'unhealthy'),
+        status:
+          issues.length === 0
+            ? "healthy"
+            : issues.length < 3
+              ? "degraded"
+              : "unhealthy",
         connections: this.metrics.activeConnections,
         responseTime: Date.now() - startTime,
         errorRate,
         lastCheck: new Date(),
-        issues
+        issues,
       };
 
       // Log health status
-      if (health.status !== 'healthy') {
-        console.warn('Database health check failed:', health);
+      if (health.status !== "healthy") {
+        console.warn("Database health check failed:", health);
       }
-
     } catch (error) {
-      console.error('Database health check failed:', error);
+      console.error("Database health check failed:", error);
       this.isHealthy = false;
     }
   }
@@ -497,16 +521,17 @@ class DatabaseManagerV2 {
    */
   async getHealth(): Promise<DatabaseHealth> {
     await this.performHealthCheck();
-    
+
     return {
-      status: this.isHealthy ? 'healthy' : 'unhealthy',
+      status: this.isHealthy ? "healthy" : "unhealthy",
       connections: this.metrics.activeConnections,
       responseTime: this.metrics.averageQueryTime,
-      errorRate: this.metrics.totalQueries > 0 
-        ? (this.metrics.errors / this.metrics.totalQueries) * 100 
-        : 0,
+      errorRate:
+        this.metrics.totalQueries > 0
+          ? (this.metrics.errors / this.metrics.totalQueries) * 100
+          : 0,
       lastCheck: new Date(),
-      issues: this.isHealthy ? [] : ['Database connection issues']
+      issues: this.isHealthy ? [] : ["Database connection issues"],
     };
   }
 
@@ -516,17 +541,17 @@ class DatabaseManagerV2 {
   async optimizeDatabase(): Promise<void> {
     try {
       // Run VACUUM to optimize database
-      await this.executeQuery('VACUUM');
-      
+      await this.executeQuery("VACUUM");
+
       // Run ANALYZE to update statistics
-      await this.executeQuery('ANALYZE');
-      
+      await this.executeQuery("ANALYZE");
+
       // Clean up query history
       this.queryHistory = this.queryHistory.slice(-100);
-      
-      console.log('Database optimization completed');
+
+      console.log("Database optimization completed");
     } catch (error) {
-      console.error('Database optimization failed:', error);
+      console.error("Database optimization failed:", error);
       throw error;
     }
   }
@@ -537,31 +562,31 @@ class DatabaseManagerV2 {
   async getSchemaInfo(): Promise<any> {
     try {
       const tables = await this.executeQuery(
-        "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+        "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
       );
-      
+
       const schemaInfo: any = { tables: [] };
-      
+
       for (const table of tables.data) {
         const columns = await this.executeQuery(
-          `PRAGMA table_info(${table.name})`
+          `PRAGMA table_info(${table.name})`,
         );
-        
+
         const indexes = await this.executeQuery(
-          `PRAGMA index_list(${table.name})`
+          `PRAGMA index_list(${table.name})`,
         );
-        
+
         schemaInfo.tables.push({
           name: table.name,
           sql: table.sql,
           columns: columns.data,
-          indexes: indexes.data
+          indexes: indexes.data,
         });
       }
-      
+
       return schemaInfo;
     } catch (error) {
-      console.error('Failed to get schema info:', error);
+      console.error("Failed to get schema info:", error);
       throw error;
     }
   }
@@ -571,18 +596,18 @@ class DatabaseManagerV2 {
    */
   async createMigration(name: string, sql: string): Promise<string> {
     const migrationId = this.generateId();
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const filename = `${timestamp}_${name}.sql`;
-    const filePath = path.join('./migrations', filename);
+    const filePath = path.join("./migrations", filename);
 
     try {
-      await fs.mkdir('./migrations', { recursive: true });
+      await fs.mkdir("./migrations", { recursive: true });
       await fs.writeFile(filePath, sql);
-      
+
       console.log(`Migration created: ${filename}`);
       return migrationId;
     } catch (error) {
-      console.error('Migration creation failed:', error);
+      console.error("Migration creation failed:", error);
       throw error;
     }
   }
@@ -595,13 +620,13 @@ class DatabaseManagerV2 {
       // This would typically involve reading the migration file and executing it
       // For now, we'll simulate the process
       console.log(`Executing migration: ${migrationId}`);
-      
+
       // Execute the migration SQL
       // await this.executeQuery(migrationSql);
-      
+
       console.log(`Migration executed successfully: ${migrationId}`);
     } catch (error) {
-      console.error('Migration execution failed:', error);
+      console.error("Migration execution failed:", error);
       throw error;
     }
   }
@@ -610,8 +635,8 @@ class DatabaseManagerV2 {
    * Generate unique ID
    */
   private async generateId(): Promise<string> {
-    const crypto = await import('crypto');
-    return crypto.randomBytes(16).toString('hex');
+    const crypto = await import("crypto");
+    return crypto.randomBytes(16).toString("hex");
   }
 
   /**
@@ -623,55 +648,55 @@ class DatabaseManagerV2 {
   async healthCheck(): Promise<DatabaseHealth> {
     try {
       const startTime = Date.now();
-      
+
       // Test database connection
       await this.prisma.$queryRaw`SELECT 1`;
       const responseTime = Date.now() - startTime;
-      
+
       // Get current metrics
       const metrics = this.getDatabaseMetrics();
-      
+
       // Determine health status
-      let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy';
+      let status: "healthy" | "degraded" | "unhealthy" = "healthy";
       const issues: string[] = [];
-      
+
       if (responseTime > 1000) {
-        status = 'degraded';
-        issues.push('High response time');
+        status = "degraded";
+        issues.push("High response time");
       }
-      
+
       if (metrics.errorRate > 0.05) {
-        status = 'degraded';
-        issues.push('High error rate');
+        status = "degraded";
+        issues.push("High error rate");
       }
-      
+
       if (metrics.activeConnections > metrics.totalConnections * 0.8) {
-        status = 'degraded';
-        issues.push('High connection usage');
+        status = "degraded";
+        issues.push("High connection usage");
       }
-      
+
       if (responseTime > 5000 || metrics.errorRate > 0.1) {
-        status = 'unhealthy';
-        issues.push('Critical performance issues');
+        status = "unhealthy";
+        issues.push("Critical performance issues");
       }
-      
+
       return {
         status,
         connections: metrics.activeConnections,
         responseTime,
         errorRate: metrics.errorRate,
         lastCheck: new Date(),
-        issues
+        issues,
       };
     } catch (error) {
-      console.error('Database health check failed:', error);
+      console.error("Database health check failed:", error);
       return {
-        status: 'unhealthy',
+        status: "unhealthy",
         connections: 0,
         responseTime: 0,
         errorRate: 1,
         lastCheck: new Date(),
-        issues: [error.message]
+        issues: [error.message],
       };
     }
   }
@@ -689,18 +714,18 @@ class DatabaseManagerV2 {
       if (this.healthCheckInterval) {
         clearInterval(this.healthCheckInterval);
       }
-      
+
       // Stop backup process
       if (this.backupInterval) {
         clearInterval(this.backupInterval);
       }
-      
+
       // Disconnect from database
       await this.prisma.$disconnect();
-      
-      console.log('Database Manager cleaned up successfully');
+
+      console.log("Database Manager cleaned up successfully");
     } catch (error) {
-      console.error('Database Manager cleanup failed:', error);
+      console.error("Database Manager cleanup failed:", error);
     }
   }
 }

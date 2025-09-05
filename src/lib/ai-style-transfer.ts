@@ -8,7 +8,7 @@ export interface StyleTransferOptions {
   contentImage: string;
   styleStrength: number; // 0-1
   preserveColors: boolean;
-  outputQuality: 'low' | 'medium' | 'high';
+  outputQuality: "low" | "medium" | "high";
 }
 
 export interface StyleTransferResult {
@@ -38,13 +38,13 @@ class AIStyleTransferService {
   async transferStyle(
     contentImageUrl: string,
     styleImageUrl: string,
-    options: StyleTransferOptions
+    options: StyleTransferOptions,
   ): Promise<StyleTransferResult> {
     // Mock style transfer process
     const processingTime = Math.random() * 4000 + 2000; // 2-6 seconds
-    
+
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, processingTime));
+    await new Promise((resolve) => setTimeout(resolve, processingTime));
 
     const stylizedImageUrl = `${contentImageUrl}_styled_${Math.random().toString(36).slice(2, 11)}`;
     const thumbnailUrl = `${stylizedImageUrl}_thumb`;
@@ -58,37 +58,39 @@ class AIStyleTransferService {
         styleStrength: options.styleStrength,
         processingTime,
         colorsPreserved: options.preserveColors,
-        outputQuality: options.outputQuality
+        outputQuality: options.outputQuality,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
-  async getAvailableStyles(): Promise<Array<{
-    id: string;
-    name: string;
-    description: string;
-    previewUrl: string;
-  }>> {
+  async getAvailableStyles(): Promise<
+    Array<{
+      id: string;
+      name: string;
+      description: string;
+      previewUrl: string;
+    }>
+  > {
     return [
       {
-        id: 'van-gogh',
-        name: 'Van Gogh',
-        description: 'Starry Night style with bold brushstrokes',
-        previewUrl: '/styles/van-gogh-preview.jpg'
+        id: "van-gogh",
+        name: "Van Gogh",
+        description: "Starry Night style with bold brushstrokes",
+        previewUrl: "/styles/van-gogh-preview.jpg",
       },
       {
-        id: 'picasso',
-        name: 'Picasso',
-        description: 'Cubist geometric style',
-        previewUrl: '/styles/picasso-preview.jpg'
+        id: "picasso",
+        name: "Picasso",
+        description: "Cubist geometric style",
+        previewUrl: "/styles/picasso-preview.jpg",
       },
       {
-        id: 'monet',
-        name: 'Monet',
-        description: 'Impressionist water lilies style',
-        previewUrl: '/styles/monet-preview.jpg'
-      }
+        id: "monet",
+        name: "Monet",
+        description: "Impressionist water lilies style",
+        previewUrl: "/styles/monet-preview.jpg",
+      },
     ];
   }
 
@@ -99,9 +101,9 @@ class AIStyleTransferService {
   }> {
     // Mock style analysis
     return {
-      dominantColors: ['#FF6B6B', '#4ECDC4', '#45B7D1'],
-      styleCategory: 'impressionist',
-      artisticElements: ['brushstrokes', 'color-blending', 'light-play']
+      dominantColors: ["#FF6B6B", "#4ECDC4", "#45B7D1"],
+      styleCategory: "impressionist",
+      artisticElements: ["brushstrokes", "color-blending", "light-play"],
     };
   }
 }

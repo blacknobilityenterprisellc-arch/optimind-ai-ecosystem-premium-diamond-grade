@@ -1,5 +1,5 @@
 // Focus management utilities for better screen reader experience
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from "react";
 
 export interface FocusOptions {
   preventScroll?: boolean;
@@ -23,14 +23,14 @@ export class FocusManager {
   }
 
   private init() {
-    if (typeof window === 'undefined') return;
-    
+    if (typeof window === "undefined") return;
+
     // Track focus changes
-    document.addEventListener('focusin', this.handleFocusIn.bind(this));
-    document.addEventListener('focusout', this.handleFocusOut.bind(this));
-    
+    document.addEventListener("focusin", this.handleFocusIn.bind(this));
+    document.addEventListener("focusout", this.handleFocusOut.bind(this));
+
     // Handle programmatic focus changes
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private handleFocusIn(event: FocusEvent) {
@@ -47,7 +47,7 @@ export class FocusManager {
 
   private handleKeyDown(event: KeyboardEvent) {
     // Handle Tab key for better focus management
-    if (event.key === 'Tab') {
+    if (event.key === "Tab") {
       this.handleTabKey(event);
     }
   }
@@ -58,12 +58,12 @@ export class FocusManager {
 
     const activeElement = document.activeElement as HTMLElement;
     const currentIndex = focusableElements.indexOf(activeElement);
-    
+
     if (currentIndex === -1) return;
 
     const isShiftTab = event.shiftKey;
     const nextIndex = isShiftTab ? currentIndex - 1 : currentIndex + 1;
-    
+
     // Check if we're at the boundaries
     if (nextIndex < 0 || nextIndex >= focusableElements.length) {
       // Allow natural tab behavior at boundaries
@@ -72,59 +72,68 @@ export class FocusManager {
 
     // Prevent default tab behavior
     event.preventDefault();
-    
+
     // Focus the next element
     this.focusElement(focusableElements[nextIndex], {
       preventScroll: false,
-      focusVisible: true
+      focusVisible: true,
     });
   }
 
   private isFocusableElement(element: HTMLElement): boolean {
     const tagName = element.tagName.toLowerCase();
-    const tabIndex = element.getAttribute('tabindex');
-    
+    const tabIndex = element.getAttribute("tabindex");
+
     // Check if element is inherently focusable
     const inherentlyFocusable = [
-      'a', 'button', 'input', 'select', 'textarea', 'iframe'
+      "a",
+      "button",
+      "input",
+      "select",
+      "textarea",
+      "iframe",
     ].includes(tagName);
-    
+
     // Check if element has explicit tabindex
-    const hasTabIndex = tabIndex !== null && tabIndex !== '-1';
-    
+    const hasTabIndex = tabIndex !== null && tabIndex !== "-1";
+
     // Check if element is disabled or hidden
-    const isDisabled = element.hasAttribute('disabled');
-    const isHidden = element.offsetParent === null || 
-                     element.getAttribute('aria-hidden') === 'true' ||
-                     element.style.display === 'none' ||
-                     element.style.visibility === 'hidden';
-    
+    const isDisabled = element.hasAttribute("disabled");
+    const isHidden =
+      element.offsetParent === null ||
+      element.getAttribute("aria-hidden") === "true" ||
+      element.style.display === "none" ||
+      element.style.visibility === "hidden";
+
     return (inherentlyFocusable || hasTabIndex) && !isDisabled && !isHidden;
   }
 
-  private getFocusableElements(container: HTMLElement = document.body): HTMLElement[] {
+  private getFocusableElements(
+    container: HTMLElement = document.body,
+  ): HTMLElement[] {
     const selector = [
-      'a[href]',
-      'button:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      'iframe',
+      "a[href]",
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "iframe",
       '[tabindex]:not([tabindex="-1"])',
-      '[contenteditable="true"]'
-    ].join(', ');
+      '[contenteditable="true"]',
+    ].join(", ");
 
-    return Array.from(container.querySelectorAll(selector) as NodeListOf<HTMLElement>)
-      .filter(element => this.isFocusableElement(element));
+    return Array.from(
+      container.querySelectorAll(selector) as NodeListOf<HTMLElement>,
+    ).filter((element) => this.isFocusableElement(element));
   }
 
   private addToHistory(element: HTMLElement) {
     // Remove element if it already exists in history
-    this.focusHistory = this.focusHistory.filter(el => el !== element);
-    
+    this.focusHistory = this.focusHistory.filter((el) => el !== element);
+
     // Add element to the beginning of history
     this.focusHistory.unshift(element);
-    
+
     // Keep only last 50 elements
     if (this.focusHistory.length > 50) {
       this.focusHistory = this.focusHistory.slice(0, 50);
@@ -138,25 +147,25 @@ export class FocusManager {
     const opts = {
       preventScroll: false,
       focusVisible: false,
-      ...options
+      ...options,
     };
 
     try {
       element.focus({
-        preventScroll: opts.preventScroll
+        preventScroll: opts.preventScroll,
       });
 
       // Add focus visible class if needed
       if (opts.focusVisible) {
-        element.classList.add('focus-visible');
+        element.classList.add("focus-visible");
         setTimeout(() => {
-          element.classList.remove('focus-visible');
+          element.classList.remove("focus-visible");
         }, 100);
       }
 
       this.addToHistory(element);
     } catch (error) {
-      console.warn('Failed to focus element:', error);
+      console.warn("Failed to focus element:", error);
     }
   }
 
@@ -181,8 +190,10 @@ export class FocusManager {
     if (focusableElements.length === 0) return false;
 
     const activeElement = document.activeElement as HTMLElement;
-    const currentIndex = activeElement ? focusableElements.indexOf(activeElement) : -1;
-    
+    const currentIndex = activeElement
+      ? focusableElements.indexOf(activeElement)
+      : -1;
+
     let nextIndex = currentIndex + 1;
     if (nextIndex >= focusableElements.length) {
       nextIndex = 0; // Loop to beginning
@@ -197,8 +208,10 @@ export class FocusManager {
     if (focusableElements.length === 0) return false;
 
     const activeElement = document.activeElement as HTMLElement;
-    const currentIndex = activeElement ? focusableElements.indexOf(activeElement) : -1;
-    
+    const currentIndex = activeElement
+      ? focusableElements.indexOf(activeElement)
+      : -1;
+
     let prevIndex = currentIndex - 1;
     if (prevIndex < 0) {
       prevIndex = focusableElements.length - 1; // Loop to end
@@ -229,11 +242,14 @@ export class FocusManager {
     }
   }
 
-  announceToScreenReader(message: string, priority: 'polite' | 'assertive' = 'polite'): void {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', priority);
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
+  announceToScreenReader(
+    message: string,
+    priority: "polite" | "assertive" = "polite",
+  ): void {
+    const announcement = document.createElement("div");
+    announcement.setAttribute("aria-live", priority);
+    announcement.setAttribute("aria-atomic", "true");
+    announcement.className = "sr-only";
     announcement.textContent = message;
 
     document.body.appendChild(announcement);
@@ -246,37 +262,41 @@ export class FocusManager {
 
   manageFocus(container: HTMLElement): void {
     // Add ARIA attributes for better screen reader support
-    if (!container.hasAttribute('role')) {
-      container.setAttribute('role', 'region');
+    if (!container.hasAttribute("role")) {
+      container.setAttribute("role", "region");
     }
 
-    if (!container.hasAttribute('aria-label') && !container.hasAttribute('aria-labelledby')) {
-      const heading = container.querySelector('h1, h2, h3, h4, h5, h6');
+    if (
+      !container.hasAttribute("aria-label") &&
+      !container.hasAttribute("aria-labelledby")
+    ) {
+      const heading = container.querySelector("h1, h2, h3, h4, h5, h6");
       if (heading) {
         const id = heading.id || `heading-${Date.now()}`;
         heading.id = id;
-        container.setAttribute('aria-labelledby', id);
+        container.setAttribute("aria-labelledby", id);
       }
     }
 
     // Ensure all interactive elements have proper ARIA attributes
     const interactiveElements = container.querySelectorAll(
-      'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
 
     for (const element of interactiveElements) {
       const el = element as HTMLElement;
-      
+
       // Add aria-label if missing and no other label exists
-      if (!el.hasAttribute('aria-label') && 
-          !el.hasAttribute('aria-labelledby') &&
-          !el.hasAttribute('title') &&
-          el.textContent?.trim() === '') {
-        
+      if (
+        !el.hasAttribute("aria-label") &&
+        !el.hasAttribute("aria-labelledby") &&
+        !el.hasAttribute("title") &&
+        el.textContent?.trim() === ""
+      ) {
         // Generate a label based on element type and context
         const label = this.generateAccessibleLabel(el);
         if (label) {
-          el.setAttribute('aria-label', label);
+          el.setAttribute("aria-label", label);
         }
       }
     }
@@ -284,77 +304,80 @@ export class FocusManager {
 
   private generateAccessibleLabel(element: HTMLElement): string {
     const tagName = element.tagName.toLowerCase();
-    
+
     switch (tagName) {
-      case 'button':
+      case "button":
         const icon = element.querySelector('[class*="icon"], svg');
         if (icon) {
-          const iconClass = icon.className || '';
-          if (iconClass.includes('close')) return 'Close';
-          if (iconClass.includes('menu')) return 'Menu';
-          if (iconClass.includes('search')) return 'Search';
-          if (iconClass.includes('settings')) return 'Settings';
-          if (iconClass.includes('user')) return 'User profile';
-          if (iconClass.includes('home')) return 'Home';
+          const iconClass = icon.className || "";
+          if (iconClass.includes("close")) return "Close";
+          if (iconClass.includes("menu")) return "Menu";
+          if (iconClass.includes("search")) return "Search";
+          if (iconClass.includes("settings")) return "Settings";
+          if (iconClass.includes("user")) return "User profile";
+          if (iconClass.includes("home")) return "Home";
         }
-        return 'Button';
-      
-      case 'a':
-        return 'Link';
-      
-      case 'input':
-        const type = element.getAttribute('type') || 'text';
-        const placeholder = element.getAttribute('placeholder') || '';
+        return "Button";
+
+      case "a":
+        return "Link";
+
+      case "input":
+        const type = element.getAttribute("type") || "text";
+        const placeholder = element.getAttribute("placeholder") || "";
         return placeholder || `${type} input field`;
-      
+
       default:
-        return 'Interactive element';
+        return "Interactive element";
     }
   }
 
   // High contrast mode detection
   isHighContrastMode(): boolean {
     // Check for Windows high contrast mode
-    if (window.matchMedia('(prefers-contrast: high)').matches) {
+    if (window.matchMedia("(prefers-contrast: high)").matches) {
       return true;
     }
 
     // Check for forced colors mode
-    if (window.matchMedia('(forced-colors: active)').matches) {
+    if (window.matchMedia("(forced-colors: active)").matches) {
       return true;
     }
 
     // Check for high contrast theme via CSS
-    const testElement = document.createElement('div');
-    testElement.style.color = 'rgb(255, 0, 0)';
-    testElement.style.backgroundColor = 'rgb(0, 255, 0)';
+    const testElement = document.createElement("div");
+    testElement.style.color = "rgb(255, 0, 0)";
+    testElement.style.backgroundColor = "rgb(0, 255, 0)";
     document.body.appendChild(testElement);
-    
+
     const computedColor = window.getComputedStyle(testElement).color;
-    const computedBgColor = window.getComputedStyle(testElement).backgroundColor;
-    
+    const computedBgColor =
+      window.getComputedStyle(testElement).backgroundColor;
+
     document.body.removeChild(testElement);
-    
+
     // If colors are forced to high contrast, they might be different
-    return computedColor !== 'rgb(255, 0, 0)' || computedBgColor !== 'rgb(0, 255, 0)';
+    return (
+      computedColor !== "rgb(255, 0, 0)" || computedBgColor !== "rgb(0, 255, 0)"
+    );
   }
 
   // Reduced motion detection
   prefersReducedMotion(): boolean {
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   // Screen reader detection
   isScreenReaderActive(): boolean {
     // This is a heuristic - no 100% reliable way to detect screen readers
-    const testElement = document.createElement('div');
-    testElement.setAttribute('aria-hidden', 'true');
-    testElement.textContent = 'screen reader test';
+    const testElement = document.createElement("div");
+    testElement.setAttribute("aria-hidden", "true");
+    testElement.textContent = "screen reader test";
     document.body.appendChild(testElement);
-    
-    const isHidden = testElement.getAttribute('aria-hidden') === 'true';
+
+    const isHidden = testElement.getAttribute("aria-hidden") === "true";
     document.body.removeChild(testElement);
-    
+
     return !isHidden; // If aria-hidden was ignored, screen reader might be active
   }
 }
@@ -362,7 +385,7 @@ export class FocusManager {
 // Export singleton instance - only initialize in browser context
 export let focusManager: FocusManager | null = null;
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   focusManager = FocusManager.getInstance();
 }
 
@@ -390,11 +413,14 @@ export function useFocusManagement() {
     }
   }, []);
 
-  const announce = useCallback((message: string, priority?: 'polite' | 'assertive') => {
-    if (focusManager) {
-      focusManager.announceToScreenReader(message, priority);
-    }
-  }, []);
+  const announce = useCallback(
+    (message: string, priority?: "polite" | "assertive") => {
+      if (focusManager) {
+        focusManager.announceToScreenReader(message, priority);
+      }
+    },
+    [],
+  );
 
   return {
     containerRef,
@@ -404,7 +430,7 @@ export function useFocusManagement() {
     announce,
     isHighContrastMode: focusManager?.isHighContrastMode() ?? false,
     prefersReducedMotion: focusManager?.prefersReducedMotion() ?? false,
-    isScreenReaderActive: focusManager?.isScreenReaderActive() ?? false
+    isScreenReaderActive: focusManager?.isScreenReaderActive() ?? false,
   };
 }
 
@@ -417,12 +443,12 @@ export function useModalFocus(isOpen: boolean) {
     if (isOpen && containerRef.current) {
       // Save current focus
       previousFocusRef.current = document.activeElement as HTMLElement;
-      
+
       // Focus first element in modal
       if (focusManager) {
         focusManager.focusFirst(containerRef.current);
       }
-      
+
       // Manage focus within modal
       if (focusManager) {
         focusManager.manageFocus(containerRef.current);
@@ -430,10 +456,13 @@ export function useModalFocus(isOpen: boolean) {
     }
 
     return () => {
-      if (!isOpen && previousFocusRef.current && // Restore focus when modal closes
-        focusManager) {
-          focusManager.focusElement(previousFocusRef.current);
-        }
+      if (
+        !isOpen &&
+        previousFocusRef.current && // Restore focus when modal closes
+        focusManager
+      ) {
+        focusManager.focusElement(previousFocusRef.current);
+      }
     };
   }, [isOpen]);
 

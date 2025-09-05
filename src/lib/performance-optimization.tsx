@@ -3,7 +3,13 @@
  * Utilities for progressive loading, lazy rendering, and performance optimization
  */
 
-import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 
 interface IntersectionObserverOptions {
   threshold?: number;
@@ -12,8 +18,8 @@ interface IntersectionObserverOptions {
 }
 
 interface LoadingStrategy {
-  type: 'lazy' | 'eager' | 'progressive';
-  priority?: 'high' | 'medium' | 'low';
+  type: "lazy" | "eager" | "progressive";
+  priority?: "high" | "medium" | "low";
   placeholder?: React.ReactNode;
   skeleton?: React.ReactNode;
 }
@@ -33,10 +39,10 @@ const performanceMetrics = new Map<string, PerformanceMetrics[]>();
  */
 export function useIntersectionObserver(
   elementRef: React.RefObject<Element>,
-  options: IntersectionObserverOptions = {}
+  options: IntersectionObserverOptions = {},
 ) {
   const [isIntersecting, setIsIntersecting] = useState(false);
-  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
+  const { threshold = 0.1, rootMargin = "0px", triggerOnce = true } = options;
 
   useEffect(() => {
     const element = elementRef.current;
@@ -53,7 +59,7 @@ export function useIntersectionObserver(
           setIsIntersecting(false);
         }
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     observer.observe(element);
@@ -71,7 +77,7 @@ export function useIntersectionObserver(
  */
 export function useLazyComponent<T extends React.ComponentType<any>>(
   importFn: () => Promise<{ default: T }>,
-  options: LoadingStrategy = { type: 'lazy' }
+  options: LoadingStrategy = { type: "lazy" },
 ) {
   const [Component, setComponent] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -86,10 +92,10 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
     try {
       const importedModule = await importFn();
       setComponent(() => importedModule.default);
-      
+
       // Track performance metrics
       const loadTime = performance.now() - startTime;
-      trackPerformance('lazy_component', { loadTime, renderTime: 0 });
+      trackPerformance("lazy_component", { loadTime, renderTime: 0 });
     } catch (err) {
       setError(err as Error);
     } finally {
@@ -98,7 +104,7 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
   }, [importFn, Component, isLoading]);
 
   useEffect(() => {
-    if (options.type === 'eager') {
+    if (options.type === "eager") {
       loadComponent();
     }
   }, [loadComponent, options.type]);
@@ -110,15 +116,15 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
 
     const WrappedComponent = (props: Parameters<T>[0]) => {
       const renderStartTime = performance.now();
-      
+
       useEffect(() => {
         const renderTime = performance.now() - renderStartTime;
-        trackPerformance('lazy_component_render', { loadTime: 0, renderTime });
+        trackPerformance("lazy_component_render", { loadTime: 0, renderTime });
       }, []);
 
       return React.createElement(Component, props);
     };
-    
+
     return WrappedComponent;
   }, [Component]);
 
@@ -126,7 +132,7 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
     LazyComponent,
     isLoading,
     error,
-    loadComponent
+    loadComponent,
   };
 }
 
@@ -136,20 +142,20 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
 export function useProgressiveImage(
   src: string,
   placeholderSrc?: string,
-  options: LoadingStrategy = { type: 'lazy' }
+  options: LoadingStrategy = { type: "lazy" },
 ) {
-  const [currentSrc, setCurrentSrc] = useState(placeholderSrc || '');
+  const [currentSrc, setCurrentSrc] = useState(placeholderSrc || "");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   const isIntersecting = useIntersectionObserver(imgRef, {
     threshold: 0.1,
-    triggerOnce: true
+    triggerOnce: true,
   });
 
   useEffect(() => {
-    if (!isIntersecting || options.type !== 'lazy') return;
+    if (!isIntersecting || options.type !== "lazy") return;
 
     const img = new Image();
     const startTime = performance.now();
@@ -157,14 +163,14 @@ export function useProgressiveImage(
     img.onload = () => {
       setCurrentSrc(src);
       setIsLoading(false);
-      
+
       // Track performance metrics
       const loadTime = performance.now() - startTime;
-      trackPerformance('image_load', { loadTime, renderTime: 0 });
+      trackPerformance("image_load", { loadTime, renderTime: 0 });
     };
 
     img.onerror = () => {
-      setError(new Error('Failed to load image'));
+      setError(new Error("Failed to load image"));
       setIsLoading(false);
     };
 
@@ -178,7 +184,7 @@ export function useProgressiveImage(
 
   // Eager loading
   useEffect(() => {
-    if (options.type === 'eager' && !currentSrc) {
+    if (options.type === "eager" && !currentSrc) {
       const img = new Image();
       img.onload = () => setCurrentSrc(src);
       img.src = src;
@@ -189,7 +195,7 @@ export function useProgressiveImage(
     src: currentSrc,
     isLoading,
     error,
-    imgRef
+    imgRef,
   };
 }
 
@@ -200,15 +206,18 @@ export function useVirtualScroll<T>(
   items: T[],
   itemHeight: number,
   containerHeight: number,
-  overscan: number = 5
+  overscan: number = 5,
 ) {
   const [scrollTop, setScrollTop] = useState(0);
 
   const visibleRange = useMemo(() => {
-    const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan);
+    const startIndex = Math.max(
+      0,
+      Math.floor(scrollTop / itemHeight) - overscan,
+    );
     const endIndex = Math.min(
       items.length - 1,
-      Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
+      Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan,
     );
 
     return { startIndex, endIndex };
@@ -230,7 +239,7 @@ export function useVirtualScroll<T>(
     totalHeight,
     offsetY,
     handleScroll,
-    scrollTop
+    scrollTop,
   };
 }
 
@@ -258,7 +267,7 @@ export function useDebounce<T>(value: T, delay: number): T {
  */
 export function useThrottle<T extends (...args: any[]) => any>(
   callback: T,
-  delay: number
+  delay: number,
 ): T {
   const lastCall = useRef<number>(0);
 
@@ -270,7 +279,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
         return callback(...args);
       }
     }) as T,
-    [callback, delay]
+    [callback, delay],
   );
 }
 
@@ -279,7 +288,7 @@ export function useThrottle<T extends (...args: any[]) => any>(
  */
 export function trackPerformance(
   componentName: string,
-  metrics: Partial<PerformanceMetrics>
+  metrics: Partial<PerformanceMetrics>,
 ) {
   if (!performanceMetrics.has(componentName)) {
     performanceMetrics.set(componentName, []);
@@ -290,7 +299,7 @@ export function trackPerformance(
     loadTime: metrics.loadTime || 0,
     renderTime: metrics.renderTime || 0,
     memoryUsage: metrics.memoryUsage,
-    componentSize: metrics.componentSize
+    componentSize: metrics.componentSize,
   });
 
   // Keep only last 100 measurements
@@ -300,10 +309,14 @@ export function trackPerformance(
 
   // Log performance warnings
   if (metrics.loadTime && metrics.loadTime > 1000) {
-    console.warn(`[Performance] ${componentName} slow load: ${metrics.loadTime}ms`);
+    console.warn(
+      `[Performance] ${componentName} slow load: ${metrics.loadTime}ms`,
+    );
   }
   if (metrics.renderTime && metrics.renderTime > 100) {
-    console.warn(`[Performance] ${componentName} slow render: ${metrics.renderTime}ms`);
+    console.warn(
+      `[Performance] ${componentName} slow render: ${metrics.renderTime}ms`,
+    );
   }
 }
 
@@ -312,13 +325,15 @@ export function trackPerformance(
  */
 export function getPerformanceMetrics(componentName: string) {
   const metrics = performanceMetrics.get(componentName) || [];
-  
+
   if (metrics.length === 0) return null;
 
-  const avgLoadTime = metrics.reduce((sum, m) => sum + m.loadTime, 0) / metrics.length;
-  const avgRenderTime = metrics.reduce((sum, m) => sum + m.renderTime, 0) / metrics.length;
-  const maxLoadTime = Math.max(...metrics.map(m => m.loadTime));
-  const maxRenderTime = Math.max(...metrics.map(m => m.renderTime));
+  const avgLoadTime =
+    metrics.reduce((sum, m) => sum + m.loadTime, 0) / metrics.length;
+  const avgRenderTime =
+    metrics.reduce((sum, m) => sum + m.renderTime, 0) / metrics.length;
+  const maxLoadTime = Math.max(...metrics.map((m) => m.loadTime));
+  const maxRenderTime = Math.max(...metrics.map((m) => m.renderTime));
 
   return {
     count: metrics.length,
@@ -326,7 +341,7 @@ export function getPerformanceMetrics(componentName: string) {
     avgRenderTime,
     maxLoadTime,
     maxRenderTime,
-    recentMetrics: metrics.slice(-10)
+    recentMetrics: metrics.slice(-10),
   };
 }
 
@@ -342,12 +357,12 @@ export function useMemoryUsage() {
 
   useEffect(() => {
     const updateMemoryUsage = () => {
-      if ('memory' in performance) {
+      if ("memory" in performance) {
         const memory = (performance as any).memory;
         setMemoryUsage({
           used: memory.usedJSHeapSize,
           total: memory.totalJSHeapSize,
-          jsHeapSizeLimit: memory.jsHeapSizeLimit
+          jsHeapSizeLimit: memory.jsHeapSizeLimit,
         });
       }
     };
@@ -368,8 +383,8 @@ export function LazyLoadComponent({
   children,
   placeholder,
   skeleton,
-  strategy = { type: 'lazy' },
-  className = ''
+  strategy = { type: "lazy" },
+  className = "",
 }: {
   children: React.ReactNode;
   placeholder?: React.ReactNode;
@@ -380,19 +395,35 @@ export function LazyLoadComponent({
   const ref = useRef<HTMLDivElement>(null);
   const isIntersecting = useIntersectionObserver(ref, {
     threshold: 0.1,
-    triggerOnce: true
+    triggerOnce: true,
   });
 
-  const shouldLoad = strategy.type === 'eager' || isIntersecting;
+  const shouldLoad = strategy.type === "eager" || isIntersecting;
 
-  return React.createElement('div', { ref, className }, 
-    shouldLoad ? children : React.createElement('div', { className: 'lazy-loading-placeholder' },
-      skeleton || placeholder || React.createElement('div', { className: 'animate-pulse' },
-        React.createElement('div', { className: 'h-4 bg-gray-200 rounded w-3/4 mb-2' }),
-        React.createElement('div', { className: 'h-4 bg-gray-200 rounded w-1/2 mb-2' }),
-        React.createElement('div', { className: 'h-4 bg-gray-200 rounded w-5/6' })
-      )
-    )
+  return React.createElement(
+    "div",
+    { ref, className },
+    shouldLoad
+      ? children
+      : React.createElement(
+          "div",
+          { className: "lazy-loading-placeholder" },
+          skeleton ||
+            placeholder ||
+            React.createElement(
+              "div",
+              { className: "animate-pulse" },
+              React.createElement("div", {
+                className: "h-4 bg-gray-200 rounded w-3/4 mb-2",
+              }),
+              React.createElement("div", {
+                className: "h-4 bg-gray-200 rounded w-1/2 mb-2",
+              }),
+              React.createElement("div", {
+                className: "h-4 bg-gray-200 rounded w-5/6",
+              }),
+            ),
+        ),
   );
 }
 
@@ -403,10 +434,10 @@ export function ProgressiveImage({
   src,
   alt,
   placeholderSrc,
-  className = '',
+  className = "",
   onLoad,
   onError,
-  strategy = { type: 'lazy' }
+  strategy = { type: "lazy" },
 }: {
   src: string;
   alt: string;
@@ -416,11 +447,12 @@ export function ProgressiveImage({
   onError?: () => void;
   strategy?: LoadingStrategy;
 }) {
-  const { src: currentSrc, isLoading, error, imgRef } = useProgressiveImage(
-    src,
-    placeholderSrc,
-    strategy
-  );
+  const {
+    src: currentSrc,
+    isLoading,
+    error,
+    imgRef,
+  } = useProgressiveImage(src, placeholderSrc, strategy);
 
   return (
     <div className={`progressive-image-container ${className}`}>
@@ -429,7 +461,7 @@ export function ProgressiveImage({
         src={currentSrc}
         alt={alt}
         className={`w-full h-full object-cover transition-opacity duration-300 ${
-          isLoading ? 'opacity-50' : 'opacity-100'
+          isLoading ? "opacity-50" : "opacity-100"
         }`}
         onLoad={onLoad}
         onError={onError}
@@ -457,7 +489,7 @@ export function VirtualList<T>({
   containerHeight,
   renderItem,
   overscan = 5,
-  className = ''
+  className = "",
 }: {
   items: T[];
   itemHeight: number;
@@ -470,17 +502,17 @@ export function VirtualList<T>({
     items,
     itemHeight,
     containerHeight,
-    overscan
+    overscan,
   );
 
   return (
     <div
       className={`virtual-list-container ${className}`}
-      style={{ height: containerHeight, overflow: 'auto' }}
+      style={{ height: containerHeight, overflow: "auto" }}
       onScroll={handleScroll}
     >
-      <div style={{ height: totalHeight, position: 'relative' }}>
-        <div style={{ position: 'absolute', top: offsetY, width: '100%' }}>
+      <div style={{ height: totalHeight, position: "relative" }}>
+        <div style={{ position: "absolute", top: offsetY, width: "100%" }}>
           {visibleItems.map((item, index) => {
             const originalIndex = items.indexOf(item);
             return (

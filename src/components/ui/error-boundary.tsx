@@ -3,7 +3,13 @@
 import { Component, ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 interface ErrorBoundaryState {
@@ -53,24 +59,29 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </div>
               <CardTitle className="text-xl">Something went wrong</CardTitle>
               <CardDescription>
-                We encountered an unexpected error. Please try refreshing the page or go back to the dashboard.
+                We encountered an unexpected error. Please try refreshing the
+                page or go back to the dashboard.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {process.env.NODE_ENV === 'development' && this.state.error && (
+              {process.env.NODE_ENV === "development" && this.state.error && (
                 <div className="p-3 bg-muted rounded-lg">
                   <p className="text-sm font-mono text-red-600">
                     {this.state.error.message}
                   </p>
                 </div>
               )}
-              
+
               <div className="flex flex-col space-y-2">
                 <Button onClick={this.handleReset} className="w-full">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Try Again
                 </Button>
-                <Button variant="outline" onClick={() => window.location.href = '/'} className="w-full">
+                <Button
+                  variant="outline"
+                  onClick={() => (window.location.href = "/")}
+                  className="w-full"
+                >
                   <Home className="w-4 h-4 mr-2" />
                   Go to Dashboard
                 </Button>

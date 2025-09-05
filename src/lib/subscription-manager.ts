@@ -54,7 +54,9 @@ class SubscriptionManager {
     if (typeof window === "undefined") return;
 
     try {
-      const stored = localStorage.getItem("private_photo_guardian_subscription");
+      const stored = localStorage.getItem(
+        "private_photo_guardian_subscription",
+      );
       if (stored) {
         const data = JSON.parse(stored);
         this.subscription = {
@@ -77,7 +79,7 @@ class SubscriptionManager {
       if (this.subscription) {
         localStorage.setItem(
           "private_photo_guardian_subscription",
-          JSON.stringify(this.subscription)
+          JSON.stringify(this.subscription),
         );
       } else {
         localStorage.removeItem("private_photo_guardian_subscription");
@@ -94,7 +96,7 @@ class SubscriptionManager {
     }
 
     const now = new Date();
-    
+
     // Check if subscription is expired
     if (this.subscription.currentPeriodEnd < now) {
       this.subscription.status = "expired";
@@ -121,7 +123,7 @@ class SubscriptionManager {
   // Public Methods
   async subscribe(planId: SubscriptionPlan["id"]): Promise<UserSubscription> {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const now = new Date();
     let currentPeriodEnd: Date;
@@ -134,7 +136,9 @@ class SubscriptionManager {
         currentPeriodEnd = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
         break;
       case "lifetime":
-        currentPeriodEnd = new Date(now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000); // 50 years
+        currentPeriodEnd = new Date(
+          now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000,
+        ); // 50 years
         break;
     }
 
@@ -159,7 +163,7 @@ class SubscriptionManager {
 
   async startFreeTrial(): Promise<UserSubscription> {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const now = new Date();
     const trialEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
@@ -187,7 +191,7 @@ class SubscriptionManager {
     if (!this.subscription) return;
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     this.subscription.cancelAtPeriodEnd = true;
     this.subscription.status = "cancelled";
@@ -198,7 +202,7 @@ class SubscriptionManager {
     if (!this.subscription) return;
 
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     this.subscription.cancelAtPeriodEnd = false;
     this.subscription.status = "active";
@@ -232,7 +236,9 @@ class SubscriptionManager {
     // Simulate usage data - in real implementation, this would come from your backend
     const baseUsage = {
       storageUsed: 150 * 1024 * 1024, // 150MB
-      storageLimit: this.isPremium ? 1024 * 1024 * 1024 * 1024 : 500 * 1024 * 1024, // 1TB vs 500MB
+      storageLimit: this.isPremium
+        ? 1024 * 1024 * 1024 * 1024
+        : 500 * 1024 * 1024, // 1TB vs 500MB
       photosScanned: 45,
       scanLimit: this.isPremium ? 10000 : 100,
       aiTagsGenerated: 120,
@@ -257,8 +263,8 @@ class SubscriptionManager {
           "Advanced editing suite",
           "Secure vault with biometric auth",
           "Premium themes & customization",
-          "Priority customer support"
-        ]
+          "Priority customer support",
+        ],
       },
       {
         id: "annual",
@@ -273,10 +279,10 @@ class SubscriptionManager {
           "Advanced AI emotion recognition",
           "Private sharing links",
           "Custom AI model training",
-          "Early access to new features"
+          "Early access to new features",
         ],
         popular: true,
-        highlighted: true
+        highlighted: true,
       },
       {
         id: "lifetime",
@@ -290,15 +296,15 @@ class SubscriptionManager {
           "All future updates included",
           "Exclusive premium themes",
           "VIP customer support",
-          "Special lifetime-only features"
-        ]
-      }
+          "Special lifetime-only features",
+        ],
+      },
     ];
   }
 
   private getPlanFeatures(planId: SubscriptionPlan["id"]): string[] {
     const plans = this.getAvailablePlans();
-    const plan = plans.find(p => p.id === planId);
+    const plan = plans.find((p) => p.id === planId);
     return plan?.features || [];
   }
 
@@ -336,7 +342,7 @@ class SubscriptionManager {
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
     if (bytes === 0) return "0 Bytes";
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
   formatDate(date: Date): string {
@@ -363,7 +369,9 @@ export const subscriptionManager = SubscriptionManager.getInstance();
 import { useState, useEffect } from "react";
 
 export function useSubscription() {
-  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const [subscription, setSubscription] = useState<UserSubscription | null>(
+    null,
+  );
   const [isPremium, setIsPremium] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -385,7 +393,7 @@ export function useSubscription() {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
@@ -408,12 +416,16 @@ export function useSubscription() {
 
   const cancelSubscription = async () => {
     await subscriptionManager.cancelSubscription();
-    setSubscription(prev => prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null);
+    setSubscription((prev) =>
+      prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null,
+    );
   };
 
   const reactivateSubscription = async () => {
     await subscriptionManager.reactivateSubscription();
-    setSubscription(prev => prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null);
+    setSubscription((prev) =>
+      prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null,
+    );
   };
 
   const usage = subscriptionManager.getUsage();

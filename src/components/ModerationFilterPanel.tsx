@@ -1,28 +1,45 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { 
-  Search, 
-  Filter, 
-  X, 
-  Calendar, 
-  Tag, 
-  User, 
-  Shield, 
+import { useState } from "react";
+import {
+  Search,
+  Filter,
+  X,
+  Calendar,
+  Tag,
+  User,
+  Shield,
   AlertTriangle,
   CheckCircle,
   Clock,
   Download,
-  RefreshCw
-} from 'lucide-react';
+  RefreshCw,
+} from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export interface FilterState {
   search: string;
@@ -54,60 +71,58 @@ export function ModerationFilterPanel({
   onExport,
   onReset,
   totalResults,
-  filteredResults
+  filteredResults,
 }: ModerationFilterPanelProps) {
   const [filters, setFilters] = useState<FilterState>({
-    search: '',
+    search: "",
     status: [],
     categories: [],
     dateRange: {
-      start: '',
-      end: ''
+      start: "",
+      end: "",
     },
     confidence: {
       min: 0,
-      max: 100
+      max: 100,
     },
     models: [],
     actions: [],
-    reviewers: []
+    reviewers: [],
   });
 
   const [isExpanded, setIsExpanded] = useState(false);
 
   const statusOptions = [
-    { value: 'safe', label: 'Safe', color: 'bg-green-100 text-green-800' },
-    { value: 'flagged', label: 'Flagged', color: 'bg-red-100 text-red-800' },
-    { value: 'pending', label: 'Pending Review', color: 'bg-yellow-100 text-yellow-800' },
-    { value: 'quarantined', label: 'Quarantined', color: 'bg-orange-100 text-orange-800' }
+    { value: "safe", label: "Safe", color: "bg-green-100 text-green-800" },
+    { value: "flagged", label: "Flagged", color: "bg-red-100 text-red-800" },
+    {
+      value: "pending",
+      label: "Pending Review",
+      color: "bg-yellow-100 text-yellow-800",
+    },
+    {
+      value: "quarantined",
+      label: "Quarantined",
+      color: "bg-orange-100 text-orange-800",
+    },
   ];
 
   const categoryOptions = [
-    'sexual_nudity',
-    'child_exposed',
-    'violence',
-    'hate_speech',
-    'deepfake_suspected',
-    'harassment',
-    'spam',
-    'copyright',
-    'misinformation',
-    'self_harm'
+    "sexual_nudity",
+    "child_exposed",
+    "violence",
+    "hate_speech",
+    "deepfake_suspected",
+    "harassment",
+    "spam",
+    "copyright",
+    "misinformation",
+    "self_harm",
   ];
 
-  const modelOptions = [
-    'GLM-4.5V',
-    'GLM-4.5-AIR',
-    'GLM-4.5',
-    'Consensus'
-  ];
+  const modelOptions = ["GLM-4.5V", "GLM-4.5-AIR", "GLM-4.5", "Consensus"];
 
-  const actionOptions = [
-    'allow',
-    'monitor',
-    'quarantine',
-    'hold_for_review'
-  ];
+  const actionOptions = ["allow", "monitor", "quarantine", "hold_for_review"];
 
   const updateFilter = (key: keyof FilterState, value: any) => {
     const newFilters = { ...filters, [key]: value };
@@ -118,20 +133,22 @@ export function ModerationFilterPanel({
   const toggleArrayFilter = (key: keyof FilterState, value: string) => {
     const currentArray = filters[key] as string[];
     const newArray = currentArray.includes(value)
-      ? currentArray.filter(item => item !== value)
+      ? currentArray.filter((item) => item !== value)
       : [...currentArray, value];
     updateFilter(key, newArray);
   };
 
   const hasActiveFilters = () => {
-    return filters.search !== '' ||
-           filters.status.length > 0 ||
-           filters.categories.length > 0 ||
-           filters.dateRange.start !== '' ||
-           filters.dateRange.end !== '' ||
-           filters.models.length > 0 ||
-           filters.actions.length > 0 ||
-           filters.reviewers.length > 0;
+    return (
+      filters.search !== "" ||
+      filters.status.length > 0 ||
+      filters.categories.length > 0 ||
+      filters.dateRange.start !== "" ||
+      filters.dateRange.end !== "" ||
+      filters.models.length > 0 ||
+      filters.actions.length > 0 ||
+      filters.reviewers.length > 0
+    );
   };
 
   const getActiveFiltersCount = () => {
@@ -158,7 +175,7 @@ export function ModerationFilterPanel({
               <Input
                 placeholder="Search by image ID, filename, or reviewer..."
                 value={filters.search}
-                onChange={(e) => updateFilter('search', e.target.value)}
+                onChange={(e) => updateFilter("search", e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -184,34 +201,42 @@ export function ModerationFilterPanel({
               Reset
             </Button>
           </div>
-          
+
           {/* Active Filters Display */}
           {hasActiveFilters() && (
             <div className="mt-3 flex flex-wrap gap-2">
               {filters.search && (
                 <Badge variant="outline" className="flex items-center gap-1">
                   Search: {filters.search}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
-                    onClick={() => updateFilter('search', '')}
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => updateFilter("search", "")}
                   />
                 </Badge>
               )}
-              {filters.status.map(status => (
-                <Badge key={status} variant="outline" className="flex items-center gap-1">
+              {filters.status.map((status) => (
+                <Badge
+                  key={status}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
                   Status: {status}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
-                    onClick={() => toggleArrayFilter('status', status)}
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => toggleArrayFilter("status", status)}
                   />
                 </Badge>
               ))}
-              {filters.categories.map(category => (
-                <Badge key={category} variant="outline" className="flex items-center gap-1">
+              {filters.categories.map((category) => (
+                <Badge
+                  key={category}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
                   Category: {category}
-                  <X 
-                    className="h-3 w-3 cursor-pointer" 
-                    onClick={() => toggleArrayFilter('categories', category)}
+                  <X
+                    className="h-3 w-3 cursor-pointer"
+                    onClick={() => toggleArrayFilter("categories", category)}
                   />
                 </Badge>
               ))}
@@ -230,8 +255,11 @@ export function ModerationFilterPanel({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Accordion type="multiple" defaultValue={['status', 'categories']} className="space-y-4">
-              
+            <Accordion
+              type="multiple"
+              defaultValue={["status", "categories"]}
+              className="space-y-4"
+            >
               {/* Status Filter */}
               <AccordionItem value="status">
                 <AccordionTrigger className="text-sm font-medium">
@@ -239,11 +267,16 @@ export function ModerationFilterPanel({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {statusOptions.map(option => (
-                      <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
+                    {statusOptions.map((option) => (
+                      <label
+                        key={option.value}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
                         <Checkbox
                           checked={filters.status.includes(option.value)}
-                          onCheckedChange={() => toggleArrayFilter('status', option.value)}
+                          onCheckedChange={() =>
+                            toggleArrayFilter("status", option.value)
+                          }
                         />
                         <Badge variant="outline" className={option.color}>
                           {option.label}
@@ -261,13 +294,20 @@ export function ModerationFilterPanel({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                    {categoryOptions.map(category => (
-                      <label key={category} className="flex items-center space-x-2 cursor-pointer">
+                    {categoryOptions.map((category) => (
+                      <label
+                        key={category}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
                         <Checkbox
                           checked={filters.categories.includes(category)}
-                          onCheckedChange={() => toggleArrayFilter('categories', category)}
+                          onCheckedChange={() =>
+                            toggleArrayFilter("categories", category)
+                          }
                         />
-                        <span className="text-sm">{category.replace('_', ' ')}</span>
+                        <span className="text-sm">
+                          {category.replace("_", " ")}
+                        </span>
                       </label>
                     ))}
                   </div>
@@ -286,7 +326,12 @@ export function ModerationFilterPanel({
                       <Input
                         type="date"
                         value={filters.dateRange.start}
-                        onChange={(e) => updateFilter('dateRange', { ...filters.dateRange, start: e.target.value })}
+                        onChange={(e) =>
+                          updateFilter("dateRange", {
+                            ...filters.dateRange,
+                            start: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div>
@@ -294,7 +339,12 @@ export function ModerationFilterPanel({
                       <Input
                         type="date"
                         value={filters.dateRange.end}
-                        onChange={(e) => updateFilter('dateRange', { ...filters.dateRange, end: e.target.value })}
+                        onChange={(e) =>
+                          updateFilter("dateRange", {
+                            ...filters.dateRange,
+                            end: e.target.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -308,11 +358,16 @@ export function ModerationFilterPanel({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {modelOptions.map(model => (
-                      <label key={model} className="flex items-center space-x-2 cursor-pointer">
+                    {modelOptions.map((model) => (
+                      <label
+                        key={model}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
                         <Checkbox
                           checked={filters.models.includes(model)}
-                          onCheckedChange={() => toggleArrayFilter('models', model)}
+                          onCheckedChange={() =>
+                            toggleArrayFilter("models", model)
+                          }
                         />
                         <span className="text-sm">{model}</span>
                       </label>
@@ -328,19 +383,25 @@ export function ModerationFilterPanel({
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {actionOptions.map(action => (
-                      <label key={action} className="flex items-center space-x-2 cursor-pointer">
+                    {actionOptions.map((action) => (
+                      <label
+                        key={action}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
                         <Checkbox
                           checked={filters.actions.includes(action)}
-                          onCheckedChange={() => toggleArrayFilter('actions', action)}
+                          onCheckedChange={() =>
+                            toggleArrayFilter("actions", action)
+                          }
                         />
-                        <span className="text-sm capitalize">{action.replace('_', ' ')}</span>
+                        <span className="text-sm capitalize">
+                          {action.replace("_", " ")}
+                        </span>
                       </label>
                     ))}
                   </div>
                 </AccordionContent>
               </AccordionItem>
-
             </Accordion>
           </CardContent>
         </Card>
@@ -353,14 +414,19 @@ export function ModerationFilterPanel({
             <div className="flex items-center gap-4">
               <div>
                 <span className="text-sm text-gray-600">Showing </span>
-                <span className="font-semibold">{filteredResults.toLocaleString()}</span>
+                <span className="font-semibold">
+                  {filteredResults.toLocaleString()}
+                </span>
                 <span className="text-sm text-gray-600"> of </span>
-                <span className="font-semibold">{totalResults.toLocaleString()}</span>
+                <span className="font-semibold">
+                  {totalResults.toLocaleString()}
+                </span>
                 <span className="text-sm text-gray-600"> results</span>
               </div>
               {hasActiveFilters() && (
                 <Badge variant="outline">
-                  {getActiveFiltersCount()} active filter{getActiveFiltersCount() !== 1 ? 's' : ''}
+                  {getActiveFiltersCount()} active filter
+                  {getActiveFiltersCount() !== 1 ? "s" : ""}
                 </Badge>
               )}
             </div>

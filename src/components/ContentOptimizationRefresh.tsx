@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  RefreshCw, 
-  TrendingUp, 
-  Target, 
-  BarChart3, 
-  Clock, 
+import {
+  RefreshCw,
+  TrendingUp,
+  Target,
+  BarChart3,
+  Clock,
   AlertTriangle,
   CheckCircle,
   FileText,
@@ -19,17 +19,29 @@ import {
   Calendar,
   Award,
   Lightbulb,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import ContentFreshnessDetector from "@/components/ContentFreshnessDetector";
 import CompetitorContentAnalyzer from "@/components/CompetitorContentAnalyzer";
 
@@ -41,7 +53,7 @@ interface ContentItem {
   freshnessScore: number;
   performanceScore: number;
   optimizationScore: number;
-  status: 'fresh' | 'needs_refresh' | 'outdated';
+  status: "fresh" | "needs_refresh" | "outdated";
   wordCount: number;
   category: string;
 }
@@ -61,8 +73,13 @@ interface CompetitorAnalysis {
 interface RefreshRecommendation {
   id: string;
   contentId: string;
-  type: 'update_statistics' | 'add_new_section' | 'improve_readability' | 'add_examples' | 'update_keywords';
-  priority: 'high' | 'medium' | 'low';
+  type:
+    | "update_statistics"
+    | "add_new_section"
+    | "improve_readability"
+    | "add_examples"
+    | "update_keywords";
+  priority: "high" | "medium" | "low";
   description: string;
   impact: number; // 0-100
   effort: number; // 0-100
@@ -99,9 +116,9 @@ export default function ContentOptimizationRefresh() {
       freshnessScore: 85,
       performanceScore: 78,
       optimizationScore: 72,
-      status: 'needs_refresh',
+      status: "needs_refresh",
       wordCount: 2500,
-      category: "Guide"
+      category: "Guide",
     },
     {
       id: "2",
@@ -112,9 +129,9 @@ export default function ContentOptimizationRefresh() {
       freshnessScore: 92,
       performanceScore: 85,
       optimizationScore: 88,
-      status: 'fresh',
+      status: "fresh",
       wordCount: 3200,
-      category: "Article"
+      category: "Article",
     },
     {
       id: "3",
@@ -124,10 +141,10 @@ export default function ContentOptimizationRefresh() {
       freshnessScore: 45,
       performanceScore: 52,
       optimizationScore: 48,
-      status: 'outdated',
+      status: "outdated",
       wordCount: 1800,
-      category: "Strategy"
-    }
+      category: "Strategy",
+    },
   ];
 
   const competitorAnalyses: CompetitorAnalysis[] = [
@@ -138,9 +155,13 @@ export default function ContentOptimizationRefresh() {
       title: "Complete Voice Search Optimization",
       ranking: 1,
       contentScore: 88,
-      strengths: ["Comprehensive coverage", "Recent statistics", "Video examples"],
+      strengths: [
+        "Comprehensive coverage",
+        "Recent statistics",
+        "Video examples",
+      ],
       weaknesses: ["Long loading time", "Poor mobile optimization"],
-      opportunities: ["Add case studies", "Include expert quotes"]
+      opportunities: ["Add case studies", "Include expert quotes"],
     },
     {
       id: "2",
@@ -151,8 +172,8 @@ export default function ContentOptimizationRefresh() {
       contentScore: 82,
       strengths: ["Clear structure", "Actionable tips", "Good examples"],
       weaknesses: ["Outdated information", "Missing recent trends"],
-      opportunities: ["Update statistics", "Add 2025 trends"]
-    }
+      opportunities: ["Update statistics", "Add 2025 trends"],
+    },
   ];
 
   const refreshRecommendations: RefreshRecommendation[] = [
@@ -165,7 +186,7 @@ export default function ContentOptimizationRefresh() {
       description: "Update voice search statistics with 2025 data",
       impact: 85,
       effort: 30,
-      estimatedTime: "2 hours"
+      estimatedTime: "2 hours",
     },
     {
       id: "2",
@@ -175,7 +196,7 @@ export default function ContentOptimizationRefresh() {
       description: "Add section on AI assistant optimization",
       impact: 75,
       effort: 60,
-      estimatedTime: "4 hours"
+      estimatedTime: "4 hours",
     },
     {
       id: "3",
@@ -185,8 +206,8 @@ export default function ContentOptimizationRefresh() {
       description: "Refresh keyword strategy for local SEO",
       impact: 90,
       effort: 45,
-      estimatedTime: "3 hours"
-    }
+      estimatedTime: "3 hours",
+    },
   ];
 
   const performanceMetrics: PerformanceMetrics = {
@@ -196,30 +217,38 @@ export default function ContentOptimizationRefresh() {
     timeOnPage: 245,
     conversions: 186,
     keywordRankings: 12,
-    socialShares: 342
+    socialShares: 342,
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'fresh': return 'text-green-600';
-      case 'needs_refresh': return 'text-yellow-600';
-      case 'outdated': return 'text-red-600';
-      default: return 'text-gray-600';
+      case "fresh":
+        return "text-green-600";
+      case "needs_refresh":
+        return "text-yellow-600";
+      case "outdated":
+        return "text-red-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'fresh': return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'needs_refresh': return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
-      case 'outdated': return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      default: return <div className="w-4 h-4 rounded-full bg-gray-400" />;
+      case "fresh":
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
+      case "needs_refresh":
+        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      case "outdated":
+        return <AlertTriangle className="w-4 h-4 text-red-500" />;
+      default:
+        return <div className="w-4 h-4 rounded-full bg-gray-400" />;
     }
   };
 
   const handleAnalyzeContent = async () => {
     if (!selectedContent) return;
-    
+
     setIsAnalyzing(true);
     // Simulate API call
     setTimeout(() => {
@@ -227,7 +256,9 @@ export default function ContentOptimizationRefresh() {
         freshness: 78,
         performance: 82,
         optimization: 75,
-        recommendations: refreshRecommendations.filter(r => r.contentId === selectedContent)
+        recommendations: refreshRecommendations.filter(
+          (r) => r.contentId === selectedContent,
+        ),
       });
       setIsAnalyzing(false);
     }, 2000);
@@ -235,14 +266,18 @@ export default function ContentOptimizationRefresh() {
 
   const handleAnalyzeCompetitor = async () => {
     if (!competitorUrl) return;
-    
+
     setIsAnalyzing(true);
     // Simulate API call
     setTimeout(() => {
       setAnalysisResults({
         competitor: competitorAnalyses[0],
         gaps: ["Missing case studies", "No video content", "Limited examples"],
-        opportunities: ["Add expert interviews", "Include data visualizations", "Create comparison charts"]
+        opportunities: [
+          "Add expert interviews",
+          "Include data visualizations",
+          "Create comparison charts",
+        ],
       });
       setIsAnalyzing(false);
     }, 2500);
@@ -260,7 +295,8 @@ export default function ContentOptimizationRefresh() {
         </div>
         <h2 className="text-4xl font-bold">Content Optimization & Refresh</h2>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Keep your content fresh, competitive, and performing at its best with AI-powered optimization and refresh strategies
+          Keep your content fresh, competitive, and performing at its best with
+          AI-powered optimization and refresh strategies
         </p>
       </div>
 
@@ -275,13 +311,19 @@ export default function ContentOptimizationRefresh() {
                 Content Analysis
               </CardTitle>
               <CardDescription>
-                Analyze your content for freshness and optimization opportunities
+                Analyze your content for freshness and optimization
+                opportunities
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Select Content</label>
-                <Select value={selectedContent} onValueChange={setSelectedContent}>
+                <label className="text-sm font-medium mb-2 block">
+                  Select Content
+                </label>
+                <Select
+                  value={selectedContent}
+                  onValueChange={setSelectedContent}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Choose content to analyze" />
                   </SelectTrigger>
@@ -294,8 +336,8 @@ export default function ContentOptimizationRefresh() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button 
-                onClick={handleAnalyzeContent} 
+              <Button
+                onClick={handleAnalyzeContent}
                 disabled={!selectedContent || isAnalyzing}
                 className="w-full"
               >
@@ -326,15 +368,17 @@ export default function ContentOptimizationRefresh() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Competitor URL</label>
+                <label className="text-sm font-medium mb-2 block">
+                  Competitor URL
+                </label>
                 <Input
                   placeholder="Enter competitor URL..."
                   value={competitorUrl}
                   onChange={(e) => setCompetitorUrl(e.target.value)}
                 />
               </div>
-              <Button 
-                onClick={handleAnalyzeCompetitor} 
+              <Button
+                onClick={handleAnalyzeCompetitor}
                 disabled={!competitorUrl || isAnalyzing}
                 className="w-full"
                 variant="outline"
@@ -366,24 +410,29 @@ export default function ContentOptimizationRefresh() {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm">Total Content</span>
-                  <span className="text-sm font-medium">{contentItems.length}</span>
+                  <span className="text-sm font-medium">
+                    {contentItems.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Fresh Content</span>
                   <span className="text-sm font-medium text-green-600">
-                    {contentItems.filter(c => c.status === 'fresh').length}
+                    {contentItems.filter((c) => c.status === "fresh").length}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Needs Refresh</span>
                   <span className="text-sm font-medium text-yellow-600">
-                    {contentItems.filter(c => c.status === 'needs_refresh').length}
+                    {
+                      contentItems.filter((c) => c.status === "needs_refresh")
+                        .length
+                    }
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Outdated</span>
                   <span className="text-sm font-medium text-red-600">
-                    {contentItems.filter(c => c.status === 'outdated').length}
+                    {contentItems.filter((c) => c.status === "outdated").length}
                   </span>
                 </div>
               </div>
@@ -400,7 +449,11 @@ export default function ContentOptimizationRefresh() {
 
         {/* Results Section */}
         <div className="lg:col-span-2">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="content">Content</TabsTrigger>
@@ -420,18 +473,25 @@ export default function ContentOptimizationRefresh() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {contentItems.map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
                         <div className="flex items-center gap-3">
                           {getStatusIcon(item.status)}
                           <div>
-                            <div className="font-medium text-sm">{item.title}</div>
+                            <div className="font-medium text-sm">
+                              {item.title}
+                            </div>
                             <div className="text-xs text-muted-foreground">
                               {item.category} • {item.wordCount} words
                             </div>
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className={`text-sm font-medium ${getStatusColor(item.status)}`}>
+                          <div
+                            className={`text-sm font-medium ${getStatusColor(item.status)}`}
+                          >
                             {item.freshnessScore}%
                           </div>
                           <div className="text-xs text-muted-foreground">
@@ -454,14 +514,22 @@ export default function ContentOptimizationRefresh() {
                     {refreshRecommendations.slice(0, 3).map((rec) => (
                       <div key={rec.id} className="p-3 border rounded-lg">
                         <div className="flex items-center justify-between mb-2">
-                          <Badge variant={rec.priority === 'high' ? 'destructive' : 'secondary'}>
+                          <Badge
+                            variant={
+                              rec.priority === "high"
+                                ? "destructive"
+                                : "secondary"
+                            }
+                          >
                             {rec.priority}
                           </Badge>
                           <div className="text-xs text-muted-foreground">
                             {rec.estimatedTime}
                           </div>
                         </div>
-                        <div className="text-sm font-medium mb-1">{rec.description}</div>
+                        <div className="text-sm font-medium mb-1">
+                          {rec.description}
+                        </div>
                         <div className="flex items-center justify-between text-xs">
                           <span>Impact: {rec.impact}%</span>
                           <span>Effort: {rec.effort}%</span>
@@ -483,20 +551,36 @@ export default function ContentOptimizationRefresh() {
                 <CardContent>
                   <div className="grid md:grid-cols-4 gap-6">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600">{performanceMetrics.pageViews.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">Page Views</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        {performanceMetrics.pageViews.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Page Views
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-600">{performanceMetrics.organicTraffic.toLocaleString()}</div>
-                      <div className="text-sm text-muted-foreground">Organic Traffic</div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {performanceMetrics.organicTraffic.toLocaleString()}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Organic Traffic
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-600">{performanceMetrics.bounceRate}%</div>
-                      <div className="text-sm text-muted-foreground">Bounce Rate</div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        {performanceMetrics.bounceRate}%
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Bounce Rate
+                      </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-orange-600">{performanceMetrics.conversions}</div>
-                      <div className="text-sm text-muted-foreground">Conversions</div>
+                      <div className="text-2xl font-bold text-orange-600">
+                        {performanceMetrics.conversions}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Conversions
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -517,20 +601,33 @@ export default function ContentOptimizationRefresh() {
                 <CardContent>
                   <div className="space-y-4">
                     {contentItems.map((item) => (
-                      <Card key={item.id} className="hover:shadow-md transition-shadow">
+                      <Card
+                        key={item.id}
+                        className="hover:shadow-md transition-shadow"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex-1">
-                              <h4 className="font-semibold mb-1">{item.title}</h4>
+                              <h4 className="font-semibold mb-1">
+                                {item.title}
+                              </h4>
                               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
                                 <span>{item.category}</span>
                                 <span>{item.wordCount} words</span>
-                                <span>Last updated: {new Date(item.lastUpdated).toLocaleDateString()}</span>
+                                <span>
+                                  Last updated:{" "}
+                                  {new Date(
+                                    item.lastUpdated,
+                                  ).toLocaleDateString()}
+                                </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 {getStatusIcon(item.status)}
-                                <Badge variant="outline" className={getStatusColor(item.status)}>
-                                  {item.status.replace('_', ' ')}
+                                <Badge
+                                  variant="outline"
+                                  className={getStatusColor(item.status)}
+                                >
+                                  {item.status.replace("_", " ")}
                                 </Badge>
                               </div>
                             </div>
@@ -538,27 +635,48 @@ export default function ContentOptimizationRefresh() {
                               View Details
                             </Button>
                           </div>
-                          
+
                           <div className="grid grid-cols-3 gap-4 mt-4">
                             <div>
-                              <div className="text-sm text-muted-foreground">Freshness</div>
+                              <div className="text-sm text-muted-foreground">
+                                Freshness
+                              </div>
                               <div className="flex items-center gap-2">
-                                <Progress value={item.freshnessScore} className="flex-1 h-2" />
-                                <span className="text-sm font-medium">{item.freshnessScore}%</span>
+                                <Progress
+                                  value={item.freshnessScore}
+                                  className="flex-1 h-2"
+                                />
+                                <span className="text-sm font-medium">
+                                  {item.freshnessScore}%
+                                </span>
                               </div>
                             </div>
                             <div>
-                              <div className="text-sm text-muted-foreground">Performance</div>
+                              <div className="text-sm text-muted-foreground">
+                                Performance
+                              </div>
                               <div className="flex items-center gap-2">
-                                <Progress value={item.performanceScore} className="flex-1 h-2" />
-                                <span className="text-sm font-medium">{item.performanceScore}%</span>
+                                <Progress
+                                  value={item.performanceScore}
+                                  className="flex-1 h-2"
+                                />
+                                <span className="text-sm font-medium">
+                                  {item.performanceScore}%
+                                </span>
                               </div>
                             </div>
                             <div>
-                              <div className="text-sm text-muted-foreground">Optimization</div>
+                              <div className="text-sm text-muted-foreground">
+                                Optimization
+                              </div>
                               <div className="flex items-center gap-2">
-                                <Progress value={item.optimizationScore} className="flex-1 h-2" />
-                                <span className="text-sm font-medium">{item.optimizationScore}%</span>
+                                <Progress
+                                  value={item.optimizationScore}
+                                  className="flex-1 h-2"
+                                />
+                                <span className="text-sm font-medium">
+                                  {item.optimizationScore}%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -586,7 +704,8 @@ export default function ContentOptimizationRefresh() {
                     Performance Tracking
                   </CardTitle>
                   <CardDescription>
-                    Monitor content performance and identify optimization opportunities
+                    Monitor content performance and identify optimization
+                    opportunities
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -596,19 +715,28 @@ export default function ContentOptimizationRefresh() {
                       <div className="space-y-3">
                         <div className="flex justify-between">
                           <span className="text-sm">Page Views</span>
-                          <span className="text-sm font-medium">{performanceMetrics.pageViews.toLocaleString()}</span>
+                          <span className="text-sm font-medium">
+                            {performanceMetrics.pageViews.toLocaleString()}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Organic Traffic</span>
-                          <span className="text-sm font-medium text-green-600">{performanceMetrics.organicTraffic.toLocaleString()}</span>
+                          <span className="text-sm font-medium text-green-600">
+                            {performanceMetrics.organicTraffic.toLocaleString()}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Bounce Rate</span>
-                          <span className="text-sm font-medium">{performanceMetrics.bounceRate}%</span>
+                          <span className="text-sm font-medium">
+                            {performanceMetrics.bounceRate}%
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Time on Page</span>
-                          <span className="text-sm font-medium">{Math.floor(performanceMetrics.timeOnPage / 60)}m {performanceMetrics.timeOnPage % 60}s</span>
+                          <span className="text-sm font-medium">
+                            {Math.floor(performanceMetrics.timeOnPage / 60)}m{" "}
+                            {performanceMetrics.timeOnPage % 60}s
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -618,19 +746,32 @@ export default function ContentOptimizationRefresh() {
                       <div className="space-y-3">
                         <div className="flex justify-between">
                           <span className="text-sm">Conversions</span>
-                          <span className="text-sm font-medium text-green-600">{performanceMetrics.conversions}</span>
+                          <span className="text-sm font-medium text-green-600">
+                            {performanceMetrics.conversions}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Keyword Rankings</span>
-                          <span className="text-sm font-medium">{performanceMetrics.keywordRankings}</span>
+                          <span className="text-sm font-medium">
+                            {performanceMetrics.keywordRankings}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Social Shares</span>
-                          <span className="text-sm font-medium">{performanceMetrics.socialShares}</span>
+                          <span className="text-sm font-medium">
+                            {performanceMetrics.socialShares}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm">Conversion Rate</span>
-                          <span className="text-sm font-medium">{((performanceMetrics.conversions / performanceMetrics.pageViews) * 100).toFixed(2)}%</span>
+                          <span className="text-sm font-medium">
+                            {(
+                              (performanceMetrics.conversions /
+                                performanceMetrics.pageViews) *
+                              100
+                            ).toFixed(2)}
+                            %
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -640,16 +781,28 @@ export default function ContentOptimizationRefresh() {
                     <h4 className="font-semibold mb-4">Performance Trends</h4>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="text-center p-4 bg-green-50 rounded-lg">
-                        <div className="text-lg font-bold text-green-600">+23%</div>
-                        <div className="text-sm text-muted-foreground">Traffic Growth</div>
+                        <div className="text-lg font-bold text-green-600">
+                          +23%
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Traffic Growth
+                        </div>
                       </div>
                       <div className="text-center p-4 bg-blue-50 rounded-lg">
-                        <div className="text-lg font-bold text-blue-600">+15%</div>
-                        <div className="text-sm text-muted-foreground">Engagement Rate</div>
+                        <div className="text-lg font-bold text-blue-600">
+                          +15%
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Engagement Rate
+                        </div>
                       </div>
                       <div className="text-center p-4 bg-purple-50 rounded-lg">
-                        <div className="text-lg font-bold text-purple-600">+8%</div>
-                        <div className="text-sm text-muted-foreground">Conversion Rate</div>
+                        <div className="text-lg font-bold text-purple-600">
+                          +8%
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          Conversion Rate
+                        </div>
                       </div>
                     </div>
                   </div>

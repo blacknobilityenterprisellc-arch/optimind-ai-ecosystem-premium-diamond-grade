@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { zaiApiService } from '@/lib/zai-api-service';
+import { zaiApiService } from "@/lib/zai-api-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
 
       const result = await zaiApiService.generateCompletion(
         prompt,
-        'glm-45-auto-think',
-        { customPrompt }
+        "glm-45-auto-think",
+        { customPrompt },
       );
 
       return NextResponse.json({
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
         model: result.model,
         content: result.content,
         usage: result.usage,
-        timestamp: result.timestamp
+        timestamp: result.timestamp,
       });
     }
 
@@ -32,8 +32,8 @@ export async function POST(request: NextRequest) {
       const result = await zaiApiService.analyzeWithModel({
         imageBase64,
         analysisType,
-        modelId: 'glm-45-auto-think',
-        customPrompt
+        modelId: "glm-45-auto-think",
+        customPrompt,
       });
 
       return NextResponse.json(result);
@@ -41,15 +41,17 @@ export async function POST(request: NextRequest) {
 
     // If neither format is provided, return error
     return NextResponse.json(
-      { error: 'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.' },
-      { status: 400 }
+      {
+        error:
+          'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.',
+      },
+      { status: 400 },
     );
-
   } catch (error) {
-    console.error('GLM-4.5 Auto Think analysis failed:', error);
+    console.error("GLM-4.5 Auto Think analysis failed:", error);
     return NextResponse.json(
-      { error: 'GLM-4.5 Auto Think analysis failed' },
-      { status: 500 }
+      { error: "GLM-4.5 Auto Think analysis failed" },
+      { status: 500 },
     );
   }
 }

@@ -1,27 +1,33 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { 
-  Loader2, 
-  Code, 
-  FileText, 
-  Search, 
-  Bug, 
-  Zap, 
-  Copy, 
+import { useState } from "react";
+import {
+  Loader2,
+  Code,
+  FileText,
+  Search,
+  Bug,
+  Zap,
+  Copy,
   Download,
   CheckCircle,
   AlertTriangle,
-  Lightbulb
-} from 'lucide-react';
+  Lightbulb,
+} from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CodeAssistantProps {
   className?: string;
@@ -39,102 +45,103 @@ interface CodeResult {
 }
 
 export function CodeAssistant({ className }: CodeAssistantProps) {
-  const [code, setCode] = useState('');
-  const [language, setLanguage] = useState('javascript');
-  const [task, setTask] = useState('review');
-  const [context, setContext] = useState('');
+  const [code, setCode] = useState("");
+  const [language, setLanguage] = useState("javascript");
+  const [task, setTask] = useState("review");
+  const [context, setContext] = useState("");
   const [result, setResult] = useState<CodeResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const languages = [
-    { value: 'javascript', label: 'JavaScript' },
-    { value: 'typescript', label: 'TypeScript' },
-    { value: 'python', label: 'Python' },
-    { value: 'java', label: 'Java' },
-    { value: 'cpp', label: 'C++' },
-    { value: 'csharp', label: 'C#' },
-    { value: 'go', label: 'Go' },
-    { value: 'rust', label: 'Rust' },
-    { value: 'php', label: 'PHP' },
-    { value: 'ruby', label: 'Ruby' },
-    { value: 'swift', label: 'Swift' },
-    { value: 'kotlin', label: 'Kotlin' }
+    { value: "javascript", label: "JavaScript" },
+    { value: "typescript", label: "TypeScript" },
+    { value: "python", label: "Python" },
+    { value: "java", label: "Java" },
+    { value: "cpp", label: "C++" },
+    { value: "csharp", label: "C#" },
+    { value: "go", label: "Go" },
+    { value: "rust", label: "Rust" },
+    { value: "php", label: "PHP" },
+    { value: "ruby", label: "Ruby" },
+    { value: "swift", label: "Swift" },
+    { value: "kotlin", label: "Kotlin" },
   ];
 
   const tasks = [
-    { 
-      value: 'review', 
-      label: 'Code Review', 
+    {
+      value: "review",
+      label: "Code Review",
       icon: <Search className="h-4 w-4" />,
-      description: 'Review code for bugs, performance issues, and best practices'
+      description:
+        "Review code for bugs, performance issues, and best practices",
     },
-    { 
-      value: 'optimize', 
-      label: 'Optimize', 
+    {
+      value: "optimize",
+      label: "Optimize",
       icon: <Zap className="h-4 w-4" />,
-      description: 'Optimize code for better performance and readability'
+      description: "Optimize code for better performance and readability",
     },
-    { 
-      value: 'document', 
-      label: 'Document', 
+    {
+      value: "document",
+      label: "Document",
       icon: <FileText className="h-4 w-4" />,
-      description: 'Generate comprehensive documentation and comments'
+      description: "Generate comprehensive documentation and comments",
     },
-    { 
-      value: 'debug', 
-      label: 'Debug', 
+    {
+      value: "debug",
+      label: "Debug",
       icon: <Bug className="h-4 w-4" />,
-      description: 'Identify and fix bugs in the code'
+      description: "Identify and fix bugs in the code",
     },
-    { 
-      value: 'generate-tests', 
-      label: 'Generate Tests', 
+    {
+      value: "generate-tests",
+      label: "Generate Tests",
       icon: <CheckCircle className="h-4 w-4" />,
-      description: 'Create unit tests and test cases'
+      description: "Create unit tests and test cases",
     },
-    { 
-      value: 'refactor', 
-      label: 'Refactor', 
+    {
+      value: "refactor",
+      label: "Refactor",
       icon: <Code className="h-4 w-4" />,
-      description: 'Refactor code for better structure and maintainability'
-    }
+      description: "Refactor code for better structure and maintainability",
+    },
   ];
 
   const processCode = async () => {
     if (!code.trim() || !language || !task) {
-      alert('Please fill in all required fields');
+      alert("Please fill in all required fields");
       return;
     }
 
     setIsProcessing(true);
     try {
-      const response = await fetch('/api/code-assist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/code-assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code,
           language,
           task,
-          context
+          context,
         }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         setResult({
           content: data.result,
           model: data.model,
           cost: data.cost,
-          usage: data.usage
+          usage: data.usage,
         });
       } else {
-        alert('Failed to process code: ' + data.error);
+        alert("Failed to process code: " + data.error);
       }
     } catch (error) {
-      console.error('Error processing code:', error);
-      alert('Error processing code');
+      console.error("Error processing code:", error);
+      alert("Error processing code");
     } finally {
       setIsProcessing(false);
     }
@@ -142,25 +149,25 @@ export function CodeAssistant({ className }: CodeAssistantProps) {
 
   const copyToClipboard = async () => {
     if (!result) return;
-    
+
     try {
       await navigator.clipboard.writeText(result.content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      console.error("Failed to copy to clipboard:", error);
     }
   };
 
   const downloadResult = () => {
     if (!result) return;
-    
-    const taskInfo = tasks.find(t => t.value === task);
-    const filename = `${taskInfo?.label.toLowerCase().replace(/\s+/g, '_')}_${language}.${language === 'javascript' ? 'js' : language}`;
-    
-    const blob = new Blob([result.content], { type: 'text/plain' });
+
+    const taskInfo = tasks.find((t) => t.value === task);
+    const filename = `${taskInfo?.label.toLowerCase().replace(/\s+/g, "_")}_${language}.${language === "javascript" ? "js" : language}`;
+
+    const blob = new Blob([result.content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
@@ -170,13 +177,13 @@ export function CodeAssistant({ className }: CodeAssistantProps) {
   };
 
   const getTaskIcon = (taskValue: string) => {
-    const taskInfo = tasks.find(t => t.value === taskValue);
+    const taskInfo = tasks.find((t) => t.value === taskValue);
     return taskInfo?.icon || <Code className="h-4 w-4" />;
   };
 
   const getTaskDescription = (taskValue: string) => {
-    const taskInfo = tasks.find(t => t.value === taskValue);
-    return taskInfo?.description || '';
+    const taskInfo = tasks.find((t) => t.value === taskValue);
+    return taskInfo?.description || "";
   };
 
   const codeExamples = {
@@ -201,7 +208,7 @@ public double calculateTotal(List<Item> items) {
         total += item.getPrice() * item.getQuantity();
     }
     return total;
-}`
+}`,
   };
 
   const loadExample = () => {
@@ -223,7 +230,9 @@ public double calculateTotal(List<Item> items) {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Programming Language</label>
+              <label className="text-sm font-medium">
+                Programming Language
+              </label>
               <Select value={language} onValueChange={setLanguage}>
                 <SelectTrigger>
                   <SelectValue />
@@ -286,15 +295,17 @@ public double calculateTotal(List<Item> items) {
           <div className="bg-muted p-3 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               {getTaskIcon(task)}
-              <span className="font-medium">{tasks.find(t => t.value === task)?.label}</span>
+              <span className="font-medium">
+                {tasks.find((t) => t.value === task)?.label}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
               {getTaskDescription(task)}
             </p>
           </div>
 
-          <Button 
-            onClick={processCode} 
+          <Button
+            onClick={processCode}
             disabled={isProcessing || !code.trim()}
             className="w-full"
           >
@@ -306,7 +317,9 @@ public double calculateTotal(List<Item> items) {
             ) : (
               <>
                 {getTaskIcon(task)}
-                <span className="ml-2">{tasks.find(t => t.value === task)?.label} Code</span>
+                <span className="ml-2">
+                  {tasks.find((t) => t.value === task)?.label} Code
+                </span>
               </>
             )}
           </Button>
@@ -319,11 +332,15 @@ public double calculateTotal(List<Item> items) {
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 {getTaskIcon(task)}
-                {tasks.find(t => t.value === task)?.label} Result
+                {tasks.find((t) => t.value === task)?.label} Result
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={copyToClipboard}>
-                  {copied ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copied ? (
+                    <CheckCircle className="h-4 w-4" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
                 </Button>
                 <Button variant="outline" size="sm" onClick={downloadResult}>
                   <Download className="h-4 w-4" />
@@ -333,7 +350,9 @@ public double calculateTotal(List<Item> items) {
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">Model: {result.model}</Badge>
               <Badge variant="secondary">Cost: ${result.cost.toFixed(4)}</Badge>
-              <Badge variant="secondary">Tokens: {result.usage.totalTokens}</Badge>
+              <Badge variant="secondary">
+                Tokens: {result.usage.totalTokens}
+              </Badge>
             </div>
           </CardHeader>
           <CardContent>

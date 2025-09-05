@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { 
-  Activity, 
-  Users, 
-  MessageSquare, 
-  Bot, 
-  FileText, 
+import {
+  Activity,
+  Users,
+  MessageSquare,
+  Bot,
+  FileText,
   Bell,
   UserPlus,
   UserMinus,
   Send,
   Heart,
   Share2,
-  Zap
+  Zap,
 } from "lucide-react";
 import { io, Socket } from "socket.io-client";
 
@@ -25,7 +25,12 @@ import { Input } from "@/components/ui/input";
 
 interface ActivityItem {
   id: string;
-  type: 'user_joined' | 'user_left' | 'message_sent' | 'ai_query' | 'system_event';
+  type:
+    | "user_joined"
+    | "user_left"
+    | "message_sent"
+    | "ai_query"
+    | "system_event";
   description: string;
   timestamp: Date;
   userId?: string;
@@ -73,7 +78,7 @@ export function ActivityFeed() {
 
     // Listen for new activities
     socketInstance.on("new_activity", (activity: ActivityItem) => {
-      setActivities(prev => [activity, ...prev].slice(0, 50));
+      setActivities((prev) => [activity, ...prev].slice(0, 50));
     });
 
     // Listen for user count updates
@@ -88,12 +93,12 @@ export function ActivityFeed() {
 
     // Listen for user joined events
     socketInstance.on("user_joined", (user: User) => {
-      setActiveUsers(prev => [...prev, user]);
+      setActiveUsers((prev) => [...prev, user]);
     });
 
     // Listen for user left events
     socketInstance.on("user_left", (data) => {
-      setActiveUsers(prev => prev.filter(user => user.id !== data.userId));
+      setActiveUsers((prev) => prev.filter((user) => user.id !== data.userId));
     });
 
     // Listen for notifications
@@ -141,7 +146,10 @@ export function ActivityFeed() {
       setTimeout(() => {
         socket.emit("ai_response", {
           queryId: Date.now().toString(),
-          response: "I can help you understand the system status! Currently, there are " + userCount + " active users connected to the platform. The system is running smoothly with real-time updates enabled.",
+          response:
+            "I can help you understand the system status! Currently, there are " +
+            userCount +
+            " active users connected to the platform. The system is running smoothly with real-time updates enabled.",
         });
       }, 2000);
     }
@@ -157,17 +165,17 @@ export function ActivityFeed() {
     }
   };
 
-  const getActivityIcon = (type: ActivityItem['type']) => {
+  const getActivityIcon = (type: ActivityItem["type"]) => {
     switch (type) {
-      case 'user_joined':
+      case "user_joined":
         return <UserPlus className="w-4 h-4 text-green-500" />;
-      case 'user_left':
+      case "user_left":
         return <UserMinus className="w-4 h-4 text-red-500" />;
-      case 'message_sent':
+      case "message_sent":
         return <Send className="w-4 h-4 text-blue-500" />;
-      case 'ai_query':
+      case "ai_query":
         return <Bot className="w-4 h-4 text-purple-500" />;
-      case 'system_event':
+      case "system_event":
         return <Zap className="w-4 h-4 text-orange-500" />;
       default:
         return <Activity className="w-4 h-4 text-gray-500" />;
@@ -176,7 +184,7 @@ export function ActivityFeed() {
 
   const formatTime = (date: Date | string) => {
     const d = new Date(date);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   if (!hasJoined) {
@@ -206,8 +214,8 @@ export function ActivityFeed() {
               type="email"
             />
           </div>
-          <Button 
-            onClick={handleJoin} 
+          <Button
+            onClick={handleJoin}
             className="w-full"
             disabled={!userName.trim() || !userEmail.trim() || !isConnected}
           >
@@ -253,12 +261,16 @@ export function ActivityFeed() {
               <Bot className="w-4 h-4 mr-2" />
               AI Query
             </Button>
-            <Button onClick={handleSendNotification} variant="outline" size="sm">
+            <Button
+              onClick={handleSendNotification}
+              variant="outline"
+              size="sm"
+            >
               <Bell className="w-4 h-4 mr-2" />
               Send Notification
             </Button>
           </div>
-          
+
           {activeUsers.length > 0 && (
             <div className="mb-4">
               <h4 className="text-sm font-medium mb-2">Active Users:</h4>
@@ -296,7 +308,9 @@ export function ActivityFeed() {
                       {getActivityIcon(activity.type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium">{activity.description}</p>
+                      <p className="text-sm font-medium">
+                        {activity.description}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         {formatTime(activity.timestamp)}
                       </p>

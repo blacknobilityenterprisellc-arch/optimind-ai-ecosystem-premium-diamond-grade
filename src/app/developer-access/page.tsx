@@ -3,40 +3,52 @@
  * Main page for managing exclusive developer access with monitoring and tracking
  */
 
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { DeveloperAccessDashboard } from '@/components/developer-access/DeveloperAccessDashboard';
-import { KeyGenerationForm } from '@/components/developer-access/KeyGenerationForm';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Shield, 
-  Key, 
-  Activity, 
-  Users, 
-  AlertTriangle, 
+import React, { useState } from "react";
+import { DeveloperAccessDashboard } from "@/components/developer-access/DeveloperAccessDashboard";
+import { KeyGenerationForm } from "@/components/developer-access/KeyGenerationForm";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Shield,
+  Key,
+  Activity,
+  Users,
+  AlertTriangle,
   CheckCircle,
   Settings,
   BarChart3,
-  Lock
-} from 'lucide-react';
+  Lock,
+} from "lucide-react";
 
 interface GeneratedKey {
   id: string;
   keyId: string;
   userId: string;
-  keyType: 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY';
-  accessLevel: 'PUBLIC' | 'INTERNAL' | 'RESTRICTED' | 'CONFIDENTIAL' | 'SECRET' | 'TOP_SECRET';
+  keyType: "EXCLUSIVE" | "STANDARD" | "TEMPORARY";
+  accessLevel:
+    | "PUBLIC"
+    | "INTERNAL"
+    | "RESTRICTED"
+    | "CONFIDENTIAL"
+    | "SECRET"
+    | "TOP_SECRET";
   permissions: string[];
   allowedEndpoints: string[];
   expiresAt: string;
   isActive: boolean;
   metadata: {
     purpose?: string;
-    environment?: 'development' | 'staging' | 'production';
+    environment?: "development" | "staging" | "production";
     createdBy?: string;
   };
   createdAt: string;
@@ -44,63 +56,82 @@ interface GeneratedKey {
 }
 
 export default function DeveloperAccessPage() {
-  const [recentlyGeneratedKeys, setRecentlyGeneratedKeys] = useState<GeneratedKey[]>([]);
+  const [recentlyGeneratedKeys, setRecentlyGeneratedKeys] = useState<
+    GeneratedKey[]
+  >([]);
 
   const handleKeyGenerated = (key: GeneratedKey) => {
-    setRecentlyGeneratedKeys(prev => [key, ...prev.slice(0, 9)]); // Keep last 10 keys
+    setRecentlyGeneratedKeys((prev) => [key, ...prev.slice(0, 9)]); // Keep last 10 keys
   };
 
   const features = [
     {
       icon: <Shield className="h-6 w-6" />,
       title: "Exclusive Access Control",
-      description: "Granular access control with multiple permission levels and endpoint restrictions"
+      description:
+        "Granular access control with multiple permission levels and endpoint restrictions",
     },
     {
       icon: <Key className="h-6 w-6" />,
       title: "Quantum-Secure Keys",
-      description: "Cryptographically secure key generation using quantum-resistant algorithms"
+      description:
+        "Cryptographically secure key generation using quantum-resistant algorithms",
     },
     {
       icon: <Activity className="h-6 w-6" />,
       title: "Real-time Monitoring",
-      description: "Live monitoring of all developer access activities with comprehensive event tracking"
+      description:
+        "Live monitoring of all developer access activities with comprehensive event tracking",
     },
     {
       icon: <Users className="h-6 w-6" />,
       title: "User Management",
-      description: "Track and manage developer access across your organization with detailed analytics"
+      description:
+        "Track and manage developer access across your organization with detailed analytics",
     },
     {
       icon: <BarChart3 className="h-6 w-6" />,
       title: "Advanced Analytics",
-      description: "Comprehensive metrics and analytics to understand usage patterns and security posture"
+      description:
+        "Comprehensive metrics and analytics to understand usage patterns and security posture",
     },
     {
       icon: <Lock className="h-6 w-6" />,
       title: "Security-First Design",
-      description: "Built with security in mind, featuring audit logging, rate limiting, and threat detection"
-    }
+      description:
+        "Built with security in mind, featuring audit logging, rate limiting, and threat detection",
+    },
   ];
 
   const getAccessTypeColor = (keyType: string) => {
     switch (keyType) {
-      case 'EXCLUSIVE': return 'bg-purple-100 text-purple-800';
-      case 'STANDARD': return 'bg-blue-100 text-blue-800';
-      case 'TEMPORARY': return 'bg-gray-100 text-gray-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "EXCLUSIVE":
+        return "bg-purple-100 text-purple-800";
+      case "STANDARD":
+        return "bg-blue-100 text-blue-800";
+      case "TEMPORARY":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getAccessLevelColor = (accessLevel: string) => {
     switch (accessLevel) {
-      case 'PUBLIC': return 'bg-green-100 text-green-800';
-      case 'INTERNAL': return 'bg-blue-100 text-blue-800';
-      case 'RESTRICTED': return 'bg-yellow-100 text-yellow-800';
-      case 'CONFIDENTIAL': return 'bg-orange-100 text-orange-800';
-      case 'SECRET': return 'bg-red-100 text-red-800';
-      case 'TOP_SECRET': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "PUBLIC":
+        return "bg-green-100 text-green-800";
+      case "INTERNAL":
+        return "bg-blue-100 text-blue-800";
+      case "RESTRICTED":
+        return "bg-yellow-100 text-yellow-800";
+      case "CONFIDENTIAL":
+        return "bg-orange-100 text-orange-800";
+      case "SECRET":
+        return "bg-red-100 text-red-800";
+      case "TOP_SECRET":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -110,10 +141,13 @@ export default function DeveloperAccessPage() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2">
           <Shield className="h-8 w-8 text-primary" />
-          <h1 className="text-4xl font-bold tracking-tight">Developer Access Control</h1>
+          <h1 className="text-4xl font-bold tracking-tight">
+            Developer Access Control
+          </h1>
         </div>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Exclusive, secure, and monitorable access control system for developers with comprehensive tracking and analytics
+          Exclusive, secure, and monitorable access control system for
+          developers with comprehensive tracking and analytics
         </p>
         <div className="flex items-center justify-center gap-2">
           <Badge variant="outline" className="px-3 py-1">
@@ -182,7 +216,8 @@ export default function DeveloperAccessPage() {
             <CardHeader>
               <CardTitle>Recently Generated Keys</CardTitle>
               <CardDescription>
-                View and manage the most recently generated developer access keys
+                View and manage the most recently generated developer access
+                keys
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -204,20 +239,28 @@ export default function DeveloperAccessPage() {
                             <Badge className={getAccessTypeColor(key.keyType)}>
                               {key.keyType}
                             </Badge>
-                            <Badge className={getAccessLevelColor(key.accessLevel)}>
+                            <Badge
+                              className={getAccessLevelColor(key.accessLevel)}
+                            >
                               {key.accessLevel}
                             </Badge>
                             {key.isActive ? (
-                              <Badge variant="outline" className="bg-green-50 text-green-700">
+                              <Badge
+                                variant="outline"
+                                className="bg-green-50 text-green-700"
+                              >
                                 Active
                               </Badge>
                             ) : (
-                              <Badge variant="outline" className="bg-red-50 text-red-700">
+                              <Badge
+                                variant="outline"
+                                className="bg-red-50 text-red-700"
+                              >
                                 Inactive
                               </Badge>
                             )}
                           </div>
-                          
+
                           <div>
                             <p className="font-medium">{key.userId}</p>
                             <p className="text-sm text-muted-foreground font-mono">
@@ -227,16 +270,16 @@ export default function DeveloperAccessPage() {
 
                           <div className="space-y-1">
                             <p className="text-sm">
-                              <span className="font-medium">Expires:</span> {' '}
+                              <span className="font-medium">Expires:</span>{" "}
                               {new Date(key.expiresAt).toLocaleString()}
                             </p>
                             <p className="text-sm">
-                              <span className="font-medium">Environment:</span> {' '}
+                              <span className="font-medium">Environment:</span>{" "}
                               {key.metadata.environment?.toUpperCase()}
                             </p>
                             {key.metadata.purpose && (
                               <p className="text-sm">
-                                <span className="font-medium">Purpose:</span> {' '}
+                                <span className="font-medium">Purpose:</span>{" "}
                                 {key.metadata.purpose}
                               </p>
                             )}
@@ -246,7 +289,11 @@ export default function DeveloperAccessPage() {
                             <p className="text-sm font-medium">Permissions:</p>
                             <div className="flex flex-wrap gap-1">
                               {key.permissions.slice(0, 3).map((permission) => (
-                                <Badge key={permission} variant="outline" className="text-xs">
+                                <Badge
+                                  key={permission}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
                                   {permission}
                                 </Badge>
                               ))}
@@ -305,9 +352,10 @@ export default function DeveloperAccessPage() {
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>Important:</strong> This system provides exclusive access control with comprehensive monitoring. 
-              Ensure you understand the security implications before generating keys and always follow your organization's 
-              security policies.
+              <strong>Important:</strong> This system provides exclusive access
+              control with comprehensive monitoring. Ensure you understand the
+              security implications before generating keys and always follow
+              your organization's security policies.
             </AlertDescription>
           </Alert>
         </CardContent>

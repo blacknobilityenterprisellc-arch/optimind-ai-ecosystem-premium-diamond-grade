@@ -1,21 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from "next/server";
 
-import { db } from '@/lib/db'
+import { db } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
-    const days = Number.parseInt(searchParams.get('days') || '30')
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get("userId");
+    const days = Number.parseInt(searchParams.get("days") || "30");
 
-    const startDate = new Date()
-    startDate.setDate(startDate.getDate() - days)
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
 
     // Build where clause for user-specific or global analytics
-    const userWhere = userId ? { userId } : {}
-    const conversationWhere = userId ? { userId } : {}
-    const imageWhere = userId ? { userId } : {}
-    const searchWhere = userId ? { userId } : {}
+    const userWhere = userId ? { userId } : {};
+    const conversationWhere = userId ? { userId } : {};
+    const imageWhere = userId ? { userId } : {};
+    const searchWhere = userId ? { userId } : {};
 
     // Get basic counts
     const [
@@ -24,56 +24,56 @@ export async function GET(request: NextRequest) {
       totalMessages,
       totalImages,
       totalSearches,
-      totalProjects
+      totalProjects,
     ] = await Promise.all([
       db.user.count({ where: userId ? { id: userId } : {} }),
       db.conversation.count({ where: conversationWhere }),
       db.message.count({
         where: {
           conversation: conversationWhere,
-          createdAt: { gte: startDate }
-        }
+          createdAt: { gte: startDate },
+        },
       }),
       db.generatedImage.count({ where: imageWhere }),
       db.webSearch.count({ where: searchWhere }),
-      db.project.count({ where: userWhere })
-    ])
+      db.project.count({ where: userWhere }),
+    ]);
 
     // Get daily stats for the time period
-    const dailyStats = await db.$queryRaw`
+    const dailyStats = (await db.$queryRaw`
       SELECT 
         DATE(createdAt) as date,
         COUNT(*) as conversations
       FROM Conversation 
-      WHERE ${userId ? `userId = ${userId} AND` : ''} createdAt >= ${startDate}
+      WHERE ${userId ? `userId = ${userId} AND` : ""} createdAt >= ${startDate}
       GROUP BY DATE(createdAt)
       ORDER BY date ASC
-    ` as Array<{ date: string; conversations: number }>
+    `) as Array<{ date: string; conversations: number }>;
 
     // Get tool usage stats
     const toolUsage = await db.toolUsage.groupBy({
-      by: ['toolName'],
+      by: ["toolName"],
       where: {
         ...userWhere,
-        createdAt: { gte: startDate }
+        createdAt: { gte: startDate },
       },
       _count: {
-        toolName: true
+        toolName: true,
       },
       orderBy: {
         _count: {
-          toolName: 'desc'
-        }
-      }
-    })
+          toolName: "desc",
+        },
+      },
+    });
 
     // Get user activity (if userId is provided)
-    let userActivity = null
+    let userActivity = null;
     if (userId) {
       userActivity = await db.conversation.findMany({
         where: {
           userId,
-          createdAt: { gte: startDate }
+          createdAt: { gte: startDate },
         },
         select: {
           id: true,
@@ -83,26 +83,26 @@ export async function GET(request: NextRequest) {
             select: {
               messages: true,
               images: true,
-              searches: true
-            }
-          }
+              searches: true,
+            },
+          },
         },
-        orderBy: { createdAt: 'desc' },
-        take: 10
-      })
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      });
     }
 
     // Get system health metrics
     const systemHealth = {
       activeUsers: await db.user.count({
         where: {
-          status: 'ACTIVE',
-          createdAt: { gte: startDate }
-        }
+          status: "ACTIVE",
+          createdAt: { gte: startDate },
+        },
       }),
       totalApiCalls: totalMessages + totalImages + totalSearches,
-      successRate: 98.5 // This would be calculated from actual error logs
-    }
+      successRate: 98.5, // This would be calculated from actual error logs
+    };
 
     return NextResponse.json({
       overview: {
@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
         totalMessages,
         totalImages,
         totalSearches,
-        totalProjects
+        totalProjects,
       },
       dailyStats,
       toolUsage,
@@ -120,14 +120,14 @@ export async function GET(request: NextRequest) {
       period: {
         days,
         startDate,
-        endDate: new Date()
-      }
-    })
+        endDate: new Date(),
+      },
+    });
   } catch (error: any) {
-    console.error('Get analytics error:', error)
+    console.error("Get analytics error:", error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
-      { status: 500 }
-    )
+      { error: error.message || "Internal server error" },
+      { status: 500 },
+    );
   }
 }

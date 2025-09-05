@@ -1,21 +1,30 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { 
-  X, 
-  Lock, 
-  Shield, 
-  CheckCircle, 
+import {
+  X,
+  Lock,
+  Shield,
+  CheckCircle,
   AlertCircle,
   Delete,
-  Fingerprint
+  Fingerprint,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { useFocusTrap, useKeyboardNavigation, useModalFocus } from "@/lib/keyboard-navigation";
+import {
+  useFocusTrap,
+  useKeyboardNavigation,
+  useModalFocus,
+} from "@/lib/keyboard-navigation";
 import { useFocusManagement } from "@/lib/focus-manager";
 
 interface PINPadProps {
@@ -33,102 +42,112 @@ export function PINPad({
   onSuccess,
   onError,
   title = "Premium Authentication",
-  description = "Enter your 4-digit PIN to access premium features"
+  description = "Enter your 4-digit PIN to access premium features",
 }: PINPadProps) {
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showBiometric, setShowBiometric] = useState(false);
-  
+
   const dialogRef = useFocusTrap(isOpen);
   const modalFocusRef = useModalFocus(isOpen);
   const { containerRef, announce } = useFocusManagement();
   const { containerRef: navContainerRef } = useKeyboardNavigation({
     enabled: isOpen,
-    orientation: 'grid',
-    loop: true
+    orientation: "grid",
+    loop: true,
   });
 
-  const handleNumberPress = useCallback((number: string) => {
-    if (pin.length < 4) {
-      const newPin = pin + number;
-      setPin(newPin);
-      setError("");
-      
-      // Auto-submit when 4 digits are entered
-      if (newPin.length === 4) {
-        setTimeout(() => handleSubmit(newPin), 300);
+  const handleNumberPress = useCallback(
+    (number: string) => {
+      if (pin.length < 4) {
+        const newPin = pin + number;
+        setPin(newPin);
+        setError("");
+
+        // Auto-submit when 4 digits are entered
+        if (newPin.length === 4) {
+          setTimeout(() => handleSubmit(newPin), 300);
+        }
       }
-    }
-  }, [pin]);
+    },
+    [pin],
+  );
 
   const handleBackspace = useCallback(() => {
-    setPin(prev => prev.slice(0, -1));
+    setPin((prev) => prev.slice(0, -1));
     setError("");
   }, []);
 
-  const handleSubmit = useCallback(async (enteredPin?: string) => {
-    const pinToCheck = enteredPin || pin;
-    
-    if (pinToCheck.length !== 4) {
-      setError("Please enter a complete 4-digit PIN");
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (enteredPin?: string) => {
+      const pinToCheck = enteredPin || pin;
 
-    setIsLoading(true);
-    
-    try {
-      // Call secure API endpoint for PIN validation
-      const response = await fetch('/api/auth/pin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ pin: pinToCheck }),
-      });
+      if (pinToCheck.length !== 4) {
+        setError("Please enter a complete 4-digit PIN");
+        return;
+      }
 
-      const data = await response.json();
+      setIsLoading(true);
 
-      if (response.ok && data.success) {
-        // Store session token securely
-        if (data.sessionToken) {
-          sessionStorage.setItem('auth_session', data.sessionToken);
-        }
-        announce("PIN verified successfully. Access granted.", "polite");
-        onSuccess();
-        setPin("");
-        setError("");
-      } else {
-        const errorMsg = data.error || "Invalid PIN. Please try again.";
-        setError(errorMsg);
-        onError?.(errorMsg);
-        announce(`Authentication failed: ${errorMsg}`, "assertive");
-        
-        // Clear PIN after error
-        setTimeout(() => {
+      try {
+        // Call secure API endpoint for PIN validation
+        const response = await fetch("/api/auth/pin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ pin: pinToCheck }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Store session token securely
+          if (data.sessionToken) {
+            sessionStorage.setItem("auth_session", data.sessionToken);
+          }
+          announce("PIN verified successfully. Access granted.", "polite");
+          onSuccess();
           setPin("");
           setError("");
-        }, 2000);
+        } else {
+          const errorMsg = data.error || "Invalid PIN. Please try again.";
+          setError(errorMsg);
+          onError?.(errorMsg);
+          announce(`Authentication failed: ${errorMsg}`, "assertive");
+
+          // Clear PIN after error
+          setTimeout(() => {
+            setPin("");
+            setError("");
+          }, 2000);
+        }
+      } catch {
+        const errorMsg =
+          "Authentication failed. Please check your connection and try again.";
+        setError(errorMsg);
+        onError?.(errorMsg);
+      } finally {
+        setIsLoading(false);
       }
-    } catch {
-      const errorMsg = "Authentication failed. Please check your connection and try again.";
-      setError(errorMsg);
-      onError?.(errorMsg);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [pin, onSuccess, onError]);
+    },
+    [pin, onSuccess, onError],
+  );
 
   const handleBiometricAuth = useCallback(async () => {
     setShowBiometric(true);
     setIsLoading(true);
-    
+
     try {
       // Simulate biometric authentication
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // For demo purposes, biometric auth always succeeds
-      announce("Biometric authentication successful. Access granted.", "polite");
+      announce(
+        "Biometric authentication successful. Access granted.",
+        "polite",
+      );
       onSuccess();
       setPin("");
       setError("");
@@ -181,7 +200,13 @@ export function PINPad({
           <p className="text-sm text-muted-foreground">{description}</p>
         </DialogHeader>
 
-        <div ref={containerRef as any} className="space-y-6" role="application" aria-label="PIN entry" tabIndex={-1}>
+        <div
+          ref={containerRef as any}
+          className="space-y-6"
+          role="application"
+          aria-label="PIN entry"
+          tabIndex={-1}
+        >
           {/* PIN Display */}
           <div className="flex justify-center">
             <div className="flex gap-3">
@@ -190,9 +215,9 @@ export function PINPad({
                   key={index}
                   className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                     pin[index]
-                      ? (error
+                      ? error
                         ? "border-red-500 bg-red-500/10"
-                        : "border-green-500 bg-green-500/10")
+                        : "border-green-500 bg-green-500/10"
                       : "border-gray-300 bg-gray-50"
                   }`}
                 >
@@ -227,7 +252,11 @@ export function PINPad({
           )}
 
           {/* Number Pad */}
-          <div className="grid grid-cols-3 gap-2" role="grid" aria-label="Number pad">
+          <div
+            className="grid grid-cols-3 gap-2"
+            role="grid"
+            aria-label="Number pad"
+          >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
               <Button
                 key={number}
@@ -243,7 +272,7 @@ export function PINPad({
                 {number}
               </Button>
             ))}
-            
+
             {/* Biometric Button */}
             <Button
               variant="outline"
@@ -257,7 +286,7 @@ export function PINPad({
             >
               <Fingerprint className="w-5 h-5" />
             </Button>
-            
+
             <Button
               variant="outline"
               size="lg"
@@ -270,7 +299,7 @@ export function PINPad({
             >
               0
             </Button>
-            
+
             {/* Backspace Button */}
             <Button
               variant="outline"

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { 
-  FileText, 
-  Shield, 
-  AlertTriangle, 
-  CheckCircle, 
-  Clock, 
+import {
+  FileText,
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
   DollarSign,
   Scale,
   FileUp,
@@ -17,21 +17,37 @@ import {
   Plus,
   TrendingUp,
   TrendingDown,
-  Minus
+  Minus,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { contractWiseService, ContractAnalysisRequest, ContractAnalysisResult } from "@/lib/contractwise-service";
+import {
+  contractWiseService,
+  ContractAnalysisRequest,
+  ContractAnalysisResult,
+} from "@/lib/contractwise-service";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 
 interface ContractWiseAIProps {
@@ -39,14 +55,18 @@ interface ContractWiseAIProps {
   onAnalysisComplete?: (result: ContractAnalysisResult) => void;
 }
 
-export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractWiseAIProps) {
+export function ContractWiseAI({
+  className = "",
+  onAnalysisComplete,
+}: ContractWiseAIProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState<ContractAnalysisResult | null>(null);
+  const [analysisResult, setAnalysisResult] =
+    useState<ContractAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [contractHistory, setContractHistory] = useState<any[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [activeTab, setActiveTab] = useState("analyze");
-  
+
   // Form state
   const [contractTitle, setContractTitle] = useState("");
   const [contractType, setContractType] = useState("");
@@ -57,7 +77,7 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
   const [industry, setIndustry] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
   const [enableFileUpload, setEnableFileUpload] = useState(false);
-  
+
   const { isPremium } = useSecureSubscription();
 
   const contractTypes = contractWiseService.getContractTypes();
@@ -86,7 +106,7 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
         extractedText: extractedText || undefined,
         jurisdiction: jurisdiction || undefined,
         industry: industry || undefined,
-        priority
+        priority,
       };
 
       // Simulate API call (in real implementation, this would call your backend)
@@ -95,7 +115,7 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
           contractType,
           totalClauses: 12,
           riskLevel: "medium",
-          overallConfidence: 0.87
+          overallConfidence: 0.87,
         },
         riskAssessment: {
           highRiskClauses: [
@@ -103,25 +123,27 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
               clause: "Limitation of Liability",
               risk: "Excessive limitation caps may not be enforceable",
               severity: "high",
-              recommendation: "Negotiate higher liability limits or add exceptions"
-            }
+              recommendation:
+                "Negotiate higher liability limits or add exceptions",
+            },
           ],
           mediumRiskClauses: [
             {
               clause: "Termination Clause",
               risk: "Termination for convenience terms are unfavorable",
               severity: "medium",
-              recommendation: "Add notice period requirements and exit conditions"
-            }
+              recommendation:
+                "Add notice period requirements and exit conditions",
+            },
           ],
           lowRiskClauses: [
             {
               clause: "Confidentiality",
               risk: "Standard confidentiality provisions",
               severity: "low",
-              recommendation: "Clause is acceptable as written"
-            }
-          ]
+              recommendation: "Clause is acceptable as written",
+            },
+          ],
         },
         clauses: {
           identified: [
@@ -129,59 +151,75 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
               type: "Payment Terms",
               title: "Payment Schedule",
               content: "Net 30 days from invoice date",
-              importance: "critical"
-            }
+              importance: "critical",
+            },
           ],
           missing: [
             {
               type: "Force Majeure",
               importance: "important",
-              recommendation: "Add force majeure clause for unforeseen events"
-            }
-          ]
+              recommendation: "Add force majeure clause for unforeseen events",
+            },
+          ],
         },
         plainLanguage: {
-          summary: "This is a standard service agreement with payment terms, confidentiality provisions, and termination clauses. The contract outlines obligations between parties but lacks some important protections.",
+          summary:
+            "This is a standard service agreement with payment terms, confidentiality provisions, and termination clauses. The contract outlines obligations between parties but lacks some important protections.",
           keyPoints: [
             "Net 30 day payment terms",
             "Confidentiality obligations included",
             "Termination for convenience allowed",
-            "Missing force majeure protection"
+            "Missing force majeure protection",
           ],
           simplifiedClauses: [
             {
-              original: "Party A shall provide services as specified in Exhibit A",
-              simplified: "Party A will provide the services listed in the attached exhibit"
-            }
-          ]
+              original:
+                "Party A shall provide services as specified in Exhibit A",
+              simplified:
+                "Party A will provide the services listed in the attached exhibit",
+            },
+          ],
         },
         complianceCheck: {
           jurisdiction: jurisdiction || "Unknown",
           compliant: true,
-          issues: []
+          issues: [],
         },
         recommendations: {
-          immediate: ["Review liability limitation clause", "Add force majeure provision"],
-          shortTerm: ["Negotiate better termination terms", "Add dispute resolution clause"],
-          longTerm: ["Implement contract management system", "Regular contract reviews"],
-          negotiationPoints: ["Liability limits", "Termination notice period", "Payment terms"]
+          immediate: [
+            "Review liability limitation clause",
+            "Add force majeure provision",
+          ],
+          shortTerm: [
+            "Negotiate better termination terms",
+            "Add dispute resolution clause",
+          ],
+          longTerm: [
+            "Implement contract management system",
+            "Regular contract reviews",
+          ],
+          negotiationPoints: [
+            "Liability limits",
+            "Termination notice period",
+            "Payment terms",
+          ],
         },
         metadata: {
           processingTime: 4500,
           modelsUsed: ["GPT-4o", "Claude 3.5 Sonnet", "GLM-4 Flagship"],
           confidence: 0.87,
-          cost: 45.5
-        }
+          cost: 45.5,
+        },
       };
 
       // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       setAnalysisResult(mockResult);
       onAnalysisComplete?.(mockResult);
-      
+
       // Add to history
-      setContractHistory(prev => [
+      setContractHistory((prev) => [
         {
           id: `contract-${Date.now()}`,
           title: contractTitle,
@@ -189,11 +227,10 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
           riskLevel: mockResult.overview.riskLevel,
           confidence: mockResult.overview.overallConfidence,
           createdAt: new Date(),
-          cost: mockResult.metadata.cost
+          cost: mockResult.metadata.cost,
         },
-        ...prev.slice(0, 9) // Keep last 10 items
+        ...prev.slice(0, 9), // Keep last 10 items
       ]);
-
     } catch (err) {
       setError(err instanceof Error ? err.message : "Contract analysis failed");
     } finally {
@@ -209,24 +246,32 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
     industry,
     priority,
     isPremium,
-    onAnalysisComplete
+    onAnalysisComplete,
   ]);
 
   const getRiskLevelColor = (riskLevel: string) => {
     switch (riskLevel) {
-      case "low": return "text-green-600 bg-green-50";
-      case "medium": return "text-yellow-600 bg-yellow-50";
-      case "high": return "text-red-600 bg-red-50";
-      default: return "text-gray-600 bg-gray-50";
+      case "low":
+        return "text-green-600 bg-green-50";
+      case "medium":
+        return "text-yellow-600 bg-yellow-50";
+      case "high":
+        return "text-red-600 bg-red-50";
+      default:
+        return "text-gray-600 bg-gray-50";
     }
   };
 
   const getRiskLevelIcon = (riskLevel: string) => {
     switch (riskLevel) {
-      case "low": return <CheckCircle className="w-4 h-4" />;
-      case "medium": return <AlertTriangle className="w-4 h-4" />;
-      case "high": return <AlertTriangle className="w-4 h-4" />;
-      default: return <Minus className="w-4 h-4" />;
+      case "low":
+        return <CheckCircle className="w-4 h-4" />;
+      case "medium":
+        return <AlertTriangle className="w-4 h-4" />;
+      case "high":
+        return <AlertTriangle className="w-4 h-4" />;
+      default:
+        return <Minus className="w-4 h-4" />;
     }
   };
 
@@ -244,7 +289,8 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
             <Scale className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">ContractWise AI</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Advanced AI-powered contract analysis, risk assessment, and compliance monitoring for small businesses
+              Advanced AI-powered contract analysis, risk assessment, and
+              compliance monitoring for small businesses
             </p>
             <div className="space-y-3 text-left text-sm text-muted-foreground mb-6">
               <div className="flex items-center gap-2">
@@ -285,13 +331,17 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
               <div>
                 <CardTitle className="flex items-center gap-2">
                   ContractWise AI
-                  <Badge variant="outline" className="text-blue-600 border-blue-600">
+                  <Badge
+                    variant="outline"
+                    className="text-blue-600 border-blue-600"
+                  >
                     <Shield className="w-3 h-3 mr-1" />
                     Legal AI
                   </Badge>
                 </CardTitle>
                 <CardDescription>
-                  AI-powered contract analysis, risk assessment, and compliance monitoring
+                  AI-powered contract analysis, risk assessment, and compliance
+                  monitoring
                 </CardDescription>
               </div>
             </div>
@@ -343,7 +393,8 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                       <div>
                         <p className="font-medium">{contract.title}</p>
                         <p className="text-sm text-muted-foreground">
-                          {contract.type} • {contract.createdAt.toLocaleDateString()}
+                          {contract.type} •{" "}
+                          {contract.createdAt.toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -359,8 +410,8 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                         {Math.round(contract.confidence * 100)}% confidence
                       </Badge>
                       <Badge variant="outline">
-                        <DollarSign className="w-3 h-3 mr-1" />
-                        ${contract.cost.toFixed(2)}
+                        <DollarSign className="w-3 h-3 mr-1" />$
+                        {contract.cost.toFixed(2)}
                       </Badge>
                     </div>
                   </div>
@@ -400,7 +451,10 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="contractType">Contract Type *</Label>
-                    <Select value={contractType} onValueChange={setContractType}>
+                    <Select
+                      value={contractType}
+                      onValueChange={setContractType}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select contract type" />
                       </SelectTrigger>
@@ -443,14 +497,25 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
 
                 <div className="space-y-2">
                   <Label htmlFor="priority">Priority Level</Label>
-                  <Select value={priority} onValueChange={(value: "low" | "medium" | "high") => setPriority(value)}>
+                  <Select
+                    value={priority}
+                    onValueChange={(value: "low" | "medium" | "high") =>
+                      setPriority(value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Low - Standard analysis</SelectItem>
-                      <SelectItem value="medium">Medium - Enhanced analysis</SelectItem>
-                      <SelectItem value="high">High - Comprehensive analysis</SelectItem>
+                      <SelectItem value="low">
+                        Low - Standard analysis
+                      </SelectItem>
+                      <SelectItem value="medium">
+                        Medium - Enhanced analysis
+                      </SelectItem>
+                      <SelectItem value="high">
+                        High - Comprehensive analysis
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -500,7 +565,12 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
 
                 <Button
                   onClick={handleAnalyze}
-                  disabled={isAnalyzing || !contractTitle || !contractType || (!contractText && !fileUrl)}
+                  disabled={
+                    isAnalyzing ||
+                    !contractTitle ||
+                    !contractType ||
+                    (!contractText && !fileUrl)
+                  }
                   className="w-full"
                   size="lg"
                 >
@@ -530,7 +600,9 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                       Analysis Results
                       <Badge
                         variant="outline"
-                        className={getRiskLevelColor(analysisResult.overview.riskLevel)}
+                        className={getRiskLevelColor(
+                          analysisResult.overview.riskLevel,
+                        )}
                       >
                         {getRiskLevelIcon(analysisResult.overview.riskLevel)}
                         {analysisResult.overview.riskLevel.toUpperCase()} RISK
@@ -539,14 +611,25 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">
                         <Clock className="w-3 h-3 mr-1" />
-                        {(analysisResult.metadata.processingTime / 1000).toFixed(1)}s
+                        {(
+                          analysisResult.metadata.processingTime / 1000
+                        ).toFixed(1)}
+                        s
                       </Badge>
                       <Badge variant="outline">
-                        <DollarSign className="w-3 h-3 mr-1" />
-                        ${analysisResult.metadata.cost.toFixed(2)}
+                        <DollarSign className="w-3 h-3 mr-1" />$
+                        {analysisResult.metadata.cost.toFixed(2)}
                       </Badge>
-                      <Badge variant="outline" className={getConfidenceColor(analysisResult.overview.overallConfidence)}>
-                        {Math.round(analysisResult.overview.overallConfidence * 100)}% confidence
+                      <Badge
+                        variant="outline"
+                        className={getConfidenceColor(
+                          analysisResult.overview.overallConfidence,
+                        )}
+                      >
+                        {Math.round(
+                          analysisResult.overview.overallConfidence * 100,
+                        )}
+                        % confidence
                       </Badge>
                     </div>
                   </div>
@@ -554,16 +637,26 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="text-center">
-                      <p className="text-2xl font-bold">{analysisResult.overview.totalClauses}</p>
-                      <p className="text-sm text-muted-foreground">Total Clauses</p>
+                      <p className="text-2xl font-bold">
+                        {analysisResult.overview.totalClauses}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Total Clauses
+                      </p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold">{analysisResult.riskAssessment.highRiskClauses.length}</p>
+                      <p className="text-2xl font-bold">
+                        {analysisResult.riskAssessment.highRiskClauses.length}
+                      </p>
                       <p className="text-sm text-muted-foreground">High Risk</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-2xl font-bold">{analysisResult.riskAssessment.mediumRiskClauses.length}</p>
-                      <p className="text-sm text-muted-foreground">Medium Risk</p>
+                      <p className="text-2xl font-bold">
+                        {analysisResult.riskAssessment.mediumRiskClauses.length}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Medium Risk
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -580,66 +673,109 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                 <CardContent className="space-y-4">
                   {analysisResult.riskAssessment.highRiskClauses.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-red-600 mb-2">High Risk Clauses</h4>
+                      <h4 className="font-medium text-red-600 mb-2">
+                        High Risk Clauses
+                      </h4>
                       <div className="space-y-2">
-                        {analysisResult.riskAssessment.highRiskClauses.map((clause, index) => (
-                          <div key={index} className="p-3 border border-red-200 bg-red-50 rounded-lg">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-medium">{clause.clause}</p>
-                                <p className="text-sm text-red-700">{clause.risk}</p>
-                                <p className="text-sm text-red-600 mt-1">{clause.recommendation}</p>
+                        {analysisResult.riskAssessment.highRiskClauses.map(
+                          (clause, index) => (
+                            <div
+                              key={index}
+                              className="p-3 border border-red-200 bg-red-50 rounded-lg"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium">{clause.clause}</p>
+                                  <p className="text-sm text-red-700">
+                                    {clause.risk}
+                                  </p>
+                                  <p className="text-sm text-red-600 mt-1">
+                                    {clause.recommendation}
+                                  </p>
+                                </div>
+                                <Badge
+                                  variant="outline"
+                                  className="text-red-600 border-red-600"
+                                >
+                                  HIGH
+                                </Badge>
                               </div>
-                              <Badge variant="outline" className="text-red-600 border-red-600">
-                                HIGH
-                              </Badge>
                             </div>
-                          </div>
-                        ))}
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
 
-                  {analysisResult.riskAssessment.mediumRiskClauses.length > 0 && (
+                  {analysisResult.riskAssessment.mediumRiskClauses.length >
+                    0 && (
                     <div>
-                      <h4 className="font-medium text-yellow-600 mb-2">Medium Risk Clauses</h4>
+                      <h4 className="font-medium text-yellow-600 mb-2">
+                        Medium Risk Clauses
+                      </h4>
                       <div className="space-y-2">
-                        {analysisResult.riskAssessment.mediumRiskClauses.map((clause, index) => (
-                          <div key={index} className="p-3 border border-yellow-200 bg-yellow-50 rounded-lg">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-medium">{clause.clause}</p>
-                                <p className="text-sm text-yellow-700">{clause.risk}</p>
-                                <p className="text-sm text-yellow-600 mt-1">{clause.recommendation}</p>
+                        {analysisResult.riskAssessment.mediumRiskClauses.map(
+                          (clause, index) => (
+                            <div
+                              key={index}
+                              className="p-3 border border-yellow-200 bg-yellow-50 rounded-lg"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium">{clause.clause}</p>
+                                  <p className="text-sm text-yellow-700">
+                                    {clause.risk}
+                                  </p>
+                                  <p className="text-sm text-yellow-600 mt-1">
+                                    {clause.recommendation}
+                                  </p>
+                                </div>
+                                <Badge
+                                  variant="outline"
+                                  className="text-yellow-600 border-yellow-600"
+                                >
+                                  MEDIUM
+                                </Badge>
                               </div>
-                              <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-                                MEDIUM
-                              </Badge>
                             </div>
-                          </div>
-                        ))}
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
 
                   {analysisResult.riskAssessment.lowRiskClauses.length > 0 && (
                     <div>
-                      <h4 className="font-medium text-green-600 mb-2">Low Risk Clauses</h4>
+                      <h4 className="font-medium text-green-600 mb-2">
+                        Low Risk Clauses
+                      </h4>
                       <div className="space-y-2">
-                        {analysisResult.riskAssessment.lowRiskClauses.map((clause, index) => (
-                          <div key={index} className="p-3 border border-green-200 bg-green-50 rounded-lg">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <p className="font-medium">{clause.clause}</p>
-                                <p className="text-sm text-green-700">{clause.risk}</p>
-                                <p className="text-sm text-green-600 mt-1">{clause.recommendation}</p>
+                        {analysisResult.riskAssessment.lowRiskClauses.map(
+                          (clause, index) => (
+                            <div
+                              key={index}
+                              className="p-3 border border-green-200 bg-green-50 rounded-lg"
+                            >
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <p className="font-medium">{clause.clause}</p>
+                                  <p className="text-sm text-green-700">
+                                    {clause.risk}
+                                  </p>
+                                  <p className="text-sm text-green-600 mt-1">
+                                    {clause.recommendation}
+                                  </p>
+                                </div>
+                                <Badge
+                                  variant="outline"
+                                  className="text-green-600 border-green-600"
+                                >
+                                  LOW
+                                </Badge>
                               </div>
-                              <Badge variant="outline" className="text-green-600 border-green-600">
-                                LOW
-                              </Badge>
                             </div>
-                          </div>
-                        ))}
+                          ),
+                        )}
                       </div>
                     </div>
                   )}
@@ -656,49 +792,78 @@ export function ContractWiseAI({ className = "", onAnalysisComplete }: ContractW
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <h4 className="font-medium text-red-600 mb-2">Immediate Actions</h4>
+                    <h4 className="font-medium text-red-600 mb-2">
+                      Immediate Actions
+                    </h4>
                     <ul className="space-y-1">
-                      {analysisResult.recommendations.immediate.map((action, index) => (
-                        <li key={index} className="text-sm flex items-start gap-2">
-                          <span className="text-red-600">•</span>
-                          {action}
-                        </li>
-                      ))}
+                      {analysisResult.recommendations.immediate.map(
+                        (action, index) => (
+                          <li
+                            key={index}
+                            className="text-sm flex items-start gap-2"
+                          >
+                            <span className="text-red-600">•</span>
+                            {action}
+                          </li>
+                        ),
+                      )}
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-yellow-600 mb-2">Short-term Goals</h4>
+                    <h4 className="font-medium text-yellow-600 mb-2">
+                      Short-term Goals
+                    </h4>
                     <ul className="space-y-1">
-                      {analysisResult.recommendations.shortTerm.map((action, index) => (
-                        <li key={index} className="text-sm flex items-start gap-2">
-                          <span className="text-yellow-600">•</span>
-                          {action}
-                        </li>
-                      ))}
+                      {analysisResult.recommendations.shortTerm.map(
+                        (action, index) => (
+                          <li
+                            key={index}
+                            className="text-sm flex items-start gap-2"
+                          >
+                            <span className="text-yellow-600">•</span>
+                            {action}
+                          </li>
+                        ),
+                      )}
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-blue-600 mb-2">Long-term Strategy</h4>
+                    <h4 className="font-medium text-blue-600 mb-2">
+                      Long-term Strategy
+                    </h4>
                     <ul className="space-y-1">
-                      {analysisResult.recommendations.longTerm.map((action, index) => (
-                        <li key={index} className="text-sm flex items-start gap-2">
-                          <span className="text-blue-600">•</span>
-                          {action}
-                        </li>
-                      ))}
+                      {analysisResult.recommendations.longTerm.map(
+                        (action, index) => (
+                          <li
+                            key={index}
+                            className="text-sm flex items-start gap-2"
+                          >
+                            <span className="text-blue-600">•</span>
+                            {action}
+                          </li>
+                        ),
+                      )}
                     </ul>
                   </div>
 
                   <div>
-                    <h4 className="font-medium text-purple-600 mb-2">Negotiation Points</h4>
+                    <h4 className="font-medium text-purple-600 mb-2">
+                      Negotiation Points
+                    </h4>
                     <div className="flex flex-wrap gap-2">
-                      {analysisResult.recommendations.negotiationPoints.map((point, index) => (
-                        <Badge key={index} variant="outline" className="text-purple-600 border-purple-600">
-                          {point}
-                        </Badge>
-                      ))}
+                      {analysisResult.recommendations.negotiationPoints.map(
+                        (point, index) => (
+                          <Badge
+                            key={index}
+                            variant="outline"
+                            className="text-purple-600 border-purple-600"
+                          >
+                            {point}
+                          </Badge>
+                        ),
+                      )}
                     </div>
                   </div>
                 </CardContent>

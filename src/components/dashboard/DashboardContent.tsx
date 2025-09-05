@@ -1,17 +1,17 @@
 /**
  * Premium Diamond Grade Dashboard Content Component
- * 
+ *
  * Enterprise-grade main content area with optimized performance
  * and clean architecture.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 1.0.0
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AnalyticsChart from "@/components/AnalyticsChart";
 import AICapabilitiesGrid from "@/components/dashboard/AICapabilitiesGrid";
@@ -30,7 +30,7 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
   metrics,
   alerts,
   activities,
-  aiCapabilities
+  aiCapabilities,
 }) => {
   return (
     <>

@@ -38,9 +38,10 @@ class CacheManager {
 
     // Remove oldest entries if cache is too large
     if (this.cache.size > this.maxSize) {
-      const entries = Array.from(this.cache.entries())
-        .sort((a, b) => a[1].timestamp - b[1].timestamp);
-      
+      const entries = Array.from(this.cache.entries()).sort(
+        (a, b) => a[1].timestamp - b[1].timestamp,
+      );
+
       const toRemove = entries.slice(0, this.cache.size - this.maxSize);
       for (const [key] of toRemove) this.cache.delete(key);
     }
@@ -62,7 +63,11 @@ class CacheManager {
     return entry.data;
   }
 
-  async set<T>(url: string, data: T, options: CacheOptions = {}): Promise<void> {
+  async set<T>(
+    url: string,
+    data: T,
+    options: CacheOptions = {},
+  ): Promise<void> {
     const key = this.generateKey(url, options);
     const ttl = options.ttl || 300; // Default 5 minutes
 
@@ -99,7 +104,7 @@ export const cacheManager = new CacheManager();
 export async function cachedFetch<T>(
   url: string,
   options: RequestInit = {},
-  cacheOptions: CacheOptions = {}
+  cacheOptions: CacheOptions = {},
 ): Promise<T> {
   // Try to get from cache first
   const cached = await cacheManager.get<T>(url, cacheOptions);
@@ -112,7 +117,7 @@ export async function cachedFetch<T>(
     ...options,
     headers: {
       ...options.headers,
-      'Cache-Control': 'public, max-age=300',
+      "Cache-Control": "public, max-age=300",
     },
   });
 
@@ -129,13 +134,13 @@ export async function cachedFetch<T>(
 }
 
 // React hook for cached data
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useCachedData<T>(
   url: string,
   options: RequestInit = {},
   cacheOptions: CacheOptions = {},
-  dependencies: any[] = []
+  dependencies: any[] = [],
 ) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -146,11 +151,11 @@ export function useCachedData<T>(
       try {
         setLoading(true);
         setError(null);
-        
+
         const result = await cachedFetch<T>(url, options, cacheOptions);
         setData(result);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
+        setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -163,13 +168,13 @@ export function useCachedData<T>(
     try {
       setLoading(true);
       setError(null);
-      
+
       // Invalidate cache and refetch
       cacheManager.invalidate(url, cacheOptions);
       const result = await cachedFetch<T>(url, options, cacheOptions);
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error');
+      setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -204,7 +209,7 @@ export class ImageCache {
             this.cache.delete(firstKey);
           }
         }
-        
+
         this.cache.set(url, url);
         resolve(url);
       };
@@ -214,7 +219,7 @@ export class ImageCache {
   }
 
   preloadImages(urls: string[]): Promise<string[]> {
-    return Promise.all(urls.map(url => this.loadImage(url)));
+    return Promise.all(urls.map((url) => this.loadImage(url)));
   }
 
   clear(): void {
@@ -226,14 +231,18 @@ export const imageCache = new ImageCache();
 
 // Service Worker registration for offline caching
 export function registerServiceWorker() {
-  if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(registration => {
-          console.log('ServiceWorker registration successful with scope:', registration.scope);
+  if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log(
+            "ServiceWorker registration successful with scope:",
+            registration.scope,
+          );
         })
-        .catch(error => {
-          console.log('ServiceWorker registration failed:', error);
+        .catch((error) => {
+          console.log("ServiceWorker registration failed:", error);
         });
     });
   }
@@ -242,15 +251,15 @@ export function registerServiceWorker() {
 // Generate cache headers for API responses
 export function getCacheHeaders(ttl: number = 300): Record<string, string> {
   return {
-    'Cache-Control': `public, max-age=${ttl}`,
-    'ETag': `W/"${Date.now()}"`,
-    'Last-Modified': new Date().toUTCString(),
+    "Cache-Control": `public, max-age=${ttl}`,
+    ETag: `W/"${Date.now()}"`,
+    "Last-Modified": new Date().toUTCString(),
   };
 }
 
 // Cache busting utility
 export function addCacheBust(url: string): string {
   const bust = Date.now().toString(36);
-  const separator = url.includes('?') ? '&' : '?';
+  const separator = url.includes("?") ? "&" : "?";
   return `${url}${separator}_=${bust}`;
 }

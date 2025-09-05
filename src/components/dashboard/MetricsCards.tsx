@@ -1,18 +1,24 @@
 /**
  * Premium Diamond Grade Metrics Cards Component
- * 
+ *
  * Enterprise-grade metrics display with optimized performance
  * and real-time data visualization.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 1.0.0
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-'use client';
+"use client";
 
-import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { FileText, TrendingUp, Users, Activity } from "lucide-react";
 
@@ -35,19 +41,19 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
       title: "Total Content",
       value: metrics.totalContent.toLocaleString(),
       change: "+12% from last month",
-      icon: FileText
+      icon: FileText,
     },
     {
       title: "Avg. Optimization",
       value: `${metrics.avgOptimizationScore}%`,
       change: "+5% from last week",
-      icon: TrendingUp
+      icon: TrendingUp,
     },
     {
       title: "Active Projects",
       value: metrics.activeProjects.toString(),
       change: "+3 new this week",
-      icon: Users
+      icon: Users,
     },
     {
       title: "System Health",
@@ -55,8 +61,8 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
       change: "",
       icon: Activity,
       showProgress: true,
-      progressValue: metrics.systemHealth
-    }
+      progressValue: metrics.systemHealth,
+    },
   ];
 
   return (

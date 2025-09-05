@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { zaiApiService } from '@/lib/zai-api-service';
+import { zaiApiService } from "@/lib/zai-api-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,24 +9,24 @@ export async function POST(request: NextRequest) {
 
     if (!imageBase64 || !analysisType) {
       return NextResponse.json(
-        { error: 'Missing required fields: imageBase64, analysisType' },
-        { status: 400 }
+        { error: "Missing required fields: imageBase64, analysisType" },
+        { status: 400 },
       );
     }
 
     const result = await zaiApiService.analyzeWithModel({
       imageBase64,
       analysisType,
-      modelId: 'glm-45v',
-      customPrompt
+      modelId: "glm-45v",
+      customPrompt,
     });
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('GLM-4.5V analysis failed:', error);
+    console.error("GLM-4.5V analysis failed:", error);
     return NextResponse.json(
-      { error: 'GLM-4.5V analysis failed' },
-      { status: 500 }
+      { error: "GLM-4.5V analysis failed" },
+      { status: 500 },
     );
   }
 }

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
 
     if (!content || !contentType) {
       return NextResponse.json(
-        { error: 'Content and content type are required' },
-        { status: 400 }
+        { error: "Content and content type are required" },
+        { status: 400 },
       );
     }
 
@@ -69,22 +69,23 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are an expert AEO/GEO optimization specialist. Analyze content for AI optimization opportunities and provide structured recommendations.'
+          role: "system",
+          content:
+            "You are an expert AEO/GEO optimization specialist. Analyze content for AI optimization opportunities and provide structured recommendations.",
         },
         {
-          role: 'user',
-          content: analysisPrompt
-        }
+          role: "user",
+          content: analysisPrompt,
+        },
       ],
       temperature: 0.3,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
 
     const analysisContent = completion.choices[0]?.message?.content;
-    
+
     if (!analysisContent) {
-      throw new Error('No analysis content received from AI');
+      throw new Error("No analysis content received from AI");
     }
 
     // Parse the JSON response
@@ -92,29 +93,31 @@ export async function POST(request: NextRequest) {
     try {
       analysisResult = JSON.parse(analysisContent);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       // Fallback response if JSON parsing fails
       analysisResult = {
         citations: [],
         eeatRecommendations: [],
         schemaMarkups: [],
         keywordClusters: [],
-        optimizationScore: 50
+        optimizationScore: 50,
       };
     }
 
     return NextResponse.json({
       success: true,
       data: analysisResult,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Content analysis error:', error);
+    console.error("Content analysis error:", error);
     return NextResponse.json(
-      { error: 'Failed to analyze content', details: error.message },
-      { error: 'Failed to analyze content', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      { error: "Failed to analyze content", details: error.message },
+      {
+        error: "Failed to analyze content",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

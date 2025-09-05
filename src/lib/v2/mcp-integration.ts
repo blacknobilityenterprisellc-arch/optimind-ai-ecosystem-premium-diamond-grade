@@ -1,13 +1,13 @@
 /**
  * OptiMind AI Ecosystem - MCP (Model Context Protocol) Integration v2.0
  * Premium Diamond Grade Multi-Model Context Management
- * 
+ *
  * This implementation provides advanced MCP integration for maintaining context
  * across multiple AI models, enabling seamless collaboration and knowledge sharing.
  */
 
-import { quantumSecurityV2 } from './quantum-security';
-import { predictiveAnalyticsV2 } from './predictive-analytics';
+import { quantumSecurityV2 } from "./quantum-security";
+import { predictiveAnalyticsV2 } from "./predictive-analytics";
 
 export interface MCPContext {
   id: string;
@@ -28,13 +28,13 @@ export interface MCPContext {
 
 export interface MCPMessage {
   id: string;
-  type: 'REQUEST' | 'RESPONSE' | 'NOTIFICATION' | 'ERROR';
+  type: "REQUEST" | "RESPONSE" | "NOTIFICATION" | "ERROR";
   contextId?: string;
   payload: any;
   source: string;
   destination: string;
   timestamp: Date;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
   requiresAck: boolean;
 }
 
@@ -51,7 +51,7 @@ export interface MCPProtocol {
 export interface MCPConnection {
   id: string;
   modelId: string;
-  status: 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR';
+  status: "CONNECTING" | "CONNECTED" | "DISCONNECTED" | "ERROR";
   lastActivity: Date;
   messageCount: number;
   errorCount: number;
@@ -80,27 +80,27 @@ class MCPIntegrationV2 {
 
   constructor() {
     this.protocol = {
-      version: '2.0.0',
+      version: "2.0.0",
       capabilities: [
-        'context_sharing',
-        'message_routing',
-        'error_handling',
-        'compression',
-        'encryption',
-        'persistence',
-        'synchronization'
+        "context_sharing",
+        "message_routing",
+        "error_handling",
+        "compression",
+        "encryption",
+        "persistence",
+        "synchronization",
       ],
       supportedModels: [
-        'GLM-4.5',
-        'GPT-4',
-        'Claude-3',
-        'Llama-3',
-        'Gemini-Pro'
+        "GLM-4.5",
+        "GPT-4",
+        "Claude-3",
+        "Llama-3",
+        "Gemini-Pro",
       ],
       maxContextSize: 10 * 1024 * 1024, // 10MB
       maxMessageSize: 1 * 1024 * 1024, // 1MB
       encryption: true,
-      compression: true
+      compression: true,
     };
 
     this.stats = {
@@ -110,7 +110,7 @@ class MCPIntegrationV2 {
       averageLatency: 0,
       successRate: 0,
       contextHits: 0,
-      contextMisses: 0
+      contextMisses: 0,
     };
 
     this.initialize();
@@ -123,19 +123,19 @@ class MCPIntegrationV2 {
     try {
       // Start message processor
       this.startMessageProcessor();
-      
+
       // Start connection monitor
       this.startConnectionMonitor();
-      
+
       // Start context cleaner
       this.startContextCleaner();
-      
+
       // Load persisted contexts
       await this.loadPersistedContexts();
-      
-      console.log('MCP Integration v2.0 initialized successfully');
+
+      console.log("MCP Integration v2.0 initialized successfully");
     } catch (error) {
-      console.error('MCP Integration initialization failed:', error);
+      console.error("MCP Integration initialization failed:", error);
     }
   }
 
@@ -146,10 +146,10 @@ class MCPIntegrationV2 {
     sessionId: string,
     userId: string,
     data: any,
-    metadata: Partial<MCPContext['metadata']> = {}
+    metadata: Partial<MCPContext["metadata"]> = {},
   ): Promise<string> {
     const contextId = this.generateContextId();
-    
+
     const context: MCPContext = {
       id: contextId,
       sessionId,
@@ -157,21 +157,23 @@ class MCPIntegrationV2 {
       timestamp: new Date(),
       data,
       metadata: {
-        modelId: metadata.modelId || 'default',
-        operation: metadata.operation || 'create',
+        modelId: metadata.modelId || "default",
+        operation: metadata.operation || "create",
         priority: metadata.priority || 5,
         ttl: metadata.ttl || 3600000, // 1 hour
         tags: metadata.tags || [],
-        ...metadata
+        ...metadata,
       },
       version: 1,
-      checksum: await this.generateChecksum(data)
+      checksum: await this.generateChecksum(data),
     };
 
     // Validate context size
     const contextSize = JSON.stringify(context).length;
     if (contextSize > this.protocol.maxContextSize) {
-      throw new Error(`Context size (${contextSize} bytes) exceeds maximum allowed size (${this.protocol.maxContextSize} bytes)`);
+      throw new Error(
+        `Context size (${contextSize} bytes) exceeds maximum allowed size (${this.protocol.maxContextSize} bytes)`,
+      );
     }
 
     // Encrypt context if enabled
@@ -182,13 +184,13 @@ class MCPIntegrationV2 {
     // Store context
     this.contexts.set(contextId, context);
     this.contextCache.set(contextId, context);
-    
+
     // Update stats
     this.stats.totalContexts++;
-    
+
     // Broadcast context creation to connected models
     await this.broadcastContextCreation(context);
-    
+
     console.log(`MCP context created: ${contextId}`);
     return contextId;
   }
@@ -203,21 +205,21 @@ class MCPIntegrationV2 {
       this.stats.contextHits++;
       return cached;
     }
-    
+
     // Check main storage
     const context = this.contexts.get(contextId);
     if (context) {
       // Decrypt data if encrypted
-      if (this.protocol.encryption && typeof context.data === 'string') {
+      if (this.protocol.encryption && typeof context.data === "string") {
         context.data = await this.decryptData(context.data);
       }
-      
+
       // Cache the context
       this.contextCache.set(contextId, context);
       this.stats.contextHits++;
       return context;
     }
-    
+
     this.stats.contextMisses++;
     return null;
   }
@@ -228,36 +230,36 @@ class MCPIntegrationV2 {
   async updateContext(
     contextId: string,
     data: any,
-    metadata?: Partial<MCPContext['metadata']>
+    metadata?: Partial<MCPContext["metadata"]>,
   ): Promise<boolean> {
     const context = this.contexts.get(contextId);
     if (!context) {
       return false;
     }
-    
+
     // Update context data and metadata
     context.data = data;
     context.version++;
     context.timestamp = new Date();
-    
+
     if (metadata) {
       context.metadata = { ...context.metadata, ...metadata };
     }
-    
+
     // Update checksum
     context.checksum = await this.generateChecksum(data);
-    
+
     // Encrypt data if enabled
     if (this.protocol.encryption) {
       context.data = await this.encryptData(context.data);
     }
-    
+
     // Update cache
     this.contextCache.set(contextId, context);
-    
+
     // Broadcast context update
     await this.broadcastContextUpdate(context);
-    
+
     console.log(`MCP context updated: ${contextId}`);
     return true;
   }
@@ -270,14 +272,14 @@ class MCPIntegrationV2 {
     if (!context) {
       return false;
     }
-    
+
     // Remove from storage
     this.contexts.delete(contextId);
     this.contextCache.delete(contextId);
-    
+
     // Broadcast context deletion
     await this.broadcastContextDeletion(context);
-    
+
     console.log(`MCP context deleted: ${contextId}`);
     return true;
   }
@@ -286,34 +288,36 @@ class MCPIntegrationV2 {
    * Send MCP message
    */
   async sendMessage(
-    message: Omit<MCPMessage, 'id' | 'timestamp'>
+    message: Omit<MCPMessage, "id" | "timestamp">,
   ): Promise<string> {
     const messageId = this.generateMessageId();
-    
+
     const fullMessage: MCPMessage = {
       ...message,
       id: messageId,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    
+
     // Validate message size
     const messageSize = JSON.stringify(fullMessage).length;
     if (messageSize > this.protocol.maxMessageSize) {
-      throw new Error(`Message size (${messageSize} bytes) exceeds maximum allowed size (${this.protocol.maxMessageSize} bytes)`);
+      throw new Error(
+        `Message size (${messageSize} bytes) exceeds maximum allowed size (${this.protocol.maxMessageSize} bytes)`,
+      );
     }
-    
+
     // Add to queue
     this.messageQueue.push(fullMessage);
-    
+
     // Update stats
     this.stats.totalMessages++;
-    
+
     // Store in history
     this.messageHistory.push(fullMessage);
     if (this.messageHistory.length > 1000) {
       this.messageHistory = this.messageHistory.slice(-1000);
     }
-    
+
     console.log(`MCP message queued: ${messageId}`);
     return messageId;
   }
@@ -323,41 +327,41 @@ class MCPIntegrationV2 {
    */
   async connectModel(modelId: string): Promise<string> {
     const connectionId = this.generateConnectionId();
-    
+
     const connection: MCPConnection = {
       id: connectionId,
       modelId,
-      status: 'CONNECTING',
+      status: "CONNECTING",
       lastActivity: new Date(),
       messageCount: 0,
       errorCount: 0,
-      latency: 0
+      latency: 0,
     };
-    
+
     this.connections.set(connectionId, connection);
-    
+
     // Simulate connection process
     setTimeout(async () => {
-      connection.status = 'CONNECTED';
+      connection.status = "CONNECTED";
       this.stats.activeConnections++;
-      
+
       // Send connection notification
       await this.sendMessage({
-        type: 'NOTIFICATION',
+        type: "NOTIFICATION",
         payload: {
-          event: 'model_connected',
+          event: "model_connected",
           modelId,
-          connectionId
+          connectionId,
         },
-        source: 'mcp_integration',
-        destination: 'all',
-        priority: 'medium',
-        requiresAck: false
+        source: "mcp_integration",
+        destination: "all",
+        priority: "medium",
+        requiresAck: false,
       });
-      
+
       console.log(`Model connected: ${modelId}`);
     }, 1000);
-    
+
     return connectionId;
   }
 
@@ -369,29 +373,29 @@ class MCPIntegrationV2 {
     if (!connection) {
       return false;
     }
-    
-    connection.status = 'DISCONNECTED';
+
+    connection.status = "DISCONNECTED";
     this.stats.activeConnections--;
-    
+
     // Send disconnection notification
     await this.sendMessage({
-      type: 'NOTIFICATION',
+      type: "NOTIFICATION",
       payload: {
-        event: 'model_disconnected',
+        event: "model_disconnected",
         modelId: connection.modelId,
-        connectionId
+        connectionId,
       },
-      source: 'mcp_integration',
-      destination: 'all',
-      priority: 'medium',
-      requiresAck: false
+      source: "mcp_integration",
+      destination: "all",
+      priority: "medium",
+      requiresAck: false,
     });
-    
+
     // Remove connection after delay
     setTimeout(() => {
       this.connections.delete(connectionId);
     }, 5000);
-    
+
     console.log(`Model disconnected: ${connection.modelId}`);
     return true;
   }
@@ -401,35 +405,38 @@ class MCPIntegrationV2 {
    */
   async shareContext(
     contextId: string,
-    targetModels: string[]
+    targetModels: string[],
   ): Promise<boolean> {
     const context = await this.getContext(contextId);
     if (!context) {
       return false;
     }
-    
+
     // Send context to target models
     for (const modelId of targetModels) {
-      const connection = Array.from(this.connections.values())
-        .find(conn => conn.modelId === modelId && conn.status === 'CONNECTED');
-      
+      const connection = Array.from(this.connections.values()).find(
+        (conn) => conn.modelId === modelId && conn.status === "CONNECTED",
+      );
+
       if (connection) {
         await this.sendMessage({
-          type: 'REQUEST',
+          type: "REQUEST",
           contextId,
           payload: {
-            action: 'context_share',
-            context
+            action: "context_share",
+            context,
           },
-          source: 'mcp_integration',
+          source: "mcp_integration",
           destination: modelId,
-          priority: 'high',
-          requiresAck: true
+          priority: "high",
+          requiresAck: true,
         });
       }
     }
-    
-    console.log(`Context shared with ${targetModels.length} models: ${contextId}`);
+
+    console.log(
+      `Context shared with ${targetModels.length} models: ${contextId}`,
+    );
     return true;
   }
 
@@ -451,8 +458,9 @@ class MCPIntegrationV2 {
    * Get active connections
    */
   getActiveConnections(): MCPConnection[] {
-    return Array.from(this.connections.values())
-      .filter(conn => conn.status === 'CONNECTED');
+    return Array.from(this.connections.values()).filter(
+      (conn) => conn.status === "CONNECTED",
+    );
   }
 
   /**
@@ -480,17 +488,20 @@ class MCPIntegrationV2 {
     if (this.messageQueue.length === 0) return;
 
     this.isProcessing = true;
-    
+
     try {
-      const messagesToProcess = this.messageQueue.splice(0, Math.min(10, this.messageQueue.length));
-      
+      const messagesToProcess = this.messageQueue.splice(
+        0,
+        Math.min(10, this.messageQueue.length),
+      );
+
       const promises = messagesToProcess.map(async (message) => {
         return this.processMessage(message);
       });
 
       await Promise.allSettled(promises);
     } catch (error) {
-      console.error('Message processing failed:', error);
+      console.error("Message processing failed:", error);
     } finally {
       this.isProcessing = false;
     }
@@ -501,64 +512,65 @@ class MCPIntegrationV2 {
    */
   private async processMessage(message: MCPMessage): Promise<void> {
     const startTime = Date.now();
-    
+
     try {
       // Find connection for destination
-      const connection = Array.from(this.connections.values())
-        .find(conn => conn.modelId === message.destination && conn.status === 'CONNECTED');
-      
+      const connection = Array.from(this.connections.values()).find(
+        (conn) =>
+          conn.modelId === message.destination && conn.status === "CONNECTED",
+      );
+
       if (connection) {
         // Update connection stats
         connection.messageCount++;
         connection.lastActivity = new Date();
         connection.latency = Date.now() - startTime;
-        
+
         // Process message based on type
         switch (message.type) {
-          case 'REQUEST':
+          case "REQUEST":
             await this.handleRequest(message, connection);
             break;
-          case 'RESPONSE':
+          case "RESPONSE":
             await this.handleResponse(message, connection);
             break;
-          case 'NOTIFICATION':
+          case "NOTIFICATION":
             await this.handleNotification(message, connection);
             break;
-          case 'ERROR':
+          case "ERROR":
             await this.handleError(message, connection);
             break;
         }
       }
-      
+
       // Send acknowledgment if required
       if (message.requiresAck) {
         await this.sendMessage({
-          type: 'RESPONSE',
+          type: "RESPONSE",
           payload: {
             ack: true,
-            originalMessageId: message.id
+            originalMessageId: message.id,
           },
           source: message.destination,
           destination: message.source,
-          priority: 'low',
-          requiresAck: false
+          priority: "low",
+          requiresAck: false,
         });
       }
-      
     } catch (error) {
       console.error(`Message processing failed for ${message.id}:`, error);
-      
+
       // Send error response
       await this.sendMessage({
-        type: 'ERROR',
+        type: "ERROR",
         payload: {
           error: error.message,
-          originalMessageId: message.id
+          originalMessageId: message.id,
         },
         source: message.destination,
         destination: message.source,
-        priority: 'high',
-        requiresAck: false
+        priority: "high",
+        requiresAck: false,
       });
     }
   }
@@ -566,16 +578,19 @@ class MCPIntegrationV2 {
   /**
    * Handle request message
    */
-  private async handleRequest(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleRequest(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     // Handle different request types
     switch (message.payload.action) {
-      case 'context_share':
+      case "context_share":
         await this.handleContextShare(message, connection);
         break;
-      case 'context_request':
+      case "context_request":
         await this.handleContextRequest(message, connection);
         break;
-      case 'model_info':
+      case "model_info":
         await this.handleModelInfo(message, connection);
         break;
       default:
@@ -586,69 +601,88 @@ class MCPIntegrationV2 {
   /**
    * Handle response message
    */
-  private async handleResponse(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleResponse(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     // Handle response processing
-    console.log(`Response received from ${connection.modelId}:`, message.payload);
+    console.log(
+      `Response received from ${connection.modelId}:`,
+      message.payload,
+    );
   }
 
   /**
    * Handle notification message
    */
-  private async handleNotification(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleNotification(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     // Handle notification processing
-    console.log(`Notification received from ${connection.modelId}:`, message.payload);
+    console.log(
+      `Notification received from ${connection.modelId}:`,
+      message.payload,
+    );
   }
 
   /**
    * Handle error message
    */
-  private async handleError(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleError(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     // Handle error processing
     connection.errorCount++;
-    console.error(`Error received from ${connection.modelId}:`, message.payload);
+    console.error(
+      `Error received from ${connection.modelId}:`,
+      message.payload,
+    );
   }
 
   /**
    * Handle context share
    */
-  private async handleContextShare(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleContextShare(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     const { context } = message.payload;
-    
+
     // Store context for this model
-    await this.createContext(
-      connection.id,
-      'system',
-      context.data,
-      {
-        modelId: connection.modelId,
-        operation: 'context_share',
-        priority: 8
-      }
-    );
-    
+    await this.createContext(connection.id, "system", context.data, {
+      modelId: connection.modelId,
+      operation: "context_share",
+      priority: 8,
+    });
+
     console.log(`Context shared with ${connection.modelId}`);
   }
 
   /**
    * Handle context request
    */
-  private async handleContextRequest(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleContextRequest(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     const { contextId } = message.payload;
-    
+
     // Get requested context
     const context = await this.getContext(contextId);
-    
+
     if (context) {
       // Send context back to requesting model
       await this.sendMessage({
-        type: 'RESPONSE',
+        type: "RESPONSE",
         payload: {
-          context
+          context,
         },
-        source: 'mcp_integration',
+        source: "mcp_integration",
         destination: connection.modelId,
-        priority: 'high',
-        requiresAck: true
+        priority: "high",
+        requiresAck: true,
       });
     }
   }
@@ -656,21 +690,24 @@ class MCPIntegrationV2 {
   /**
    * Handle model info request
    */
-  private async handleModelInfo(message: MCPMessage, connection: MCPConnection): Promise<void> {
+  private async handleModelInfo(
+    message: MCPMessage,
+    connection: MCPConnection,
+  ): Promise<void> {
     // Send model information
     await this.sendMessage({
-      type: 'RESPONSE',
+      type: "RESPONSE",
       payload: {
         model: {
           id: connection.modelId,
           protocol: this.protocol,
-          capabilities: this.protocol.capabilities
-        }
+          capabilities: this.protocol.capabilities,
+        },
       },
-      source: 'mcp_integration',
+      source: "mcp_integration",
       destination: connection.modelId,
-      priority: 'medium',
-      requiresAck: true
+      priority: "medium",
+      requiresAck: true,
     });
   }
 
@@ -688,12 +725,12 @@ class MCPIntegrationV2 {
    */
   private monitorConnections(): void {
     const now = new Date();
-    
+
     for (const [connectionId, connection] of this.connections.entries()) {
       const inactiveTime = now.getTime() - connection.lastActivity.getTime();
-      
+
       // Disconnect inactive connections (5 minutes)
-      if (inactiveTime > 300000 && connection.status === 'CONNECTED') {
+      if (inactiveTime > 300000 && connection.status === "CONNECTED") {
         this.disconnectModel(connectionId);
       }
     }
@@ -714,20 +751,20 @@ class MCPIntegrationV2 {
   private cleanExpiredContexts(): void {
     const now = Date.now();
     const expiredContexts: string[] = [];
-    
+
     for (const [contextId, context] of this.contexts.entries()) {
       const contextAge = now - context.timestamp.getTime();
-      
+
       if (contextAge > context.metadata.ttl) {
         expiredContexts.push(contextId);
       }
     }
-    
+
     // Remove expired contexts
     for (const contextId of expiredContexts) {
       this.deleteContext(contextId);
     }
-    
+
     if (expiredContexts.length > 0) {
       console.log(`Cleaned ${expiredContexts.length} expired contexts`);
     }
@@ -738,7 +775,7 @@ class MCPIntegrationV2 {
    */
   private async loadPersistedContexts(): Promise<void> {
     // In a real implementation, load from database
-    console.log('Loaded persisted contexts from database');
+    console.log("Loaded persisted contexts from database");
   }
 
   /**
@@ -746,16 +783,16 @@ class MCPIntegrationV2 {
    */
   private async broadcastContextCreation(context: MCPContext): Promise<void> {
     await this.sendMessage({
-      type: 'NOTIFICATION',
+      type: "NOTIFICATION",
       payload: {
-        event: 'context_created',
+        event: "context_created",
         contextId: context.id,
-        sessionId: context.sessionId
+        sessionId: context.sessionId,
       },
-      source: 'mcp_integration',
-      destination: 'all',
-      priority: 'medium',
-      requiresAck: false
+      source: "mcp_integration",
+      destination: "all",
+      priority: "medium",
+      requiresAck: false,
     });
   }
 
@@ -764,16 +801,16 @@ class MCPIntegrationV2 {
    */
   private async broadcastContextUpdate(context: MCPContext): Promise<void> {
     await this.sendMessage({
-      type: 'NOTIFICATION',
+      type: "NOTIFICATION",
       payload: {
-        event: 'context_updated',
+        event: "context_updated",
         contextId: context.id,
-        version: context.version
+        version: context.version,
       },
-      source: 'mcp_integration',
-      destination: 'all',
-      priority: 'medium',
-      requiresAck: false
+      source: "mcp_integration",
+      destination: "all",
+      priority: "medium",
+      requiresAck: false,
     });
   }
 
@@ -782,15 +819,15 @@ class MCPIntegrationV2 {
    */
   private async broadcastContextDeletion(context: MCPContext): Promise<void> {
     await this.sendMessage({
-      type: 'NOTIFICATION',
+      type: "NOTIFICATION",
       payload: {
-        event: 'context_deleted',
-        contextId: context.id
+        event: "context_deleted",
+        contextId: context.id,
       },
-      source: 'mcp_integration',
-      destination: 'all',
-      priority: 'low',
-      requiresAck: false
+      source: "mcp_integration",
+      destination: "all",
+      priority: "low",
+      requiresAck: false,
     });
   }
 
@@ -822,9 +859,9 @@ class MCPIntegrationV2 {
     const dataString = JSON.stringify(data);
     const encoder = new TextEncoder();
     const dataBuffer = encoder.encode(dataString);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", dataBuffer);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
   }
 
   /**
@@ -834,8 +871,8 @@ class MCPIntegrationV2 {
     // Use quantum security for encryption
     const encrypted = await quantumSecurityV2.encryptQuantumSecure(
       JSON.stringify(data),
-      'default_key',
-      'system'
+      "default_key",
+      "system",
     );
     return JSON.stringify(encrypted);
   }
@@ -845,7 +882,10 @@ class MCPIntegrationV2 {
    */
   private async decryptData(encryptedData: string): Promise<any> {
     const encrypted = JSON.parse(encryptedData);
-    const decrypted = await quantumSecurityV2.decryptQuantumSecure(encrypted, 'system');
+    const decrypted = await quantumSecurityV2.decryptQuantumSecure(
+      encrypted,
+      "system",
+    );
     return JSON.parse(decrypted);
   }
 }
@@ -854,13 +894,7 @@ class MCPIntegrationV2 {
 export const mcpIntegrationV2 = new MCPIntegrationV2();
 
 // Export types and utilities
-export type {
-  MCPContext,
-  MCPMessage,
-  MCPProtocol,
-  MCPConnection,
-  MCPStats
-};
+export type { MCPContext, MCPMessage, MCPProtocol, MCPConnection, MCPStats };
 
 // Export utility functions
 export const createMCPIntegration = () => {

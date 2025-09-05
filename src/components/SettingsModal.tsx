@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { 
-  Settings, 
-  Shield, 
-  Brain, 
-  Monitor, 
-  Smartphone, 
-  Database, 
-  Wifi, 
+import {
+  Settings,
+  Shield,
+  Brain,
+  Monitor,
+  Smartphone,
+  Database,
+  Wifi,
   WifiOff,
   Bell,
   Lock,
@@ -17,7 +17,7 @@ import {
   Trash2,
   RefreshCw,
   Save,
-  X
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
@@ -45,7 +56,7 @@ interface Settings {
   autoBackup: boolean;
   offlineMode: boolean;
   aiModel: string;
-  scanSensitivity: 'low' | 'medium' | 'high';
+  scanSensitivity: "low" | "medium" | "high";
   storageLocation: string;
   maxFileSize: number;
   language: string;
@@ -57,15 +68,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [settings, setSettings] = useState<Settings>({
     autoScan: true,
     notifications: true,
-    darkMode: theme === 'dark',
+    darkMode: theme === "dark",
     highContrast: isHighContrast,
     autoBackup: false,
     offlineMode: false,
-    aiModel: 'glm-45v',
-    scanSensitivity: 'medium',
-    storageLocation: 'local',
+    aiModel: "glm-45v",
+    scanSensitivity: "medium",
+    storageLocation: "local",
     maxFileSize: 10,
-    language: 'en'
+    language: "en",
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -73,22 +84,22 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     setIsSaving(true);
     try {
       // Apply theme settings
-      if (settings.darkMode !== (theme === 'dark')) {
-        setTheme(settings.darkMode ? 'dark' : 'light');
+      if (settings.darkMode !== (theme === "dark")) {
+        setTheme(settings.darkMode ? "dark" : "light");
       }
-      
+
       if (settings.highContrast !== isHighContrast) {
         toggleHighContrast();
       }
 
       // Save other settings to localStorage
-      localStorage.setItem('app-settings', JSON.stringify(settings));
-      
+      localStorage.setItem("app-settings", JSON.stringify(settings));
+
       toast({
         title: "Settings Saved",
         description: "Your preferences have been saved successfully.",
       });
-      
+
       onClose();
     } catch {
       toast({
@@ -99,23 +110,31 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     } finally {
       setIsSaving(false);
     }
-  }, [settings, theme, setTheme, isHighContrast, toggleHighContrast, toast, onClose]);
+  }, [
+    settings,
+    theme,
+    setTheme,
+    isHighContrast,
+    toggleHighContrast,
+    toast,
+    onClose,
+  ]);
 
   const handleReset = useCallback(() => {
     setSettings({
       autoScan: true,
       notifications: true,
-      darkMode: theme === 'dark',
+      darkMode: theme === "dark",
       highContrast: isHighContrast,
       autoBackup: false,
       offlineMode: false,
-      aiModel: 'glm-45v',
-      scanSensitivity: 'medium',
-      storageLocation: 'local',
+      aiModel: "glm-45v",
+      scanSensitivity: "medium",
+      storageLocation: "local",
       maxFileSize: 10,
-      language: 'en'
+      language: "en",
     });
-    
+
     toast({
       title: "Settings Reset",
       description: "Settings have been reset to defaults.",
@@ -123,20 +142,26 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   }, [theme, isHighContrast, toast]);
 
   const handleClearCache = useCallback(() => {
-    if (confirm('Are you sure you want to clear all cached data? This action cannot be undone.')) {
+    if (
+      confirm(
+        "Are you sure you want to clear all cached data? This action cannot be undone.",
+      )
+    ) {
       // Clear localStorage
       localStorage.clear();
-      
+
       // Clear sessionStorage
       sessionStorage.clear();
-      
+
       // Clear service worker cache if available
-      if ('caches' in window) {
-        caches.keys().then(cacheNames => {
-          return Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)));
+      if ("caches" in window) {
+        caches.keys().then((cacheNames) => {
+          return Promise.all(
+            cacheNames.map((cacheName) => caches.delete(cacheName)),
+          );
         });
       }
-      
+
       toast({
         title: "Cache Cleared",
         description: "All cached data has been cleared.",
@@ -146,22 +171,24 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const exportData = useCallback(() => {
     const data = {
-      settings: localStorage.getItem('app-settings'),
-      photos: localStorage.getItem('photo-data'),
-      preferences: localStorage.getItem('user-preferences'),
-      exportDate: new Date().toISOString()
+      settings: localStorage.getItem("app-settings"),
+      photos: localStorage.getItem("photo-data"),
+      preferences: localStorage.getItem("user-preferences"),
+      exportDate: new Date().toISOString(),
     };
-    
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `photo-guardian-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.download = `photo-guardian-export-${new Date().toISOString().split("T")[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
+
     toast({
       title: "Data Exported",
       description: "Your data has been exported successfully.",
@@ -198,28 +225,44 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Dark Mode</Label>
-                    <p className="text-sm text-muted-foreground">Enable dark theme</p>
+                    <p className="text-sm text-muted-foreground">
+                      Enable dark theme
+                    </p>
                   </div>
                   <Switch
                     checked={settings.darkMode}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, darkMode: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({ ...prev, darkMode: checked }))
+                    }
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>High Contrast</Label>
-                    <p className="text-sm text-muted-foreground">Improve visibility</p>
+                    <p className="text-sm text-muted-foreground">
+                      Improve visibility
+                    </p>
                   </div>
                   <Switch
                     checked={settings.highContrast}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, highContrast: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        highContrast: checked,
+                      }))
+                    }
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Language</Label>
-                  <Select value={settings.language} onValueChange={(value) => setSettings(prev => ({ ...prev, language: value }))}>
+                  <Select
+                    value={settings.language}
+                    onValueChange={(value) =>
+                      setSettings((prev) => ({ ...prev, language: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -246,22 +289,33 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Push Notifications</Label>
-                    <p className="text-sm text-muted-foreground">Receive app notifications</p>
+                    <p className="text-sm text-muted-foreground">
+                      Receive app notifications
+                    </p>
                   </div>
                   <Switch
                     checked={settings.notifications}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, notifications: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        notifications: checked,
+                      }))
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Auto Scan</Label>
-                    <p className="text-sm text-muted-foreground">Automatically scan new photos</p>
+                    <p className="text-sm text-muted-foreground">
+                      Automatically scan new photos
+                    </p>
                   </div>
                   <Switch
                     checked={settings.autoScan}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, autoScan: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({ ...prev, autoScan: checked }))
+                    }
                   />
                 </div>
               </CardContent>
@@ -280,35 +334,55 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Auto Backup</Label>
-                    <p className="text-sm text-muted-foreground">Backup photos to cloud</p>
+                    <p className="text-sm text-muted-foreground">
+                      Backup photos to cloud
+                    </p>
                   </div>
                   <Switch
                     checked={settings.autoBackup}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, autoBackup: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({ ...prev, autoBackup: checked }))
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label>Offline Mode</Label>
-                    <p className="text-sm text-muted-foreground">Work without internet</p>
+                    <p className="text-sm text-muted-foreground">
+                      Work without internet
+                    </p>
                   </div>
                   <Switch
                     checked={settings.offlineMode}
-                    onCheckedChange={(checked) => setSettings(prev => ({ ...prev, offlineMode: checked }))}
+                    onCheckedChange={(checked) =>
+                      setSettings((prev) => ({ ...prev, offlineMode: checked }))
+                    }
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label>Scan Sensitivity</Label>
-                  <Select value={settings.scanSensitivity} onValueChange={(value: 'low' | 'medium' | 'high') => setSettings(prev => ({ ...prev, scanSensitivity: value }))}>
+                  <Select
+                    value={settings.scanSensitivity}
+                    onValueChange={(value: "low" | "medium" | "high") =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        scanSensitivity: value,
+                      }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="low">Low (Fewer false positives)</SelectItem>
+                      <SelectItem value="low">
+                        Low (Fewer false positives)
+                      </SelectItem>
                       <SelectItem value="medium">Medium (Balanced)</SelectItem>
-                      <SelectItem value="high">High (Maximum protection)</SelectItem>
+                      <SelectItem value="high">
+                        High (Maximum protection)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -324,19 +398,29 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex gap-2">
-                  <Button onClick={exportData} variant="outline" className="flex-1">
+                  <Button
+                    onClick={exportData}
+                    variant="outline"
+                    className="flex-1"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Export Data
                   </Button>
-                  <Button onClick={handleClearCache} variant="outline" className="flex-1">
+                  <Button
+                    onClick={handleClearCache}
+                    variant="outline"
+                    className="flex-1"
+                  >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Clear Cache
                   </Button>
                 </div>
-                
+
                 <div className="text-sm text-muted-foreground">
                   <p>• Export: Download your settings and data</p>
-                  <p>• Clear Cache: Remove all cached data and reset preferences</p>
+                  <p>
+                    • Clear Cache: Remove all cached data and reset preferences
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -353,14 +437,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>AI Model</Label>
-                  <Select value={settings.aiModel} onValueChange={(value) => setSettings(prev => ({ ...prev, aiModel: value }))}>
+                  <Select
+                    value={settings.aiModel}
+                    onValueChange={(value) =>
+                      setSettings((prev) => ({ ...prev, aiModel: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="glm-45v">GLM-4.5V (Vision)</SelectItem>
-                      <SelectItem value="glm-45-auto-think">GLM-4.5 Auto-Think</SelectItem>
-                      <SelectItem value="glm-45-flagship">GLM-4.5 Flagship</SelectItem>
+                      <SelectItem value="glm-45-auto-think">
+                        GLM-4.5 Auto-Think
+                      </SelectItem>
+                      <SelectItem value="glm-45-flagship">
+                        GLM-4.5 Flagship
+                      </SelectItem>
                       <SelectItem value="air">AIR Model</SelectItem>
                     </SelectContent>
                   </Select>
@@ -368,14 +461,24 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                 <div className="space-y-2">
                   <Label>Storage Location</Label>
-                  <Select value={settings.storageLocation} onValueChange={(value) => setSettings(prev => ({ ...prev, storageLocation: value }))}>
+                  <Select
+                    value={settings.storageLocation}
+                    onValueChange={(value) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        storageLocation: value,
+                      }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="local">Local Storage</SelectItem>
                       <SelectItem value="cloud">Cloud Storage</SelectItem>
-                      <SelectItem value="hybrid">Hybrid (Local + Cloud)</SelectItem>
+                      <SelectItem value="hybrid">
+                        Hybrid (Local + Cloud)
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -385,7 +488,12 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <Input
                     type="number"
                     value={settings.maxFileSize}
-                    onChange={(e) => setSettings(prev => ({ ...prev, maxFileSize: Number.parseInt(e.target.value) || 10 }))}
+                    onChange={(e) =>
+                      setSettings((prev) => ({
+                        ...prev,
+                        maxFileSize: Number.parseInt(e.target.value) || 10,
+                      }))
+                    }
                     min="1"
                     max="100"
                   />
@@ -418,7 +526,11 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <Label>Network Status</Label>
                   <div className="flex items-center gap-2">
                     <Badge variant={navigator.onLine ? "default" : "secondary"}>
-                      {navigator.onLine ? <Wifi className="w-3 h-3 mr-1" /> : <WifiOff className="w-3 h-3 mr-1" />}
+                      {navigator.onLine ? (
+                        <Wifi className="w-3 h-3 mr-1" />
+                      ) : (
+                        <WifiOff className="w-3 h-3 mr-1" />
+                      )}
                       {navigator.onLine ? "Online" : "Offline"}
                     </Badge>
                   </div>
@@ -438,7 +550,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   <Label>App Version</Label>
                   <Badge variant="outline">1.0.0</Badge>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label>Browser</Label>
                   <Badge variant="outline">{navigator.userAgent}</Badge>
@@ -447,8 +559,14 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 <div className="space-y-2">
                   <Label>Device Type</Label>
                   <Badge variant="outline">
-                    {/Mobile|Android|iPhone/.test(navigator.userAgent) ? <Smartphone className="w-3 h-3 mr-1" /> : <Monitor className="w-3 h-3 mr-1" />}
-                    {/Mobile|Android|iPhone/.test(navigator.userAgent) ? "Mobile" : "Desktop"}
+                    {/Mobile|Android|iPhone/.test(navigator.userAgent) ? (
+                      <Smartphone className="w-3 h-3 mr-1" />
+                    ) : (
+                      <Monitor className="w-3 h-3 mr-1" />
+                    )}
+                    {/Mobile|Android|iPhone/.test(navigator.userAgent)
+                      ? "Mobile"
+                      : "Desktop"}
                   </Badge>
                 </div>
               </CardContent>
@@ -463,7 +581,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               Reset
             </Button>
           </div>
-          
+
           <div className="flex gap-2">
             <Button onClick={onClose} variant="outline">
               <X className="w-4 h-4 mr-2" />

@@ -1,16 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 
-import { contractWiseService, ContractAnalysisRequest } from '@/lib/contractwise-service';
-import { authOptions } from '@/lib/auth';
+import {
+  contractWiseService,
+  ContractAnalysisRequest,
+} from "@/lib/contractwise-service";
+import { authOptions } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
@@ -24,22 +27,22 @@ export async function POST(request: NextRequest) {
       jurisdiction,
       industry,
       priority,
-      projectId
+      projectId,
     } = body;
 
     // Validate required fields
     if (!contractTitle || !contractType) {
       return NextResponse.json(
-        { error: 'Contract title and type are required' },
-        { status: 400 }
+        { error: "Contract title and type are required" },
+        { status: 400 },
       );
     }
 
     // Validate that we have either contract text or extracted text
     if (!contractText && !extractedText && !fileUrl) {
       return NextResponse.json(
-        { error: 'Contract text, extracted text, or file URL is required' },
-        { status: 400 }
+        { error: "Contract text, extracted text, or file URL is required" },
+        { status: 400 },
       );
     }
 
@@ -51,14 +54,14 @@ export async function POST(request: NextRequest) {
       extractedText,
       jurisdiction,
       industry,
-      priority
+      priority,
     };
 
     const userId = session.user.id;
     const { result, dbRecord } = await contractWiseService.analyzeContract(
       analysisRequest,
       userId,
-      projectId
+      projectId,
     );
 
     return NextResponse.json({
@@ -68,17 +71,16 @@ export async function POST(request: NextRequest) {
       createdAt: dbRecord.createdAt,
       processingTime: result.metadata.processingTime,
       cost: result.metadata.cost,
-      confidence: result.metadata.overallConfidence
+      confidence: result.metadata.overallConfidence,
     });
-
   } catch (error: any) {
-    console.error('Contract analysis error:', error);
+    console.error("Contract analysis error:", error);
     return NextResponse.json(
-      { 
-        error: error.message || 'Contract analysis failed',
-        timestamp: new Date().toISOString()
+      {
+        error: error.message || "Contract analysis failed",
+        timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

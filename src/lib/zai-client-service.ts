@@ -44,7 +44,7 @@ class ZAIClientService {
   private async fetchWithRetry(
     url: string,
     options: RequestInit = {},
-    retries = this.MAX_RETRIES
+    retries = this.MAX_RETRIES,
   ): Promise<Response> {
     try {
       const controller = new AbortController();
@@ -54,7 +54,7 @@ class ZAIClientService {
         ...options,
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...options.headers,
         },
       });
@@ -65,7 +65,9 @@ class ZAIClientService {
         const errorData = await response.json().catch(() => ({}));
         const error: ZAIServiceError = {
           code: `HTTP_${response.status}`,
-          message: errorData.error || `HTTP ${response.status}: ${response.statusText}`,
+          message:
+            errorData.error ||
+            `HTTP ${response.status}: ${response.statusText}`,
           details: errorData,
           retryable: response.status >= 500 || response.status === 429,
         };
@@ -74,26 +76,29 @@ class ZAIClientService {
 
       return response;
     } catch (error: any) {
-      if (error?.name === 'AbortError') {
+      if (error?.name === "AbortError") {
         const timeoutError: ZAIServiceError = {
-          code: 'TIMEOUT',
-          message: 'Request timeout',
+          code: "TIMEOUT",
+          message: "Request timeout",
           retryable: true,
         };
         throw timeoutError;
       }
 
-      if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      if (
+        error instanceof TypeError &&
+        error.message.includes("Failed to fetch")
+      ) {
         const networkError: ZAIServiceError = {
-          code: 'NETWORK_ERROR',
-          message: 'Network connection failed',
+          code: "NETWORK_ERROR",
+          message: "Network connection failed",
           retryable: true,
         };
         throw networkError;
       }
 
       if (retries > 0 && error.retryable) {
-        await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+        await new Promise((resolve) => setTimeout(resolve, this.RETRY_DELAY));
         return this.fetchWithRetry(url, options, retries - 1);
       }
 
@@ -103,31 +108,33 @@ class ZAIClientService {
 
   async getAvailableModels(): Promise<ZAIModelConfig[]> {
     try {
-      const response = await this.fetchWithRetry('/api/models');
+      const response = await this.fetchWithRetry("/api/models");
       const data = await response.json();
       return data.models;
     } catch (error) {
-      console.error('Failed to get available models:', error);
+      console.error("Failed to get available models:", error);
       throw this.normalizeError(error);
     }
   }
 
-  async analyzeWithModel(request: ZAIAnalysisRequest): Promise<ZAIAnalysisResponse> {
+  async analyzeWithModel(
+    request: ZAIAnalysisRequest,
+  ): Promise<ZAIAnalysisResponse> {
     try {
       const endpoint = `/api/models/${request.modelId}`;
       const response = await this.fetchWithRetry(endpoint, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({
           imageBase64: request.imageBase64,
           analysisType: request.analysisType,
-          customPrompt: request.customPrompt
+          customPrompt: request.customPrompt,
         }),
       });
 
       const result = await response.json();
       return {
         ...result,
-        timestamp: new Date(result.timestamp)
+        timestamp: new Date(result.timestamp),
       };
     } catch (error) {
       console.error(`Analysis failed for model ${request.modelId}:`, error);
@@ -135,30 +142,35 @@ class ZAIClientService {
     }
   }
 
-  async performEnsembleAnalysis(request: ZAIAnalysisRequest, modelIds: string[] = []): Promise<any> {
+  async performEnsembleAnalysis(
+    request: ZAIAnalysisRequest,
+    modelIds: string[] = [],
+  ): Promise<any> {
     try {
-      const response = await this.fetchWithRetry('/api/models/ensemble', {
-        method: 'POST',
+      const response = await this.fetchWithRetry("/api/models/ensemble", {
+        method: "POST",
         body: JSON.stringify({
           imageBase64: request.imageBase64,
           analysisType: request.analysisType,
           customPrompt: request.customPrompt,
-          modelIds
+          modelIds,
         }),
       });
 
       return await response.json();
     } catch (error) {
-      console.error('Ensemble analysis failed:', error);
+      console.error("Ensemble analysis failed:", error);
       throw this.normalizeError(error);
     }
   }
 
   async testModelConnection(modelId: string): Promise<boolean> {
     try {
-      const response = await this.fetchWithRetry('/api/test-models');
+      const response = await this.fetchWithRetry("/api/test-models");
       const data = await response.json();
-      const modelTest = data.testResults.find((r: any) => r.modelId === modelId);
+      const modelTest = data.testResults.find(
+        (r: any) => r.modelId === modelId,
+      );
       return modelTest?.isConnected || false;
     } catch (error) {
       console.error(`Model connection test failed for ${modelId}:`, error);
@@ -169,7 +181,7 @@ class ZAIClientService {
   async getModelInfo(modelId: string): Promise<ZAIModelConfig | null> {
     try {
       const models = await this.getAvailableModels();
-      return models.find(m => m.id === modelId) || null;
+      return models.find((m) => m.id === modelId) || null;
     } catch (error) {
       console.error(`Failed to get model info for ${modelId}:`, error);
       return null;
@@ -182,8 +194,8 @@ class ZAIClientService {
     }
 
     return {
-      code: 'UNKNOWN_ERROR',
-      message: error.message || 'An unknown error occurred',
+      code: "UNKNOWN_ERROR",
+      message: error.message || "An unknown error occurred",
       retryable: false,
       details: error,
     };
@@ -193,7 +205,7 @@ class ZAIClientService {
   async isModelAvailable(modelId: string): Promise<boolean> {
     try {
       const models = await this.getAvailableModels();
-      return models.some(m => m.id === modelId);
+      return models.some((m) => m.id === modelId);
     } catch {
       return false;
     }

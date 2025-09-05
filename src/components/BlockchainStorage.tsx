@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { 
-  Shield, 
-  Database, 
-  Upload, 
-  Download, 
-  Send, 
+import {
+  Shield,
+  Database,
+  Upload,
+  Download,
+  Send,
   Image as ImageIcon,
   Link,
   Copy,
@@ -21,7 +21,7 @@ import {
   RefreshCw,
   ExternalLink,
   Crown,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,13 +32,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  useBlockchainStorage, 
+import {
+  useBlockchainStorage,
   BlockchainStorageConfig,
   NFTMetadata,
-  StorageResult 
+  StorageResult,
 } from "@/lib/blockchain-storage";
 import { useSecureSubscription } from "@/lib/secure-subscription-manager";
 
@@ -53,7 +59,7 @@ export function BlockchainStorage({
   photoId,
   file,
   onStorageComplete,
-  className = ""
+  className = "",
 }: BlockchainStorageProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("mint");
@@ -63,7 +69,9 @@ export function BlockchainStorage({
   const [tokenId, setTokenId] = useState("");
   const [transferAddress, setTransferAddress] = useState("");
   const [nftMetadata, setNftMetadata] = useState<NFTMetadata | null>(null);
-  const [ownerNFTs, setOwnerNFTs] = useState<Array<{ tokenId: string; metadata: NFTMetadata }>>([]);
+  const [ownerNFTs, setOwnerNFTs] = useState<
+    Array<{ tokenId: string; metadata: NFTMetadata }>
+  >([]);
   const [networkStats, setNetworkStats] = useState<any>(null);
   const [gasEstimate, setGasEstimate] = useState(0);
   const [isMinting, setIsMinting] = useState(false);
@@ -76,7 +84,7 @@ export function BlockchainStorage({
   const blockchainConfig: BlockchainStorageConfig = {
     provider: selectedProvider as any,
     network: selectedNetwork as any,
-    infuraApiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY
+    infuraApiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY,
   };
 
   const {
@@ -88,7 +96,7 @@ export function BlockchainStorage({
     getNFTMetadata,
     getOwnerNFTs,
     getGasEstimate,
-    getNetworkStats
+    getNetworkStats,
   } = useBlockchainStorage(blockchainConfig);
 
   // Load initial data
@@ -101,16 +109,16 @@ export function BlockchainStorage({
   const loadNetworkData = useCallback(async () => {
     try {
       setIsLoading(true);
-      
+
       const [stats, gas] = await Promise.all([
         getNetworkStats(),
-        getGasEstimate()
+        getGasEstimate(),
       ]);
-      
+
       setNetworkStats(stats);
       setGasEstimate(gas);
     } catch (error) {
-      console.error('Failed to load network data:', error);
+      console.error("Failed to load network data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -121,28 +129,31 @@ export function BlockchainStorage({
 
     try {
       setIsMinting(true);
-      
+
       const metadata: NFTMetadata = {
         name: `PhotoGuard Pro #${Date.now()}`,
-        description: 'Premium photo secured with blockchain storage',
+        description: "Premium photo secured with blockchain storage",
         image: URL.createObjectURL(file),
         attributes: [
-          { trait_type: 'Security Level', value: 'Maximum' },
-          { trait_type: 'File Size', value: `${(file.size / 1024 / 1024).toFixed(2)} MB` },
-          { trait_type: 'File Type', value: file.type },
-          { trait_type: 'Encryption', value: 'AES-256' },
-          { trait_type: 'AI Analysis', value: 'Advanced' }
-        ]
+          { trait_type: "Security Level", value: "Maximum" },
+          {
+            trait_type: "File Size",
+            value: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+          },
+          { trait_type: "File Type", value: file.type },
+          { trait_type: "Encryption", value: "AES-256" },
+          { trait_type: "AI Analysis", value: "Advanced" },
+        ],
       };
 
       const result = await storePhotoAsNFT(file, metadata, ownerAddress);
-      
+
       if (result.success) {
         setNftMetadata(result.metadata!);
         onStorageComplete?.(result);
       }
     } catch (error) {
-      console.error('Failed to mint NFT:', error);
+      console.error("Failed to mint NFT:", error);
     } finally {
       setIsMinting(false);
     }
@@ -153,22 +164,29 @@ export function BlockchainStorage({
 
     try {
       setIsTransferring(true);
-      
+
       const result = await transferNFT(tokenId, ownerAddress, transferAddress);
-      
+
       if (result.success) {
         // Refresh owner NFTs
         const updatedNFTs = await getOwnerNFTs(ownerAddress);
         setOwnerNFTs(updatedNFTs);
-        
+
         setTransferAddress("");
       }
     } catch (error) {
-      console.error('Failed to transfer NFT:', error);
+      console.error("Failed to transfer NFT:", error);
     } finally {
       setIsTransferring(false);
     }
-  }, [tokenId, transferAddress, ownerAddress, isPremium, transferNFT, getOwnerNFTs]);
+  }, [
+    tokenId,
+    transferAddress,
+    ownerAddress,
+    isPremium,
+    transferNFT,
+    getOwnerNFTs,
+  ]);
 
   const handleGetMetadata = useCallback(async () => {
     if (!tokenId || !isPremium) return;
@@ -178,7 +196,7 @@ export function BlockchainStorage({
       const metadata = await getNFTMetadata(tokenId);
       setNftMetadata(metadata);
     } catch (error) {
-      console.error('Failed to get NFT metadata:', error);
+      console.error("Failed to get NFT metadata:", error);
     } finally {
       setIsLoading(false);
     }
@@ -192,7 +210,7 @@ export function BlockchainStorage({
       const nfts = await getOwnerNFTs(ownerAddress);
       setOwnerNFTs(nfts);
     } catch (error) {
-      console.error('Failed to get owner NFTs:', error);
+      console.error("Failed to get owner NFTs:", error);
     } finally {
       setIsLoading(false);
     }
@@ -204,7 +222,7 @@ export function BlockchainStorage({
       setCopiedHash(text);
       setTimeout(() => setCopiedHash(null), 2000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
+      console.error("Failed to copy to clipboard:", error);
     }
   }, []);
 
@@ -216,7 +234,8 @@ export function BlockchainStorage({
             <Crown className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Blockchain Storage</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Store your photos as NFTs on Ethereum, Polygon, BSC, or Arbitrum with our premium blockchain storage feature
+              Store your photos as NFTs on Ethereum, Polygon, BSC, or Arbitrum
+              with our premium blockchain storage feature
             </p>
             <Button className="w-full">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -237,7 +256,7 @@ export function BlockchainStorage({
               <AlertTriangle className="w-5 h-5" />
               <h3 className="font-semibold">Blockchain Service Error</h3>
             </div>
-            
+
             <Alert className="border-red-200 bg-red-50">
               <AlertTriangle className="w-4 h-4 text-red-600" />
               <AlertDescription className="text-red-800">
@@ -245,7 +264,11 @@ export function BlockchainStorage({
               </AlertDescription>
             </Alert>
 
-            <Button onClick={loadNetworkData} variant="outline" className="w-full">
+            <Button
+              onClick={loadNetworkData}
+              variant="outline"
+              className="w-full"
+            >
               <RefreshCw className="w-4 h-4 mr-2" />
               Retry Connection
             </Button>
@@ -263,7 +286,10 @@ export function BlockchainStorage({
             <Database className="w-5 h-5 text-purple-600" />
             Blockchain Storage
             {isReady && (
-              <Badge variant="outline" className="text-green-600 border-green-600">
+              <Badge
+                variant="outline"
+                className="text-green-600 border-green-600"
+              >
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Connected
               </Badge>
@@ -286,21 +312,32 @@ export function BlockchainStorage({
             <div className="text-center">
               <Network className="w-4 h-4 mx-auto text-blue-600 mb-1" />
               <div className="text-xs font-medium">{networkStats.network}</div>
-              <div className="text-xs text-muted-foreground">{networkStats.status}</div>
+              <div className="text-xs text-muted-foreground">
+                {networkStats.status}
+              </div>
             </div>
             <div className="text-center">
               <Hash className="w-4 h-4 mx-auto text-green-600 mb-1" />
-              <div className="text-xs font-medium">Block #{networkStats.blockNumber}</div>
+              <div className="text-xs font-medium">
+                Block #{networkStats.blockNumber}
+              </div>
               <div className="text-xs text-muted-foreground">Latest</div>
             </div>
             <div className="text-center">
               <Zap className="w-4 h-4 mx-auto text-orange-600 mb-1" />
-              <div className="text-xs font-medium">{networkStats.gasPrice} Gwei</div>
+              <div className="text-xs font-medium">
+                {networkStats.gasPrice} Gwei
+              </div>
               <div className="text-xs text-muted-foreground">Gas Price</div>
             </div>
             <div className="text-center">
               <Clock className="w-4 h-4 mx-auto text-purple-600 mb-1" />
-              <div className="text-xs font-medium">~${(gasEstimate * networkStats.gasPrice / 1000000000).toFixed(2)}</div>
+              <div className="text-xs font-medium">
+                ~$
+                {((gasEstimate * networkStats.gasPrice) / 1000000000).toFixed(
+                  2,
+                )}
+              </div>
               <div className="text-xs text-muted-foreground">Est. Cost</div>
             </div>
           </div>
@@ -311,7 +348,10 @@ export function BlockchainStorage({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Provider</Label>
-              <Select value={selectedProvider} onValueChange={setSelectedProvider}>
+              <Select
+                value={selectedProvider}
+                onValueChange={setSelectedProvider}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -326,7 +366,10 @@ export function BlockchainStorage({
 
             <div className="space-y-2">
               <Label className="text-sm font-medium">Network</Label>
-              <Select value={selectedNetwork} onValueChange={setSelectedNetwork}>
+              <Select
+                value={selectedNetwork}
+                onValueChange={setSelectedNetwork}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -375,9 +418,12 @@ export function BlockchainStorage({
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-semibold mb-2">Mint Photo as NFT</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      Mint Photo as NFT
+                    </h3>
                     <p className="text-sm text-muted-foreground">
-                      Store your photo permanently on the blockchain as a unique NFT
+                      Store your photo permanently on the blockchain as a unique
+                      NFT
                     </p>
                   </div>
 
@@ -393,7 +439,7 @@ export function BlockchainStorage({
                         </div>
                       </div>
 
-                      <Button 
+                      <Button
                         onClick={handleMintNFT}
                         disabled={isMinting || !ownerAddress}
                         className="w-full"
@@ -446,7 +492,9 @@ export function BlockchainStorage({
                     </div>
 
                     <div>
-                      <Label className="text-sm font-medium">Recipient Address</Label>
+                      <Label className="text-sm font-medium">
+                        Recipient Address
+                      </Label>
                       <Input
                         placeholder="0x..."
                         value={transferAddress}
@@ -454,9 +502,14 @@ export function BlockchainStorage({
                       />
                     </div>
 
-                    <Button 
+                    <Button
                       onClick={handleTransferNFT}
-                      disabled={isTransferring || !tokenId || !transferAddress || !ownerAddress}
+                      disabled={
+                        isTransferring ||
+                        !tokenId ||
+                        !transferAddress ||
+                        !ownerAddress
+                      }
                       className="w-full"
                     >
                       {isTransferring ? (
@@ -508,7 +561,9 @@ export function BlockchainStorage({
                             <ImageIcon className="w-8 h-8 text-white" />
                           </div>
                           <div className="flex-1">
-                            <h4 className="font-semibold">{nftMetadata.name}</h4>
+                            <h4 className="font-semibold">
+                              {nftMetadata.name}
+                            </h4>
                             <p className="text-sm text-muted-foreground mb-2">
                               {nftMetadata.description}
                             </p>
@@ -527,12 +582,21 @@ export function BlockchainStorage({
                         </div>
 
                         <div>
-                          <h5 className="text-sm font-medium mb-2">Attributes</h5>
+                          <h5 className="text-sm font-medium mb-2">
+                            Attributes
+                          </h5>
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                             {nftMetadata.attributes.map((attr, index) => (
-                              <div key={index} className="p-2 bg-background rounded border">
-                                <div className="text-xs font-medium">{attr.trait_type}</div>
-                                <div className="text-xs text-muted-foreground">{attr.value}</div>
+                              <div
+                                key={index}
+                                className="p-2 bg-background rounded border"
+                              >
+                                <div className="text-xs font-medium">
+                                  {attr.trait_type}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {attr.value}
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -551,12 +615,17 @@ export function BlockchainStorage({
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold mb-2">Your Collection</h3>
+                      <h3 className="text-lg font-semibold mb-2">
+                        Your Collection
+                      </h3>
                       <p className="text-sm text-muted-foreground">
                         View all NFTs owned by your address
                       </p>
                     </div>
-                    <Button onClick={handleGetOwnerNFTs} disabled={!ownerAddress}>
+                    <Button
+                      onClick={handleGetOwnerNFTs}
+                      disabled={!ownerAddress}
+                    >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Refresh
                     </Button>
@@ -565,18 +634,31 @@ export function BlockchainStorage({
                   {ownerNFTs.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {ownerNFTs.map((nft) => (
-                        <div key={nft.tokenId} className="p-4 bg-muted/30 rounded-lg border">
+                        <div
+                          key={nft.tokenId}
+                          className="p-4 bg-muted/30 rounded-lg border"
+                        >
                           <div className="w-full h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-3 flex items-center justify-center">
                             <ImageIcon className="w-8 h-8 text-white" />
                           </div>
-                          <h4 className="font-medium text-sm mb-1">{nft.metadata.name}</h4>
-                          <p className="text-xs text-muted-foreground mb-2">Token ID: {nft.tokenId}</p>
+                          <h4 className="font-medium text-sm mb-1">
+                            {nft.metadata.name}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            Token ID: {nft.tokenId}
+                          </p>
                           <div className="flex gap-1 flex-wrap">
-                            {nft.metadata.attributes.slice(0, 2).map((attr, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {attr.value}
-                              </Badge>
-                            ))}
+                            {nft.metadata.attributes
+                              .slice(0, 2)
+                              .map((attr, index) => (
+                                <Badge
+                                  key={index}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {attr.value}
+                                </Badge>
+                              ))}
                           </div>
                         </div>
                       ))}
@@ -585,7 +667,9 @@ export function BlockchainStorage({
                     <Alert>
                       <Wallet className="w-4 h-4" />
                       <AlertDescription>
-                        {ownerAddress ? 'No NFTs found for this address' : 'Enter your wallet address to view your collection'}
+                        {ownerAddress
+                          ? "No NFTs found for this address"
+                          : "Enter your wallet address to view your collection"}
                       </AlertDescription>
                     </Alert>
                   )}

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { 
-  Wand2, 
-  Sparkles, 
+import {
+  Wand2,
+  Sparkles,
   Image as ImageIcon,
   Download,
   Share2,
@@ -1147,7 +1147,7 @@ import {
   Exhibits,
   Artifacts,
   Objects,
-  Items
+  Items,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -1158,13 +1158,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { 
+import {
   useSecureSubscription,
-  useAIPremiumEditor 
+  useAIPremiumEditor,
 } from "@/lib/ai-premium-editor";
 
 interface EditTool {
@@ -1172,7 +1178,7 @@ interface EditTool {
   name: string;
   description: string;
   icon: React.ReactNode;
-  category: 'basic' | 'advanced' | 'ai' | 'effects' | 'filters';
+  category: "basic" | "advanced" | "ai" | "effects" | "filters";
   isPremium: boolean;
   credits: number;
 }
@@ -1225,7 +1231,7 @@ export function AIPremiumEditor() {
     dehaze: 0,
     sharpen: 0,
     noise: 0,
-    vignette: 0
+    vignette: 0,
   });
   const [selectedTool, setSelectedTool] = useState<string>("adjust");
   const [activeTab, setActiveTab] = useState("edit");
@@ -1252,7 +1258,7 @@ export function AIPremiumEditor() {
     reduceNoise,
     isEditing: isServiceEditing,
     error,
-    credits
+    credits,
   } = useAIPremiumEditor();
 
   const editTools: EditTool[] = [
@@ -1263,7 +1269,7 @@ export function AIPremiumEditor() {
       icon: <Adjustments className="w-5 h-5" />,
       category: "basic",
       isPremium: false,
-      credits: 0
+      credits: 0,
     },
     {
       id: "crop",
@@ -1272,7 +1278,7 @@ export function AIPremiumEditor() {
       icon: <Crop className="w-5 h-5" />,
       category: "basic",
       isPremium: false,
-      credits: 0
+      credits: 0,
     },
     {
       id: "filters",
@@ -1281,7 +1287,7 @@ export function AIPremiumEditor() {
       icon: <Filter className="w-5 h-5" />,
       category: "basic",
       isPremium: false,
-      credits: 0
+      credits: 0,
     },
     {
       id: "enhance",
@@ -1290,7 +1296,7 @@ export function AIPremiumEditor() {
       icon: <Sparkles className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 50
+      credits: 50,
     },
     {
       id: "background",
@@ -1299,7 +1305,7 @@ export function AIPremiumEditor() {
       icon: <Layers className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 75
+      credits: 75,
     },
     {
       id: "upscale",
@@ -1308,7 +1314,7 @@ export function AIPremiumEditor() {
       icon: <ZoomIn className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 100
+      credits: 100,
     },
     {
       id: "denoise",
@@ -1317,7 +1323,7 @@ export function AIPremiumEditor() {
       icon: <Blur className="w-5 h-5" />,
       category: "advanced",
       isPremium: true,
-      credits: 40
+      credits: 40,
     },
     {
       id: "sharpen",
@@ -1326,7 +1332,7 @@ export function AIPremiumEditor() {
       icon: <Sharpen className="w-5 h-5" />,
       category: "advanced",
       isPremium: true,
-      credits: 35
+      credits: 35,
     },
     {
       id: "colorize",
@@ -1335,7 +1341,7 @@ export function AIPremiumEditor() {
       icon: <Palette className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 80
+      credits: 80,
     },
     {
       id: "restore",
@@ -1344,7 +1350,7 @@ export function AIPremiumEditor() {
       icon: <History className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 120
+      credits: 120,
     },
     {
       id: "retouch",
@@ -1353,7 +1359,7 @@ export function AIPremiumEditor() {
       icon: <Brush className="w-5 h-5" />,
       category: "ai",
       isPremium: true,
-      credits: 60
+      credits: 60,
     },
     {
       id: "style",
@@ -1362,8 +1368,8 @@ export function AIPremiumEditor() {
       icon: <MagicWand className="w-5 h-5" />,
       category: "effects",
       isPremium: true,
-      credits: 90
-    }
+      credits: 90,
+    },
   ];
 
   const filterPresets: FilterPreset[] = [
@@ -1373,7 +1379,7 @@ export function AIPremiumEditor() {
       description: "No filter applied",
       thumbnail: "📷",
       adjustments: {},
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "vivid",
@@ -1381,7 +1387,7 @@ export function AIPremiumEditor() {
       description: "Enhanced colors and contrast",
       thumbnail: "🌈",
       adjustments: { saturation: 20, contrast: 10, vibrance: 15 },
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "dramatic",
@@ -1389,7 +1395,7 @@ export function AIPremiumEditor() {
       description: "High contrast with deep shadows",
       thumbnail: "🎭",
       adjustments: { contrast: 30, shadows: -20, clarity: 15 },
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "warm",
@@ -1397,7 +1403,7 @@ export function AIPremiumEditor() {
       description: "Warm tones with golden highlights",
       thumbnail: "☀️",
       adjustments: { warmth: 15, highlights: 10, saturation: 10 },
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "cool",
@@ -1405,7 +1411,7 @@ export function AIPremiumEditor() {
       description: "Cool tones with blue accents",
       thumbnail: "❄️",
       adjustments: { warmth: -15, tint: 10, saturation: -5 },
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "cinematic",
@@ -1413,15 +1419,20 @@ export function AIPremiumEditor() {
       description: "Film-like color grading",
       thumbnail: "🎬",
       adjustments: { contrast: 20, saturation: -10, vignette: 15, warmth: 5 },
-      isPremium: true
+      isPremium: true,
     },
     {
       id: "vintage",
       name: "Vintage",
       description: "Retro film look with faded colors",
       thumbnail: "📸",
-      adjustments: { saturation: -20, warmth: 10, vignette: 25, highlights: -10 },
-      isPremium: true
+      adjustments: {
+        saturation: -20,
+        warmth: 10,
+        vignette: 25,
+        highlights: -10,
+      },
+      isPremium: true,
     },
     {
       id: "blackwhite",
@@ -1429,7 +1440,7 @@ export function AIPremiumEditor() {
       description: "Classic monochrome conversion",
       thumbnail: "⚫",
       adjustments: { saturation: -100, contrast: 15, clarity: 10 },
-      isPremium: false
+      isPremium: false,
     },
     {
       id: "portrait",
@@ -1437,7 +1448,7 @@ export function AIPremiumEditor() {
       description: "Optimized for portrait photography",
       thumbnail: "👤",
       adjustments: { brightness: 5, contrast: 10, sharpen: 15, warmth: 5 },
-      isPremium: true
+      isPremium: true,
     },
     {
       id: "landscape",
@@ -1445,53 +1456,62 @@ export function AIPremiumEditor() {
       description: "Enhanced for scenic photography",
       thumbnail: "🏔️",
       adjustments: { saturation: 15, contrast: 10, clarity: 20, dehaze: 10 },
-      isPremium: true
-    }
+      isPremium: true,
+    },
   ];
 
-  const handleAdjustmentChange = useCallback((key: keyof AdjustmentSettings, value: number) => {
-    setAdjustments(prev => ({ ...prev, [key]: value }));
-  }, []);
+  const handleAdjustmentChange = useCallback(
+    (key: keyof AdjustmentSettings, value: number) => {
+      setAdjustments((prev) => ({ ...prev, [key]: value }));
+    },
+    [],
+  );
 
-  const handleApplyFilter = useCallback(async (filterId: string) => {
-    if (!selectedImage || !isPremium) return;
+  const handleApplyFilter = useCallback(
+    async (filterId: string) => {
+      if (!selectedImage || !isPremium) return;
 
-    const filter = filterPresets.find(f => f.id === filterId);
-    if (!filter) return;
+      const filter = filterPresets.find((f) => f.id === filterId);
+      if (!filter) return;
 
-    try {
-      setIsProcessing(true);
-      setCurrentAction("Applying filter...");
-      setProcessingProgress(0);
+      try {
+        setIsProcessing(true);
+        setCurrentAction("Applying filter...");
+        setProcessingProgress(0);
 
-      // Simulate filter application
-      for (let i = 0; i <= 100; i += 10) {
-        setProcessingProgress(i);
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Simulate filter application
+        for (let i = 0; i <= 100; i += 10) {
+          setProcessingProgress(i);
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        // Update adjustments based on filter
+        setAdjustments((prev) => ({ ...prev, ...filter.adjustments }));
+        setSelectedFilter(filterId);
+
+        // Add to history
+        const historyItem: EditHistory = {
+          id: Date.now().toString(),
+          action: `Applied ${filter.name} filter`,
+          timestamp: new Date(),
+          thumbnail: selectedImage,
+          settings: { filterId, adjustments: filter.adjustments },
+        };
+
+        setEditHistory((prev) => [
+          ...prev.slice(0, historyIndex + 1),
+          historyItem,
+        ]);
+        setHistoryIndex((prev) => prev + 1);
+
+        setIsProcessing(false);
+      } catch (error) {
+        console.error("Filter application failed:", error);
+        setIsProcessing(false);
       }
-
-      // Update adjustments based on filter
-      setAdjustments(prev => ({ ...prev, ...filter.adjustments }));
-      setSelectedFilter(filterId);
-
-      // Add to history
-      const historyItem: EditHistory = {
-        id: Date.now().toString(),
-        action: `Applied ${filter.name} filter`,
-        timestamp: new Date(),
-        thumbnail: selectedImage,
-        settings: { filterId, adjustments: filter.adjustments }
-      };
-
-      setEditHistory(prev => [...prev.slice(0, historyIndex + 1), historyItem]);
-      setHistoryIndex(prev => prev + 1);
-
-      setIsProcessing(false);
-    } catch (error) {
-      console.error('Filter application failed:', error);
-      setIsProcessing(false);
-    }
-  }, [selectedImage, isPremium, historyIndex]);
+    },
+    [selectedImage, isPremium, historyIndex],
+  );
 
   const handleAIEnhance = useCallback(async () => {
     if (!selectedImage || !isPremium) return;
@@ -1505,13 +1525,13 @@ export function AIPremiumEditor() {
 
       if (result.success) {
         // Simulate AI enhancement by adjusting settings
-        setAdjustments(prev => ({
+        setAdjustments((prev) => ({
           ...prev,
           brightness: prev.brightness + 5,
           contrast: prev.contrast + 10,
           clarity: prev.clarity + 15,
           sharpen: prev.sharpen + 10,
-          saturation: prev.saturation + 5
+          saturation: prev.saturation + 5,
         }));
 
         // Add to history
@@ -1520,16 +1540,19 @@ export function AIPremiumEditor() {
           action: "AI Enhancement",
           timestamp: new Date(),
           thumbnail: selectedImage,
-          settings: { type: "ai-enhance", result }
+          settings: { type: "ai-enhance", result },
         };
 
-        setEditHistory(prev => [...prev.slice(0, historyIndex + 1), historyItem]);
-        setHistoryIndex(prev => prev + 1);
+        setEditHistory((prev) => [
+          ...prev.slice(0, historyIndex + 1),
+          historyItem,
+        ]);
+        setHistoryIndex((prev) => prev + 1);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error('AI enhancement failed:', error);
+      console.error("AI enhancement failed:", error);
       setIsProcessing(false);
     }
   }, [selectedImage, isPremium, adjustments, enhanceImage, historyIndex]);
@@ -1551,16 +1574,19 @@ export function AIPremiumEditor() {
           action: "Background Removal",
           timestamp: new Date(),
           thumbnail: selectedImage,
-          settings: { type: "background-removal", result }
+          settings: { type: "background-removal", result },
         };
 
-        setEditHistory(prev => [...prev.slice(0, historyIndex + 1), historyItem]);
-        setHistoryIndex(prev => prev + 1);
+        setEditHistory((prev) => [
+          ...prev.slice(0, historyIndex + 1),
+          historyItem,
+        ]);
+        setHistoryIndex((prev) => prev + 1);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error('Background removal failed:', error);
+      console.error("Background removal failed:", error);
       setIsProcessing(false);
     }
   }, [selectedImage, isPremium, removeBackground, historyIndex]);
@@ -1579,29 +1605,35 @@ export function AIPremiumEditor() {
       dehaze: 0,
       sharpen: 0,
       noise: 0,
-      vignette: 0
+      vignette: 0,
     });
     setSelectedFilter(null);
   }, []);
 
   const handleUndo = useCallback(() => {
     if (historyIndex > 0) {
-      setHistoryIndex(prev => prev - 1);
+      setHistoryIndex((prev) => prev - 1);
       // Restore previous state
       const previousState = editHistory[historyIndex - 1];
       if (previousState.settings.adjustments) {
-        setAdjustments(prev => ({ ...prev, ...previousState.settings.adjustments }));
+        setAdjustments((prev) => ({
+          ...prev,
+          ...previousState.settings.adjustments,
+        }));
       }
     }
   }, [historyIndex, editHistory]);
 
   const handleRedo = useCallback(() => {
     if (historyIndex < editHistory.length - 1) {
-      setHistoryIndex(prev => prev + 1);
+      setHistoryIndex((prev) => prev + 1);
       // Restore next state
       const nextState = editHistory[historyIndex + 1];
       if (nextState.settings.adjustments) {
-        setAdjustments(prev => ({ ...prev, ...nextState.settings.adjustments }));
+        setAdjustments((prev) => ({
+          ...prev,
+          ...nextState.settings.adjustments,
+        }));
       }
     }
   }, [historyIndex, editHistory]);
@@ -1610,23 +1642,25 @@ export function AIPremiumEditor() {
     if (!selectedImage) return;
 
     // In a real implementation, this would download the edited image
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = selectedImage;
     link.download = `edited-image-${Date.now()}.jpg`;
     link.click();
   }, [selectedImage]);
 
   const getToolIcon = (toolId: string) => {
-    const tool = editTools.find(t => t.id === toolId);
+    const tool = editTools.find((t) => t.id === toolId);
     return tool?.icon || <Adjustments className="w-5 h-5" />;
   };
 
   const getFilterThumbnail = (filterId: string) => {
-    const filter = filterPresets.find(f => f.id === filterId);
+    const filter = filterPresets.find((f) => f.id === filterId);
     return filter?.thumbnail || "📷";
   };
 
-  const hasAdjustments = Object.values(adjustments).some(value => value !== 0);
+  const hasAdjustments = Object.values(adjustments).some(
+    (value) => value !== 0,
+  );
 
   if (!isPremium) {
     return (
@@ -1638,8 +1672,8 @@ export function AIPremiumEditor() {
             </div>
             <h2 className="text-2xl font-bold">AI Premium Editor</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Professional-grade photo editing with AI-powered tools, advanced filters, 
-              and intelligent enhancement features.
+              Professional-grade photo editing with AI-powered tools, advanced
+              filters, and intelligent enhancement features.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-md mx-auto">
               <div className="text-center">
@@ -1678,13 +1712,20 @@ export function AIPremiumEditor() {
             <Wand2 className="w-6 h-6 text-purple-600" />
             AI Premium Editor
           </h2>
-          <p className="text-muted-foreground">Professional photo editing with AI-powered tools</p>
+          <p className="text-muted-foreground">
+            Professional photo editing with AI-powered tools
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-purple-600">
             {credits} credits
           </Badge>
-          <Button variant="outline" size="sm" onClick={handleReset} disabled={!hasAdjustments}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleReset}
+            disabled={!hasAdjustments}
+          >
             <RotateCcw className="w-4 h-4 mr-2" />
             Reset
           </Button>
@@ -1702,7 +1743,9 @@ export function AIPremiumEditor() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{currentAction}</span>
-                <span className="text-sm text-muted-foreground">{processingProgress}%</span>
+                <span className="text-sm text-muted-foreground">
+                  {processingProgress}%
+                </span>
               </div>
               <Progress value={processingProgress} className="h-2" />
               <p className="text-xs text-muted-foreground">
@@ -1721,7 +1764,7 @@ export function AIPremiumEditor() {
               <CardTitle className="text-lg">Tools</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {editTools.map(tool => (
+              {editTools.map((tool) => (
                 <Button
                   key={tool.id}
                   variant={selectedTool === tool.id ? "default" : "ghost"}
@@ -1733,9 +1776,13 @@ export function AIPremiumEditor() {
                     {tool.icon}
                     <div className="flex-1 text-left">
                       <div className="text-sm font-medium">{tool.name}</div>
-                      <div className="text-xs text-muted-foreground">{tool.description}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {tool.description}
+                      </div>
                     </div>
-                    {tool.isPremium && <Crown className="w-3 h-3 text-yellow-500" />}
+                    {tool.isPremium && (
+                      <Crown className="w-3 h-3 text-yellow-500" />
+                    )}
                   </div>
                 </Button>
               ))}
@@ -1745,7 +1792,11 @@ export function AIPremiumEditor() {
 
         {/* Main Editor Area */}
         <div className="lg:col-span-3">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="edit">Edit</TabsTrigger>
               <TabsTrigger value="filters">Filters</TabsTrigger>
@@ -1777,7 +1828,7 @@ export function AIPremiumEditor() {
                       </Button>
                     </div>
                   </div>
-                  
+
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50">
                     {selectedImage ? (
                       <div className="space-y-4">
@@ -1788,12 +1839,18 @@ export function AIPremiumEditor() {
                           style={{ transform: `scale(${zoom / 100})` }}
                         />
                         <div className="flex items-center justify-center gap-2">
-                          <Badge variant={hasAdjustments ? "default" : "secondary"}>
+                          <Badge
+                            variant={hasAdjustments ? "default" : "secondary"}
+                          >
                             {hasAdjustments ? "Edited" : "Original"}
                           </Badge>
                           {selectedFilter && (
                             <Badge variant="outline">
-                              {filterPresets.find(f => f.id === selectedFilter)?.name}
+                              {
+                                filterPresets.find(
+                                  (f) => f.id === selectedFilter,
+                                )?.name
+                              }
                             </Badge>
                           )}
                         </div>
@@ -1802,7 +1859,9 @@ export function AIPremiumEditor() {
                       <div className="space-y-4">
                         <ImageIcon className="w-16 h-16 mx-auto text-gray-400" />
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">No Image Selected</h3>
+                          <h3 className="text-lg font-semibold mb-2">
+                            No Image Selected
+                          </h3>
                           <p className="text-muted-foreground">
                             Upload an image to start editing
                           </p>
@@ -1829,7 +1888,9 @@ export function AIPremiumEditor() {
                           checked={autoEnhance}
                           onCheckedChange={setAutoEnhance}
                         />
-                        <Label htmlFor="auto-enhance" className="text-sm">Auto Enhance</Label>
+                        <Label htmlFor="auto-enhance" className="text-sm">
+                          Auto Enhance
+                        </Label>
                         <Button
                           variant="ghost"
                           size="sm"
@@ -1846,11 +1907,15 @@ export function AIPremiumEditor() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Brightness</Label>
-                          <span className="text-xs text-muted-foreground">{adjustments.brightness}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {adjustments.brightness}
+                          </span>
                         </div>
                         <Slider
                           value={[adjustments.brightness]}
-                          onValueChange={(value) => handleAdjustmentChange('brightness', value[0])}
+                          onValueChange={(value) =>
+                            handleAdjustmentChange("brightness", value[0])
+                          }
                           min={-100}
                           max={100}
                           step={1}
@@ -1860,11 +1925,15 @@ export function AIPremiumEditor() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Contrast</Label>
-                          <span className="text-xs text-muted-foreground">{adjustments.contrast}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {adjustments.contrast}
+                          </span>
                         </div>
                         <Slider
                           value={[adjustments.contrast]}
-                          onValueChange={(value) => handleAdjustmentChange('contrast', value[0])}
+                          onValueChange={(value) =>
+                            handleAdjustmentChange("contrast", value[0])
+                          }
                           min={-100}
                           max={100}
                           step={1}
@@ -1874,11 +1943,15 @@ export function AIPremiumEditor() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Saturation</Label>
-                          <span className="text-xs text-muted-foreground">{adjustments.saturation}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {adjustments.saturation}
+                          </span>
                         </div>
                         <Slider
                           value={[adjustments.saturation]}
-                          onValueChange={(value) => handleAdjustmentChange('saturation', value[0])}
+                          onValueChange={(value) =>
+                            handleAdjustmentChange("saturation", value[0])
+                          }
                           min={-100}
                           max={100}
                           step={1}
@@ -1888,11 +1961,15 @@ export function AIPremiumEditor() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Vibrance</Label>
-                          <span className="text-xs text-muted-foreground">{adjustments.vibrance}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {adjustments.vibrance}
+                          </span>
                         </div>
                         <Slider
                           value={[adjustments.vibrance]}
-                          onValueChange={(value) => handleAdjustmentChange('vibrance', value[0])}
+                          onValueChange={(value) =>
+                            handleAdjustmentChange("vibrance", value[0])
+                          }
                           min={-100}
                           max={100}
                           step={1}
@@ -1908,11 +1985,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Highlights</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.highlights}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.highlights}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.highlights]}
-                              onValueChange={(value) => handleAdjustmentChange('highlights', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("highlights", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -1922,11 +2003,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Shadows</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.shadows}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.shadows}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.shadows]}
-                              onValueChange={(value) => handleAdjustmentChange('shadows', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("shadows", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -1936,11 +2021,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Warmth</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.warmth}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.warmth}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.warmth]}
-                              onValueChange={(value) => handleAdjustmentChange('warmth', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("warmth", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -1950,11 +2039,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Tint</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.tint}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.tint}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.tint]}
-                              onValueChange={(value) => handleAdjustmentChange('tint', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("tint", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -1964,11 +2057,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Clarity</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.clarity}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.clarity}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.clarity]}
-                              onValueChange={(value) => handleAdjustmentChange('clarity', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("clarity", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -1978,11 +2075,15 @@ export function AIPremiumEditor() {
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <Label className="text-sm">Sharpen</Label>
-                              <span className="text-xs text-muted-foreground">{adjustments.sharpen}</span>
+                              <span className="text-xs text-muted-foreground">
+                                {adjustments.sharpen}
+                              </span>
                             </div>
                             <Slider
                               value={[adjustments.sharpen]}
-                              onValueChange={(value) => handleAdjustmentChange('sharpen', value[0])}
+                              onValueChange={(value) =>
+                                handleAdjustmentChange("sharpen", value[0])
+                              }
                               min={-100}
                               max={100}
                               step={1}
@@ -2003,20 +2104,30 @@ export function AIPremiumEditor() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                    {filterPresets.map(filter => (
+                    {filterPresets.map((filter) => (
                       <div
                         key={filter.id}
                         className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                           selectedFilter === filter.id
-                            ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        } ${filter.isPremium && credits < 50 ? 'opacity-50' : ''}`}
-                        onClick={() => filter.isPremium && credits >= 50 ? handleApplyFilter(filter.id) : null}
+                            ? "border-purple-500 bg-purple-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        } ${filter.isPremium && credits < 50 ? "opacity-50" : ""}`}
+                        onClick={() =>
+                          filter.isPremium && credits >= 50
+                            ? handleApplyFilter(filter.id)
+                            : null
+                        }
                       >
                         <div className="text-center">
-                          <div className="text-3xl mb-2">{filter.thumbnail}</div>
-                          <div className="font-medium text-sm">{filter.name}</div>
-                          <div className="text-xs text-muted-foreground mt-1">{filter.description}</div>
+                          <div className="text-3xl mb-2">
+                            {filter.thumbnail}
+                          </div>
+                          <div className="font-medium text-sm">
+                            {filter.name}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {filter.description}
+                          </div>
                           {filter.isPremium && (
                             <Badge variant="outline" className="text-xs mt-2">
                               <Crown className="w-2 h-2 mr-1" />
@@ -2042,9 +2153,10 @@ export function AIPremiumEditor() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                      Automatically enhance your photo using advanced AI algorithms for optimal quality.
+                      Automatically enhance your photo using advanced AI
+                      algorithms for optimal quality.
                     </p>
-                    <Button 
+                    <Button
                       onClick={handleAIEnhance}
                       disabled={!selectedImage || credits < 50}
                       className="w-full"
@@ -2066,7 +2178,7 @@ export function AIPremiumEditor() {
                     <p className="text-sm text-muted-foreground">
                       Remove or replace backgrounds with AI-powered precision.
                     </p>
-                    <Button 
+                    <Button
                       onClick={handleRemoveBackground}
                       disabled={!selectedImage || credits < 75}
                       className="w-full"
@@ -2086,9 +2198,10 @@ export function AIPremiumEditor() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                      Increase image resolution while maintaining quality using advanced AI upscaling.
+                      Increase image resolution while maintaining quality using
+                      advanced AI upscaling.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => upscaleImage(selectedImage!)}
                       disabled={!selectedImage || credits < 100}
                       className="w-full"
@@ -2108,9 +2221,10 @@ export function AIPremiumEditor() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                      Remove noise and grain from your photos for cleaner, sharper images.
+                      Remove noise and grain from your photos for cleaner,
+                      sharper images.
                     </p>
-                    <Button 
+                    <Button
                       onClick={() => reduceNoise(selectedImage!)}
                       disabled={!selectedImage || credits < 40}
                       className="w-full"
@@ -2158,8 +2272,8 @@ export function AIPremiumEditor() {
                           key={item.id}
                           className={`p-3 rounded-lg border ${
                             index === historyIndex
-                              ? 'border-purple-500 bg-purple-50'
-                              : 'border-gray-200'
+                              ? "border-purple-500 bg-purple-50"
+                              : "border-gray-200"
                           }`}
                         >
                           <div className="flex items-center justify-between">
@@ -2170,7 +2284,9 @@ export function AIPremiumEditor() {
                                 className="w-12 h-12 object-cover rounded"
                               />
                               <div>
-                                <div className="font-medium text-sm">{item.action}</div>
+                                <div className="font-medium text-sm">
+                                  {item.action}
+                                </div>
                                 <div className="text-xs text-muted-foreground">
                                   {item.timestamp.toLocaleTimeString()}
                                 </div>
@@ -2186,7 +2302,9 @@ export function AIPremiumEditor() {
                   ) : (
                     <div className="text-center py-8">
                       <History className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Edit History</h3>
+                      <h3 className="text-lg font-semibold mb-2">
+                        No Edit History
+                      </h3>
                       <p className="text-muted-foreground">
                         Start editing to see your history here
                       </p>

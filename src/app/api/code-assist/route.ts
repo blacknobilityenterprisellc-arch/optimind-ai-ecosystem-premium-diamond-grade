@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { aiService } from '@/lib/ai';
+import { aiService } from "@/lib/ai";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!code || !language || !task) {
       return NextResponse.json(
-        { error: 'Code, language, and task are required' },
-        { status: 400 }
+        { error: "Code, language, and task are required" },
+        { status: 400 },
       );
     }
 
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
       code,
       language,
       task,
-      context: context || ''
+      context: context || "",
     });
 
     return NextResponse.json({
@@ -28,14 +28,13 @@ export async function POST(request: NextRequest) {
       result: result.content,
       model: result.model,
       usage: result.usage,
-      cost: result.cost
+      cost: result.cost,
     });
-
   } catch (error) {
-    console.error('Code assistance error:', error);
+    console.error("Code assistance error:", error);
     return NextResponse.json(
-      { error: 'Failed to assist with code' },
-      { status: 500 }
+      { error: "Failed to assist with code" },
+      { status: 500 },
     );
   }
 }

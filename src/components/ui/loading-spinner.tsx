@@ -10,25 +10,23 @@ interface LoadingSpinnerProps {
   text?: string;
 }
 
-export function LoadingSpinner({ 
-  size = "md", 
-  className = "", 
-  text 
+export function LoadingSpinner({
+  size = "md",
+  className = "",
+  text,
 }: LoadingSpinnerProps) {
   const sizeClasses = {
     sm: "w-4 h-4",
-    md: "w-6 h-6", 
+    md: "w-6 h-6",
     lg: "w-8 h-8",
-    xl: "w-12 h-12"
+    xl: "w-12 h-12",
   };
 
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <div className="flex flex-col items-center space-y-2">
         <Loader2 className={cn("animate-spin", sizeClasses[size])} />
-        {text && (
-          <p className="text-sm text-muted-foreground">{text}</p>
-        )}
+        {text && <p className="text-sm text-muted-foreground">{text}</p>}
       </div>
     </div>
   );
@@ -40,10 +38,10 @@ interface LoadingCardProps {
   className?: string;
 }
 
-export function LoadingCard({ 
-  title = "Loading...", 
+export function LoadingCard({
+  title = "Loading...",
   description = "Please wait while we process your request",
-  className = "" 
+  className = "",
 }: LoadingCardProps) {
   return (
     <div className={cn("flex items-center justify-center p-8", className)}>
@@ -63,7 +61,10 @@ interface LoadingSkeletonProps {
   className?: string;
 }
 
-export function LoadingSkeleton({ lines = 3, className = "" }: LoadingSkeletonProps) {
+export function LoadingSkeleton({
+  lines = 3,
+  className = "",
+}: LoadingSkeletonProps) {
   return (
     <div className={cn("space-y-3", className)}>
       {Array.from({ length: lines }).map((_, index) => (

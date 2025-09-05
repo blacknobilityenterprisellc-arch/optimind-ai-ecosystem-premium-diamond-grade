@@ -22,81 +22,84 @@ export function useApi() {
   const [state, setState] = useState<ApiState>({
     data: null,
     loading: false,
-    error: null
+    error: null,
   });
 
-  const callApi = useCallback(async (
-    url: string,
-    options: RequestInit = {},
-    apiOptions: ApiCallOptions = {}
-  ) => {
-    const {
-      onSuccess,
-      onError,
-      showSuccessToast = false,
-      showErrorToast = true,
-      successMessage = "Operation completed successfully",
-      errorMessage = "An error occurred"
-    } = apiOptions;
+  const callApi = useCallback(
+    async (
+      url: string,
+      options: RequestInit = {},
+      apiOptions: ApiCallOptions = {},
+    ) => {
+      const {
+        onSuccess,
+        onError,
+        showSuccessToast = false,
+        showErrorToast = true,
+        successMessage = "Operation completed successfully",
+        errorMessage = "An error occurred",
+      } = apiOptions;
 
-    setState(prev => ({ ...prev, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
-        ...options,
-      });
+      try {
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+          },
+          ...options,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || errorMessage);
-        throw error;
-      }
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const error = new Error(errorData.message || errorMessage);
+          throw error;
+        }
 
-      const data = await response.json();
-      
-      setState(prev => ({ ...prev, data, loading: false, error: null }));
-      
-      if (showSuccessToast) {
-        toast.success(successMessage);
+        const data = await response.json();
+
+        setState((prev) => ({ ...prev, data, loading: false, error: null }));
+
+        if (showSuccessToast) {
+          toast.success(successMessage);
+        }
+
+        if (onSuccess) {
+          onSuccess(data);
+        }
+
+        return data;
+      } catch (error) {
+        const err = error as Error;
+        setState((prev) => ({ ...prev, loading: false, error: err }));
+
+        if (showErrorToast) {
+          toast.error(err.message || errorMessage);
+        }
+
+        if (onError) {
+          onError(err);
+        }
+
+        throw err;
       }
-      
-      if (onSuccess) {
-        onSuccess(data);
-      }
-      
-      return data;
-    } catch (error) {
-      const err = error as Error;
-      setState(prev => ({ ...prev, loading: false, error: err }));
-      
-      if (showErrorToast) {
-        toast.error(err.message || errorMessage);
-      }
-      
-      if (onError) {
-        onError(err);
-      }
-      
-      throw err;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const reset = useCallback(() => {
     setState({
       data: null,
       loading: false,
-      error: null
+      error: null,
     });
   }, []);
 
   return {
     ...state,
     callApi,
-    reset
+    reset,
   };
 }
 
@@ -104,80 +107,83 @@ export function useLazyApi() {
   const [state, setState] = useState<ApiState>({
     data: null,
     loading: false,
-    error: null
+    error: null,
   });
 
-  const execute = useCallback(async (
-    url: string,
-    options: RequestInit = {},
-    apiOptions: ApiCallOptions = {}
-  ) => {
-    const {
-      onSuccess,
-      onError,
-      showSuccessToast = false,
-      showErrorToast = true,
-      successMessage = "Operation completed successfully",
-      errorMessage = "An error occurred"
-    } = apiOptions;
+  const execute = useCallback(
+    async (
+      url: string,
+      options: RequestInit = {},
+      apiOptions: ApiCallOptions = {},
+    ) => {
+      const {
+        onSuccess,
+        onError,
+        showSuccessToast = false,
+        showErrorToast = true,
+        successMessage = "Operation completed successfully",
+        errorMessage = "An error occurred",
+      } = apiOptions;
 
-    setState(prev => ({ ...prev, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
-        ...options,
-      });
+      try {
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            ...options.headers,
+          },
+          ...options,
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const error = new Error(errorData.message || errorMessage);
-        throw error;
-      }
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const error = new Error(errorData.message || errorMessage);
+          throw error;
+        }
 
-      const data = await response.json();
-      
-      setState(prev => ({ ...prev, data, loading: false, error: null }));
-      
-      if (showSuccessToast) {
-        toast.success(successMessage);
+        const data = await response.json();
+
+        setState((prev) => ({ ...prev, data, loading: false, error: null }));
+
+        if (showSuccessToast) {
+          toast.success(successMessage);
+        }
+
+        if (onSuccess) {
+          onSuccess(data);
+        }
+
+        return data;
+      } catch (error) {
+        const err = error as Error;
+        setState((prev) => ({ ...prev, loading: false, error: err }));
+
+        if (showErrorToast) {
+          toast.error(err.message || errorMessage);
+        }
+
+        if (onError) {
+          onError(err);
+        }
+
+        throw err;
       }
-      
-      if (onSuccess) {
-        onSuccess(data);
-      }
-      
-      return data;
-    } catch (error) {
-      const err = error as Error;
-      setState(prev => ({ ...prev, loading: false, error: err }));
-      
-      if (showErrorToast) {
-        toast.error(err.message || errorMessage);
-      }
-      
-      if (onError) {
-        onError(err);
-      }
-      
-      throw err;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const reset = useCallback(() => {
     setState({
       data: null,
       loading: false,
-      error: null
+      error: null,
     });
   }, []);
 
   return {
     ...state,
     execute,
-    reset
+    reset,
   };
 }

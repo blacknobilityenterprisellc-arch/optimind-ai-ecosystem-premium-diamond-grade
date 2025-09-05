@@ -7,7 +7,7 @@ export interface User {
   id: string;
   email: string;
   name?: string;
-  role: 'USER' | 'ADMIN' | 'MODERATOR' | 'DEVELOPER';
+  role: "USER" | "ADMIN" | "MODERATOR" | "DEVELOPER";
 }
 
 export interface Session {
@@ -33,22 +33,22 @@ export class AuthService {
     try {
       // For now, return a mock user for testing
       return {
-        id: '1',
-        email: 'user@example.com',
-        name: 'Test User',
-        role: 'USER'
+        id: "1",
+        email: "user@example.com",
+        name: "Test User",
+        role: "USER",
       };
     } catch (error) {
-      console.error('Token validation error:', error);
+      console.error("Token validation error:", error);
       return null;
     }
   }
 
-  async createUser(userData: Omit<User, 'id'>): Promise<User> {
+  async createUser(userData: Omit<User, "id">): Promise<User> {
     // In production, this would create a user in the database
     return {
       id: Math.random().toString(36).slice(2, 11),
-      ...userData
+      ...userData,
     };
   }
 
@@ -62,7 +62,7 @@ export class AuthService {
       userId,
       token: Math.random().toString(36).slice(2, 34),
       expiresAt,
-      isActive: true
+      isActive: true,
     };
   }
 

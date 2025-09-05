@@ -4,14 +4,14 @@
  */
 
 export interface BackgroundGenerationOptions {
-  style: 'photorealistic' | 'artistic' | 'abstract' | 'minimalist';
+  style: "photorealistic" | "artistic" | "abstract" | "minimalist";
   theme: string;
   colors: string[];
   resolution: {
     width: number;
     height: number;
   };
-  quality: 'low' | 'medium' | 'high';
+  quality: "low" | "medium" | "high";
 }
 
 export interface BackgroundGenerationResult {
@@ -33,20 +33,21 @@ class AIBackgroundGeneratorService {
 
   static getInstance(): AIBackgroundGeneratorService {
     if (!AIBackgroundGeneratorService.instance) {
-      AIBackgroundGeneratorService.instance = new AIBackgroundGeneratorService();
+      AIBackgroundGeneratorService.instance =
+        new AIBackgroundGeneratorService();
     }
     return AIBackgroundGeneratorService.instance;
   }
 
   async generateBackground(
     prompt: string,
-    options: BackgroundGenerationOptions
+    options: BackgroundGenerationOptions,
   ): Promise<BackgroundGenerationResult> {
     // Mock generation process
     const generationTime = Math.random() * 5000 + 2000; // 2-7 seconds
-    
+
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, generationTime));
+    await new Promise((resolve) => setTimeout(resolve, generationTime));
 
     const imageUrl = `/generated/backgrounds/${Math.random().toString(36).slice(2, 11)}.png`;
     const thumbnailUrl = `${imageUrl}_thumb`;
@@ -60,37 +61,38 @@ class AIBackgroundGeneratorService {
         theme: options.theme,
         colors: options.colors,
         resolution: `${options.resolution.width}x${options.resolution.height}`,
-        generationTime
+        generationTime,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
   async getStyles(): Promise<string[]> {
     return [
-      'photorealistic',
-      'artistic', 
-      'abstract',
-      'minimalist',
-      'geometric',
-      'watercolor',
-      'oil-painting',
-      'digital-art'
+      "photorealistic",
+      "artistic",
+      "abstract",
+      "minimalist",
+      "geometric",
+      "watercolor",
+      "oil-painting",
+      "digital-art",
     ];
   }
 
   async getThemes(): Promise<string[]> {
     return [
-      'nature',
-      'technology',
-      'architecture',
-      'abstract',
-      'business',
-      'creative',
-      'professional',
-      'modern'
+      "nature",
+      "technology",
+      "architecture",
+      "abstract",
+      "business",
+      "creative",
+      "professional",
+      "modern",
     ];
   }
 }
 
-export const aiBackgroundGeneratorService = AIBackgroundGeneratorService.getInstance();
+export const aiBackgroundGeneratorService =
+  AIBackgroundGeneratorService.getInstance();

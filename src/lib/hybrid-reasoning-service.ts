@@ -1,15 +1,29 @@
 // Hybrid Reasoning Service
 // Implements intelligent mode switching and auto-routing between GLM-4.5 and OpenRouter models
 
-import { zaiApiService, ZAIAnalysisRequest, ZAIAnalysisResponse } from './zai-api-service';
-import { openRouterService, OpenRouterAnalysisRequest, OpenRouterAnalysisResponse } from './openrouter-service';
-import { agenticWorkflowEngine, AgenticTask, ThinkingModeConfig, NonThinkingModeConfig, HybridModeConfig } from './agentic-workflow-engine';
+import {
+  zaiApiService,
+  ZAIAnalysisRequest,
+  ZAIAnalysisResponse,
+} from "./zai-api-service";
+import {
+  openRouterService,
+  OpenRouterAnalysisRequest,
+  OpenRouterAnalysisResponse,
+} from "./openrouter-service";
+import {
+  agenticWorkflowEngine,
+  AgenticTask,
+  ThinkingModeConfig,
+  NonThinkingModeConfig,
+  HybridModeConfig,
+} from "./agentic-workflow-engine";
 
 export interface ReasoningMode {
   id: string;
   name: string;
   description: string;
-  type: 'thinking' | 'non-thinking' | 'hybrid';
+  type: "thinking" | "non-thinking" | "hybrid";
   characteristics: {
     depth: number;
     speed: number;
@@ -22,7 +36,7 @@ export interface ReasoningMode {
 }
 
 export interface RoutingDecision {
-  selectedMode: 'thinking' | 'non-thinking' | 'hybrid';
+  selectedMode: "thinking" | "non-thinking" | "hybrid";
   selectedModel: string;
   confidence: number;
   reasoning: {
@@ -40,15 +54,19 @@ export interface RoutingDecision {
 }
 
 export interface ModeSwitchTrigger {
-  type: 'complexity' | 'cost' | 'time' | 'quality' | 'error';
+  type: "complexity" | "cost" | "time" | "quality" | "error";
   threshold: number;
   condition: string;
-  action: 'switch-to-thinking' | 'switch-to-non-thinking' | 'escalate' | 'retry';
+  action:
+    | "switch-to-thinking"
+    | "switch-to-non-thinking"
+    | "escalate"
+    | "retry";
 }
 
 export interface AutoRoutingConfig {
   enabled: boolean;
-  strategy: 'cost-optimized' | 'quality-optimized' | 'balanced' | 'custom';
+  strategy: "cost-optimized" | "quality-optimized" | "balanced" | "custom";
   rules: RoutingRule[];
   fallbackModel: string;
   maxRetries: number;
@@ -65,13 +83,20 @@ export interface RoutingRule {
 }
 
 export interface RuleCondition {
-  field: 'complexity' | 'urgency' | 'cost' | 'quality' | 'domain' | 'taskType' | 'userPreference';
-  operator: 'equals' | 'greater-than' | 'less-than' | 'contains' | 'matches';
+  field:
+    | "complexity"
+    | "urgency"
+    | "cost"
+    | "quality"
+    | "domain"
+    | "taskType"
+    | "userPreference";
+  operator: "equals" | "greater-than" | "less-than" | "contains" | "matches";
   value: any;
 }
 
 export interface RoutingAction {
-  mode: 'thinking' | 'non-thinking' | 'hybrid';
+  mode: "thinking" | "non-thinking" | "hybrid";
   model: string;
   parameters: any;
 }
@@ -111,80 +136,115 @@ export interface ModeTransition {
 // Predefined reasoning modes
 export const REASONING_MODES: ReasoningMode[] = [
   {
-    id: 'thinking-deep',
-    name: 'Deep Thinking Mode',
-    description: 'Comprehensive reasoning with self-reflection and tool orchestration',
-    type: 'thinking',
+    id: "thinking-deep",
+    name: "Deep Thinking Mode",
+    description:
+      "Comprehensive reasoning with self-reflection and tool orchestration",
+    type: "thinking",
     characteristics: {
       depth: 0.95,
       speed: 0.3,
       cost: 0.9,
       accuracy: 0.95,
-      creativity: 0.85
+      creativity: 0.85,
     },
-    suitableFor: ['complex-analysis', 'strategic-planning', 'creative-problem-solving', 'research'],
-    models: ['glm-45-flagship', 'glm-45-auto-think', 'gpt-4o', 'claude-3.5-sonnet']
+    suitableFor: [
+      "complex-analysis",
+      "strategic-planning",
+      "creative-problem-solving",
+      "research",
+    ],
+    models: [
+      "glm-45-flagship",
+      "glm-45-auto-think",
+      "gpt-4o",
+      "claude-3.5-sonnet",
+    ],
   },
   {
-    id: 'thinking-balanced',
-    name: 'Balanced Thinking Mode',
-    description: 'Moderate reasoning with good balance of speed and depth',
-    type: 'thinking',
+    id: "thinking-balanced",
+    name: "Balanced Thinking Mode",
+    description: "Moderate reasoning with good balance of speed and depth",
+    type: "thinking",
     characteristics: {
       depth: 0.75,
       speed: 0.6,
       cost: 0.6,
       accuracy: 0.85,
-      creativity: 0.7
+      creativity: 0.7,
     },
-    suitableFor: ['standard-analysis', 'decision-making', 'content-generation'],
-    models: ['glm-45-auto-think', 'glm-45-full-stack', 'claude-3.5-sonnet', 'gpt-4o-mini']
+    suitableFor: ["standard-analysis", "decision-making", "content-generation"],
+    models: [
+      "glm-45-auto-think",
+      "glm-45-full-stack",
+      "claude-3.5-sonnet",
+      "gpt-4o-mini",
+    ],
   },
   {
-    id: 'non-thinking-fast',
-    name: 'Fast Non-Thinking Mode',
-    description: 'Rapid response generation with minimal reasoning',
-    type: 'non-thinking',
+    id: "non-thinking-fast",
+    name: "Fast Non-Thinking Mode",
+    description: "Rapid response generation with minimal reasoning",
+    type: "non-thinking",
     characteristics: {
       depth: 0.3,
       speed: 0.95,
       cost: 0.2,
       accuracy: 0.7,
-      creativity: 0.4
+      creativity: 0.4,
     },
-    suitableFor: ['quick-responses', 'simple-queries', 'data-retrieval', 'basic-classification'],
-    models: ['glm-45-air', 'gpt-4o-mini', 'claude-3.5-haiku', 'gemini-flash']
+    suitableFor: [
+      "quick-responses",
+      "simple-queries",
+      "data-retrieval",
+      "basic-classification",
+    ],
+    models: ["glm-45-air", "gpt-4o-mini", "claude-3.5-haiku", "gemini-flash"],
   },
   {
-    id: 'non-thinking-balanced',
-    name: 'Balanced Non-Thinking Mode',
-    description: 'Fast but reasonably accurate responses for everyday tasks',
-    type: 'non-thinking',
+    id: "non-thinking-balanced",
+    name: "Balanced Non-Thinking Mode",
+    description: "Fast but reasonably accurate responses for everyday tasks",
+    type: "non-thinking",
     characteristics: {
       depth: 0.5,
       speed: 0.8,
       cost: 0.4,
       accuracy: 0.8,
-      creativity: 0.6
+      creativity: 0.6,
     },
-    suitableFor: ['customer-service', 'content-summarization', 'basic-analysis'],
-    models: ['glm-45-full-stack', 'gpt-4o', 'claude-3.5-sonnet', 'gemini-pro']
+    suitableFor: [
+      "customer-service",
+      "content-summarization",
+      "basic-analysis",
+    ],
+    models: ["glm-45-full-stack", "gpt-4o", "claude-3.5-sonnet", "gemini-pro"],
   },
   {
-    id: 'hybrid-adaptive',
-    name: 'Adaptive Hybrid Mode',
-    description: 'Intelligently switches between thinking and non-thinking based on context',
-    type: 'hybrid',
+    id: "hybrid-adaptive",
+    name: "Adaptive Hybrid Mode",
+    description:
+      "Intelligently switches between thinking and non-thinking based on context",
+    type: "hybrid",
     characteristics: {
       depth: 0.7,
       speed: 0.7,
       cost: 0.5,
       accuracy: 0.85,
-      creativity: 0.75
+      creativity: 0.75,
     },
-    suitableFor: ['mixed-workflows', 'uncertain-complexity', 'cost-sensitive-tasks'],
-    models: ['glm-45-flagship', 'glm-45-auto-think', 'gpt-4o', 'openrouter-auto']
-  }
+    suitableFor: [
+      "mixed-workflows",
+      "uncertain-complexity",
+      "cost-sensitive-tasks",
+    ],
+    models: [
+      "glm-45-flagship",
+      "glm-45-auto-think",
+      "gpt-4o",
+      "openrouter-auto",
+    ],
+  },
 ];
 
 class HybridReasoningService {
@@ -203,177 +263,181 @@ class HybridReasoningService {
   private initializeRoutingConfig(): void {
     this.routingConfig = {
       enabled: true,
-      strategy: 'balanced',
+      strategy: "balanced",
       rules: [
         {
-          id: 'high-complexity-thinking',
-          name: 'High Complexity Tasks Use Thinking Mode',
+          id: "high-complexity-thinking",
+          name: "High Complexity Tasks Use Thinking Mode",
           priority: 1,
           conditions: [
-            { field: 'complexity', operator: 'greater-than', value: 0.7 }
+            { field: "complexity", operator: "greater-than", value: 0.7 },
           ],
           action: {
-            mode: 'thinking',
-            model: 'glm-45-flagship',
-            parameters: { maxDepth: 5, selfReflection: true }
+            mode: "thinking",
+            model: "glm-45-flagship",
+            parameters: { maxDepth: 5, selfReflection: true },
           },
-          weight: 0.9
+          weight: 0.9,
         },
         {
-          id: 'low-complexity-non-thinking',
-          name: 'Low Complexity Tasks Use Non-Thinking Mode',
+          id: "low-complexity-non-thinking",
+          name: "Low Complexity Tasks Use Non-Thinking Mode",
           priority: 1,
           conditions: [
-            { field: 'complexity', operator: 'less-than', value: 0.4 }
+            { field: "complexity", operator: "less-than", value: 0.4 },
           ],
           action: {
-            mode: 'non-thinking',
-            model: 'glm-45-air',
-            parameters: { maxTokens: 500, temperature: 0.7 }
+            mode: "non-thinking",
+            model: "glm-45-air",
+            parameters: { maxTokens: 500, temperature: 0.7 },
           },
-          weight: 0.8
+          weight: 0.8,
         },
         {
-          id: 'urgent-fast-mode',
-          name: 'Urgent Tasks Use Fast Mode',
+          id: "urgent-fast-mode",
+          name: "Urgent Tasks Use Fast Mode",
           priority: 2,
           conditions: [
-            { field: 'urgency', operator: 'greater-than', value: 0.8 }
+            { field: "urgency", operator: "greater-than", value: 0.8 },
           ],
           action: {
-            mode: 'non-thinking',
-            model: 'gpt-4o-mini',
-            parameters: { maxTokens: 300, temperature: 0.5 }
+            mode: "non-thinking",
+            model: "gpt-4o-mini",
+            parameters: { maxTokens: 300, temperature: 0.5 },
           },
-          weight: 0.85
+          weight: 0.85,
         },
         {
-          id: 'cost-sensitive-cheap',
-          name: 'Cost Sensitive Tasks Use Cheap Models',
+          id: "cost-sensitive-cheap",
+          name: "Cost Sensitive Tasks Use Cheap Models",
           priority: 1,
-          conditions: [
-            { field: 'cost', operator: 'greater-than', value: 0.8 }
-          ],
+          conditions: [{ field: "cost", operator: "greater-than", value: 0.8 }],
           action: {
-            mode: 'non-thinking',
-            model: 'gpt-4o-mini',
-            parameters: { maxTokens: 250, temperature: 0.3 }
+            mode: "non-thinking",
+            model: "gpt-4o-mini",
+            parameters: { maxTokens: 250, temperature: 0.3 },
           },
-          weight: 0.7
+          weight: 0.7,
         },
         {
-          id: 'quality-critical-thinking',
-          name: 'Quality Critical Tasks Use Thinking Mode',
+          id: "quality-critical-thinking",
+          name: "Quality Critical Tasks Use Thinking Mode",
           priority: 2,
           conditions: [
-            { field: 'quality', operator: 'greater-than', value: 0.8 }
+            { field: "quality", operator: "greater-than", value: 0.8 },
           ],
           action: {
-            mode: 'thinking',
-            model: 'glm-45-flagship',
-            parameters: { maxDepth: 3, selfReflection: true }
+            mode: "thinking",
+            model: "glm-45-flagship",
+            parameters: { maxDepth: 3, selfReflection: true },
           },
-          weight: 0.95
+          weight: 0.95,
         },
         {
-          id: 'healthcare-strict',
-          name: 'Healthcare Domain Uses Strict Thinking Mode',
+          id: "healthcare-strict",
+          name: "Healthcare Domain Uses Strict Thinking Mode",
           priority: 3,
           conditions: [
-            { field: 'domain', operator: 'equals', value: 'healthcare' }
+            { field: "domain", operator: "equals", value: "healthcare" },
           ],
           action: {
-            mode: 'thinking',
-            model: 'glm-45-flagship',
-            parameters: { maxDepth: 4, selfReflection: true, compliance: 'strict' }
+            mode: "thinking",
+            model: "glm-45-flagship",
+            parameters: {
+              maxDepth: 4,
+              selfReflection: true,
+              compliance: "strict",
+            },
           },
-          weight: 1
+          weight: 1,
         },
         {
-          id: 'legal-detailed',
-          name: 'Legal Domain Uses Detailed Analysis',
+          id: "legal-detailed",
+          name: "Legal Domain Uses Detailed Analysis",
           priority: 3,
-          conditions: [
-            { field: 'domain', operator: 'equals', value: 'legal' }
-          ],
+          conditions: [{ field: "domain", operator: "equals", value: "legal" }],
           action: {
-            mode: 'thinking',
-            model: 'glm-45-auto-think',
-            parameters: { maxDepth: 3, selfReflection: true, jurisdiction: 'auto' }
+            mode: "thinking",
+            model: "glm-45-auto-think",
+            parameters: {
+              maxDepth: 3,
+              selfReflection: true,
+              jurisdiction: "auto",
+            },
           },
-          weight: 0.9
+          weight: 0.9,
         },
         {
-          id: 'customer-service-fast',
-          name: 'Customer Service Uses Fast Response',
+          id: "customer-service-fast",
+          name: "Customer Service Uses Fast Response",
           priority: 2,
           conditions: [
-            { field: 'domain', operator: 'equals', value: 'customer-service' }
+            { field: "domain", operator: "equals", value: "customer-service" },
           ],
           action: {
-            mode: 'non-thinking',
-            model: 'gpt-4o',
-            parameters: { maxTokens: 400, temperature: 0.6 }
+            mode: "non-thinking",
+            model: "gpt-4o",
+            parameters: { maxTokens: 400, temperature: 0.6 },
           },
-          weight: 0.8
+          weight: 0.8,
         },
         {
-          id: 'default-balanced',
-          name: 'Default Balanced Approach',
+          id: "default-balanced",
+          name: "Default Balanced Approach",
           priority: 0,
           conditions: [],
           action: {
-            mode: 'hybrid',
-            model: 'openrouter-auto',
-            parameters: { autoSwitch: true, complexityThreshold: 0.6 }
+            mode: "hybrid",
+            model: "openrouter-auto",
+            parameters: { autoSwitch: true, complexityThreshold: 0.6 },
           },
-          weight: 0.5
-        }
+          weight: 0.5,
+        },
       ],
-      fallbackModel: 'gpt-4o',
+      fallbackModel: "gpt-4o",
       maxRetries: 3,
-      timeout: 30000
+      timeout: 30000,
     };
   }
 
   private initializeModeSwitchTriggers(): void {
     this.modeSwitchTriggers = [
       {
-        type: 'complexity',
+        type: "complexity",
         threshold: 0.7,
         condition: 'task.complexity > 0.7 && currentMode === "non-thinking"',
-        action: 'switch-to-thinking'
+        action: "switch-to-thinking",
       },
       {
-        type: 'cost',
+        type: "cost",
         threshold: 0.1,
         condition: 'estimatedCost > 0.1 && currentMode === "thinking"',
-        action: 'switch-to-non-thinking'
+        action: "switch-to-non-thinking",
       },
       {
-        type: 'time',
+        type: "time",
         threshold: 10000,
         condition: 'processingTime > 10000 && currentMode === "thinking"',
-        action: 'switch-to-non-thinking'
+        action: "switch-to-non-thinking",
       },
       {
-        type: 'quality',
+        type: "quality",
         threshold: 0.6,
         condition: 'confidence < 0.6 && currentMode === "non-thinking"',
-        action: 'switch-to-thinking'
+        action: "switch-to-thinking",
       },
       {
-        type: 'error',
+        type: "error",
         threshold: 0.5,
-        condition: 'errorRate > 0.5',
-        action: 'retry'
-      }
+        condition: "errorRate > 0.5",
+        action: "retry",
+      },
     ];
   }
 
   private initializeModelCapabilities(): void {
     // Initialize model capabilities for intelligent routing
-    this.modelCapabilities.set('glm-45-flagship', {
+    this.modelCapabilities.set("glm-45-flagship", {
       reasoning: 0.95,
       speed: 0.4,
       cost: 0.9,
@@ -381,10 +445,10 @@ class HybridReasoningService {
       creativity: 0.85,
       multimodal: true,
       maxTokens: 8192,
-      bestFor: ['complex-reasoning', 'creative-tasks', 'multimodal-analysis']
+      bestFor: ["complex-reasoning", "creative-tasks", "multimodal-analysis"],
     });
 
-    this.modelCapabilities.set('glm-45-auto-think', {
+    this.modelCapabilities.set("glm-45-auto-think", {
       reasoning: 0.9,
       speed: 0.6,
       cost: 0.7,
@@ -392,10 +456,14 @@ class HybridReasoningService {
       creativity: 0.8,
       multimodal: false,
       maxTokens: 4096,
-      bestFor: ['step-by-step-reasoning', 'self-reflection', 'logical-analysis']
+      bestFor: [
+        "step-by-step-reasoning",
+        "self-reflection",
+        "logical-analysis",
+      ],
     });
 
-    this.modelCapabilities.set('glm-45v', {
+    this.modelCapabilities.set("glm-45v", {
       reasoning: 0.85,
       speed: 0.5,
       cost: 0.8,
@@ -403,10 +471,10 @@ class HybridReasoningService {
       creativity: 0.75,
       multimodal: true,
       maxTokens: 4096,
-      bestFor: ['visual-analysis', 'image-understanding', 'multimodal-tasks']
+      bestFor: ["visual-analysis", "image-understanding", "multimodal-tasks"],
     });
 
-    this.modelCapabilities.set('glm-45-air', {
+    this.modelCapabilities.set("glm-45-air", {
       reasoning: 0.7,
       speed: 0.9,
       cost: 0.3,
@@ -414,10 +482,10 @@ class HybridReasoningService {
       creativity: 0.6,
       multimodal: false,
       maxTokens: 2048,
-      bestFor: ['fast-responses', 'simple-queries', 'cost-sensitive-tasks']
+      bestFor: ["fast-responses", "simple-queries", "cost-sensitive-tasks"],
     });
 
-    this.modelCapabilities.set('glm-45-full-stack', {
+    this.modelCapabilities.set("glm-45-full-stack", {
       reasoning: 0.8,
       speed: 0.7,
       cost: 0.6,
@@ -425,10 +493,10 @@ class HybridReasoningService {
       creativity: 0.75,
       multimodal: true,
       maxTokens: 4096,
-      bestFor: ['balanced-tasks', 'full-stack-analysis', 'multi-domain']
+      bestFor: ["balanced-tasks", "full-stack-analysis", "multi-domain"],
     });
 
-    this.modelCapabilities.set('gpt-4o', {
+    this.modelCapabilities.set("gpt-4o", {
       reasoning: 0.9,
       speed: 0.7,
       cost: 0.8,
@@ -436,10 +504,10 @@ class HybridReasoningService {
       creativity: 0.85,
       multimodal: true,
       maxTokens: 4096,
-      bestFor: ['general-purpose', 'multimodal', 'balanced-performance']
+      bestFor: ["general-purpose", "multimodal", "balanced-performance"],
     });
 
-    this.modelCapabilities.set('gpt-4o-mini', {
+    this.modelCapabilities.set("gpt-4o-mini", {
       reasoning: 0.7,
       speed: 0.95,
       cost: 0.2,
@@ -447,10 +515,10 @@ class HybridReasoningService {
       creativity: 0.6,
       multimodal: true,
       maxTokens: 4096,
-      bestFor: ['fast-tasks', 'cost-sensitive', 'high-volume']
+      bestFor: ["fast-tasks", "cost-sensitive", "high-volume"],
     });
 
-    this.modelCapabilities.set('claude-3.5-sonnet', {
+    this.modelCapabilities.set("claude-3.5-sonnet", {
       reasoning: 0.85,
       speed: 0.8,
       cost: 0.6,
@@ -458,10 +526,10 @@ class HybridReasoningService {
       creativity: 0.9,
       multimodal: false,
       maxTokens: 8192,
-      bestFor: ['creative-writing', 'analysis', 'long-context']
+      bestFor: ["creative-writing", "analysis", "long-context"],
     });
 
-    this.modelCapabilities.set('claude-3.5-haiku', {
+    this.modelCapabilities.set("claude-3.5-haiku", {
       reasoning: 0.6,
       speed: 0.95,
       cost: 0.1,
@@ -469,10 +537,10 @@ class HybridReasoningService {
       creativity: 0.7,
       multimodal: false,
       maxTokens: 4096,
-      bestFor: ['quick-responses', 'chat', 'simple-tasks']
+      bestFor: ["quick-responses", "chat", "simple-tasks"],
     });
 
-    this.modelCapabilities.set('gemini-pro', {
+    this.modelCapabilities.set("gemini-pro", {
       reasoning: 0.8,
       speed: 0.7,
       cost: 0.4,
@@ -480,10 +548,10 @@ class HybridReasoningService {
       creativity: 0.7,
       multimodal: true,
       maxTokens: 8192,
-      bestFor: ['general-analysis', 'multimodal', 'cost-effective']
+      bestFor: ["general-analysis", "multimodal", "cost-effective"],
     });
 
-    this.modelCapabilities.set('gemini-flash', {
+    this.modelCapabilities.set("gemini-flash", {
       reasoning: 0.6,
       speed: 0.9,
       cost: 0.15,
@@ -491,32 +559,44 @@ class HybridReasoningService {
       creativity: 0.5,
       multimodal: true,
       maxTokens: 4096,
-      bestFor: ['fast-tasks', 'simple-queries', 'high-volume']
+      bestFor: ["fast-tasks", "simple-queries", "high-volume"],
     });
   }
 
   // Main routing method
-  async makeRoutingDecision(task: AgenticTask, context?: any): Promise<RoutingDecision> {
+  async makeRoutingDecision(
+    task: AgenticTask,
+    context?: any,
+  ): Promise<RoutingDecision> {
     const startTime = Date.now();
 
     // Analyze task characteristics
     const taskAnalysis = this.analyzeTaskCharacteristics(task, context);
-    
+
     // Apply routing rules
     const routingDecision = this.applyRoutingRules(taskAnalysis, task);
-    
+
     // Calculate estimated metrics
-    const estimatedMetrics = this.calculateEstimatedMetrics(routingDecision, taskAnalysis);
-    
+    const estimatedMetrics = this.calculateEstimatedMetrics(
+      routingDecision,
+      taskAnalysis,
+    );
+
     // Apply strategy-specific adjustments
-    const adjustedDecision = this.applyStrategyAdjustments(routingDecision, this.routingConfig.strategy);
-    
+    const adjustedDecision = this.applyStrategyAdjustments(
+      routingDecision,
+      this.routingConfig.strategy,
+    );
+
     const finalDecision: RoutingDecision = {
       selectedMode: adjustedDecision.mode,
       selectedModel: adjustedDecision.model,
-      confidence: this.calculateDecisionConfidence(adjustedDecision, taskAnalysis),
+      confidence: this.calculateDecisionConfidence(
+        adjustedDecision,
+        taskAnalysis,
+      ),
       reasoning: taskAnalysis,
-      estimatedMetrics
+      estimatedMetrics,
     };
 
     // Log decision for learning
@@ -525,7 +605,10 @@ class HybridReasoningService {
     return finalDecision;
   }
 
-  private analyzeTaskCharacteristics(task: AgenticTask, context?: any): {
+  private analyzeTaskCharacteristics(
+    task: AgenticTask,
+    context?: any,
+  ): {
     complexity: number;
     urgency: number;
     costSensitivity: number;
@@ -535,13 +618,13 @@ class HybridReasoningService {
   } {
     // Base complexity analysis
     let complexity = this.getComplexityScore(task.complexity);
-    
+
     // Adjust complexity based on task type
     const typeComplexity = {
-      'analysis': 0.1,
-      'generation': 0.2,
-      'transformation': 0.15,
-      'validation': 0.25
+      analysis: 0.1,
+      generation: 0.2,
+      transformation: 0.15,
+      validation: 0.25,
     };
     complexity += typeComplexity[task.type] || 0;
 
@@ -549,9 +632,11 @@ class HybridReasoningService {
     let urgency = this.getPriorityScore(task.priority);
     if (task.deadline) {
       const timeToDeadline = task.deadline.getTime() - Date.now();
-      if (timeToDeadline < 3600000) { // Less than 1 hour
+      if (timeToDeadline < 3600000) {
+        // Less than 1 hour
         urgency += 0.3;
-      } else if (timeToDeadline < 86400000) { // Less than 1 day
+      } else if (timeToDeadline < 86400000) {
+        // Less than 1 day
         urgency += 0.15;
       }
     }
@@ -565,7 +650,7 @@ class HybridReasoningService {
 
     // Quality requirements based on task criticality
     let qualityRequired = this.getPriorityScore(task.priority);
-    if (task.type === 'validation' || task.complexity === 'expert') {
+    if (task.type === "validation" || task.complexity === "expert") {
       qualityRequired += 0.2;
     }
 
@@ -574,48 +659,50 @@ class HybridReasoningService {
       urgency: Math.min(1, urgency),
       costSensitivity: Math.min(1, costSensitivity),
       qualityRequired: Math.min(1, qualityRequired),
-      domain: context?.domain || 'general',
-      taskType: task.type
+      domain: context?.domain || "general",
+      taskType: task.type,
     };
   }
 
   private getComplexityScore(complexity: string): number {
     const scores = {
-      'simple': 0.2,
-      'moderate': 0.5,
-      'complex': 0.8,
-      'expert': 1
+      simple: 0.2,
+      moderate: 0.5,
+      complex: 0.8,
+      expert: 1,
     };
     return scores[complexity as keyof typeof scores] || 0.5;
   }
 
   private getPriorityScore(priority: string): number {
     const scores = {
-      'low': 0.2,
-      'medium': 0.5,
-      'high': 0.8,
-      'critical': 1
+      low: 0.2,
+      medium: 0.5,
+      high: 0.8,
+      critical: 1,
     };
     return scores[priority as keyof typeof scores] || 0.5;
   }
 
-  private applyRoutingRules(taskAnalysis: any, task: AgenticTask): RoutingAction {
+  private applyRoutingRules(
+    taskAnalysis: any,
+    task: AgenticTask,
+  ): RoutingAction {
     if (!this.routingConfig.enabled) {
       return {
-        mode: 'hybrid',
-        model: 'openrouter-auto',
-        parameters: {}
+        mode: "hybrid",
+        model: "openrouter-auto",
+        parameters: {},
       };
     }
 
     // Sort rules by priority (descending) and weight (descending)
-    const sortedRules = [...this.routingConfig.rules]
-      .sort((a, b) => {
-        if (a.priority !== b.priority) {
-          return b.priority - a.priority;
-        }
-        return b.weight - a.weight;
-      });
+    const sortedRules = [...this.routingConfig.rules].sort((a, b) => {
+      if (a.priority !== b.priority) {
+        return b.priority - a.priority;
+      }
+      return b.weight - a.weight;
+    });
 
     // Find first matching rule
     for (const rule of sortedRules) {
@@ -625,15 +712,23 @@ class HybridReasoningService {
     }
 
     // Fallback to default rule
-    const defaultRule = this.routingConfig.rules.find(r => r.id === 'default-balanced');
-    return defaultRule ? defaultRule.action : {
-      mode: 'hybrid',
-      model: 'openrouter-auto',
-      parameters: {}
-    };
+    const defaultRule = this.routingConfig.rules.find(
+      (r) => r.id === "default-balanced",
+    );
+    return defaultRule
+      ? defaultRule.action
+      : {
+          mode: "hybrid",
+          model: "openrouter-auto",
+          parameters: {},
+        };
   }
 
-  private evaluateRuleConditions(conditions: RuleCondition[], taskAnalysis: any, task: AgenticTask): boolean {
+  private evaluateRuleConditions(
+    conditions: RuleCondition[],
+    taskAnalysis: any,
+    task: AgenticTask,
+  ): boolean {
     for (const condition of conditions) {
       if (!this.evaluateCondition(condition, taskAnalysis, task)) {
         return false;
@@ -642,52 +737,59 @@ class HybridReasoningService {
     return true;
   }
 
-  private evaluateCondition(condition: RuleCondition, taskAnalysis: any, task: AgenticTask): boolean {
+  private evaluateCondition(
+    condition: RuleCondition,
+    taskAnalysis: any,
+    task: AgenticTask,
+  ): boolean {
     let fieldValue: any;
 
     switch (condition.field) {
-      case 'complexity':
+      case "complexity":
         fieldValue = taskAnalysis.complexity;
         break;
-      case 'urgency':
+      case "urgency":
         fieldValue = taskAnalysis.urgency;
         break;
-      case 'cost':
+      case "cost":
         fieldValue = taskAnalysis.costSensitivity;
         break;
-      case 'quality':
+      case "quality":
         fieldValue = taskAnalysis.qualityRequired;
         break;
-      case 'domain':
+      case "domain":
         fieldValue = taskAnalysis.domain;
         break;
-      case 'taskType':
+      case "taskType":
         fieldValue = taskAnalysis.taskType;
         break;
-      case 'userPreference':
-        fieldValue = taskAnalysis.userPreference || 'balanced';
+      case "userPreference":
+        fieldValue = taskAnalysis.userPreference || "balanced";
         break;
       default:
         return false;
     }
 
     switch (condition.operator) {
-      case 'equals':
+      case "equals":
         return fieldValue === condition.value;
-      case 'greater-than':
+      case "greater-than":
         return fieldValue > condition.value;
-      case 'less-than':
+      case "less-than":
         return fieldValue < condition.value;
-      case 'contains':
+      case "contains":
         return String(fieldValue).includes(String(condition.value));
-      case 'matches':
+      case "matches":
         return new RegExp(condition.value).test(String(fieldValue));
       default:
         return false;
     }
   }
 
-  private calculateEstimatedMetrics(decision: RoutingAction, taskAnalysis: any): {
+  private calculateEstimatedMetrics(
+    decision: RoutingAction,
+    taskAnalysis: any,
+  ): {
     processingTime: number;
     cost: number;
     accuracy: number;
@@ -699,7 +801,7 @@ class HybridReasoningService {
         processingTime: 5000,
         cost: 0.05,
         accuracy: 0.7,
-        tokenUsage: 1000
+        tokenUsage: 1000,
       };
     }
 
@@ -710,12 +812,12 @@ class HybridReasoningService {
     let tokenUsage = 1000; // Base token usage
 
     // Adjust based on task characteristics
-    if (decision.mode === 'thinking') {
+    if (decision.mode === "thinking") {
       processingTime *= 2.5; // Thinking mode takes longer
       cost *= 2; // Higher cost
       accuracy *= 1.1; // Better accuracy
       tokenUsage *= 2; // More tokens used
-    } else if (decision.mode === 'hybrid') {
+    } else if (decision.mode === "hybrid") {
       processingTime *= 1.5;
       cost *= 1.3;
       accuracy *= 1.05;
@@ -723,9 +825,9 @@ class HybridReasoningService {
     }
 
     // Adjust based on task complexity
-    processingTime *= (1 + taskAnalysis.complexity * 0.5);
-    cost *= (1 + taskAnalysis.complexity * 0.3);
-    tokenUsage *= (1 + taskAnalysis.complexity * 0.4);
+    processingTime *= 1 + taskAnalysis.complexity * 0.5;
+    cost *= 1 + taskAnalysis.complexity * 0.3;
+    tokenUsage *= 1 + taskAnalysis.complexity * 0.4;
 
     // Apply quality requirements
     if (taskAnalysis.qualityRequired > 0.8) {
@@ -738,33 +840,36 @@ class HybridReasoningService {
       processingTime: Math.round(processingTime),
       cost: Math.round(cost * 10000) / 10000, // Round to 4 decimal places
       accuracy: Math.min(1, accuracy),
-      tokenUsage: Math.round(tokenUsage)
+      tokenUsage: Math.round(tokenUsage),
     };
   }
 
-  private applyStrategyAdjustments(decision: RoutingAction, strategy: string): RoutingAction {
+  private applyStrategyAdjustments(
+    decision: RoutingAction,
+    strategy: string,
+  ): RoutingAction {
     switch (strategy) {
-      case 'cost-optimized':
+      case "cost-optimized":
         // Prefer cheaper models and non-thinking mode
-        if (decision.mode === 'thinking' && decision.model !== 'glm-45-air') {
-          decision.mode = 'non-thinking';
-          decision.model = 'gpt-4o-mini';
+        if (decision.mode === "thinking" && decision.model !== "glm-45-air") {
+          decision.mode = "non-thinking";
+          decision.model = "gpt-4o-mini";
         }
         break;
 
-      case 'quality-optimized':
+      case "quality-optimized":
         // Prefer more capable models and thinking mode
-        if (decision.mode === 'non-thinking') {
-          decision.mode = 'thinking';
-          decision.model = 'glm-45-flagship';
+        if (decision.mode === "non-thinking") {
+          decision.mode = "thinking";
+          decision.model = "glm-45-flagship";
         }
         break;
 
-      case 'balanced':
+      case "balanced":
         // Keep the decision as-is (already balanced)
         break;
 
-      case 'custom':
+      case "custom":
         // Apply custom logic based on parameters
         if (decision.parameters?.customStrategy) {
           // Custom strategy implementation would go here
@@ -775,42 +880,66 @@ class HybridReasoningService {
     return decision;
   }
 
-  private calculateDecisionConfidence(decision: RoutingAction, taskAnalysis: any): number {
+  private calculateDecisionConfidence(
+    decision: RoutingAction,
+    taskAnalysis: any,
+  ): number {
     let confidence = 0.8; // Base confidence
 
     // Adjust based on rule matching quality
     const modelCapabilities = this.modelCapabilities.get(decision.model);
     if (modelCapabilities) {
       // Higher confidence if model is well-suited for task
-      const suitability = this.calculateModelSuitability(decision.model, taskAnalysis);
+      const suitability = this.calculateModelSuitability(
+        decision.model,
+        taskAnalysis,
+      );
       confidence += suitability * 0.2;
     }
 
     // Adjust based on strategy alignment
-    if (this.routingConfig.strategy === 'cost-optimized' && decision.mode === 'non-thinking') {
+    if (
+      this.routingConfig.strategy === "cost-optimized" &&
+      decision.mode === "non-thinking"
+    ) {
       confidence += 0.1;
     }
-    if (this.routingConfig.strategy === 'quality-optimized' && decision.mode === 'thinking') {
+    if (
+      this.routingConfig.strategy === "quality-optimized" &&
+      decision.mode === "thinking"
+    ) {
       confidence += 0.1;
     }
 
     return Math.min(1, Math.max(0, confidence));
   }
 
-  private calculateModelSuitability(modelId: string, taskAnalysis: any): number {
+  private calculateModelSuitability(
+    modelId: string,
+    taskAnalysis: any,
+  ): number {
     const capabilities = this.modelCapabilities.get(modelId);
     if (!capabilities) return 0.5;
 
     let suitability = 0.5;
 
     // Check if model's best uses match task characteristics
-    if (capabilities.bestFor?.includes('complex-reasoning') && taskAnalysis.complexity > 0.7) {
+    if (
+      capabilities.bestFor?.includes("complex-reasoning") &&
+      taskAnalysis.complexity > 0.7
+    ) {
       suitability += 0.3;
     }
-    if (capabilities.bestFor?.includes('fast-tasks') && taskAnalysis.urgency > 0.7) {
+    if (
+      capabilities.bestFor?.includes("fast-tasks") &&
+      taskAnalysis.urgency > 0.7
+    ) {
       suitability += 0.3;
     }
-    if (capabilities.bestFor?.includes('cost-sensitive') && taskAnalysis.costSensitivity > 0.7) {
+    if (
+      capabilities.bestFor?.includes("cost-sensitive") &&
+      taskAnalysis.costSensitivity > 0.7
+    ) {
       suitability += 0.2;
     }
 
@@ -825,7 +954,11 @@ class HybridReasoningService {
     return Math.min(1, suitability);
   }
 
-  private logRoutingDecision(decision: RoutingDecision, task: AgenticTask, processingTime: number): void {
+  private logRoutingDecision(
+    decision: RoutingDecision,
+    task: AgenticTask,
+    processingTime: number,
+  ): void {
     // Log for future learning and optimization
     const logEntry = {
       timestamp: new Date(),
@@ -835,15 +968,18 @@ class HybridReasoningService {
       taskPriority: task.priority,
       decision,
       processingTime,
-      routingConfig: this.routingConfig.strategy
+      routingConfig: this.routingConfig.strategy,
     };
 
     // In a real implementation, this would be stored in a database
-    console.log('Routing decision logged:', logEntry);
+    console.log("Routing decision logged:", logEntry);
   }
 
   // Mode switching during execution
-  async checkModeSwitchTriggers(session: HybridReasoningSession, currentMetrics: PerformanceMetrics): Promise<{
+  async checkModeSwitchTriggers(
+    session: HybridReasoningSession,
+    currentMetrics: PerformanceMetrics,
+  ): Promise<{
     shouldSwitch: boolean;
     newMode?: string;
     reason?: string;
@@ -853,7 +989,7 @@ class HybridReasoningService {
         return {
           shouldSwitch: true,
           newMode: this.getNewModeFromAction(trigger.action),
-          reason: `Trigger ${trigger.type} exceeded threshold: ${trigger.condition}`
+          reason: `Trigger ${trigger.type} exceeded threshold: ${trigger.condition}`,
         };
       }
     }
@@ -861,7 +997,11 @@ class HybridReasoningService {
     return { shouldSwitch: false };
   }
 
-  private evaluateTriggerCondition(trigger: ModeSwitchTrigger, session: HybridReasoningSession, metrics: PerformanceMetrics): boolean {
+  private evaluateTriggerCondition(
+    trigger: ModeSwitchTrigger,
+    session: HybridReasoningSession,
+    metrics: PerformanceMetrics,
+  ): boolean {
     // Create evaluation context
     const context = {
       task: { complexity: 0.5 }, // Would be extracted from session
@@ -869,23 +1009,25 @@ class HybridReasoningService {
       estimatedCost: metrics.cost,
       processingTime: metrics.processingTime,
       confidence: metrics.accuracy,
-      errorRate: metrics.success ? 0 : 1
+      errorRate: metrics.success ? 0 : 1,
     };
 
     try {
       // Simple condition evaluation (in production, use proper expression evaluation)
       return this.evaluateConditionString(trigger.condition, context);
     } catch (error) {
-      console.warn('Trigger condition evaluation failed:', error);
+      console.warn("Trigger condition evaluation failed:", error);
       return false;
     }
   }
 
   private evaluateConditionString(condition: string, context: any): boolean {
     // Simplified condition evaluation
-    if (condition.includes('>') && condition.includes('&&')) {
-      const parts = condition.split('&&');
-      return parts.every(part => this.evaluateSimpleCondition(part.trim(), context));
+    if (condition.includes(">") && condition.includes("&&")) {
+      const parts = condition.split("&&");
+      return parts.every((part) =>
+        this.evaluateSimpleCondition(part.trim(), context),
+      );
     }
     return this.evaluateSimpleCondition(condition, context);
   }
@@ -900,34 +1042,46 @@ class HybridReasoningService {
     const value = Number.parseFloat(valueStr);
 
     switch (operator) {
-      case '>': return fieldValue > value;
-      case '<': return fieldValue < value;
-      case '>=': return fieldValue >= value;
-      case '<=': return fieldValue <= value;
-      case '==': return fieldValue === value;
-      case '!=': return fieldValue !== value;
-      default: return false;
+      case ">":
+        return fieldValue > value;
+      case "<":
+        return fieldValue < value;
+      case ">=":
+        return fieldValue >= value;
+      case "<=":
+        return fieldValue <= value;
+      case "==":
+        return fieldValue === value;
+      case "!=":
+        return fieldValue !== value;
+      default:
+        return false;
     }
   }
 
   private getNestedValue(obj: any, path: string): any {
-    return path.split('.').reduce((current, key) => current?.[key], obj);
+    return path.split(".").reduce((current, key) => current?.[key], obj);
   }
 
   private getNewModeFromAction(action: string): string {
     switch (action) {
-      case 'switch-to-thinking': return 'thinking';
-      case 'switch-to-non-thinking': return 'non-thinking';
-      case 'escalate': return 'thinking';
-      case 'retry': return 'hybrid';
-      default: return 'hybrid';
+      case "switch-to-thinking":
+        return "thinking";
+      case "switch-to-non-thinking":
+        return "non-thinking";
+      case "escalate":
+        return "thinking";
+      case "retry":
+        return "hybrid";
+      default:
+        return "hybrid";
     }
   }
 
   // Performance tracking and optimization
   async recordPerformanceMetrics(metrics: PerformanceMetrics): Promise<void> {
     this.performanceHistory.push(metrics);
-    
+
     // Keep only recent history (last 1000 entries)
     if (this.performanceHistory.length > 1000) {
       this.performanceHistory = this.performanceHistory.slice(-1000);
@@ -940,7 +1094,7 @@ class HybridReasoningService {
   private updateRoutingRulesBasedOnPerformance(): void {
     // Analyze performance patterns and adjust routing rules
     const recentPerformance = this.performanceHistory.slice(-100); // Last 100 entries
-    
+
     // Group by mode and model
     const performanceByMode = new Map<string, PerformanceMetrics[]>();
     for (const metrics of recentPerformance) {
@@ -954,16 +1108,22 @@ class HybridReasoningService {
     // Calculate average performance for each mode-model combination
     const avgPerformance = new Map<string, any>();
     for (const [key, metricsList] of performanceByMode) {
-      const avgAccuracy = metricsList.reduce((sum, m) => sum + m.accuracy, 0) / metricsList.length;
-      const avgCost = metricsList.reduce((sum, m) => sum + m.cost, 0) / metricsList.length;
-      const avgTime = metricsList.reduce((sum, m) => sum + m.processingTime, 0) / metricsList.length;
-      const successRate = metricsList.filter(m => m.success).length / metricsList.length;
+      const avgAccuracy =
+        metricsList.reduce((sum, m) => sum + m.accuracy, 0) /
+        metricsList.length;
+      const avgCost =
+        metricsList.reduce((sum, m) => sum + m.cost, 0) / metricsList.length;
+      const avgTime =
+        metricsList.reduce((sum, m) => sum + m.processingTime, 0) /
+        metricsList.length;
+      const successRate =
+        metricsList.filter((m) => m.success).length / metricsList.length;
 
       avgPerformance.set(key, {
         accuracy: avgAccuracy,
         cost: avgCost,
         processingTime: avgTime,
-        successRate
+        successRate,
       });
     }
 
@@ -971,10 +1131,11 @@ class HybridReasoningService {
     for (const rule of this.routingConfig.rules) {
       const key = `${rule.action.mode}-${rule.action.model}`;
       const performance = avgPerformance.get(key);
-      
+
       if (performance) {
         // Adjust weight based on success rate and accuracy
-        const performanceScore = (performance.successRate * 0.6 + performance.accuracy * 0.4);
+        const performanceScore =
+          performance.successRate * 0.6 + performance.accuracy * 0.4;
         rule.weight = Math.max(0.1, Math.min(1, performanceScore));
       }
     }
@@ -995,20 +1156,20 @@ class HybridReasoningService {
 
   getPerformanceHistory(mode?: string, model?: string): PerformanceMetrics[] {
     let history = [...this.performanceHistory];
-    
+
     if (mode) {
-      history = history.filter(m => m.mode === mode);
+      history = history.filter((m) => m.mode === mode);
     }
     if (model) {
-      history = history.filter(m => m.model === model);
+      history = history.filter((m) => m.model === model);
     }
-    
+
     return history;
   }
 
   getPerformanceAnalytics(): any {
     const history = this.performanceHistory;
-    
+
     if (history.length === 0) {
       return {
         totalRequests: 0,
@@ -1017,15 +1178,18 @@ class HybridReasoningService {
         averageProcessingTime: 0,
         successRate: 0,
         modeUsage: {},
-        modelUsage: {}
+        modelUsage: {},
       };
     }
 
     const totalRequests = history.length;
-    const averageAccuracy = history.reduce((sum, m) => sum + m.accuracy, 0) / totalRequests;
-    const averageCost = history.reduce((sum, m) => sum + m.cost, 0) / totalRequests;
-    const averageProcessingTime = history.reduce((sum, m) => sum + m.processingTime, 0) / totalRequests;
-    const successRate = history.filter(m => m.success).length / totalRequests;
+    const averageAccuracy =
+      history.reduce((sum, m) => sum + m.accuracy, 0) / totalRequests;
+    const averageCost =
+      history.reduce((sum, m) => sum + m.cost, 0) / totalRequests;
+    const averageProcessingTime =
+      history.reduce((sum, m) => sum + m.processingTime, 0) / totalRequests;
+    const successRate = history.filter((m) => m.success).length / totalRequests;
 
     // Mode usage statistics
     const modeUsage = new Map<string, number>();
@@ -1043,7 +1207,7 @@ class HybridReasoningService {
       averageProcessingTime: Math.round(averageProcessingTime),
       successRate: Math.round(successRate * 100) / 100,
       modeUsage: Object.fromEntries(modeUsage),
-      modelUsage: Object.fromEntries(modelUsage)
+      modelUsage: Object.fromEntries(modelUsage),
     };
   }
 
@@ -1057,19 +1221,22 @@ class HybridReasoningService {
   async optimizeRoutingStrategy(): Promise<void> {
     // Analyze performance data and suggest optimal routing strategy
     const analytics = this.getPerformanceAnalytics();
-    
+
     // Determine best strategy based on current performance
-    let recommendedStrategy = 'balanced';
-    
+    let recommendedStrategy = "balanced";
+
     if (analytics.averageCost > 0.05 && analytics.successRate > 0.9) {
-      recommendedStrategy = 'cost-optimized';
-    } else if (analytics.averageAccuracy < 0.8 && analytics.averageCost < 0.03) {
-      recommendedStrategy = 'quality-optimized';
+      recommendedStrategy = "cost-optimized";
+    } else if (
+      analytics.averageAccuracy < 0.8 &&
+      analytics.averageCost < 0.03
+    ) {
+      recommendedStrategy = "quality-optimized";
     }
 
     // Update routing config with recommendation
     this.routingConfig.strategy = recommendedStrategy;
-    
+
     console.log(`Routing strategy optimized to: ${recommendedStrategy}`);
   }
 }

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
 
     if (!contentId && !url) {
       return NextResponse.json(
-        { error: 'Content ID or URL is required' },
-        { status: 400 }
+        { error: "Content ID or URL is required" },
+        { status: 400 },
       );
     }
 
@@ -18,9 +18,9 @@ export async function POST(request: NextRequest) {
     const performancePrompt = `
     Analyze content performance and provide optimization insights:
 
-    Content ID: ${contentId || 'unknown'}
-    URL: ${url || 'unknown'}
-    Timeframe: ${timeframe || '30 days'}
+    Content ID: ${contentId || "unknown"}
+    URL: ${url || "unknown"}
+    Timeframe: ${timeframe || "30 days"}
     Current Metrics: ${JSON.stringify(metrics || {})}
 
     Analyze the following aspects:
@@ -97,22 +97,23 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are an expert content performance analyst specializing in digital marketing and SEO optimization. Provide data-driven insights and actionable recommendations.'
+          role: "system",
+          content:
+            "You are an expert content performance analyst specializing in digital marketing and SEO optimization. Provide data-driven insights and actionable recommendations.",
         },
         {
-          role: 'user',
-          content: performancePrompt
-        }
+          role: "user",
+          content: performancePrompt,
+        },
       ],
       temperature: 0.3,
-      max_tokens: 2500
+      max_tokens: 2500,
     });
 
     const performanceContent = completion.choices[0]?.message?.content;
-    
+
     if (!performanceContent) {
-      throw new Error('No performance analysis received from AI');
+      throw new Error("No performance analysis received from AI");
     }
 
     // Parse the JSON response
@@ -120,29 +121,34 @@ export async function POST(request: NextRequest) {
     try {
       performanceResult = JSON.parse(performanceContent);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       // Fallback response if JSON parsing fails
       performanceResult = {
         performance: {},
         trends: {},
         insights: [],
         recommendations: [],
-        benchmark: {}
+        benchmark: {},
       };
     }
 
     return NextResponse.json({
       success: true,
       data: performanceResult,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Content performance analysis error:', error);
+    console.error("Content performance analysis error:", error);
     return NextResponse.json(
-      { error: 'Failed to analyze content performance', details: error.message },
-      { error: 'Failed to analyze content performance', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      {
+        error: "Failed to analyze content performance",
+        details: error.message,
+      },
+      {
+        error: "Failed to analyze content performance",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }

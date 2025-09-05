@@ -1,17 +1,29 @@
 /**
  * OptiMind AI Ecosystem - Predictive Analytics Service v2.0
  * Premium Diamond Grade AI-Powered Predictive Analytics Service
- * 
+ *
  * This service provides high-level predictive analytics operations with
  * enterprise-grade model management, training, and inference capabilities.
  */
 
-import { prisma } from '@/lib/db';
+import { prisma } from "@/lib/db";
 
-import { predictiveAnalyticsV2, type PredictiveModelConfig, type TrainingData, type PredictionResult, type PredictiveInsight } from './predictive-analytics';
+import {
+  predictiveAnalyticsV2,
+  type PredictiveModelConfig,
+  type TrainingData,
+  type PredictionResult,
+  type PredictiveInsight,
+} from "./predictive-analytics";
 
 export interface PredictiveAnalyticsRequest {
-  operation: 'create_model' | 'train_model' | 'predict' | 'generate_insights' | 'get_metrics' | 'health_check';
+  operation:
+    | "create_model"
+    | "train_model"
+    | "predict"
+    | "generate_insights"
+    | "get_metrics"
+    | "health_check";
   modelId?: string;
   config?: PredictiveModelConfig;
   trainingData?: TrainingData;
@@ -34,7 +46,7 @@ export interface PredictiveAnalyticsResponse {
 
 export interface ModelManagementRequest {
   userId: string;
-  action: 'create' | 'train' | 'deploy' | 'archive' | 'delete';
+  action: "create" | "train" | "deploy" | "archive" | "delete";
   modelId?: string;
   name?: string;
   description?: string;
@@ -45,12 +57,12 @@ export interface PredictiveInsightRequest {
   userId: string;
   modelId?: string;
   data: any[];
-  insightTypes?: ('trend' | 'anomaly' | 'forecast' | 'recommendation')[];
+  insightTypes?: ("trend" | "anomaly" | "forecast" | "recommendation")[];
   timeframe?: string;
 }
 
 class PredictiveAnalyticsServiceV2 {
-  private readonly serviceName = 'PredictiveAnalyticsServiceV2';
+  private readonly serviceName = "PredictiveAnalyticsServiceV2";
   private readonly maxModelsPerUser = 10;
   private readonly maxInsightsPerModel = 100;
   private readonly maxTrainingDataSize = 10000;
@@ -58,40 +70,42 @@ class PredictiveAnalyticsServiceV2 {
   /**
    * Execute predictive analytics operation
    */
-  async executeOperation(request: PredictiveAnalyticsRequest): Promise<PredictiveAnalyticsResponse> {
+  async executeOperation(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<PredictiveAnalyticsResponse> {
     const startTime = Date.now();
-    
+
     try {
       // Validate user authentication
       await this.validateUser(request.userId);
-      
+
       // Execute operation
       let result: any;
       const operationSuccess = true;
       let modelType: string | undefined;
       let confidence: number | undefined;
-      
+
       switch (request.operation) {
-        case 'create_model':
+        case "create_model":
           result = await this.handleModelCreation(request);
           modelType = result.config?.type;
           break;
-        case 'train_model':
+        case "train_model":
           result = await this.handleModelTraining(request);
           modelType = result.config?.type;
           confidence = result.metrics?.accuracy;
           break;
-        case 'predict':
+        case "predict":
           result = await this.handlePrediction(request);
           confidence = result.confidence;
           break;
-        case 'generate_insights':
+        case "generate_insights":
           result = await this.handleInsightGeneration(request);
           break;
-        case 'get_metrics':
+        case "get_metrics":
           result = await this.handleMetricsRetrieval(request);
           break;
-        case 'health_check':
+        case "health_check":
           result = await this.handleHealthCheck(request);
           break;
         default:
@@ -102,14 +116,14 @@ class PredictiveAnalyticsServiceV2 {
       await this.logOperation({
         userId: request.userId,
         operation: request.operation,
-        resource: 'predictive_analytics',
+        resource: "predictive_analytics",
         success: true,
         details: {
           ...request.metadata,
           modelId: request.modelId,
           executionTime: Date.now() - startTime,
-          result: typeof result === 'object' ? 'success' : result
-        }
+          result: typeof result === "object" ? "success" : result,
+        },
       });
 
       return {
@@ -118,29 +132,28 @@ class PredictiveAnalyticsServiceV2 {
         timestamp: new Date(),
         operation: request.operation,
         modelType,
-        confidence
+        confidence,
       };
-
     } catch (error) {
       // Log failed operation
       await this.logOperation({
         userId: request.userId,
         operation: request.operation,
-        resource: 'predictive_analytics',
+        resource: "predictive_analytics",
         success: false,
         details: {
           ...request.metadata,
           modelId: request.modelId,
           error: error.message,
-          executionTime: Date.now() - startTime
-        }
+          executionTime: Date.now() - startTime,
+        },
       });
 
       return {
         success: false,
         error: error.message,
         timestamp: new Date(),
-        operation: request.operation
+        operation: request.operation,
       };
     }
   }
@@ -148,111 +161,125 @@ class PredictiveAnalyticsServiceV2 {
   /**
    * Handle model creation
    */
-  private async handleModelCreation(request: PredictiveAnalyticsRequest): Promise<any> {
+  private async handleModelCreation(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<any> {
     if (!request.config) {
-      throw new Error('Model configuration is required');
+      throw new Error("Model configuration is required");
     }
 
     const modelId = crypto.randomUUID();
-    
+
     // Create the model
-    const model = await predictiveAnalyticsV2.createModel(modelId, request.config);
-    
+    const model = await predictiveAnalyticsV2.createModel(
+      modelId,
+      request.config,
+    );
+
     // Save model metadata to database
     await prisma.predictiveModel.create({
       data: {
         name: `Model ${modelId}`,
         type: request.config.type.toUpperCase() as any,
-        version: '2.0.0',
+        version: "2.0.0",
         description: `Predictive model of type ${request.config.type}`,
         trainingData: {
           features: request.config.features,
           target: request.config.target,
-          sampleSize: 0
+          sampleSize: 0,
         },
         hyperparameters: request.config.hyperparameters,
-        status: 'CREATED',
+        status: "CREATED",
         accuracy: 0,
-        userId: request.userId
-      }
+        userId: request.userId,
+      },
     });
 
     return {
       modelId,
       config: request.config,
-      status: 'created',
-      message: 'Predictive model created successfully'
+      status: "created",
+      message: "Predictive model created successfully",
     };
   }
 
   /**
    * Handle model training
    */
-  private async handleModelTraining(request: PredictiveAnalyticsRequest): Promise<any> {
+  private async handleModelTraining(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<any> {
     if (!request.modelId) {
-      throw new Error('Model ID is required for training');
+      throw new Error("Model ID is required for training");
     }
-    
+
     if (!request.trainingData) {
-      throw new Error('Training data is required for training');
+      throw new Error("Training data is required for training");
     }
 
     // Validate model exists and belongs to user
     await this.validateModelOwnership(request.modelId, request.userId);
-    
+
     // Validate training data size
     if (request.trainingData.inputs.length > this.maxTrainingDataSize) {
-      throw new Error(`Training data exceeds maximum size of ${this.maxTrainingDataSize}`);
+      throw new Error(
+        `Training data exceeds maximum size of ${this.maxTrainingDataSize}`,
+      );
     }
 
     // Train the model
-    const metrics = await predictiveAnalyticsV2.trainModel(request.modelId, request.trainingData);
-    
+    const metrics = await predictiveAnalyticsV2.trainModel(
+      request.modelId,
+      request.trainingData,
+    );
+
     // Update model in database
     await prisma.predictiveModel.update({
       where: { id: request.modelId },
       data: {
-        status: 'TRAINED',
+        status: "TRAINED",
         accuracy: metrics.accuracy,
         trainingData: {
           ...request.trainingData,
-          sampleSize: request.trainingData.inputs.length
+          sampleSize: request.trainingData.inputs.length,
         },
         performance: metrics,
-        hyperparameters: request.config?.hyperparameters || {}
-      }
+        hyperparameters: request.config?.hyperparameters || {},
+      },
     });
 
     return {
       modelId: request.modelId,
       metrics,
-      status: 'trained',
-      message: 'Model trained successfully'
+      status: "trained",
+      message: "Model trained successfully",
     };
   }
 
   /**
    * Handle prediction
    */
-  private async handlePrediction(request: PredictiveAnalyticsRequest): Promise<PredictionResult> {
+  private async handlePrediction(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<PredictionResult> {
     if (!request.modelId) {
-      throw new Error('Model ID is required for prediction');
+      throw new Error("Model ID is required for prediction");
     }
-    
+
     if (!request.inputData) {
-      throw new Error('Input data is required for prediction');
+      throw new Error("Input data is required for prediction");
     }
 
     // Validate model exists and belongs to user
     await this.validateModelOwnership(request.modelId, request.userId);
-    
+
     // Validate model is trained
     const model = await prisma.predictiveModel.findUnique({
-      where: { id: request.modelId }
+      where: { id: request.modelId },
     });
-    
-    if (!model || model.status !== 'TRAINED') {
-      throw new Error('Model is not trained or not found');
+
+    if (!model || model.status !== "TRAINED") {
+      throw new Error("Model is not trained or not found");
     }
 
     // Make prediction
@@ -260,7 +287,7 @@ class PredictiveAnalyticsServiceV2 {
     const prediction = await predictiveAnalyticsV2.predict(
       request.modelId,
       request.inputData,
-      features
+      features,
     );
 
     // Log prediction to database
@@ -269,14 +296,16 @@ class PredictiveAnalyticsServiceV2 {
         userId: request.userId,
         modelId: request.modelId,
         inputData: request.inputData,
-        prediction: Array.isArray(prediction.prediction) ? prediction.prediction : [prediction.prediction],
+        prediction: Array.isArray(prediction.prediction)
+          ? prediction.prediction
+          : [prediction.prediction],
         confidence: prediction.confidence,
         features: features,
         metadata: {
           timestamp: prediction.timestamp,
-          modelVersion: prediction.modelVersion
-        }
-      }
+          modelVersion: prediction.modelVersion,
+        },
+      },
     });
 
     return prediction;
@@ -285,15 +314,17 @@ class PredictiveAnalyticsServiceV2 {
   /**
    * Handle insight generation
    */
-  private async handleInsightGeneration(request: PredictiveAnalyticsRequest): Promise<PredictiveInsight[]> {
+  private async handleInsightGeneration(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<PredictiveInsight[]> {
     if (!request.data) {
-      throw new Error('Data is required for insight generation');
+      throw new Error("Data is required for insight generation");
     }
 
     // Generate insights
     const insights = await predictiveAnalyticsV2.generateInsights(
       request.data,
-      request.modelId
+      request.modelId,
     );
 
     // Store insights in database
@@ -310,8 +341,8 @@ class PredictiveAnalyticsServiceV2 {
           timeframe: insight.timeframe,
           data: insight.data,
           actionable: insight.actionable,
-          createdAt: insight.createdAt
-        }
+          createdAt: insight.createdAt,
+        },
       });
     }
 
@@ -321,9 +352,11 @@ class PredictiveAnalyticsServiceV2 {
   /**
    * Handle metrics retrieval
    */
-  private async handleMetricsRetrieval(request: PredictiveAnalyticsRequest): Promise<any> {
+  private async handleMetricsRetrieval(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<any> {
     if (!request.modelId) {
-      throw new Error('Model ID is required for metrics retrieval');
+      throw new Error("Model ID is required for metrics retrieval");
     }
 
     // Validate model exists and belongs to user
@@ -331,29 +364,31 @@ class PredictiveAnalyticsServiceV2 {
 
     // Get model metrics
     const metrics = predictiveAnalyticsV2.getModelMetrics(request.modelId);
-    
+
     if (!metrics) {
-      throw new Error('Model metrics not found');
+      throw new Error("Model metrics not found");
     }
 
     return {
       modelId: request.modelId,
       metrics,
-      insights: predictiveAnalyticsV2.getInsights(request.modelId)
+      insights: predictiveAnalyticsV2.getInsights(request.modelId),
     };
   }
 
   /**
    * Handle health check
    */
-  private async handleHealthCheck(request: PredictiveAnalyticsRequest): Promise<any> {
+  private async handleHealthCheck(
+    request: PredictiveAnalyticsRequest,
+  ): Promise<any> {
     const healthCheck = await predictiveAnalyticsV2.healthCheck();
-    
+
     return {
-      service: 'PredictiveAnalyticsServiceV2',
+      service: "PredictiveAnalyticsServiceV2",
       status: healthCheck.status,
       checks: healthCheck,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
   }
 
@@ -371,57 +406,61 @@ class PredictiveAnalyticsServiceV2 {
       await this.validateUser(request.userId);
 
       switch (request.action) {
-        case 'create': {
+        case "create": {
           if (!request.config) {
-            throw new Error('Model configuration is required for creation');
+            throw new Error("Model configuration is required for creation");
           }
 
           // Check user model limit
           const userModelsCount = await prisma.predictiveModel.count({
-            where: { userId: request.userId }
+            where: { userId: request.userId },
           });
 
           if (userModelsCount >= this.maxModelsPerUser) {
-            throw new Error(`Maximum number of models (${this.maxModelsPerUser}) reached for user`);
+            throw new Error(
+              `Maximum number of models (${this.maxModelsPerUser}) reached for user`,
+            );
           }
 
           const modelId = crypto.randomUUID();
           const name = request.name || `Model ${modelId}`;
-          const description = request.description || `Predictive model of type ${request.config.type}`;
+          const description =
+            request.description ||
+            `Predictive model of type ${request.config.type}`;
 
           // Create model
           await predictiveAnalyticsV2.createModel(modelId, request.config);
-          
+
           // Save to database
           const model = await prisma.predictiveModel.create({
             data: {
               id: modelId,
               name,
               type: request.config.type.toUpperCase() as any,
-              version: '2.0.0',
+              version: "2.0.0",
               description,
               trainingData: {
                 features: request.config.features,
                 target: request.config.target,
-                sampleSize: 0
+                sampleSize: 0,
               },
               hyperparameters: request.config.hyperparameters,
-              status: 'CREATED',
+              status: "CREATED",
               accuracy: 0,
-              userId: request.userId
-            }
+              userId: request.userId,
+            },
           });
 
           return {
             success: true,
             models: [model],
-            message: 'Predictive model created successfully'
+            message: "Predictive model created successfully",
           };
         }
 
-        case 'train':
+        case "train":
           if (!request.modelId) {
-            throw new Error('Model ID is required for training');
+            throw new Error("Model ID is required for training");
           }
 
           // Validate model ownership
@@ -430,47 +469,47 @@ class PredictiveAnalyticsServiceV2 {
           // Update model status to training
           await prisma.predictiveModel.update({
             where: { id: request.modelId },
-            data: { status: 'TRAINING' }
+            data: { status: "TRAINING" },
           });
 
           return {
             success: true,
-            message: 'Model training initiated'
+            message: "Model training initiated",
           };
 
-        case 'deploy': {
+        case "deploy": {
           if (!request.modelId) {
-            throw new Error('Model ID is required for deployment');
+            throw new Error("Model ID is required for deployment");
           }
 
           // Validate model ownership and training status
           const model = await prisma.predictiveModel.findUnique({
-            where: { id: request.modelId }
+            where: { id: request.modelId },
           });
 
           if (!model || model.userId !== request.userId) {
-            throw new Error('Model not found or access denied');
+            throw new Error("Model not found or access denied");
           }
 
-          if (model.status !== 'TRAINED') {
-            throw new Error('Model must be trained before deployment');
+          if (model.status !== "TRAINED") {
+            throw new Error("Model must be trained before deployment");
           }
 
           // Update model status to deployed
           await prisma.predictiveModel.update({
             where: { id: request.modelId },
-            data: { status: 'DEPLOYED' }
+            data: { status: "DEPLOYED" },
           });
 
           return {
             success: true,
-            message: 'Model deployed successfully'
+            message: "Model deployed successfully",
           };
         }
 
-        case 'archive':
+        case "archive":
           if (!request.modelId) {
-            throw new Error('Model ID is required for archiving');
+            throw new Error("Model ID is required for archiving");
           }
 
           // Validate model ownership
@@ -479,17 +518,17 @@ class PredictiveAnalyticsServiceV2 {
           // Update model status to archived
           await prisma.predictiveModel.update({
             where: { id: request.modelId },
-            data: { status: 'ARCHIVED' }
+            data: { status: "ARCHIVED" },
           });
 
           return {
             success: true,
-            message: 'Model archived successfully'
+            message: "Model archived successfully",
           };
 
-        case 'delete':
+        case "delete":
           if (!request.modelId) {
-            throw new Error('Model ID is required for deletion');
+            throw new Error("Model ID is required for deletion");
           }
 
           // Validate model ownership
@@ -497,22 +536,23 @@ class PredictiveAnalyticsServiceV2 {
 
           // Delete model and related data
           await prisma.predictiveModel.delete({
-            where: { id: request.modelId }
+            where: { id: request.modelId },
           });
 
           return {
             success: true,
-            message: 'Model deleted successfully'
+            message: "Model deleted successfully",
           };
 
         default:
-          throw new Error(`Unsupported model management action: ${request.action}`);
+          throw new Error(
+            `Unsupported model management action: ${request.action}`,
+          );
       }
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -538,12 +578,14 @@ class PredictiveAnalyticsServiceV2 {
       // Generate insights
       const insights = await predictiveAnalyticsV2.generateInsights(
         request.data,
-        request.modelId
+        request.modelId,
       );
 
       // Filter by insight types if specified
       const filteredInsights = request.insightTypes
-        ? insights.filter(insight => request.insightTypes!.includes(insight.type))
+        ? insights.filter((insight) =>
+            request.insightTypes!.includes(insight.type),
+          )
         : insights;
 
       // Store insights in database
@@ -560,21 +602,20 @@ class PredictiveAnalyticsServiceV2 {
             timeframe: insight.timeframe,
             data: insight.data,
             actionable: insight.actionable,
-            createdAt: insight.createdAt
-          }
+            createdAt: insight.createdAt,
+          },
         });
       }
 
       return {
         success: true,
         insights: filteredInsights,
-        total: filteredInsights.length
+        total: filteredInsights.length,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -582,7 +623,10 @@ class PredictiveAnalyticsServiceV2 {
   /**
    * Get user's predictive insights
    */
-  async getUserInsights(userId: string, limit: number = 50): Promise<{
+  async getUserInsights(
+    userId: string,
+    limit: number = 50,
+  ): Promise<{
     success: boolean;
     insights?: any[];
     total: number;
@@ -595,7 +639,7 @@ class PredictiveAnalyticsServiceV2 {
       const insights = await prisma.predictiveInsight.findMany({
         where: { userId },
         orderBy: {
-          createdAt: 'desc'
+          createdAt: "desc",
         },
         take: limit,
         include: {
@@ -603,15 +647,15 @@ class PredictiveAnalyticsServiceV2 {
             select: {
               id: true,
               name: true,
-              type: true
-            }
-          }
-        }
+              type: true,
+            },
+          },
+        },
       });
 
       return {
         success: true,
-        insights: insights.map(insight => ({
+        insights: insights.map((insight) => ({
           id: insight.id,
           type: insight.type.toLowerCase(),
           title: insight.title,
@@ -622,15 +666,14 @@ class PredictiveAnalyticsServiceV2 {
           data: insight.data,
           actionable: insight.actionable,
           createdAt: insight.createdAt,
-          model: insight.model
+          model: insight.model,
         })),
-        total: insights.length
+        total: insights.length,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -651,38 +694,38 @@ class PredictiveAnalyticsServiceV2 {
       const models = await prisma.predictiveModel.findMany({
         where: { userId },
         orderBy: {
-          createdAt: 'desc'
+          createdAt: "desc",
         },
         include: {
           predictions: {
             select: {
               id: true,
               confidence: true,
-              createdAt: true
+              createdAt: true,
             },
             take: 5,
             orderBy: {
-              createdAt: 'desc'
-            }
+              createdAt: "desc",
+            },
           },
           insights: {
             select: {
               id: true,
               type: true,
               confidence: true,
-              createdAt: true
+              createdAt: true,
             },
             take: 5,
             orderBy: {
-              createdAt: 'desc'
-            }
-          }
-        }
+              createdAt: "desc",
+            },
+          },
+        },
       });
 
       return {
         success: true,
-        models: models.map(model => ({
+        models: models.map((model) => ({
           id: model.id,
           name: model.name,
           type: model.type.toLowerCase(),
@@ -696,15 +739,14 @@ class PredictiveAnalyticsServiceV2 {
           createdAt: model.createdAt,
           updatedAt: model.updatedAt,
           predictions: model.predictions,
-          insights: model.insights
+          insights: model.insights,
         })),
-        total: models.length
+        total: models.length,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -714,7 +756,7 @@ class PredictiveAnalyticsServiceV2 {
    */
   async healthCheck(): Promise<{
     success: boolean;
-    status: 'healthy' | 'degraded' | 'unhealthy';
+    status: "healthy" | "degraded" | "unhealthy";
     checks?: {
       models: number;
       insights: number;
@@ -729,14 +771,13 @@ class PredictiveAnalyticsServiceV2 {
       return {
         success: true,
         status: healthCheck.status,
-        checks: healthCheck.checks
+        checks: healthCheck.checks,
       };
-
     } catch (error) {
       return {
         success: false,
-        status: 'unhealthy',
-        error: error.message
+        status: "unhealthy",
+        error: error.message,
       };
     }
   }
@@ -746,28 +787,31 @@ class PredictiveAnalyticsServiceV2 {
    */
   private async validateUser(userId: string): Promise<void> {
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id: userId },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     if (!user.isActive) {
-      throw new Error('User account is not active');
+      throw new Error("User account is not active");
     }
   }
 
   /**
    * Validate model ownership
    */
-  private async validateModelOwnership(modelId: string, userId: string): Promise<void> {
+  private async validateModelOwnership(
+    modelId: string,
+    userId: string,
+  ): Promise<void> {
     const model = await prisma.predictiveModel.findUnique({
-      where: { id: modelId }
+      where: { id: modelId },
     });
 
     if (!model || model.userId !== userId) {
-      throw new Error('Model not found or access denied');
+      throw new Error("Model not found or access denied");
     }
   }
 
@@ -790,13 +834,12 @@ class PredictiveAnalyticsServiceV2 {
           success: operation.success,
           details: operation.details,
           timestamp: new Date(),
-          ipAddress: '127.0.0.1', // Would get from request context
-          userAgent: 'PredictiveAnalyticsService/2.0'
-        }
+          ipAddress: "127.0.0.1", // Would get from request context
+          userAgent: "PredictiveAnalyticsService/2.0",
+        },
       });
-
     } catch (error) {
-      console.error('Failed to log predictive analytics operation:', error);
+      console.error("Failed to log predictive analytics operation:", error);
     }
   }
 
@@ -810,13 +853,13 @@ class PredictiveAnalyticsServiceV2 {
   }> {
     try {
       const cutoffDate = new Date(Date.now() - maxAge * 24 * 60 * 60 * 1000);
-      
+
       const result = await prisma.predictiveInsight.deleteMany({
         where: {
           createdAt: {
-            lt: cutoffDate
-          }
-        }
+            lt: cutoffDate,
+          },
+        },
       });
 
       // Also cleanup in-memory insights
@@ -824,13 +867,12 @@ class PredictiveAnalyticsServiceV2 {
 
       return {
         success: true,
-        cleanedInsights: result.count
+        cleanedInsights: result.count,
       };
-
     } catch (error) {
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -840,11 +882,11 @@ class PredictiveAnalyticsServiceV2 {
 export const predictiveAnalyticsServiceV2 = new PredictiveAnalyticsServiceV2();
 
 // Export types and utilities
-export type { 
-  PredictiveAnalyticsRequest, 
-  PredictiveAnalyticsResponse, 
-  ModelManagementRequest, 
-  PredictiveInsightRequest 
+export type {
+  PredictiveAnalyticsRequest,
+  PredictiveAnalyticsResponse,
+  ModelManagementRequest,
+  PredictiveInsightRequest,
 };
 
 // Export utility functions

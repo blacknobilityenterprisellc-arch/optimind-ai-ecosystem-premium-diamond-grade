@@ -21,8 +21,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "OptiMind AI Ecosystem - Premium Diamond Grade AI Platform",
-  description: "Advanced AI-powered optimization platform with SEO, AEO, GEO, and content creation tools. Diamond-grade AI ecosystem for enterprise optimization.",
-  keywords: ["OptiMind AI", "SEO", "AEO", "GEO", "AI optimization", "content creation", "enterprise AI", "diamond grade"],
+  description:
+    "Advanced AI-powered optimization platform with SEO, AEO, GEO, and content creation tools. Diamond-grade AI ecosystem for enterprise optimization.",
+  keywords: [
+    "OptiMind AI",
+    "SEO",
+    "AEO",
+    "GEO",
+    "AI optimization",
+    "content creation",
+    "enterprise AI",
+    "diamond grade",
+  ],
   authors: [{ name: "OptiMind AI Team" }],
   openGraph: {
     title: "OptiMind AI Ecosystem",

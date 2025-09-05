@@ -1,16 +1,16 @@
 /**
  * Diamond-Grade Database Optimization System
- * 
+ *
  * Comprehensive database optimization system with connection pooling,
  * query optimization, and performance monitoring.
- * 
+ *
  * @version 1.0.0
  * @author OptiMind AI Team
  * @license MIT
  */
 
-import { PrismaClient } from '@prisma/client';
-import { performance } from 'perf_hooks';
+import { PrismaClient } from "@prisma/client";
+import { performance } from "perf_hooks";
 
 // Database configuration interface
 export interface DatabaseConfig {
@@ -20,7 +20,7 @@ export interface DatabaseConfig {
   queryTimeout?: number;
   poolTimeout?: number;
   logQueries?: boolean;
-  logLevel?: 'info' | 'warn' | 'error';
+  logLevel?: "info" | "warn" | "error";
 }
 
 // Query metrics interface
@@ -35,7 +35,7 @@ export interface QueryMetrics {
 
 // Database health status interface
 export interface DatabaseHealth {
-  status: 'healthy' | 'degraded' | 'unhealthy';
+  status: "healthy" | "degraded" | "unhealthy";
   responseTime: number;
   connectionCount: number;
   maxConnections: number;
@@ -50,7 +50,7 @@ export interface QueryOptimization {
   improvement: {
     estimatedTimeReduction: number;
     suggestions: string[];
-    complexity: 'low' | 'medium' | 'high';
+    complexity: "low" | "medium" | "high";
   };
 }
 
@@ -69,26 +69,28 @@ export class DatabaseConnectionPool {
       queryTimeout: 30000,
       poolTimeout: 60000,
       logQueries: false,
-      logLevel: 'info',
-      ...config
+      logLevel: "info",
+      ...config,
     };
 
     this.pool = new PrismaClient({
       datasources: {
         db: {
-          url: this.config.url
-        }
+          url: this.config.url,
+        },
       },
-      log: this.config.logQueries ? ['query', 'info', 'warn', 'error'] : ['warn', 'error']
+      log: this.config.logQueries
+        ? ["query", "info", "warn", "error"]
+        : ["warn", "error"],
     });
 
     this.healthStatus = {
-      status: 'healthy',
+      status: "healthy",
       responseTime: 0,
       connectionCount: 0,
       maxConnections: this.config.maxConnections!,
       errorRate: 0,
-      lastChecked: new Date()
+      lastChecked: new Date(),
     };
 
     this.startHealthMonitoring();
@@ -102,7 +104,7 @@ export class DatabaseConnectionPool {
       timeout?: number;
       retryAttempts?: number;
       cacheKey?: string;
-    }
+    },
   ): Promise<T> {
     const startTime = performance.now();
     const queryMetrics: QueryMetrics = {
@@ -110,28 +112,29 @@ export class DatabaseConnectionPool {
       duration: 0,
       timestamp: new Date(),
       success: false,
-      parameters
+      parameters,
     };
 
     try {
       const result = await this.withRetry(
         () => this.pool.$queryRawUnsafe(query, ...parameters),
-        options?.retryAttempts || 3
+        options?.retryAttempts || 3,
       );
 
       queryMetrics.duration = performance.now() - startTime;
       queryMetrics.success = true;
-      
+
       this.recordQueryMetrics(queryMetrics);
-      
+
       return result as T;
     } catch (error) {
       queryMetrics.duration = performance.now() - startTime;
       queryMetrics.success = false;
-      queryMetrics.errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+      queryMetrics.errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
       this.recordQueryMetrics(queryMetrics);
-      
+
       throw error;
     }
   }
@@ -143,7 +146,7 @@ export class DatabaseConnectionPool {
     options?: {
       optimize?: boolean;
       explain?: boolean;
-    }
+    },
   ): Promise<{ result: T; optimization?: QueryOptimization; explain?: any }> {
     let finalQuery = query;
     let optimization: QueryOptimization | undefined;
@@ -163,7 +166,7 @@ export class DatabaseConnectionPool {
     return {
       result,
       optimization,
-      explain: explainResult
+      explain: explainResult,
     };
   }
 
@@ -171,39 +174,46 @@ export class DatabaseConnectionPool {
   async getHealthStatus(): Promise<DatabaseHealth> {
     try {
       const startTime = performance.now();
-      
+
       // Execute a simple health check query
       await this.pool.$queryRaw`SELECT 1`;
-      
+
       const responseTime = performance.now() - startTime;
-      
+
       // Get connection count (this is a simplified approach)
       const connectionCount = await this.estimateConnectionCount();
-      
+
       // Calculate error rate from recent metrics
       const recentMetrics = this.getRecentMetrics(300000); // Last 5 minutes
-      const errorRate = recentMetrics.length > 0 
-        ? (recentMetrics.filter(m => !m.success).length / recentMetrics.length) * 100 
-        : 0;
+      const errorRate =
+        recentMetrics.length > 0
+          ? (recentMetrics.filter((m) => !m.success).length /
+              recentMetrics.length) *
+            100
+          : 0;
 
       this.healthStatus = {
-        status: this.determineHealthStatus(responseTime, errorRate, connectionCount),
+        status: this.determineHealthStatus(
+          responseTime,
+          errorRate,
+          connectionCount,
+        ),
         responseTime,
         connectionCount,
         maxConnections: this.config.maxConnections!,
         errorRate,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
 
       return this.healthStatus;
     } catch (error) {
       this.healthStatus = {
-        status: 'unhealthy',
+        status: "unhealthy",
         responseTime: 0,
         connectionCount: 0,
         maxConnections: this.config.maxConnections!,
         errorRate: 100,
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
 
       return this.healthStatus;
@@ -220,11 +230,11 @@ export class DatabaseConnectionPool {
 
     if (options?.timeRange) {
       const cutoff = new Date(Date.now() - options.timeRange);
-      filteredMetrics = filteredMetrics.filter(m => m.timestamp >= cutoff);
+      filteredMetrics = filteredMetrics.filter((m) => m.timestamp >= cutoff);
     }
 
     if (options?.successOnly) {
-      filteredMetrics = filteredMetrics.filter(m => m.success);
+      filteredMetrics = filteredMetrics.filter((m) => m.success);
     }
 
     if (options?.limit) {
@@ -236,7 +246,7 @@ export class DatabaseConnectionPool {
 
   // Get slow queries
   getSlowQueries(threshold: number = 1000): QueryMetrics[] {
-    return this.metrics.filter(m => m.duration > threshold && m.success);
+    return this.metrics.filter((m) => m.duration > threshold && m.success);
   }
 
   // Optimize query
@@ -253,10 +263,13 @@ export class DatabaseConnectionPool {
       originalQuery: query,
       optimizedQuery,
       improvement: {
-        estimatedTimeReduction: this.estimateTimeReduction(query, optimizedQuery),
-        suggestions: optimizations.map(o => o.description),
-        complexity: this.assessQueryComplexity(optimizedQuery)
-      }
+        estimatedTimeReduction: this.estimateTimeReduction(
+          query,
+          optimizedQuery,
+        ),
+        suggestions: optimizations.map((o) => o.description),
+        complexity: this.assessQueryComplexity(optimizedQuery),
+      },
     };
   }
 
@@ -287,7 +300,7 @@ export class DatabaseConnectionPool {
           pg_total_relation_size(schemaname||'.'||tablename) as size_bytes
         FROM pg_tables 
         WHERE schemaname = 'public'
-        ORDER BY size_bytes DESC`
+        ORDER BY size_bytes DESC`,
       );
 
       const indexSizes = await this.executeQuery<any[]>(
@@ -299,7 +312,7 @@ export class DatabaseConnectionPool {
           pg_relation_size(schemaname||'.'||indexname) as size_bytes
         FROM pg_indexes 
         WHERE schemaname = 'public'
-        ORDER BY size_bytes DESC`
+        ORDER BY size_bytes DESC`,
       );
 
       const connectionStats = await this.executeQuery<any[]>(
@@ -307,23 +320,37 @@ export class DatabaseConnectionPool {
           count(*) as active_connections,
           setting as max_connections
         FROM pg_stat_activity, pg_settings 
-        WHERE pg_settings.name = 'max_connections'`
+        WHERE pg_settings.name = 'max_connections'`,
       );
 
-      const totalSize = tableSizes.reduce((sum, table) => sum + parseInt(table.size_bytes), 0);
+      const totalSize = tableSizes.reduce(
+        (sum, table) => sum + parseInt(table.size_bytes),
+        0,
+      );
 
       return {
-        tableSizes: tableSizes.reduce((acc, table) => {
-          acc[`${table.schemaname}.${table.tablename}`] = parseInt(table.size_bytes);
-          return acc;
-        }, {} as Record<string, number>),
-        indexSizes: indexSizes.reduce((acc, index) => {
-          acc[`${index.schemaname}.${index.tablename}.${index.indexname}`] = parseInt(index.size_bytes);
-          return acc;
-        }, {} as Record<string, number>),
+        tableSizes: tableSizes.reduce(
+          (acc, table) => {
+            acc[`${table.schemaname}.${table.tablename}`] = parseInt(
+              table.size_bytes,
+            );
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+        indexSizes: indexSizes.reduce(
+          (acc, index) => {
+            acc[`${index.schemaname}.${index.tablename}.${index.indexname}`] =
+              parseInt(index.size_bytes);
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
         totalSize,
-        activeConnections: parseInt(connectionStats[0]?.active_connections || '0'),
-        maxConnections: parseInt(connectionStats[0]?.max_connections || '0')
+        activeConnections: parseInt(
+          connectionStats[0]?.active_connections || "0",
+        ),
+        maxConnections: parseInt(connectionStats[0]?.max_connections || "0"),
       };
     } catch (error) {
       throw new Error(`Failed to get database stats: ${error}`);
@@ -331,9 +358,10 @@ export class DatabaseConnectionPool {
   }
 
   // Clean up old metrics
-  cleanupMetrics(olderThan: number = 86400000): void { // 24 hours
+  cleanupMetrics(olderThan: number = 86400000): void {
+    // 24 hours
     const cutoff = new Date(Date.now() - olderThan);
-    this.metrics = this.metrics.filter(m => m.timestamp >= cutoff);
+    this.metrics = this.metrics.filter((m) => m.timestamp >= cutoff);
   }
 
   // Get Prisma client
@@ -349,7 +377,7 @@ export class DatabaseConnectionPool {
   // Private methods
   private async withRetry<T>(
     operation: () => Promise<T>,
-    maxAttempts: number
+    maxAttempts: number,
   ): Promise<T> {
     let lastError: Error;
 
@@ -358,13 +386,13 @@ export class DatabaseConnectionPool {
         return await operation();
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt === maxAttempts) {
           throw lastError;
         }
 
         // Wait before retrying
-        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        await new Promise((resolve) => setTimeout(resolve, 1000 * attempt));
       }
     }
 
@@ -373,7 +401,7 @@ export class DatabaseConnectionPool {
 
   private recordQueryMetrics(metrics: QueryMetrics): void {
     this.metrics.push(metrics);
-    
+
     // Keep only last 10,000 metrics
     if (this.metrics.length > 10000) {
       this.metrics = this.metrics.slice(-10000);
@@ -382,26 +410,26 @@ export class DatabaseConnectionPool {
 
   private getRecentMetrics(timeRange: number): QueryMetrics[] {
     const cutoff = new Date(Date.now() - timeRange);
-    return this.metrics.filter(m => m.timestamp >= cutoff);
+    return this.metrics.filter((m) => m.timestamp >= cutoff);
   }
 
   private determineHealthStatus(
     responseTime: number,
     errorRate: number,
-    connectionCount: number
-  ): 'healthy' | 'degraded' | 'unhealthy' {
+    connectionCount: number,
+  ): "healthy" | "degraded" | "unhealthy" {
     const maxConnections = this.config.maxConnections!;
     const connectionRatio = connectionCount / maxConnections;
 
     if (responseTime > 5000 || errorRate > 10 || connectionRatio > 0.9) {
-      return 'unhealthy';
+      return "unhealthy";
     }
 
     if (responseTime > 1000 || errorRate > 5 || connectionRatio > 0.7) {
-      return 'degraded';
+      return "degraded";
     }
 
-    return 'healthy';
+    return "healthy";
   }
 
   private async estimateConnectionCount(): Promise<number> {
@@ -411,7 +439,7 @@ export class DatabaseConnectionPool {
         FROM pg_stat_activity 
         WHERE state = 'active'
       `;
-      return parseInt(result[0]?.count || '0');
+      return parseInt(result[0]?.count || "0");
     } catch {
       return 0;
     }
@@ -421,53 +449,67 @@ export class DatabaseConnectionPool {
     const optimizations: QueryOptimizationRule[] = [];
 
     // Add SELECT * optimization
-    if (query.includes('SELECT *')) {
+    if (query.includes("SELECT *")) {
       optimizations.push({
-        description: 'Replace SELECT * with specific columns',
-        apply: (q) => q.replace(/SELECT \*/g, 'SELECT id, created_at, updated_at')
+        description: "Replace SELECT * with specific columns",
+        apply: (q) =>
+          q.replace(/SELECT \*/g, "SELECT id, created_at, updated_at"),
       });
     }
 
     // Add missing WHERE clause optimization
-    if (!query.includes('WHERE') && !query.includes('INSERT') && !query.includes('UPDATE') && !query.includes('DELETE')) {
+    if (
+      !query.includes("WHERE") &&
+      !query.includes("INSERT") &&
+      !query.includes("UPDATE") &&
+      !query.includes("DELETE")
+    ) {
       optimizations.push({
-        description: 'Add WHERE clause to limit results',
-        apply: (q) => q + ' WHERE 1=1 LIMIT 1000'
+        description: "Add WHERE clause to limit results",
+        apply: (q) => q + " WHERE 1=1 LIMIT 1000",
       });
     }
 
     // Add LIMIT clause optimization
-    if (!query.includes('LIMIT') && !query.includes('INSERT') && !query.includes('UPDATE') && !query.includes('DELETE')) {
+    if (
+      !query.includes("LIMIT") &&
+      !query.includes("INSERT") &&
+      !query.includes("UPDATE") &&
+      !query.includes("DELETE")
+    ) {
       optimizations.push({
-        description: 'Add LIMIT clause to prevent large result sets',
-        apply: (q) => q + ' LIMIT 1000'
+        description: "Add LIMIT clause to prevent large result sets",
+        apply: (q) => q + " LIMIT 1000",
       });
     }
 
     // Add index suggestion
-    if (query.includes('WHERE') && !query.includes('ORDER BY')) {
+    if (query.includes("WHERE") && !query.includes("ORDER BY")) {
       optimizations.push({
-        description: 'Consider adding index on WHERE clause columns',
-        apply: (q) => q // No change, just suggestion
+        description: "Consider adding index on WHERE clause columns",
+        apply: (q) => q, // No change, just suggestion
       });
     }
 
     return optimizations;
   }
 
-  private estimateTimeReduction(originalQuery: string, optimizedQuery: string): number {
+  private estimateTimeReduction(
+    originalQuery: string,
+    optimizedQuery: string,
+  ): number {
     // Simple estimation based on query complexity
     const originalComplexity = this.assessQueryComplexity(originalQuery);
     const optimizedComplexity = this.assessQueryComplexity(optimizedQuery);
-    
+
     return Math.max(0, (originalComplexity - optimizedComplexity) * 10);
   }
 
-  private assessQueryComplexity(query: string): 'low' | 'medium' | 'high' {
+  private assessQueryComplexity(query: string): "low" | "medium" | "high" {
     let complexity = 0;
 
     // Check for SELECT *
-    if (query.includes('SELECT *')) complexity += 2;
+    if (query.includes("SELECT *")) complexity += 2;
 
     // Check for JOIN operations
     const joinCount = (query.match(/JOIN/gi) || []).length;
@@ -478,22 +520,23 @@ export class DatabaseConnectionPool {
     complexity += subqueryCount * 2;
 
     // Check for aggregate functions
-    const aggregateCount = (query.match(/COUNT|SUM|AVG|MIN|MAX/gi) || []).length;
+    const aggregateCount = (query.match(/COUNT|SUM|AVG|MIN|MAX/gi) || [])
+      .length;
     complexity += aggregateCount;
 
     // Check for GROUP BY
-    if (query.includes('GROUP BY')) complexity += 2;
+    if (query.includes("GROUP BY")) complexity += 2;
 
     // Check for ORDER BY
-    if (query.includes('ORDER BY')) complexity += 1;
+    if (query.includes("ORDER BY")) complexity += 1;
 
     // Check for LIKE operations
     const likeCount = (query.match(/LIKE/gi) || []).length;
     complexity += likeCount;
 
-    if (complexity <= 3) return 'low';
-    if (complexity <= 8) return 'medium';
-    return 'high';
+    if (complexity <= 3) return "low";
+    if (complexity <= 8) return "medium";
+    return "high";
   }
 
   private startHealthMonitoring(): void {
@@ -525,7 +568,10 @@ export class DatabasePoolManager {
   }
 
   // Get or create connection pool
-  getPool(name: string = 'default', config?: DatabaseConfig): DatabaseConnectionPool {
+  getPool(
+    name: string = "default",
+    config?: DatabaseConfig,
+  ): DatabaseConnectionPool {
     if (!this.pools.has(name)) {
       if (!config) {
         throw new Error(`Database configuration required for pool '${name}'`);
@@ -576,5 +622,5 @@ export {
   type DatabaseConfig,
   type QueryMetrics,
   type DatabaseHealth,
-  type QueryOptimization
+  type QueryOptimization,
 };

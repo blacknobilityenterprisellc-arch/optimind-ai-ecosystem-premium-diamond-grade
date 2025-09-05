@@ -1,13 +1,13 @@
 /**
  * OptiMind AI Ecosystem - Quantum Security API v2.0
  * Premium Diamond Grade Quantum-Resistant Security Endpoints
- * 
+ *
  * Generate quantum-secure key pairs for users
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
+import { quantumSecurityService } from "@/lib/v2/quantum-security-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,11 +16,15 @@ export async function POST(request: NextRequest) {
     // Allow system-level key generation for validation
     let finalUserId = userId;
     if (!finalUserId) {
-      finalUserId = 'system-validator';
+      finalUserId = "system-validator";
     }
 
     // Generate quantum key pair
-    const keyPair = await quantumSecurityService.generateUserKeyPair(finalUserId, algorithm, keySize);
+    const keyPair = await quantumSecurityService.generateUserKeyPair(
+      finalUserId,
+      algorithm,
+      keySize,
+    );
 
     return NextResponse.json({
       success: true,
@@ -28,19 +32,18 @@ export async function POST(request: NextRequest) {
         keyId: keyPair.keyId,
         publicKey: keyPair.publicKey,
         createdAt: keyPair.createdAt,
-        expiresAt: keyPair.expiresAt
+        expiresAt: keyPair.expiresAt,
       },
-      message: 'Quantum key pair generated successfully'
+      message: "Quantum key pair generated successfully",
     });
-
   } catch (error) {
-    console.error('Quantum key pair generation failed:', error);
+    console.error("Quantum key pair generation failed:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to generate quantum key pair',
-        details: error.message 
+      {
+        error: "Failed to generate quantum key pair",
+        details: error.message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

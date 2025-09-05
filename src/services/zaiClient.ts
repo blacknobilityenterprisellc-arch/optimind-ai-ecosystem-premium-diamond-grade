@@ -1,6 +1,6 @@
 // src/services/zaiClient.ts
-import fetch from 'node-fetch'; // optional: in Node18+ global fetch exists; keep for compatibility
-import AbortController from 'abort-controller';
+import fetch from "node-fetch"; // optional: in Node18+ global fetch exists; keep for compatibility
+import AbortController from "abort-controller";
 
 export interface ZaiClientConfig {
   apiKey: string;
@@ -12,8 +12,8 @@ export interface ZaiClientConfig {
 }
 
 const DEFAULT_CONFIG: Partial<ZaiClientConfig> = {
-  apiUrl: process.env.ZAI_API_URL || 'https://api.z.ai/v1/generate',
-  defaultModel: process.env.ZAI_DEFAULT_MODEL || 'GLM-4.5',
+  apiUrl: process.env.ZAI_API_URL || "https://api.z.ai/v1/generate",
+  defaultModel: process.env.ZAI_DEFAULT_MODEL || "GLM-4.5",
   timeoutMs: 30_000,
   maxRetries: 3,
   backoffBaseMs: 500,
@@ -21,11 +21,11 @@ const DEFAULT_CONFIG: Partial<ZaiClientConfig> = {
 
 export class ZaiClient {
   config: ZaiClientConfig;
-  
+
   constructor(cfg: Partial<ZaiClientConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...cfg } as ZaiClientConfig;
     if (!this.config.apiKey) {
-      throw new Error('ZAI API key required in ZaiClient config');
+      throw new Error("ZAI API key required in ZaiClient config");
     }
   }
 
@@ -37,7 +37,10 @@ export class ZaiClient {
    * Generic call to Z.AI generate endpoint. Retries on 5xx or network errors.
    * `payload` shape is generic: { model, input, parameters, modalities, ... }
    */
-  async callZai(payload: any, options?: { retries?: number; timeoutMs?: number }) {
+  async callZai(
+    payload: any,
+    options?: { retries?: number; timeoutMs?: number },
+  ) {
     const retries = options?.retries ?? this.config.maxRetries ?? 3;
     const timeoutMs = options?.timeoutMs ?? this.config.timeoutMs ?? 30_000;
     let attempt = 0;
@@ -49,9 +52,9 @@ export class ZaiClient {
 
       try {
         const res = await fetch(this.config.apiUrl!, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             Authorization: `Bearer ${this.config.apiKey}`,
           },
           body: JSON.stringify(payload),
@@ -68,7 +71,8 @@ export class ZaiClient {
         // Retry on server error
         if (res.status >= 500 && attempt < retries) {
           lastErr = new Error(`ZAI server ${res.status} ${res.statusText}`);
-          const backoff = (this.config.backoffBaseMs ?? 500) * Math.pow(2, attempt - 1);
+          const backoff =
+            (this.config.backoffBaseMs ?? 500) * Math.pow(2, attempt - 1);
           await this.sleep(backoff);
           continue;
         }
@@ -79,10 +83,11 @@ export class ZaiClient {
       } catch (err) {
         clearTimeout(timer);
         lastErr = err;
-        
+
         // Retry on network errors or aborts
         if (attempt < retries) {
-          const backoff = (this.config.backoffBaseMs ?? 500) * Math.pow(2, attempt - 1);
+          const backoff =
+            (this.config.backoffBaseMs ?? 500) * Math.pow(2, attempt - 1);
           await this.sleep(backoff);
           continue;
         }

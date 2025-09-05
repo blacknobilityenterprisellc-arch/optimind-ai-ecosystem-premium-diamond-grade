@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Search, 
-  Target, 
-  Globe, 
-  Brain, 
-  CheckCircle, 
-  TrendingUp, 
-  Users, 
+import {
+  Search,
+  Target,
+  Globe,
+  Brain,
+  CheckCircle,
+  TrendingUp,
+  Users,
   FileText,
   BarChart3,
   Zap,
@@ -17,17 +17,29 @@ import {
   Award,
   Star,
   ArrowRight,
-  Loader2
+  Loader2,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import BrandMentionTracker from "@/components/BrandMentionTracker";
 
 interface KeywordCluster {
@@ -41,18 +53,22 @@ interface KeywordCluster {
 
 interface CitationOpportunity {
   id: string;
-  type: 'statistic' | 'fact' | 'data' | 'quote';
+  type: "statistic" | "fact" | "data" | "quote";
   content: string;
   source: string;
   confidence: number;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
 }
 
 interface EERecommendation {
   id: string;
-  category: 'experience' | 'expertise' | 'authoritativeness' | 'trustworthiness';
+  category:
+    | "experience"
+    | "expertise"
+    | "authoritativeness"
+    | "trustworthiness";
   recommendation: string;
-  impact: 'high' | 'medium' | 'low';
+  impact: "high" | "medium" | "low";
   implementation: string;
 }
 
@@ -80,11 +96,11 @@ export default function AIPoweredResearchStrategy() {
         "voice search best practices",
         "what is voice search optimization",
         "voice search SEO tips",
-        "optimize for google assistant"
+        "optimize for google assistant",
       ],
       intent: "informational",
       volume: 12500,
-      difficulty: 65
+      difficulty: 65,
     },
     {
       id: "2",
@@ -94,23 +110,24 @@ export default function AIPoweredResearchStrategy() {
         "featured snippet optimization",
         "google answer box",
         "position zero SEO",
-        "snippet optimization techniques"
+        "snippet optimization techniques",
       ],
       intent: "informational",
       volume: 8900,
-      difficulty: 72
-    }
+      difficulty: 72,
+    },
   ];
 
   const citationOpportunities: CitationOpportunity[] = [
     {
       id: "1",
       type: "statistic",
-      content: "Voice searches are 3x more likely to be local-based than text searches",
+      content:
+        "Voice searches are 3x more likely to be local-based than text searches",
       source: "Google Search Data 2024",
       source: "Google Search Data 2025",
       confidence: 95,
-      priority: "high"
+      priority: "high",
     },
     {
       id: "2",
@@ -118,7 +135,7 @@ export default function AIPoweredResearchStrategy() {
       content: "70% of voice search results come from page one organic results",
       source: "Backlinko Study",
       confidence: 88,
-      priority: "high"
+      priority: "high",
     },
     {
       id: "3",
@@ -126,8 +143,8 @@ export default function AIPoweredResearchStrategy() {
       content: "Average voice search query length is 29 words",
       source: "Search Engine Journal",
       confidence: 82,
-      priority: "medium"
-    }
+      priority: "medium",
+    },
   ];
 
   const eeRecommendations: EERecommendation[] = [
@@ -136,22 +153,24 @@ export default function AIPoweredResearchStrategy() {
       category: "expertise",
       recommendation: "Add author credentials and expertise section",
       impact: "high",
-      implementation: "Include author bio with relevant certifications and experience"
+      implementation:
+        "Include author bio with relevant certifications and experience",
     },
     {
       id: "2",
       category: "trustworthiness",
       recommendation: "Cite primary sources and original research",
       impact: "high",
-      implementation: "Replace generic references with specific studies and data sources"
+      implementation:
+        "Replace generic references with specific studies and data sources",
     },
     {
       id: "3",
       category: "experience",
       recommendation: "Add first-hand case studies or examples",
       impact: "medium",
-      implementation: "Include real-world implementation examples with results"
-    }
+      implementation: "Include real-world implementation examples with results",
+    },
   ];
 
   const schemaMarkups: SchemaMarkup[] = [
@@ -162,11 +181,12 @@ export default function AIPoweredResearchStrategy() {
         mainEntity: [
           {
             question: "What is voice search optimization?",
-            answer: "Voice search optimization is the process of improving content to rank better in voice-based search queries."
-          }
-        ]
+            answer:
+              "Voice search optimization is the process of improving content to rank better in voice-based search queries.",
+          },
+        ],
       },
-      confidence: 92
+      confidence: 92,
     },
     {
       id: "2",
@@ -176,12 +196,12 @@ export default function AIPoweredResearchStrategy() {
         steps: [
           {
             name: "Use Natural Language",
-            text: "Write content in conversational tone"
-          }
-        ]
+            text: "Write content in conversational tone",
+          },
+        ],
       },
-      confidence: 87
-    }
+      confidence: 87,
+    },
   ];
 
   const handleAnalyzeContent = async () => {
@@ -192,7 +212,7 @@ export default function AIPoweredResearchStrategy() {
         citations: citationOpportunities,
         recommendations: eeRecommendations,
         schemas: schemaMarkups,
-        clusters: keywordClusters
+        clusters: keywordClusters,
       });
       setIsAnalyzing(false);
     }, 2000);
@@ -272,8 +292,9 @@ By following these strategies, you can significantly improve your visibility in 
         </div>
         <h2 className="text-4xl font-bold">AI-Powered Research & Strategy</h2>
         <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-          Advanced AEO/GEO optimization with citation-first content, structured data automation, 
-          and conversational keyword analysis for 2025 and beyond
+          Advanced AEO/GEO optimization with citation-first content, structured
+          data automation, and conversational keyword analysis for 2025 and
+          beyond
         </p>
       </div>
 
@@ -288,12 +309,15 @@ By following these strategies, you can significantly improve your visibility in 
                 Content Analysis
               </CardTitle>
               <CardDescription>
-                Enter your content to analyze for AEO/GEO optimization opportunities
+                Enter your content to analyze for AEO/GEO optimization
+                opportunities
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Content Type</label>
+                <label className="text-sm font-medium mb-2 block">
+                  Content Type
+                </label>
                 <Select value={selectedTopic} onValueChange={setSelectedTopic}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select content type" />
@@ -308,7 +332,9 @@ By following these strategies, you can significantly improve your visibility in 
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Content</label>
+                <label className="text-sm font-medium mb-2 block">
+                  Content
+                </label>
                 <Textarea
                   placeholder="Paste your content here for analysis..."
                   value={inputContent}
@@ -317,8 +343,8 @@ By following these strategies, you can significantly improve your visibility in 
                 />
               </div>
               <div className="space-y-2">
-                <Button 
-                  onClick={handleAnalyzeContent} 
+                <Button
+                  onClick={handleAnalyzeContent}
                   disabled={!inputContent || isAnalyzing}
                   className="w-full"
                 >
@@ -334,8 +360,8 @@ By following these strategies, you can significantly improve your visibility in 
                     </>
                   )}
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={generateNaturalLanguageContent}
                   disabled={isAnalyzing}
                   className="w-full"
@@ -359,19 +385,27 @@ By following these strategies, you can significantly improve your visibility in 
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm">Citation Opportunities</span>
-                  <span className="text-sm font-medium">{citationOpportunities.length}</span>
+                  <span className="text-sm font-medium">
+                    {citationOpportunities.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">E-E-A-T Improvements</span>
-                  <span className="text-sm font-medium">{eeRecommendations.length}</span>
+                  <span className="text-sm font-medium">
+                    {eeRecommendations.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Schema Markups</span>
-                  <span className="text-sm font-medium">{schemaMarkups.length}</span>
+                  <span className="text-sm font-medium">
+                    {schemaMarkups.length}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm">Keyword Clusters</span>
-                  <span className="text-sm font-medium">{keywordClusters.length}</span>
+                  <span className="text-sm font-medium">
+                    {keywordClusters.length}
+                  </span>
                 </div>
               </div>
               <div className="pt-2">
@@ -387,7 +421,11 @@ By following these strategies, you can significantly improve your visibility in 
 
         {/* Results Section */}
         <div className="lg:col-span-2">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="citation">Citations</TabsTrigger>
               <TabsTrigger value="schema">Schema</TabsTrigger>
@@ -404,17 +442,27 @@ By following these strategies, you can significantly improve your visibility in 
                     Citation-First Content Optimization
                   </CardTitle>
                   <CardDescription>
-                    Identify key quotable facts and data points for AI citation opportunities
+                    Identify key quotable facts and data points for AI citation
+                    opportunities
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4">
                     {citationOpportunities.map((citation) => (
-                      <Card key={citation.id} className="border-l-4 border-l-yellow-500">
+                      <Card
+                        key={citation.id}
+                        className="border-l-4 border-l-yellow-500"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-start justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Badge variant={citation.priority === 'high' ? 'destructive' : 'secondary'}>
+                              <Badge
+                                variant={
+                                  citation.priority === "high"
+                                    ? "destructive"
+                                    : "secondary"
+                                }
+                              >
                                 {citation.priority}
                               </Badge>
                               <Badge variant="outline">{citation.type}</Badge>
@@ -424,7 +472,9 @@ By following these strategies, you can significantly improve your visibility in 
                             </div>
                           </div>
                           <p className="text-sm mb-2">{citation.content}</p>
-                          <p className="text-xs text-muted-foreground">Source: {citation.source}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Source: {citation.source}
+                          </p>
                         </CardContent>
                       </Card>
                     ))}
@@ -441,13 +491,17 @@ By following these strategies, you can significantly improve your visibility in 
                     Structured Data & Schema Markup
                   </CardTitle>
                   <CardDescription>
-                    Automated schema markup generation for better AI understanding
+                    Automated schema markup generation for better AI
+                    understanding
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4">
                     {schemaMarkups.map((schema) => (
-                      <Card key={schema.id} className="border-l-4 border-l-purple-500">
+                      <Card
+                        key={schema.id}
+                        className="border-l-4 border-l-purple-500"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-center justify-between mb-2">
                             <Badge variant="outline">{schema.type}</Badge>
@@ -474,22 +528,36 @@ By following these strategies, you can significantly improve your visibility in 
                     E-E-A-T Enhancement Analysis
                   </CardTitle>
                   <CardDescription>
-                    Improve Experience, Expertise, Authoritativeness, and Trustworthiness signals
+                    Improve Experience, Expertise, Authoritativeness, and
+                    Trustworthiness signals
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid gap-4">
                     {eeRecommendations.map((rec) => (
-                      <Card key={rec.id} className="border-l-4 border-l-green-500">
+                      <Card
+                        key={rec.id}
+                        className="border-l-4 border-l-green-500"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-center gap-2 mb-2">
                             <Badge variant="outline">{rec.category}</Badge>
-                            <Badge variant={rec.impact === 'high' ? 'destructive' : 'secondary'}>
+                            <Badge
+                              variant={
+                                rec.impact === "high"
+                                  ? "destructive"
+                                  : "secondary"
+                              }
+                            >
                               {rec.impact} impact
                             </Badge>
                           </div>
-                          <p className="text-sm font-medium mb-2">{rec.recommendation}</p>
-                          <p className="text-xs text-muted-foreground">{rec.implementation}</p>
+                          <p className="text-sm font-medium mb-2">
+                            {rec.recommendation}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {rec.implementation}
+                          </p>
                         </CardContent>
                       </Card>
                     ))}
@@ -506,27 +574,39 @@ By following these strategies, you can significantly improve your visibility in 
                     Conversational Keyword Clusters
                   </CardTitle>
                   <CardDescription>
-                    AI-generated keyword clusters based on natural language search patterns
+                    AI-generated keyword clusters based on natural language
+                    search patterns
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="grid gap-6">
                     {keywordClusters.map((cluster) => (
-                      <Card key={cluster.id} className="border-l-4 border-l-blue-500">
+                      <Card
+                        key={cluster.id}
+                        className="border-l-4 border-l-blue-500"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-center justify-between mb-4">
                             <h4 className="font-semibold">{cluster.topic}</h4>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span>Volume: {cluster.volume.toLocaleString()}</span>
+                              <span>
+                                Volume: {cluster.volume.toLocaleString()}
+                              </span>
                               <span>Difficulty: {cluster.difficulty}%</span>
                               <Badge variant="outline">{cluster.intent}</Badge>
                             </div>
                           </div>
                           <div className="space-y-2">
-                            <h5 className="text-sm font-medium">Related Keywords:</h5>
+                            <h5 className="text-sm font-medium">
+                              Related Keywords:
+                            </h5>
                             <div className="flex flex-wrap gap-2">
                               {cluster.keywords.map((keyword, index) => (
-                                <Badge key={index} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
                                   {keyword}
                                 </Badge>
                               ))}

@@ -42,7 +42,7 @@ interface ScanResponse {
 export async function scanMultiplePhotos(
   photos: PhotoItem[],
   files: File[],
-  onProgress?: ProgressCallback
+  onProgress?: ProgressCallback,
 ): Promise<ScanResult[]> {
   const results: ScanResult[] = [];
   const totalPhotos = photos.length;
@@ -67,14 +67,14 @@ export async function scanMultiplePhotos(
         const base64Image = await fileToBase64(file);
 
         // Call the scan API
-        const response = await fetch('/api/scan', {
-          method: 'POST',
+        const response = await fetch("/api/scan", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             photoId: photo.id,
-            imageData: base64Image
+            imageData: base64Image,
           }),
         });
 
@@ -90,27 +90,27 @@ export async function scanMultiplePhotos(
           isNsfw: apiResult.isNsfw,
           confidence: apiResult.confidence,
           categories: apiResult.categories || [],
-          analysis: apiResult.error ? `Error: ${apiResult.error}` : 'AI analysis completed'
+          analysis: apiResult.error
+            ? `Error: ${apiResult.error}`
+            : "AI analysis completed",
         };
 
         results.push(scanResult);
-
       } catch (error) {
         console.error(`Error scanning photo ${photo.name}:`, error);
-        
+
         // Add a fallback result for failed scans
         results.push({
           photoId: photo.id,
           isNsfw: false,
           confidence: 0.5,
           categories: ["error"],
-          analysis: "Scanning failed - please try again"
+          analysis: "Scanning failed - please try again",
         });
       }
     }
 
     return results;
-
   } catch (error) {
     console.error("Error scanning photos:", error);
     throw new Error("Failed to scan photos");
@@ -123,22 +123,22 @@ export async function scanMultiplePhotos(
 function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    
+
     reader.onload = () => {
       const result = reader.result as string;
       // Extract base64 part (remove data:image/type;base64, prefix)
-      const base64 = result.split(',')[1];
+      const base64 = result.split(",")[1];
       if (!base64) {
         reject(new Error("Failed to convert file to base64"));
         return;
       }
       resolve(base64);
     };
-    
+
     reader.onerror = () => {
       reject(new Error("Failed to read file"));
     };
-    
+
     reader.readAsDataURL(file);
   });
 }
@@ -148,7 +148,7 @@ function fileToBase64(file: File): Promise<string> {
  */
 export async function scanSinglePhoto(
   photo: PhotoItem,
-  file: File
+  file: File,
 ): Promise<ScanResult> {
   const results = await scanMultiplePhotos([photo], [file]);
   return results[0];

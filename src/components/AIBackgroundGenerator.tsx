@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import { 
-  Wand2, 
-  Image as ImageIcon, 
-  Download, 
-  RefreshCw, 
-  Palette, 
-  Crop, 
+import {
+  Wand2,
+  Image as ImageIcon,
+  Download,
+  RefreshCw,
+  Palette,
+  Crop,
   Layers,
   Sparkles,
   Zap,
@@ -26,7 +26,7 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -34,19 +34,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PremiumFeature, PremiumBadge } from "@/components/PremiumBadge";
 import { Paywall } from "@/components/Paywall";
 import { DropZone } from "@/components/DropZone";
-import { 
-  aiBackgroundGenerator, 
+import {
+  aiBackgroundGenerator,
   BackgroundGenerationOptions,
   BackgroundGenerationResult,
   BackgroundRemovalResult,
-  BackgroundReplacementOptions
+  BackgroundReplacementOptions,
 } from "@/lib/ai-background-generator";
 import { useToast } from "@/hooks/use-toast";
 
@@ -68,68 +74,93 @@ export default function AIBackgroundGenerator() {
   const [activeTab, setActiveTab] = useState("generate");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [backgroundRemovedImage, setBackgroundRemovedImage] = useState<BackgroundRemovalResult | null>(null);
-  
+  const [backgroundRemovedImage, setBackgroundRemovedImage] =
+    useState<BackgroundRemovalResult | null>(null);
+
   // Generation options
   const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState<BackgroundGenerationOptions['style']>('realistic');
-  const [resolution, setResolution] = useState<BackgroundGenerationOptions['resolution']>('1024x1024');
-  const [quality, setQuality] = useState<BackgroundGenerationOptions['quality']>('hd');
-  const [mood, setMood] = useState<BackgroundGenerationOptions['mood']>('bright');
-  const [composition, setComposition] = useState<BackgroundGenerationOptions['composition']>('centered');
-  
+  const [style, setStyle] =
+    useState<BackgroundGenerationOptions["style"]>("realistic");
+  const [resolution, setResolution] =
+    useState<BackgroundGenerationOptions["resolution"]>("1024x1024");
+  const [quality, setQuality] =
+    useState<BackgroundGenerationOptions["quality"]>("hd");
+  const [mood, setMood] =
+    useState<BackgroundGenerationOptions["mood"]>("bright");
+  const [composition, setComposition] =
+    useState<BackgroundGenerationOptions["composition"]>("centered");
+
   // Generated backgrounds
-  const [generatedBackgrounds, setGeneratedBackgrounds] = useState<BackgroundGenerationResult[]>([]);
+  const [generatedBackgrounds, setGeneratedBackgrounds] = useState<
+    BackgroundGenerationResult[]
+  >([]);
   const [presets, setPresets] = useState<BackgroundPreset[]>([]);
-  
+
   const { toast } = useToast();
 
   const styleOptions = [
-    { value: 'realistic', label: 'Realistic', icon: <Eye className="w-4 h-4" /> },
-    { value: 'artistic', label: 'Artistic', icon: <Palette className="w-4 h-4" /> },
-    { value: 'minimalist', label: 'Minimalist', icon: <Grid className="w-4 h-4" /> },
-    { value: 'abstract', label: 'Abstract', icon: <Sparkles className="w-4 h-4" /> },
-    { value: 'nature', label: 'Nature', icon: <Filter className="w-4 h-4" /> },
-    { value: 'urban', label: 'Urban', icon: <Crop className="w-4 h-4" /> },
-    { value: 'tech', label: 'Tech', icon: <Zap className="w-4 h-4" /> },
-    { value: 'fantasy', label: 'Fantasy', icon: <Magic className="w-4 h-4" /> }
+    {
+      value: "realistic",
+      label: "Realistic",
+      icon: <Eye className="w-4 h-4" />,
+    },
+    {
+      value: "artistic",
+      label: "Artistic",
+      icon: <Palette className="w-4 h-4" />,
+    },
+    {
+      value: "minimalist",
+      label: "Minimalist",
+      icon: <Grid className="w-4 h-4" />,
+    },
+    {
+      value: "abstract",
+      label: "Abstract",
+      icon: <Sparkles className="w-4 h-4" />,
+    },
+    { value: "nature", label: "Nature", icon: <Filter className="w-4 h-4" /> },
+    { value: "urban", label: "Urban", icon: <Crop className="w-4 h-4" /> },
+    { value: "tech", label: "Tech", icon: <Zap className="w-4 h-4" /> },
+    { value: "fantasy", label: "Fantasy", icon: <Magic className="w-4 h-4" /> },
   ];
 
   const resolutionOptions = [
-    { value: '512x512', label: '512×512 (Square)' },
-    { value: '1024x1024', label: '1024×1024 (Square HD)' },
-    { value: '1024x1792', label: '1024×1792 (Portrait)' },
-    { value: '1792x1024', label: '1792×1024 (Landscape)' }
+    { value: "512x512", label: "512×512 (Square)" },
+    { value: "1024x1024", label: "1024×1024 (Square HD)" },
+    { value: "1024x1792", label: "1024×1792 (Portrait)" },
+    { value: "1792x1024", label: "1792×1024 (Landscape)" },
   ];
 
   const qualityOptions = [
-    { value: 'standard', label: 'Standard' },
-    { value: 'hd', label: 'High Definition' },
-    { value: 'ultra-hd', label: 'Ultra HD' }
+    { value: "standard", label: "Standard" },
+    { value: "hd", label: "High Definition" },
+    { value: "ultra-hd", label: "Ultra HD" },
   ];
 
   const moodOptions = [
-    { value: 'bright', label: 'Bright & Cheerful' },
-    { value: 'dark', label: 'Dark & Moody' },
-    { value: 'warm', label: 'Warm & Cozy' },
-    { value: 'cool', label: 'Cool & Serene' },
-    { value: 'vibrant', label: 'Vibrant & Energetic' },
-    { value: 'muted', label: 'Muted & Subtle' }
+    { value: "bright", label: "Bright & Cheerful" },
+    { value: "dark", label: "Dark & Moody" },
+    { value: "warm", label: "Warm & Cozy" },
+    { value: "cool", label: "Cool & Serene" },
+    { value: "vibrant", label: "Vibrant & Energetic" },
+    { value: "muted", label: "Muted & Subtle" },
   ];
 
   const compositionOptions = [
-    { value: 'centered', label: 'Centered' },
-    { value: 'rule-of-thirds', label: 'Rule of Thirds' },
-    { value: 'leading-lines', label: 'Leading Lines' },
-    { value: 'symmetrical', label: 'Symmetrical' },
-    { value: 'asymmetrical', label: 'Asymmetrical' }
+    { value: "centered", label: "Centered" },
+    { value: "rule-of-thirds", label: "Rule of Thirds" },
+    { value: "leading-lines", label: "Leading Lines" },
+    { value: "symmetrical", label: "Symmetrical" },
+    { value: "asymmetrical", label: "Asymmetrical" },
   ];
 
   const handleGenerateBackground = useCallback(async () => {
     if (!prompt.trim()) {
       toast({
         title: "Prompt Required",
-        description: "Please enter a description for the background you want to generate.",
+        description:
+          "Please enter a description for the background you want to generate.",
         variant: "destructive",
       });
       return;
@@ -141,7 +172,7 @@ export default function AIBackgroundGenerator() {
     try {
       // Simulate progress
       const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + Math.random() * 20, 90));
+        setProgress((prev) => Math.min(prev + Math.random() * 20, 90));
       }, 500);
 
       const options: BackgroundGenerationOptions = {
@@ -150,22 +181,22 @@ export default function AIBackgroundGenerator() {
         resolution,
         quality,
         mood,
-        composition
+        composition,
       };
 
       const result = await aiBackgroundGenerator.generateBackground(options);
-      
+
       clearInterval(progressInterval);
       setProgress(100);
 
-      setGeneratedBackgrounds(prev => [result, ...prev]);
-      
+      setGeneratedBackgrounds((prev) => [result, ...prev]);
+
       toast({
         title: "Background Generated",
         description: `Your ${style} background has been created successfully!`,
       });
     } catch (error) {
-      console.error('Generation failed:', error);
+      console.error("Generation failed:", error);
       toast({
         title: "Generation Failed",
         description: "Unable to generate background. Please try again.",
@@ -177,93 +208,106 @@ export default function AIBackgroundGenerator() {
     }
   }, [prompt, style, resolution, quality, mood, composition, toast]);
 
-  const handleRemoveBackground = useCallback(async (imageUrl: string) => {
-    setIsRemovingBackground(true);
-    setProgress(0);
-
-    try {
-      const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + Math.random() * 25, 90));
-      }, 400);
-
-      const result = await aiBackgroundGenerator.removeBackground(imageUrl);
-      
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      setBackgroundRemovedImage(result);
-      
-      toast({
-        title: "Background Removed",
-        description: "Background has been successfully removed from your image.",
-      });
-    } catch (error) {
-      console.error('Background removal failed:', error);
-      toast({
-        title: "Removal Failed",
-        description: "Unable to remove background. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsRemovingBackground(false);
+  const handleRemoveBackground = useCallback(
+    async (imageUrl: string) => {
+      setIsRemovingBackground(true);
       setProgress(0);
-    }
-  }, [toast]);
 
-  const handleReplaceBackground = useCallback(async (options: BackgroundReplacementOptions) => {
-    setIsReplacingBackground(true);
-    setProgress(0);
+      try {
+        const progressInterval = setInterval(() => {
+          setProgress((prev) => Math.min(prev + Math.random() * 25, 90));
+        }, 400);
 
-    try {
-      const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + Math.random() * 20, 90));
-      }, 500);
+        const result = await aiBackgroundGenerator.removeBackground(imageUrl);
 
-      const result = await aiBackgroundGenerator.replaceBackground(options);
-      
-      clearInterval(progressInterval);
-      setProgress(100);
+        clearInterval(progressInterval);
+        setProgress(100);
 
-      toast({
-        title: "Background Replaced",
-        description: "Your image background has been successfully replaced!",
-      });
-    } catch (error) {
-      console.error('Background replacement failed:', error);
-      toast({
-        title: "Replacement Failed",
-        description: "Unable to replace background. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsReplacingBackground(false);
+        setBackgroundRemovedImage(result);
+
+        toast({
+          title: "Background Removed",
+          description:
+            "Background has been successfully removed from your image.",
+        });
+      } catch (error) {
+        console.error("Background removal failed:", error);
+        toast({
+          title: "Removal Failed",
+          description: "Unable to remove background. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsRemovingBackground(false);
+        setProgress(0);
+      }
+    },
+    [toast],
+  );
+
+  const handleReplaceBackground = useCallback(
+    async (options: BackgroundReplacementOptions) => {
+      setIsReplacingBackground(true);
       setProgress(0);
-    }
-  }, [toast]);
 
-  const handleImageUpload = useCallback((files: File[]) => {
-    if (files.length > 0) {
-      const file = files[0];
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      try {
+        const progressInterval = setInterval(() => {
+          setProgress((prev) => Math.min(prev + Math.random() * 20, 90));
+        }, 500);
+
+        const result = await aiBackgroundGenerator.replaceBackground(options);
+
+        clearInterval(progressInterval);
+        setProgress(100);
+
+        toast({
+          title: "Background Replaced",
+          description: "Your image background has been successfully replaced!",
+        });
+      } catch (error) {
+        console.error("Background replacement failed:", error);
+        toast({
+          title: "Replacement Failed",
+          description: "Unable to replace background. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsReplacingBackground(false);
+        setProgress(0);
+      }
+    },
+    [toast],
+  );
+
+  const handleImageUpload = useCallback(
+    (files: File[]) => {
+      if (files.length > 0) {
+        const file = files[0];
+        const imageUrl = URL.createObjectURL(file);
+        setSelectedImage(imageUrl);
+        toast({
+          title: "Image Uploaded",
+          description: "Image ready for background processing.",
+        });
+      }
+    },
+    [toast],
+  );
+
+  const handlePresetSelect = useCallback(
+    (preset: BackgroundPreset) => {
+      setPrompt(preset.prompt);
+      setStyle(preset.style as BackgroundGenerationOptions["style"]);
       toast({
-        title: "Image Uploaded",
-        description: "Image ready for background processing.",
+        title: "Preset Applied",
+        description: `"${preset.name}" preset has been applied.`,
       });
-    }
-  }, [toast]);
-
-  const handlePresetSelect = useCallback((preset: BackgroundPreset) => {
-    setPrompt(preset.prompt);
-    setStyle(preset.style as BackgroundGenerationOptions['style']);
-    toast({
-      title: "Preset Applied",
-      description: `"${preset.name}" preset has been applied.`,
-    });
-  }, [toast]);
+    },
+    [toast],
+  );
 
   const downloadImage = useCallback((imageUrl: string, filename: string) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = imageUrl;
     link.download = filename;
     link.click();
@@ -272,7 +316,7 @@ export default function AIBackgroundGenerator() {
   const formatTime = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000);
     const ms = milliseconds % 1000;
-    return `${seconds}.${ms.toString().padStart(3, '0')}s`;
+    return `${seconds}.${ms.toString().padStart(3, "0")}s`;
   };
 
   // Load presets on component mount
@@ -289,7 +333,8 @@ export default function AIBackgroundGenerator() {
             AI Background Generator
           </h2>
           <p className="text-slate-600 dark:text-slate-400 mt-2">
-            Create stunning backgrounds, remove existing backgrounds, or replace them with AI-generated alternatives
+            Create stunning backgrounds, remove existing backgrounds, or replace
+            them with AI-generated alternatives
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -304,13 +349,21 @@ export default function AIBackgroundGenerator() {
             size="sm"
             onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
           >
-            {viewMode === "grid" ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
+            {viewMode === "grid" ? (
+              <List className="w-4 h-4" />
+            ) : (
+              <Grid className="w-4 h-4" />
+            )}
           </Button>
         </div>
       </div>
 
       {/* Main Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="generate" className="flex items-center gap-2">
             <Wand2 className="w-4 h-4" />
@@ -340,7 +393,9 @@ export default function AIBackgroundGenerator() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Description</label>
+                    <label className="text-sm font-medium mb-2 block">
+                      Description
+                    </label>
                     <Textarea
                       placeholder="Describe the background you want to create..."
                       value={prompt}
@@ -350,8 +405,15 @@ export default function AIBackgroundGenerator() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Style</label>
-                    <Select value={style} onValueChange={(value: BackgroundGenerationOptions['style']) => setStyle(value)}>
+                    <label className="text-sm font-medium mb-2 block">
+                      Style
+                    </label>
+                    <Select
+                      value={style}
+                      onValueChange={(
+                        value: BackgroundGenerationOptions["style"],
+                      ) => setStyle(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -369,8 +431,15 @@ export default function AIBackgroundGenerator() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Resolution</label>
-                    <Select value={resolution} onValueChange={(value: BackgroundGenerationOptions['resolution']) => setResolution(value)}>
+                    <label className="text-sm font-medium mb-2 block">
+                      Resolution
+                    </label>
+                    <Select
+                      value={resolution}
+                      onValueChange={(
+                        value: BackgroundGenerationOptions["resolution"],
+                      ) => setResolution(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -385,8 +454,15 @@ export default function AIBackgroundGenerator() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Quality</label>
-                    <Select value={quality} onValueChange={(value: BackgroundGenerationOptions['quality']) => setQuality(value)}>
+                    <label className="text-sm font-medium mb-2 block">
+                      Quality
+                    </label>
+                    <Select
+                      value={quality}
+                      onValueChange={(
+                        value: BackgroundGenerationOptions["quality"],
+                      ) => setQuality(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -401,8 +477,15 @@ export default function AIBackgroundGenerator() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Mood</label>
-                    <Select value={mood} onValueChange={(value: BackgroundGenerationOptions['mood']) => setMood(value)}>
+                    <label className="text-sm font-medium mb-2 block">
+                      Mood
+                    </label>
+                    <Select
+                      value={mood}
+                      onValueChange={(
+                        value: BackgroundGenerationOptions["mood"],
+                      ) => setMood(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -417,8 +500,15 @@ export default function AIBackgroundGenerator() {
                   </div>
 
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Composition</label>
-                    <Select value={composition} onValueChange={(value: BackgroundGenerationOptions['composition']) => setComposition(value)}>
+                    <label className="text-sm font-medium mb-2 block">
+                      Composition
+                    </label>
+                    <Select
+                      value={composition}
+                      onValueChange={(
+                        value: BackgroundGenerationOptions["composition"],
+                      ) => setComposition(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -432,7 +522,7 @@ export default function AIBackgroundGenerator() {
                     </Select>
                   </div>
 
-                  <Button 
+                  <Button
                     onClick={handleGenerateBackground}
                     disabled={isGenerating || !prompt.trim()}
                     className="w-full"
@@ -467,8 +557,12 @@ export default function AIBackgroundGenerator() {
                         onClick={() => handlePresetSelect(preset)}
                       >
                         <div className="space-y-1">
-                          <div className="font-medium text-sm">{preset.name}</div>
-                          <div className="text-xs text-slate-500">{preset.prompt}</div>
+                          <div className="font-medium text-sm">
+                            {preset.name}
+                          </div>
+                          <div className="text-xs text-slate-500">
+                            {preset.prompt}
+                          </div>
                         </div>
                       </Button>
                     ))}
@@ -484,8 +578,12 @@ export default function AIBackgroundGenerator() {
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Generating background...</span>
-                        <span className="text-sm text-slate-500">{Math.round(progress)}%</span>
+                        <span className="text-sm font-medium">
+                          Generating background...
+                        </span>
+                        <span className="text-sm text-slate-500">
+                          {Math.round(progress)}%
+                        </span>
                       </div>
                       <Progress value={progress} className="w-full" />
                       <div className="text-center text-sm text-slate-500">
@@ -497,7 +595,9 @@ export default function AIBackgroundGenerator() {
               )}
 
               {generatedBackgrounds.length > 0 && (
-                <div className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}>
+                <div
+                  className={`grid gap-4 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2" : "grid-cols-1"}`}
+                >
                   {generatedBackgrounds.map((background) => (
                     <Card key={background.id} className="overflow-hidden">
                       <div className="relative">
@@ -508,13 +608,17 @@ export default function AIBackgroundGenerator() {
                         />
                         <div className="absolute top-2 right-2 flex gap-2">
                           <Badge variant="secondary">{background.style}</Badge>
-                          <Badge variant="outline">{background.resolution}</Badge>
+                          <Badge variant="outline">
+                            {background.resolution}
+                          </Badge>
                         </div>
                       </div>
                       <CardContent className="p-4">
                         <div className="space-y-3">
                           <div>
-                            <h4 className="font-medium text-sm mb-1">{background.prompt}</h4>
+                            <h4 className="font-medium text-sm mb-1">
+                              {background.prompt}
+                            </h4>
                             <div className="flex items-center gap-4 text-xs text-slate-500">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
@@ -530,7 +634,12 @@ export default function AIBackgroundGenerator() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => downloadImage(background.imageUrl, `background-${background.id}.png`)}
+                              onClick={() =>
+                                downloadImage(
+                                  background.imageUrl,
+                                  `background-${background.id}.png`,
+                                )
+                              }
                             >
                               <Download className="w-4 h-4 mr-1" />
                               Download
@@ -558,9 +667,12 @@ export default function AIBackgroundGenerator() {
                 <Card>
                   <CardContent className="p-12 text-center">
                     <ImageIcon className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium mb-2">No backgrounds generated yet</h3>
+                    <h3 className="text-lg font-medium mb-2">
+                      No backgrounds generated yet
+                    </h3>
                     <p className="text-slate-500 mb-4">
-                      Create your first AI-generated background by entering a description and clicking "Generate Background"
+                      Create your first AI-generated background by entering a
+                      description and clicking "Generate Background"
                     </p>
                   </CardContent>
                 </Card>
@@ -614,8 +726,12 @@ export default function AIBackgroundGenerator() {
                 {isRemovingBackground && (
                   <div className="space-y-4 mb-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Removing background...</span>
-                      <span className="text-sm text-slate-500">{Math.round(progress)}%</span>
+                      <span className="text-sm font-medium">
+                        Removing background...
+                      </span>
+                      <span className="text-sm text-slate-500">
+                        {Math.round(progress)}%
+                      </span>
                     </div>
                     <Progress value={progress} className="w-full" />
                   </div>
@@ -633,7 +749,11 @@ export default function AIBackgroundGenerator() {
                         />
                         <div className="absolute top-2 left-2">
                           <Badge variant="secondary">
-                            Transparency: {Math.round(backgroundRemovedImage.transparency * 100)}%
+                            Transparency:{" "}
+                            {Math.round(
+                              backgroundRemovedImage.transparency * 100,
+                            )}
+                            %
                           </Badge>
                         </div>
                       </div>
@@ -641,7 +761,12 @@ export default function AIBackgroundGenerator() {
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        onClick={() => downloadImage(backgroundRemovedImage.backgroundRemovedImageUrl, 'background-removed.png')}
+                        onClick={() =>
+                          downloadImage(
+                            backgroundRemovedImage.backgroundRemovedImageUrl,
+                            "background-removed.png",
+                          )
+                        }
                       >
                         <Download className="w-4 h-4 mr-1" />
                         Download
@@ -650,7 +775,9 @@ export default function AIBackgroundGenerator() {
                         size="sm"
                         variant="outline"
                         onClick={() => {
-                          setSelectedImage(backgroundRemovedImage.backgroundRemovedImageUrl);
+                          setSelectedImage(
+                            backgroundRemovedImage.backgroundRemovedImageUrl,
+                          );
                           setActiveTab("replace");
                         }}
                       >
@@ -662,7 +789,9 @@ export default function AIBackgroundGenerator() {
                 )}
 
                 <Button
-                  onClick={() => selectedImage && handleRemoveBackground(selectedImage)}
+                  onClick={() =>
+                    selectedImage && handleRemoveBackground(selectedImage)
+                  }
                   disabled={!selectedImage || isRemovingBackground}
                   className="w-full"
                 >
@@ -718,7 +847,9 @@ export default function AIBackgroundGenerator() {
               <CardContent>
                 <div className="space-y-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Background Type</label>
+                    <label className="text-sm font-medium mb-2 block">
+                      Background Type
+                    </label>
                     <Select defaultValue="generated">
                       <SelectTrigger>
                         <SelectValue />
@@ -735,8 +866,12 @@ export default function AIBackgroundGenerator() {
                   {isReplacingBackground && (
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Replacing background...</span>
-                        <span className="text-sm text-slate-500">{Math.round(progress)}%</span>
+                        <span className="text-sm font-medium">
+                          Replacing background...
+                        </span>
+                        <span className="text-sm text-slate-500">
+                          {Math.round(progress)}%
+                        </span>
                       </div>
                       <Progress value={progress} className="w-full" />
                     </div>
@@ -747,10 +882,10 @@ export default function AIBackgroundGenerator() {
                       if (selectedImage) {
                         handleReplaceBackground({
                           foregroundImageUrl: selectedImage,
-                          backgroundType: 'generated',
-                          blendMode: 'normal',
+                          backgroundType: "generated",
+                          blendMode: "normal",
                           opacity: 1,
-                          edgeRefinement: 'medium'
+                          edgeRefinement: "medium",
                         });
                       }
                     }}
@@ -785,7 +920,7 @@ export default function AIBackgroundGenerator() {
             setShowPaywall(false);
           }}
           onStartTrial={() => {
-            console.log('Started trial');
+            console.log("Started trial");
             setShowPaywall(false);
           }}
         />

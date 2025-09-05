@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { Smartphone, Monitor, Zap, Shield, Battery, Wifi, WifiOff } from "lucide-react";
+import {
+  Smartphone,
+  Monitor,
+  Zap,
+  Shield,
+  Battery,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
 
 interface MobileOptimizerProps {
   children: React.ReactNode;
@@ -33,7 +41,9 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     isBatterySaving: false,
   });
 
-  const [performanceMode, setPerformanceMode] = useState<"auto" | "high" | "medium" | "low">("auto");
+  const [performanceMode, setPerformanceMode] = useState<
+    "auto" | "high" | "medium" | "low"
+  >("auto");
   const [isOnline, setIsOnline] = useState(true);
 
   // Detect device capabilities and optimize accordingly
@@ -42,30 +52,29 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
       const width = window.innerWidth;
       const height = window.innerHeight;
       const pixelRatio = window.devicePixelRatio || 1;
-      
+
       // Device type detection
       const isMobile = width <= 768;
       const isTablet = width > 768 && width <= 1024;
       const isDesktop = width > 1024;
-      
+
       // Low-end device detection (simplified heuristic)
-      const isLowEndDevice = 
-        pixelRatio <= 1 || 
-        (navigator as any).deviceMemory <= 2 || 
+      const isLowEndDevice =
+        pixelRatio <= 1 ||
+        (navigator as any).deviceMemory <= 2 ||
         (navigator as any).hardwareConcurrency <= 4;
-      
+
       // Connection quality detection
       const connection = (navigator as any).connection;
-      const isSlowConnection = connection ? 
-        connection.effectiveType.includes('2g') || 
-        connection.downlink < 1 : 
-        false;
-      
+      const isSlowConnection = connection
+        ? connection.effectiveType.includes("2g") || connection.downlink < 1
+        : false;
+
       // Battery detection
       const battery = (navigator as any).battery;
       const batteryLevel = battery?.level;
       const isBatterySaving = batteryLevel !== undefined && batteryLevel < 0.2;
-      
+
       setDeviceInfo({
         isMobile,
         isTablet,
@@ -78,7 +87,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         batteryLevel: batteryLevel ? Math.round(batteryLevel * 100) : undefined,
         isBatterySaving,
       });
-      
+
       // Auto-adjust performance mode based on device capabilities
       if (isLowEndDevice || isSlowConnection || isBatterySaving) {
         setPerformanceMode("low");
@@ -92,41 +101,41 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     // Monitor online status
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
     // Initial detection
     detectDevice();
-    
+
     // Listen for screen size changes
-    window.addEventListener('resize', detectDevice);
-    
+    window.addEventListener("resize", detectDevice);
+
     // Listen for connection changes
     const connection = (navigator as any).connection;
     if (connection) {
-      connection.addEventListener('change', detectDevice);
+      connection.addEventListener("change", detectDevice);
     }
-    
+
     // Listen for battery changes
     const battery = (navigator as any).battery;
     if (battery) {
-      battery.addEventListener('levelchange', detectDevice);
-      battery.addEventListener('chargingchange', detectDevice);
+      battery.addEventListener("levelchange", detectDevice);
+      battery.addEventListener("chargingchange", detectDevice);
     }
-    
+
     return () => {
-      window.removeEventListener('resize', detectDevice);
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      
+      window.removeEventListener("resize", detectDevice);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+
       if (connection) {
-        connection.removeEventListener('change', detectDevice);
+        connection.removeEventListener("change", detectDevice);
       }
-      
+
       if (battery) {
-        battery.removeEventListener('levelchange', detectDevice);
-        battery.removeEventListener('chargingchange', detectDevice);
+        battery.removeEventListener("levelchange", detectDevice);
+        battery.removeEventListener("chargingchange", detectDevice);
       }
     };
   }, []);
@@ -134,49 +143,67 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   // Apply performance optimizations based on device capabilities
   useEffect(() => {
     const root = document.documentElement;
-    
+
     switch (performanceMode) {
       case "low":
         // Reduce animations and effects for low-end devices
-        root.style.setProperty('--animation-fast', '0ms');
-        root.style.setProperty('--animation-normal', '0ms');
-        root.style.setProperty('--animation-slow', '0ms');
-        
+        root.style.setProperty("--animation-fast", "0ms");
+        root.style.setProperty("--animation-normal", "0ms");
+        root.style.setProperty("--animation-slow", "0ms");
+
         // Reduce shadow effects
-        root.style.setProperty('--shadow-lg', '0 4px 6px -1px rgb(0 0 0 / 0.1)');
-        root.style.setProperty('--shadow-xl', '0 4px 6px -1px rgb(0 0 0 / 0.1)');
-        
+        root.style.setProperty(
+          "--shadow-lg",
+          "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+        );
+        root.style.setProperty(
+          "--shadow-xl",
+          "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+        );
+
         // Disable complex backdrop filters
-        root.style.setProperty('--backdrop-blur', 'none');
+        root.style.setProperty("--backdrop-blur", "none");
         break;
-        
+
       case "medium":
         // Balanced settings for mid-range devices
-        root.style.setProperty('--animation-fast', '100ms');
-        root.style.setProperty('--animation-normal', '200ms');
-        root.style.setProperty('--animation-slow', '300ms');
-        
+        root.style.setProperty("--animation-fast", "100ms");
+        root.style.setProperty("--animation-normal", "200ms");
+        root.style.setProperty("--animation-slow", "300ms");
+
         // Moderate shadows
-        root.style.setProperty('--shadow-lg', '0 10px 15px -3px rgb(0 0 0 / 0.1)');
-        root.style.setProperty('--shadow-xl', '0 10px 15px -3px rgb(0 0 0 / 0.1)');
-        
+        root.style.setProperty(
+          "--shadow-lg",
+          "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+        );
+        root.style.setProperty(
+          "--shadow-xl",
+          "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+        );
+
         // Simple backdrop filters
-        root.style.setProperty('--backdrop-blur', 'blur(4px)');
+        root.style.setProperty("--backdrop-blur", "blur(4px)");
         break;
-        
+
       case "high":
       default:
         // Full effects for high-end devices
-        root.style.setProperty('--animation-fast', '150ms');
-        root.style.setProperty('--animation-normal', '300ms');
-        root.style.setProperty('--animation-slow', '500ms');
-        
+        root.style.setProperty("--animation-fast", "150ms");
+        root.style.setProperty("--animation-normal", "300ms");
+        root.style.setProperty("--animation-slow", "500ms");
+
         // Full shadow effects
-        root.style.setProperty('--shadow-lg', '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)');
-        root.style.setProperty('--shadow-xl', '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)');
-        
+        root.style.setProperty(
+          "--shadow-lg",
+          "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        );
+        root.style.setProperty(
+          "--shadow-xl",
+          "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        );
+
         // Full backdrop filters
-        root.style.setProperty('--backdrop-blur', 'blur(10px)');
+        root.style.setProperty("--backdrop-blur", "blur(10px)");
         break;
     }
   }, [performanceMode]);
@@ -187,7 +214,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
       loading: "lazy" as const,
       fetchPriority: "low" as const,
     };
-    
+
     if (deviceInfo.isSlowConnection || deviceInfo.isLowEndDevice) {
       return {
         ...baseProps,
@@ -195,7 +222,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
       };
     }
-    
+
     if (deviceInfo.isMobile) {
       return {
         ...baseProps,
@@ -203,7 +230,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
       };
     }
-    
+
     return {
       ...baseProps,
       quality: 90,
@@ -214,12 +241,12 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   // Memory management helper
   const cleanupResources = useCallback(() => {
     // Clear unused image URLs from memory
-    if (typeof URL !== 'undefined') {
+    if (typeof URL !== "undefined") {
       // This would be called when photos are deleted or when the component unmounts
     }
-    
+
     // Force garbage collection on low-end devices
-    if (deviceInfo.isLowEndDevice && typeof gc !== 'undefined') {
+    if (deviceInfo.isLowEndDevice && typeof gc !== "undefined") {
       try {
         (gc as any)();
       } catch {
@@ -232,7 +259,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   useEffect(() => {
     if (deviceInfo.isMobile) {
       // Increase touch target sizes for better mobile UX
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.textContent = `
         button, .clickable {
           min-height: 44px;
@@ -249,7 +276,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         }
       `;
       document.head.appendChild(style);
-      
+
       return () => {
         document.head.removeChild(style);
       };
@@ -260,7 +287,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   useEffect(() => {
     if (deviceInfo.isBatterySaving) {
       // Reduce background activity when battery is low
-      const style = document.createElement('style');
+      const style = document.createElement("style");
       style.textContent = `
         .animate-pulse, .animate-bounce, .animate-spin {
           animation: none !important;
@@ -271,7 +298,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
         }
       `;
       document.head.appendChild(style);
-      
+
       return () => {
         document.head.removeChild(style);
       };
@@ -290,20 +317,36 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   return (
     <div className={`mobile-optimizer ${performanceMode}`}>
       {/* Device info overlay for development (hidden in production) */}
-      {process.env.NODE_ENV === 'development' && (
+      {process.env.NODE_ENV === "development" && (
         <div className="fixed bottom-4 left-4 z-50 bg-black/80 text-white p-3 rounded-lg text-xs space-y-1 max-w-xs">
           <div className="flex items-center gap-2">
-            {deviceInfo.isMobile ? <Smartphone className="w-3 h-3" /> : <Monitor className="w-3 h-3" />}
-            <span>{deviceInfo.isMobile ? 'Mobile' : (deviceInfo.isTablet ? 'Tablet' : 'Desktop')}</span>
-            <span>({deviceInfo.screenWidth}x{deviceInfo.screenHeight})</span>
+            {deviceInfo.isMobile ? (
+              <Smartphone className="w-3 h-3" />
+            ) : (
+              <Monitor className="w-3 h-3" />
+            )}
+            <span>
+              {deviceInfo.isMobile
+                ? "Mobile"
+                : deviceInfo.isTablet
+                  ? "Tablet"
+                  : "Desktop"}
+            </span>
+            <span>
+              ({deviceInfo.screenWidth}x{deviceInfo.screenHeight})
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <Zap className="w-3 h-3" />
             <span>Performance: {performanceMode}</span>
           </div>
           <div className="flex items-center gap-2">
-            {isOnline ? <Wifi className="w-3 h-3 text-green-400" /> : <WifiOff className="w-3 h-3 text-red-400" />}
-            <span>{isOnline ? 'Online' : 'Offline'}</span>
+            {isOnline ? (
+              <Wifi className="w-3 h-3 text-green-400" />
+            ) : (
+              <WifiOff className="w-3 h-3 text-red-400" />
+            )}
+            <span>{isOnline ? "Online" : "Offline"}</span>
           </div>
           {deviceInfo.batteryLevel !== undefined && (
             <div className="flex items-center gap-2">
@@ -319,7 +362,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
           )}
         </div>
       )}
-      
+
       {children}
     </div>
   );
@@ -327,13 +370,15 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
 
 // Hook for using mobile optimizer in components
 export function useMobileOptimizer() {
-  const context = typeof window !== 'undefined' ? 
-    (window as any).__mobileOptimizerContext : null;
-  
+  const context =
+    typeof window !== "undefined"
+      ? (window as any).__mobileOptimizerContext
+      : null;
+
   if (!context) {
-    throw new Error('useMobileOptimizer must be used within a MobileOptimizer');
+    throw new Error("useMobileOptimizer must be used within a MobileOptimizer");
   }
-  
+
   return context;
 }
 
@@ -355,29 +400,31 @@ export class PerformanceMonitor {
   }
 
   private initializeThresholds() {
-    this.thresholds.set('render', 16.67); // 60fps
-    this.thresholds.set('apiCall', 1000); // 1 second
-    this.thresholds.set('imageLoad', 3000); // 3 seconds
-    this.thresholds.set('animation', 33.33); // 30fps
+    this.thresholds.set("render", 16.67); // 60fps
+    this.thresholds.set("apiCall", 1000); // 1 second
+    this.thresholds.set("imageLoad", 3000); // 3 seconds
+    this.thresholds.set("animation", 33.33); // 30fps
   }
 
   startMeasure(name: string): () => void {
     const startTime = performance.now();
-    
+
     return () => {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       if (!this.metrics.has(name)) {
         this.metrics.set(name, []);
       }
-      
+
       this.metrics.get(name)!.push(duration);
-      
+
       // Check if performance is degraded
       const threshold = this.thresholds.get(name);
       if (threshold && duration > threshold) {
-        console.warn(`Performance warning: ${name} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`);
+        console.warn(
+          `Performance warning: ${name} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`,
+        );
         this.reportPerformanceIssue(name, duration);
       }
     };
@@ -385,8 +432,8 @@ export class PerformanceMonitor {
 
   private reportPerformanceIssue(metric: string, duration: number) {
     // Send performance metrics to analytics or monitoring service
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'performance_issue', {
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag("event", "performance_issue", {
         metric_name: metric,
         duration: Math.round(duration),
         device_type: this.getDeviceType(),
@@ -396,14 +443,17 @@ export class PerformanceMonitor {
 
   private getDeviceType(): string {
     const width = window.innerWidth;
-    if (width <= 768) return 'mobile';
-    if (width <= 1024) return 'tablet';
-    return 'desktop';
+    if (width <= 768) return "mobile";
+    if (width <= 1024) return "tablet";
+    return "desktop";
   }
 
-  getMetrics(): Record<string, { average: number; min: number; max: number; count: number }> {
+  getMetrics(): Record<
+    string,
+    { average: number; min: number; max: number; count: number }
+  > {
     const result: Record<string, any> = {};
-    
+
     for (const [name, values] of this.metrics.entries()) {
       if (values.length > 0) {
         result[name] = {
@@ -414,7 +464,7 @@ export class PerformanceMonitor {
         };
       }
     }
-    
+
     return result;
   }
 

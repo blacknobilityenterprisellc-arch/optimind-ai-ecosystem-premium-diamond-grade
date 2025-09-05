@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-import { aiService } from '@/lib/ai';
+import { aiService } from "@/lib/ai";
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!topic || !contentType) {
       return NextResponse.json(
-        { error: 'Topic and content type are required' },
-        { status: 400 }
+        { error: "Topic and content type are required" },
+        { status: 400 },
       );
     }
 
@@ -19,10 +19,10 @@ export async function POST(request: NextRequest) {
     const result = await aiService.generateContent({
       topic,
       contentType,
-      tone: tone || 'professional',
-      length: length || 'medium',
+      tone: tone || "professional",
+      length: length || "medium",
       keywords: keywords || [],
-      targetAudience: targetAudience || 'general audience'
+      targetAudience: targetAudience || "general audience",
     });
 
     return NextResponse.json({
@@ -30,14 +30,13 @@ export async function POST(request: NextRequest) {
       content: result.content,
       model: result.model,
       usage: result.usage,
-      cost: result.cost
+      cost: result.cost,
     });
-
   } catch (error) {
-    console.error('Content generation error:', error);
+    console.error("Content generation error:", error);
     return NextResponse.json(
-      { error: 'Failed to generate content' },
-      { status: 500 }
+      { error: "Failed to generate content" },
+      { status: 500 },
     );
   }
 }

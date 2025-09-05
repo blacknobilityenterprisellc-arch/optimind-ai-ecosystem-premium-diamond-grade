@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { 
-  History, 
-  Sparkles, 
-  Wand2, 
+import {
+  History,
+  Sparkles,
+  Wand2,
   Image as ImageIcon,
   Download,
   Share2,
@@ -90,7 +90,7 @@ import {
   FireDamaged,
   InsectDamage,
   LightDamage,
-  ChemicalDamage
+  ChemicalDamage,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,23 +101,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { 
+import {
   useSecureSubscription,
-  useAIPhotoRestoration 
+  useAIPhotoRestoration,
 } from "@/lib/ai-photo-restoration";
 
 interface RestorationType {
   id: string;
   name: string;
   description: string;
-  category: 'repair' | 'enhance' | 'colorize' | 'preserve';
+  category: "repair" | "enhance" | "colorize" | "preserve";
   icon: React.ReactNode;
   credits: number;
   isPremium: boolean;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   estimatedTime: string;
 }
 
@@ -144,7 +150,7 @@ interface RestorationResult {
 }
 
 interface DamageAssessment {
-  overallCondition: 'excellent' | 'good' | 'fair' | 'poor' | 'very poor';
+  overallCondition: "excellent" | "good" | "fair" | "poor" | "very poor";
   damageTypes: string[];
   severity: number; // 0-100
   recommendedActions: string[];
@@ -154,7 +160,9 @@ interface DamageAssessment {
 
 export function AIPhotoRestoration() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedRestoration, setSelectedRestoration] = useState<string | null>(null);
+  const [selectedRestoration, setSelectedRestoration] = useState<string | null>(
+    null,
+  );
   const [results, setResults] = useState<RestorationResult[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(0);
@@ -163,9 +171,10 @@ export function AIPhotoRestoration() {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [batchMode, setBatchMode] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
-  const [damageAssessment, setDamageAssessment] = useState<DamageAssessment | null>(null);
+  const [damageAssessment, setDamageAssessment] =
+    useState<DamageAssessment | null>(null);
   const [autoAssess, setAutoAssess] = useState(true);
-  
+
   const [settings, setSettings] = useState({
     intensity: 75,
     preserveDetails: true,
@@ -175,7 +184,7 @@ export function AIPhotoRestoration() {
     removeScratches: true,
     fixFading: true,
     reduceNoise: true,
-    sharpenDetails: true
+    sharpenDetails: true,
   });
 
   const { isPremium } = useSecureSubscription();
@@ -187,7 +196,7 @@ export function AIPhotoRestoration() {
     error,
     credits,
     batchRestore,
-    enhanceRestoration
+    enhanceRestoration,
   } = useAIPhotoRestoration();
 
   const restorationTypes: RestorationType[] = [
@@ -200,7 +209,7 @@ export function AIPhotoRestoration() {
       credits: 80,
       isPremium: true,
       difficulty: "medium",
-      estimatedTime: "3-5 minutes"
+      estimatedTime: "3-5 minutes",
     },
     {
       id: "scratch-removal",
@@ -211,7 +220,7 @@ export function AIPhotoRestoration() {
       credits: 60,
       isPremium: false,
       difficulty: "easy",
-      estimatedTime: "2-3 minutes"
+      estimatedTime: "2-3 minutes",
     },
     {
       id: "fade-restoration",
@@ -222,7 +231,7 @@ export function AIPhotoRestoration() {
       credits: 50,
       isPremium: false,
       difficulty: "easy",
-      estimatedTime: "1-2 minutes"
+      estimatedTime: "1-2 minutes",
     },
     {
       id: "noise-reduction",
@@ -233,7 +242,7 @@ export function AIPhotoRestoration() {
       credits: 40,
       isPremium: false,
       difficulty: "easy",
-      estimatedTime: "1-2 minutes"
+      estimatedTime: "1-2 minutes",
     },
     {
       id: "colorization",
@@ -244,7 +253,7 @@ export function AIPhotoRestoration() {
       credits: 100,
       isPremium: true,
       difficulty: "hard",
-      estimatedTime: "5-8 minutes"
+      estimatedTime: "5-8 minutes",
     },
     {
       id: "face-restoration",
@@ -255,7 +264,7 @@ export function AIPhotoRestoration() {
       credits: 90,
       isPremium: true,
       difficulty: "medium",
-      estimatedTime: "4-6 minutes"
+      estimatedTime: "4-6 minutes",
     },
     {
       id: "document-restoration",
@@ -266,7 +275,7 @@ export function AIPhotoRestoration() {
       credits: 70,
       isPremium: true,
       difficulty: "medium",
-      estimatedTime: "3-4 minutes"
+      estimatedTime: "3-4 minutes",
     },
     {
       id: "damage-repair",
@@ -277,7 +286,7 @@ export function AIPhotoRestoration() {
       credits: 120,
       isPremium: true,
       difficulty: "hard",
-      estimatedTime: "8-12 minutes"
+      estimatedTime: "8-12 minutes",
     },
     {
       id: "enhancement",
@@ -288,7 +297,7 @@ export function AIPhotoRestoration() {
       credits: 30,
       isPremium: false,
       difficulty: "easy",
-      estimatedTime: "30-60 seconds"
+      estimatedTime: "30-60 seconds",
     },
     {
       id: "sharpening",
@@ -299,7 +308,7 @@ export function AIPhotoRestoration() {
       credits: 35,
       isPremium: false,
       difficulty: "easy",
-      estimatedTime: "30-60 seconds"
+      estimatedTime: "30-60 seconds",
     },
     {
       id: "mold-removal",
@@ -310,7 +319,7 @@ export function AIPhotoRestoration() {
       credits: 75,
       isPremium: true,
       difficulty: "medium",
-      estimatedTime: "4-6 minutes"
+      estimatedTime: "4-6 minutes",
     },
     {
       id: "vintage-enhance",
@@ -321,8 +330,8 @@ export function AIPhotoRestoration() {
       credits: 55,
       isPremium: false,
       difficulty: "medium",
-      estimatedTime: "2-3 minutes"
-    }
+      estimatedTime: "2-3 minutes",
+    },
   ];
 
   const handleDamageAssessment = useCallback(async () => {
@@ -337,24 +346,33 @@ export function AIPhotoRestoration() {
 
       if (assessment) {
         setDamageAssessment(assessment);
-        
+
         // Auto-select restoration type based on assessment
-        if (assessment.damageTypes.includes('faded') || assessment.damageTypes.includes('discoloration')) {
-          setSelectedRestoration('fade-restoration');
-        } else if (assessment.damageTypes.includes('scratches') || assessment.damageTypes.includes('tears')) {
-          setSelectedRestoration('scratch-removal');
-        } else if (assessment.damageTypes.includes('noise') || assessment.damageTypes.includes('grain')) {
-          setSelectedRestoration('noise-reduction');
+        if (
+          assessment.damageTypes.includes("faded") ||
+          assessment.damageTypes.includes("discoloration")
+        ) {
+          setSelectedRestoration("fade-restoration");
+        } else if (
+          assessment.damageTypes.includes("scratches") ||
+          assessment.damageTypes.includes("tears")
+        ) {
+          setSelectedRestoration("scratch-removal");
+        } else if (
+          assessment.damageTypes.includes("noise") ||
+          assessment.damageTypes.includes("grain")
+        ) {
+          setSelectedRestoration("noise-reduction");
         } else if (assessment.severity > 70) {
-          setSelectedRestoration('damage-repair');
+          setSelectedRestoration("damage-repair");
         } else {
-          setSelectedRestoration('general-restoration');
+          setSelectedRestoration("general-restoration");
         }
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error('Damage assessment failed:', error);
+      console.error("Damage assessment failed:", error);
       setIsProcessing(false);
     }
   }, [selectedImage, isPremium, assessDamage]);
@@ -367,7 +385,11 @@ export function AIPhotoRestoration() {
       setCurrentAction("Restoring photo...");
       setProcessingProgress(0);
 
-      const result = await restorePhoto(selectedImage, selectedRestoration, settings);
+      const result = await restorePhoto(
+        selectedImage,
+        selectedRestoration,
+        settings,
+      );
 
       if (result.success) {
         const restorationResult: RestorationResult = {
@@ -380,15 +402,15 @@ export function AIPhotoRestoration() {
           creditsUsed: result.creditsUsed,
           processingTime: result.processingTime,
           improvements: result.improvements || [],
-          beforeAfter: result.beforeAfter
+          beforeAfter: result.beforeAfter,
         };
 
-        setResults(prev => [restorationResult, ...prev]);
+        setResults((prev) => [restorationResult, ...prev]);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error('Photo restoration failed:', error);
+      console.error("Photo restoration failed:", error);
       setIsProcessing(false);
     }
   }, [selectedImage, selectedRestoration, isPremium, settings, restorePhoto]);
@@ -401,7 +423,11 @@ export function AIPhotoRestoration() {
       setCurrentAction("Batch restoration...");
       setProcessingProgress(0);
 
-      const variations = await batchRestore(selectedImage, selectedRestoration, 3);
+      const variations = await batchRestore(
+        selectedImage,
+        selectedRestoration,
+        3,
+      );
 
       if (variations.length > 0) {
         const newResults = variations.map((variation, index) => ({
@@ -409,32 +435,34 @@ export function AIPhotoRestoration() {
           originalUrl: selectedImage,
           restoredUrl: variation.restoredImageUrl!,
           restorationType: selectedRestoration,
-          settings: { ...settings, intensity: settings.intensity + (index * 10) },
+          settings: { ...settings, intensity: settings.intensity + index * 10 },
           timestamp: new Date(),
           creditsUsed: variation.creditsUsed,
           processingTime: variation.processingTime,
-          improvements: variation.improvements || []
+          improvements: variation.improvements || [],
         }));
 
-        setResults(prev => [...newResults, ...prev]);
+        setResults((prev) => [...newResults, ...prev]);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error('Batch restoration failed:', error);
+      console.error("Batch restoration failed:", error);
       setIsProcessing(false);
     }
   }, [selectedImage, selectedRestoration, isPremium, settings, batchRestore]);
 
   const handleDownload = useCallback((result: RestorationResult) => {
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = result.restoredUrl;
     link.download = `restored-${result.restorationType}-${Date.now()}.jpg`;
     link.click();
   }, []);
 
   const estimateCredits = useCallback(() => {
-    const restoration = restorationTypes.find(r => r.id === selectedRestoration);
+    const restoration = restorationTypes.find(
+      (r) => r.id === selectedRestoration,
+    );
     if (!restoration) return 0;
 
     let total = restoration.credits;
@@ -445,23 +473,35 @@ export function AIPhotoRestoration() {
     return Math.round(total);
   }, [selectedRestoration, settings, batchMode]);
 
-  const getConditionColor = (condition: DamageAssessment['overallCondition']) => {
+  const getConditionColor = (
+    condition: DamageAssessment["overallCondition"],
+  ) => {
     switch (condition) {
-      case 'excellent': return 'text-green-600 bg-green-50';
-      case 'good': return 'text-blue-600 bg-blue-50';
-      case 'fair': return 'text-yellow-600 bg-yellow-50';
-      case 'poor': return 'text-orange-600 bg-orange-50';
-      case 'very poor': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case "excellent":
+        return "text-green-600 bg-green-50";
+      case "good":
+        return "text-blue-600 bg-blue-50";
+      case "fair":
+        return "text-yellow-600 bg-yellow-50";
+      case "poor":
+        return "text-orange-600 bg-orange-50";
+      case "very poor":
+        return "text-red-600 bg-red-50";
+      default:
+        return "text-gray-600 bg-gray-50";
     }
   };
 
-  const getDifficultyIcon = (difficulty: RestorationType['difficulty']) => {
+  const getDifficultyIcon = (difficulty: RestorationType["difficulty"]) => {
     switch (difficulty) {
-      case 'easy': return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case 'medium': return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
-      case 'hard': return <AlertTriangle className="w-4 h-4 text-red-600" />;
-      default: return <CheckCircle className="w-4 h-4" />;
+      case "easy":
+        return <CheckCircle className="w-4 h-4 text-green-600" />;
+      case "medium":
+        return <AlertTriangle className="w-4 h-4 text-yellow-600" />;
+      case "hard":
+        return <AlertTriangle className="w-4 h-4 text-red-600" />;
+      default:
+        return <CheckCircle className="w-4 h-4" />;
     }
   };
 
@@ -475,8 +515,9 @@ export function AIPhotoRestoration() {
             </div>
             <h2 className="text-2xl font-bold">AI Photo Restoration</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Restore old, damaged, and faded photos to their former glory using advanced AI technology. 
-              Repair scratches, remove noise, and enhance vintage photographs.
+              Restore old, damaged, and faded photos to their former glory using
+              advanced AI technology. Repair scratches, remove noise, and
+              enhance vintage photographs.
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="text-center">
@@ -511,7 +552,9 @@ export function AIPhotoRestoration() {
             <History className="w-6 h-6 text-green-600" />
             AI Photo Restoration
           </h2>
-          <p className="text-muted-foreground">Restore and enhance old or damaged photos</p>
+          <p className="text-muted-foreground">
+            Restore and enhance old or damaged photos
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-green-600">
@@ -522,7 +565,11 @@ export function AIPhotoRestoration() {
             size="sm"
             onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
           >
-            {viewMode === "grid" ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
+            {viewMode === "grid" ? (
+              <List className="w-4 h-4" />
+            ) : (
+              <Grid className="w-4 h-4" />
+            )}
           </Button>
         </div>
       </div>
@@ -534,7 +581,9 @@ export function AIPhotoRestoration() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{currentAction}</span>
-                <span className="text-sm text-muted-foreground">{processingProgress}%</span>
+                <span className="text-sm text-muted-foreground">
+                  {processingProgress}%
+                </span>
               </div>
               <Progress value={processingProgress} className="h-2" />
               <p className="text-xs text-muted-foreground">
@@ -578,7 +627,9 @@ export function AIPhotoRestoration() {
                       <div className="space-y-4">
                         <ImageIcon className="w-12 h-12 mx-auto text-gray-400" />
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">Upload Photo</h3>
+                          <h3 className="text-lg font-semibold mb-2">
+                            Upload Photo
+                          </h3>
                           <p className="text-muted-foreground text-sm">
                             Select a photo to restore
                           </p>
@@ -598,7 +649,9 @@ export function AIPhotoRestoration() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Damage Assessment</CardTitle>
+                      <CardTitle className="text-lg">
+                        Damage Assessment
+                      </CardTitle>
                       <Switch
                         checked={autoAssess}
                         onCheckedChange={setAutoAssess}
@@ -607,7 +660,7 @@ export function AIPhotoRestoration() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {autoAssess && (
-                      <Button 
+                      <Button
                         onClick={handleDamageAssessment}
                         disabled={isProcessing}
                         className="w-full"
@@ -621,33 +674,59 @@ export function AIPhotoRestoration() {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium">Condition</span>
-                          <Badge className={getConditionColor(damageAssessment.overallCondition)}>
-                            {damageAssessment.overallCondition.replace('-', ' ')}
+                          <Badge
+                            className={getConditionColor(
+                              damageAssessment.overallCondition,
+                            )}
+                          >
+                            {damageAssessment.overallCondition.replace(
+                              "-",
+                              " ",
+                            )}
                           </Badge>
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-sm">Damage Level</span>
-                            <span className="text-sm font-medium">{damageAssessment.severity}%</span>
+                            <span className="text-sm font-medium">
+                              {damageAssessment.severity}%
+                            </span>
                           </div>
-                          <Progress value={damageAssessment.severity} className="h-2" />
+                          <Progress
+                            value={damageAssessment.severity}
+                            className="h-2"
+                          />
                         </div>
 
                         <div>
-                          <span className="text-sm font-medium">Damage Types:</span>
+                          <span className="text-sm font-medium">
+                            Damage Types:
+                          </span>
                           <div className="flex flex-wrap gap-1 mt-1">
-                            {damageAssessment.damageTypes.map((damage, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {damage}
-                              </Badge>
-                            ))}
+                            {damageAssessment.damageTypes.map(
+                              (damage, index) => (
+                                <Badge
+                                  key={index}
+                                  variant="outline"
+                                  className="text-xs"
+                                >
+                                  {damage}
+                                </Badge>
+                              ),
+                            )}
                           </div>
                         </div>
 
                         <div className="text-xs text-muted-foreground">
-                          <div>• Success rate: {damageAssessment.successProbability}%</div>
-                          <div>• Estimated time: {damageAssessment.estimatedRestorationTime}</div>
+                          <div>
+                            • Success rate:{" "}
+                            {damageAssessment.successProbability}%
+                          </div>
+                          <div>
+                            • Estimated time:{" "}
+                            {damageAssessment.estimatedRestorationTime}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -665,25 +744,35 @@ export function AIPhotoRestoration() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {restorationTypes.map(type => (
+                    {restorationTypes.map((type) => (
                       <div
                         key={type.id}
                         className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
                           selectedRestoration === type.id
-                            ? 'border-green-500 bg-green-50'
-                            : 'border-gray-200 hover:border-gray-300'
-                        } ${type.isPremium && credits < type.credits ? 'opacity-50' : ''}`}
-                        onClick={() => type.isPremium && credits >= type.credits ? setSelectedRestoration(type.id) : null}
+                            ? "border-green-500 bg-green-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        } ${type.isPremium && credits < type.credits ? "opacity-50" : ""}`}
+                        onClick={() =>
+                          type.isPremium && credits >= type.credits
+                            ? setSelectedRestoration(type.id)
+                            : null
+                        }
                       >
                         <div className="text-center">
                           <div className="text-2xl mb-2">{type.icon}</div>
                           <div className="font-medium text-sm">{type.name}</div>
-                          <div className="text-xs text-muted-foreground mt-1">{type.description}</div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {type.description}
+                          </div>
                           <div className="flex items-center justify-center gap-1 mt-2">
                             {getDifficultyIcon(type.difficulty)}
-                            <span className="text-xs text-muted-foreground">{type.estimatedTime}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {type.estimatedTime}
+                            </span>
                           </div>
-                          {type.isPremium && <Crown className="w-3 h-3 text-yellow-500 mx-auto mt-1" />}
+                          {type.isPremium && (
+                            <Crown className="w-3 h-3 text-yellow-500 mx-auto mt-1" />
+                          )}
                         </div>
                       </div>
                     ))}
@@ -696,7 +785,9 @@ export function AIPhotoRestoration() {
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">Restoration Settings</CardTitle>
+                      <CardTitle className="text-lg">
+                        Restoration Settings
+                      </CardTitle>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -711,12 +802,21 @@ export function AIPhotoRestoration() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-sm">Restoration Intensity</Label>
-                          <span className="text-xs text-muted-foreground">{settings.intensity}%</span>
+                          <Label className="text-sm">
+                            Restoration Intensity
+                          </Label>
+                          <span className="text-xs text-muted-foreground">
+                            {settings.intensity}%
+                          </span>
                         </div>
                         <Slider
                           value={[settings.intensity]}
-                          onValueChange={(value) => setSettings(prev => ({ ...prev, intensity: value[0] }))}
+                          onValueChange={(value) =>
+                            setSettings((prev) => ({
+                              ...prev,
+                              intensity: value[0],
+                            }))
+                          }
                           max={100}
                           min={0}
                           step={1}
@@ -726,11 +826,18 @@ export function AIPhotoRestoration() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Color Accuracy</Label>
-                          <span className="text-xs text-muted-foreground">{settings.colorAccuracy}%</span>
+                          <span className="text-xs text-muted-foreground">
+                            {settings.colorAccuracy}%
+                          </span>
                         </div>
                         <Slider
                           value={[settings.colorAccuracy]}
-                          onValueChange={(value) => setSettings(prev => ({ ...prev, colorAccuracy: value[0] }))}
+                          onValueChange={(value) =>
+                            setSettings((prev) => ({
+                              ...prev,
+                              colorAccuracy: value[0],
+                            }))
+                          }
                           max={100}
                           min={0}
                           step={1}
@@ -740,11 +847,18 @@ export function AIPhotoRestoration() {
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
                           <Label className="text-sm">Noise Reduction</Label>
-                          <span className="text-xs text-muted-foreground">{settings.noiseReduction}%</span>
+                          <span className="text-xs text-muted-foreground">
+                            {settings.noiseReduction}%
+                          </span>
                         </div>
                         <Slider
                           value={[settings.noiseReduction]}
-                          onValueChange={(value) => setSettings(prev => ({ ...prev, noiseReduction: value[0] }))}
+                          onValueChange={(value) =>
+                            setSettings((prev) => ({
+                              ...prev,
+                              noiseReduction: value[0],
+                            }))
+                          }
                           max={100}
                           min={0}
                           step={1}
@@ -761,54 +875,105 @@ export function AIPhotoRestoration() {
                             <Switch
                               id="preserve-details"
                               checked={settings.preserveDetails}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, preserveDetails: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  preserveDetails: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="preserve-details" className="text-sm">Preserve Original Details</Label>
+                            <Label
+                              htmlFor="preserve-details"
+                              className="text-sm"
+                            >
+                              Preserve Original Details
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="enhance-colors"
                               checked={settings.enhanceColors}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, enhanceColors: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  enhanceColors: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="enhance-colors" className="text-sm">Enhance Colors</Label>
+                            <Label htmlFor="enhance-colors" className="text-sm">
+                              Enhance Colors
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="remove-scratches"
                               checked={settings.removeScratches}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, removeScratches: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  removeScratches: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="remove-scratches" className="text-sm">Remove Scratches</Label>
+                            <Label
+                              htmlFor="remove-scratches"
+                              className="text-sm"
+                            >
+                              Remove Scratches
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="fix-fading"
                               checked={settings.fixFading}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, fixFading: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  fixFading: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="fix-fading" className="text-sm">Fix Fading</Label>
+                            <Label htmlFor="fix-fading" className="text-sm">
+                              Fix Fading
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="reduce-noise"
                               checked={settings.reduceNoise}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, reduceNoise: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  reduceNoise: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="reduce-noise" className="text-sm">Reduce Noise</Label>
+                            <Label htmlFor="reduce-noise" className="text-sm">
+                              Reduce Noise
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
                             <Switch
                               id="sharpen-details"
                               checked={settings.sharpenDetails}
-                              onCheckedChange={(checked) => setSettings(prev => ({ ...prev, sharpenDetails: checked }))}
+                              onCheckedChange={(checked) =>
+                                setSettings((prev) => ({
+                                  ...prev,
+                                  sharpenDetails: checked,
+                                }))
+                              }
                             />
-                            <Label htmlFor="sharpen-details" className="text-sm">Sharpen Details</Label>
+                            <Label
+                              htmlFor="sharpen-details"
+                              className="text-sm"
+                            >
+                              Sharpen Details
+                            </Label>
                           </div>
 
                           <div className="flex items-center space-x-2">
@@ -817,7 +982,9 @@ export function AIPhotoRestoration() {
                               checked={batchMode}
                               onCheckedChange={setBatchMode}
                             />
-                            <Label htmlFor="batch-mode" className="text-sm">Batch Mode (3 variations)</Label>
+                            <Label htmlFor="batch-mode" className="text-sm">
+                              Batch Mode (3 variations)
+                            </Label>
                           </div>
                         </div>
                       </div>
@@ -826,24 +993,36 @@ export function AIPhotoRestoration() {
                     {/* Action Buttons */}
                     <div className="pt-4 border-t space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Estimated Cost</span>
-                        <span className="text-lg font-bold text-green-600">{estimateCredits()} credits</span>
+                        <span className="text-sm font-medium">
+                          Estimated Cost
+                        </span>
+                        <span className="text-lg font-bold text-green-600">
+                          {estimateCredits()} credits
+                        </span>
                       </div>
-                      
+
                       <div className="flex gap-2">
-                        <Button 
+                        <Button
                           onClick={handleRestoration}
-                          disabled={!selectedImage || !selectedRestoration || credits < estimateCredits()}
+                          disabled={
+                            !selectedImage ||
+                            !selectedRestoration ||
+                            credits < estimateCredits()
+                          }
                           className="flex-1"
                         >
                           <Wand2 className="w-4 h-4 mr-2" />
                           Restore Photo
                         </Button>
-                        
-                        <Button 
+
+                        <Button
                           variant="outline"
                           onClick={handleBatchRestore}
-                          disabled={!selectedImage || !selectedRestoration || credits < estimateCredits() * 2.5}
+                          disabled={
+                            !selectedImage ||
+                            !selectedRestoration ||
+                            credits < estimateCredits() * 2.5
+                          }
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
                           Batch
@@ -868,13 +1047,17 @@ export function AIPhotoRestoration() {
 
           {/* Gallery Grid */}
           {results.length > 0 ? (
-            <div className={`grid gap-4 ${
-              viewMode === "grid" 
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                : "grid-cols-1"
-            }`}>
-              {results.map(result => {
-                const restoration = restorationTypes.find(r => r.id === result.restorationType);
+            <div
+              className={`grid gap-4 ${
+                viewMode === "grid"
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                  : "grid-cols-1"
+              }`}
+            >
+              {results.map((result) => {
+                const restoration = restorationTypes.find(
+                  (r) => r.id === result.restorationType,
+                );
                 return (
                   <Card key={result.id} className="overflow-hidden">
                     <div className="relative aspect-square">
@@ -894,7 +1077,10 @@ export function AIPhotoRestoration() {
                         </Button>
                       </div>
                       <div className="absolute bottom-2 left-2">
-                        <Badge variant="outline" className="text-xs bg-black/50 text-white border-white/20">
+                        <Badge
+                          variant="outline"
+                          className="text-xs bg-black/50 text-white border-white/20"
+                        >
                           {restoration?.name}
                         </Badge>
                       </div>
@@ -906,11 +1092,17 @@ export function AIPhotoRestoration() {
                           <span>{result.creditsUsed} credits</span>
                         </div>
                         <div className="flex flex-wrap gap-1">
-                          {result.improvements.slice(0, 2).map((improvement, idx) => (
-                            <Badge key={idx} variant="outline" className="text-xs">
-                              {improvement}
-                            </Badge>
-                          ))}
+                          {result.improvements
+                            .slice(0, 2)
+                            .map((improvement, idx) => (
+                              <Badge
+                                key={idx}
+                                variant="outline"
+                                className="text-xs"
+                              >
+                                {improvement}
+                              </Badge>
+                            ))}
                           {result.improvements.length > 2 && (
                             <Badge variant="outline" className="text-xs">
                               +{result.improvements.length - 2}
@@ -932,11 +1124,15 @@ export function AIPhotoRestoration() {
             <Card>
               <CardContent className="p-12 text-center">
                 <History className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No Photos Restored Yet</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  No Photos Restored Yet
+                </h3>
                 <p className="text-muted-foreground mb-4">
                   Restore your first photo using AI-powered restoration tools
                 </p>
-                <Button onClick={() => setSelectedRestoration("general-restoration")}>
+                <Button
+                  onClick={() => setSelectedRestoration("general-restoration")}
+                >
                   Try General Restoration
                 </Button>
               </CardContent>
@@ -947,46 +1143,62 @@ export function AIPhotoRestoration() {
         <TabsContent value="services" className="space-y-6">
           {/* Service Categories */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {(['repair', 'enhance', 'colorize', 'preserve'] as const).map(category => (
-              <Card key={category}>
-                <CardHeader>
-                  <CardTitle className="text-lg capitalize">{category} Services</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {restorationTypes
-                      .filter(service => service.category === category)
-                      .map(service => (
-                        <div
-                          key={service.id}
-                          className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                            selectedRestoration === service.id
-                              ? 'border-green-500 bg-green-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          } ${service.isPremium && credits < service.credits ? 'opacity-50' : ''}`}
-                          onClick={() => service.isPremium && credits >= service.credits ? setSelectedRestoration(service.id) : null}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="text-xl">{service.icon}</div>
-                            <div className="flex-1">
-                              <div className="font-medium text-sm">{service.name}</div>
-                              <div className="text-xs text-muted-foreground">{service.description}</div>
-                              <div className="flex items-center gap-2 mt-1">
-                                {getDifficultyIcon(service.difficulty)}
-                                <span className="text-xs text-muted-foreground">{service.estimatedTime}</span>
-                                <Badge variant="outline" className="text-xs">
-                                  {service.credits} credits
-                                </Badge>
+            {(["repair", "enhance", "colorize", "preserve"] as const).map(
+              (category) => (
+                <Card key={category}>
+                  <CardHeader>
+                    <CardTitle className="text-lg capitalize">
+                      {category} Services
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {restorationTypes
+                        .filter((service) => service.category === category)
+                        .map((service) => (
+                          <div
+                            key={service.id}
+                            className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                              selectedRestoration === service.id
+                                ? "border-green-500 bg-green-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            } ${service.isPremium && credits < service.credits ? "opacity-50" : ""}`}
+                            onClick={() =>
+                              service.isPremium && credits >= service.credits
+                                ? setSelectedRestoration(service.id)
+                                : null
+                            }
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="text-xl">{service.icon}</div>
+                              <div className="flex-1">
+                                <div className="font-medium text-sm">
+                                  {service.name}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {service.description}
+                                </div>
+                                <div className="flex items-center gap-2 mt-1">
+                                  {getDifficultyIcon(service.difficulty)}
+                                  <span className="text-xs text-muted-foreground">
+                                    {service.estimatedTime}
+                                  </span>
+                                  <Badge variant="outline" className="text-xs">
+                                    {service.credits} credits
+                                  </Badge>
+                                </div>
                               </div>
+                              {service.isPremium && (
+                                <Crown className="w-3 h-3 text-yellow-500" />
+                              )}
                             </div>
-                            {service.isPremium && <Crown className="w-3 h-3 text-yellow-500" />}
                           </div>
-                        </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ),
+            )}
           </div>
 
           {/* Service Information */}
@@ -994,36 +1206,66 @@ export function AIPhotoRestoration() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  {restorationTypes.find(s => s.id === selectedRestoration)?.icon}
-                  {restorationTypes.find(s => s.id === selectedRestoration)?.name}
+                  {
+                    restorationTypes.find((s) => s.id === selectedRestoration)
+                      ?.icon
+                  }
+                  {
+                    restorationTypes.find((s) => s.id === selectedRestoration)
+                      ?.name
+                  }
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
-                    {restorationTypes.find(s => s.id === selectedRestoration)?.description}
+                    {
+                      restorationTypes.find((s) => s.id === selectedRestoration)
+                        ?.description
+                    }
                   </p>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label className="text-sm font-medium">Difficulty</Label>
                       <div className="flex items-center gap-2 mt-1">
-                        {getDifficultyIcon(restorationTypes.find(s => s.id === selectedRestoration)?.difficulty || 'medium')}
+                        {getDifficultyIcon(
+                          restorationTypes.find(
+                            (s) => s.id === selectedRestoration,
+                          )?.difficulty || "medium",
+                        )}
                         <span className="text-sm text-muted-foreground capitalize">
-                          {restorationTypes.find(s => s.id === selectedRestoration)?.difficulty}
+                          {
+                            restorationTypes.find(
+                              (s) => s.id === selectedRestoration,
+                            )?.difficulty
+                          }
                         </span>
                       </div>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">Estimated Time</Label>
+                      <Label className="text-sm font-medium">
+                        Estimated Time
+                      </Label>
                       <div className="text-sm text-muted-foreground mt-1">
-                        {restorationTypes.find(s => s.id === selectedRestoration)?.estimatedTime}
+                        {
+                          restorationTypes.find(
+                            (s) => s.id === selectedRestoration,
+                          )?.estimatedTime
+                        }
                       </div>
                     </div>
                     <div>
-                      <Label className="text-sm font-medium">Credits Required</Label>
+                      <Label className="text-sm font-medium">
+                        Credits Required
+                      </Label>
                       <div className="text-lg font-bold text-green-600 mt-1">
-                        {restorationTypes.find(s => s.id === selectedRestoration)?.credits} credits
+                        {
+                          restorationTypes.find(
+                            (s) => s.id === selectedRestoration,
+                          )?.credits
+                        }{" "}
+                        credits
                       </div>
                     </div>
                   </div>
@@ -1031,10 +1273,17 @@ export function AIPhotoRestoration() {
                   <div className="pt-4 border-t">
                     <Button
                       onClick={() => {
-                        setSelectedImage("https://picsum.photos/seed/demo/400/300.jpg");
+                        setSelectedImage(
+                          "https://picsum.photos/seed/demo/400/300.jpg",
+                        );
                         handleRestoration();
                       }}
-                      disabled={credits < (restorationTypes.find(s => s.id === selectedRestoration)?.credits || 0)}
+                      disabled={
+                        credits <
+                        (restorationTypes.find(
+                          (s) => s.id === selectedRestoration,
+                        )?.credits || 0)
+                      }
                     >
                       Try This Service
                     </Button>

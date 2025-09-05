@@ -2,15 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { 
-  Menu, 
-  X, 
-  Search, 
-  Target, 
-  Globe, 
-  Zap, 
+import {
+  Menu,
+  X,
+  Search,
+  Target,
+  Globe,
+  Zap,
   ChevronDown,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,20 +25,20 @@ export default function Header() {
       name: "SEO Optimization",
       description: "Advanced search engine optimization with AI",
       icon: Search,
-      href: "#seo"
+      href: "#seo",
     },
     {
-      name: "AEO Enhancement", 
+      name: "AEO Enhancement",
       description: "Answer Engine Optimization for voice search",
       icon: Target,
-      href: "#aeo"
+      href: "#aeo",
     },
     {
       name: "GEO Targeting",
       description: "Geographic optimization for local markets",
       icon: Globe,
-      href: "#geo"
-    }
+      href: "#geo",
+    },
   ];
 
   return (
@@ -59,7 +59,7 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <div className="relative group">
-              <button 
+              <button
                 className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
                 onMouseEnter={() => setIsProductsOpen(true)}
                 onMouseLeave={() => setIsProductsOpen(false)}
@@ -67,15 +67,15 @@ export default function Header() {
                 Products
                 <ChevronDown className="w-4 h-4" />
               </button>
-              
+
               {isProductsOpen && (
-                <div 
+                <div
                   className="absolute top-full left-0 mt-2 w-80 bg-card border rounded-lg shadow-lg p-4 space-y-3"
                   onMouseEnter={() => setIsProductsOpen(true)}
                   onMouseLeave={() => setIsProductsOpen(false)}
                 >
                   {products.map((product, index) => (
-                    <Link 
+                    <Link
                       key={index}
                       href={product.href}
                       className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
@@ -84,8 +84,12 @@ export default function Header() {
                         <product.icon className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{product.name}</div>
-                        <div className="text-xs text-muted-foreground">{product.description}</div>
+                        <div className="font-medium text-sm">
+                          {product.name}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {product.description}
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -93,19 +97,31 @@ export default function Header() {
               )}
             </div>
 
-            <Link href="#features" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link
+              href="#features"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Features
             </Link>
-            
-            <Link href="#pricing" className="text-sm font-medium hover:text-primary transition-colors">
+
+            <Link
+              href="#pricing"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Pricing
             </Link>
-            
-            <Link href="#about" className="text-sm font-medium hover:text-primary transition-colors">
+
+            <Link
+              href="#about"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               About
             </Link>
-            
-            <Link href="#contact" className="text-sm font-medium hover:text-primary transition-colors">
+
+            <Link
+              href="#contact"
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               Contact
             </Link>
           </nav>
@@ -128,7 +144,11 @@ export default function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </Button>
         </div>
 
@@ -137,9 +157,11 @@ export default function Header() {
           <div className="md:hidden border-t bg-background">
             <nav className="p-4 space-y-4">
               <div className="space-y-2">
-                <div className="font-medium text-sm text-muted-foreground">Products</div>
+                <div className="font-medium text-sm text-muted-foreground">
+                  Products
+                </div>
                 {products.map((product, index) => (
-                  <Link 
+                  <Link
                     key={index}
                     href={product.href}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted transition-colors"
@@ -148,43 +170,45 @@ export default function Header() {
                     <product.icon className="w-5 h-5 text-primary" />
                     <div>
                       <div className="font-medium text-sm">{product.name}</div>
-                      <div className="text-xs text-muted-foreground">{product.description}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {product.description}
+                      </div>
                     </div>
                   </Link>
                 ))}
               </div>
-              
+
               <div className="space-y-2 pt-4 border-t">
-                <Link 
-                  href="#features" 
+                <Link
+                  href="#features"
                   className="block text-sm font-medium hover:text-primary transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Features
                 </Link>
-                <Link 
-                  href="#pricing" 
+                <Link
+                  href="#pricing"
                   className="block text-sm font-medium hover:text-primary transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Pricing
                 </Link>
-                <Link 
-                  href="#about" 
+                <Link
+                  href="#about"
                   className="block text-sm font-medium hover:text-primary transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About
                 </Link>
-                <Link 
-                  href="#contact" 
+                <Link
+                  href="#contact"
                   className="block text-sm font-medium hover:text-primary transition-colors py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact
                 </Link>
               </div>
-              
+
               <div className="flex flex-col gap-2 pt-4 border-t">
                 <Button variant="ghost" className="w-full justify-start">
                   Sign In

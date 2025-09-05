@@ -1,4 +1,8 @@
-import { SubscriptionPlan, UserSubscription, SubscriptionUsage } from './subscription-manager';
+import {
+  SubscriptionPlan,
+  UserSubscription,
+  SubscriptionUsage,
+} from "./subscription-manager";
 
 class SecureSubscriptionManager {
   private static instance: SecureSubscriptionManager;
@@ -24,15 +28,15 @@ class SecureSubscriptionManager {
     if (typeof window === "undefined") return;
 
     try {
-      const sessionToken = sessionStorage.getItem('auth_session');
+      const sessionToken = sessionStorage.getItem("auth_session");
       if (!sessionToken) {
         this.resetSubscription();
         return;
       }
 
-      const response = await fetch('/api/subscription', {
+      const response = await fetch("/api/subscription", {
         headers: {
-          'Authorization': `Bearer ${sessionToken}`,
+          Authorization: `Bearer ${sessionToken}`,
         },
       });
 
@@ -75,23 +79,23 @@ class SecureSubscriptionManager {
       throw new TypeError("Subscription management requires browser context");
     }
 
-    const sessionToken = sessionStorage.getItem('auth_session');
+    const sessionToken = sessionStorage.getItem("auth_session");
     if (!sessionToken) {
       throw new Error("Authentication required");
     }
 
-    const response = await fetch('/api/subscription', {
-      method: 'POST',
+    const response = await fetch("/api/subscription", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sessionToken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken}`,
       },
-      body: JSON.stringify({ planId, action: 'subscribe' }),
+      body: JSON.stringify({ planId, action: "subscribe" }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Subscription failed');
+      throw new Error(error.error || "Subscription failed");
     }
 
     const data = await response.json();
@@ -99,9 +103,9 @@ class SecureSubscriptionManager {
     this.isPremium = data.isPremium;
     this.hasActiveTrialFlag = data.hasActiveTrial;
     this.trialDaysRemaining = data.trialDaysRemaining;
-    
+
     await this.loadSubscription(); // Refresh usage data
-    
+
     return this.subscription!;
   }
 
@@ -110,23 +114,23 @@ class SecureSubscriptionManager {
       throw new TypeError("Subscription management requires browser context");
     }
 
-    const sessionToken = sessionStorage.getItem('auth_session');
+    const sessionToken = sessionStorage.getItem("auth_session");
     if (!sessionToken) {
       throw new Error("Authentication required");
     }
 
-    const response = await fetch('/api/subscription', {
-      method: 'POST',
+    const response = await fetch("/api/subscription", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${sessionToken}`,
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken}`,
       },
-      body: JSON.stringify({ planId: 'monthly', action: 'trial' }),
+      body: JSON.stringify({ planId: "monthly", action: "trial" }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Trial activation failed');
+      throw new Error(error.error || "Trial activation failed");
     }
 
     const data = await response.json();
@@ -134,9 +138,9 @@ class SecureSubscriptionManager {
     this.isPremium = data.isPremium;
     this.hasActiveTrialFlag = data.hasActiveTrial;
     this.trialDaysRemaining = data.trialDaysRemaining;
-    
+
     await this.loadSubscription(); // Refresh usage data
-    
+
     return this.subscription!;
   }
 
@@ -179,16 +183,18 @@ class SecureSubscriptionManager {
   }
 
   getUsage(): SubscriptionUsage {
-    return this.usage || {
-      storageUsed: 150 * 1024 * 1024,
-      storageLimit: 500 * 1024 * 1024,
-      photosScanned: 45,
-      scanLimit: 100,
-      aiTagsGenerated: 120,
-      aiTagLimit: 500,
-      vaultAccess: false,
-      advancedEditing: false,
-    };
+    return (
+      this.usage || {
+        storageUsed: 150 * 1024 * 1024,
+        storageLimit: 500 * 1024 * 1024,
+        photosScanned: 45,
+        scanLimit: 100,
+        aiTagsGenerated: 120,
+        aiTagLimit: 500,
+        vaultAccess: false,
+        advancedEditing: false,
+      }
+    );
   }
 
   getAvailablePlans(): SubscriptionPlan[] {
@@ -204,8 +210,8 @@ class SecureSubscriptionManager {
           "Advanced editing suite",
           "Secure vault with biometric auth",
           "Premium themes & customization",
-          "Priority customer support"
-        ]
+          "Priority customer support",
+        ],
       },
       {
         id: "annual",
@@ -220,10 +226,10 @@ class SecureSubscriptionManager {
           "Advanced AI emotion recognition",
           "Private sharing links",
           "Custom AI model training",
-          "Early access to new features"
+          "Early access to new features",
         ],
         popular: true,
-        highlighted: true
+        highlighted: true,
       },
       {
         id: "lifetime",
@@ -237,9 +243,9 @@ class SecureSubscriptionManager {
           "All future updates included",
           "Exclusive premium themes",
           "VIP customer support",
-          "Special lifetime-only features"
-        ]
-      }
+          "Special lifetime-only features",
+        ],
+      },
     ];
   }
 
@@ -277,7 +283,7 @@ class SecureSubscriptionManager {
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
     if (bytes === 0) return "0 Bytes";
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
   formatDate(date: Date): string {
@@ -298,13 +304,16 @@ class SecureSubscriptionManager {
 }
 
 // Export singleton instance
-export const secureSubscriptionManager = SecureSubscriptionManager.getInstance();
+export const secureSubscriptionManager =
+  SecureSubscriptionManager.getInstance();
 
 // React hook for secure subscription management
 import { useState, useEffect } from "react";
 
 export function useSecureSubscription() {
-  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
+  const [subscription, setSubscription] = useState<UserSubscription | null>(
+    null,
+  );
   const [isPremium, setIsPremium] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -327,7 +336,7 @@ export function useSecureSubscription() {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
@@ -350,12 +359,16 @@ export function useSecureSubscription() {
 
   const cancelSubscription = async () => {
     await secureSubscriptionManager.cancelSubscription();
-    setSubscription(prev => prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null);
+    setSubscription((prev) =>
+      prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null,
+    );
   };
 
   const reactivateSubscription = async () => {
     await secureSubscriptionManager.reactivateSubscription();
-    setSubscription(prev => prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null);
+    setSubscription((prev) =>
+      prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null,
+    );
   };
 
   const usage = secureSubscriptionManager.getUsage();
@@ -374,8 +387,14 @@ export function useSecureSubscription() {
     reactivateSubscription,
     canStartTrial: secureSubscriptionManager.canStartTrial(),
     hasActiveTrial: secureSubscriptionManager.hasActiveTrial(),
-    formatStorage: secureSubscriptionManager.formatStorage.bind(secureSubscriptionManager),
-    formatDate: secureSubscriptionManager.formatDate.bind(secureSubscriptionManager),
-    refreshSubscription: secureSubscriptionManager.refreshSubscription.bind(secureSubscriptionManager),
+    formatStorage: secureSubscriptionManager.formatStorage.bind(
+      secureSubscriptionManager,
+    ),
+    formatDate: secureSubscriptionManager.formatDate.bind(
+      secureSubscriptionManager,
+    ),
+    refreshSubscription: secureSubscriptionManager.refreshSubscription.bind(
+      secureSubscriptionManager,
+    ),
   };
 }

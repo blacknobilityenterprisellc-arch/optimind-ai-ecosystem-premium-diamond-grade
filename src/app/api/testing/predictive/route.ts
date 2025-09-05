@@ -1,17 +1,17 @@
 /**
  * OptiTest AI - Predictive Quality Assurance Analytics API
  * Diamond-Grade Testing Ecosystem
- * 
+ *
  * API endpoint for AI-powered predictive quality analytics, failure prediction,
  * and comprehensive quality trend analysis with machine learning insights.
- * 
+ *
  * @author: J.P.H./Jocely P. Honore - CEO/Owner/Lead Visionary/Vibe Coder
  * @version: 1.0.0
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
+import { NextRequest, NextResponse } from "next/server";
+import ZAI from "z-ai-web-dev-sdk";
 
 interface PredictiveAnalyticsRequest {
   historicalData: {
@@ -26,15 +26,15 @@ interface PredictiveAnalyticsRequest {
     activeDevelopers: number;
     deploymentFrequency: string;
   };
-  predictionHorizon: 'short' | 'medium' | 'long';
-  analysisDepth: 'basic' | 'comprehensive' | 'deep';
+  predictionHorizon: "short" | "medium" | "long";
+  analysisDepth: "basic" | "comprehensive" | "deep";
 }
 
 interface PredictiveAnalyticsResponse {
-  status: 'success' | 'error' | 'partial';
+  status: "success" | "error" | "partial";
   qualityForecast: {
     overallScore: number;
-    trend: 'improving' | 'stable' | 'declining';
+    trend: "improving" | "stable" | "declining";
     confidence: number;
     timeframe: string;
   };
@@ -73,20 +73,27 @@ interface PredictiveAnalyticsResponse {
 export async function POST(request: NextRequest) {
   try {
     const body: PredictiveAnalyticsRequest = await request.json();
-    
+
     // Validate input
-    if (!body.historicalData || !body.currentContext || !body.predictionHorizon) {
+    if (
+      !body.historicalData ||
+      !body.currentContext ||
+      !body.predictionHorizon
+    ) {
       return NextResponse.json(
-        { error: 'Missing required fields: historicalData, currentContext, predictionHorizon' },
-        { status: 400 }
+        {
+          error:
+            "Missing required fields: historicalData, currentContext, predictionHorizon",
+        },
+        { status: 400 },
       );
     }
 
     const startTime = Date.now();
-    
+
     // Initialize ZAI SDK
     const zai = await ZAI.create();
-    
+
     // Generate predictive analytics prompt
     const analyticsPrompt = `
 You are the OptiTest AI Controller, specializing in predictive quality assurance analytics.
@@ -135,62 +142,63 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: 'system',
-          content: 'You are the OptiTest AI Controller, an expert in predictive quality assurance analytics, machine learning, and statistical analysis with deep knowledge of software quality metrics and trend forecasting.'
+          role: "system",
+          content:
+            "You are the OptiTest AI Controller, an expert in predictive quality assurance analytics, machine learning, and statistical analysis with deep knowledge of software quality metrics and trend forecasting.",
         },
         {
-          role: 'user',
-          content: analyticsPrompt
-        }
+          role: "user",
+          content: analyticsPrompt,
+        },
       ],
       temperature: 0.1,
-      max_tokens: 8192
+      max_tokens: 8192,
     });
 
     const analysisTime = Date.now() - startTime;
-    
+
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
     } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
+      console.error("Failed to parse AI response:", parseError);
       aiResponse = {
         qualityForecast: {
           overallScore: 75,
-          trend: 'stable',
+          trend: "stable",
           confidence: 60,
-          timeframe: '30 days'
+          timeframe: "30 days",
         },
         failurePredictions: {
           likelihood: 25,
-          highRiskAreas: ['AI prediction system'],
+          highRiskAreas: ["AI prediction system"],
           predictedFailures: 2,
-          riskFactors: ['System complexity'],
-          mitigationStrategies: ['Manual review required']
+          riskFactors: ["System complexity"],
+          mitigationStrategies: ["Manual review required"],
         },
         qualityTrends: {
           coverageTrend: [75, 76, 77, 78, 79],
           reliabilityTrend: [85, 86, 87, 88, 89],
           performanceTrend: [70, 71, 72, 73, 74],
-          securityTrend: [80, 81, 82, 83, 84]
+          securityTrend: [80, 81, 82, 83, 84],
         },
         recommendations: {
-          immediate: ['Review AI prediction system'],
-          shortTerm: ['Improve data quality'],
-          longTerm: ['Enhance ML models']
+          immediate: ["Review AI prediction system"],
+          shortTerm: ["Improve data quality"],
+          longTerm: ["Enhance ML models"],
         },
         insights: {
-          keyFindings: ['System needs optimization'],
-          opportunities: ['ML improvement potential'],
-          warnings: ['Prediction accuracy limited'],
-          bestPractices: ['Regular system reviews']
-        }
+          keyFindings: ["System needs optimization"],
+          opportunities: ["ML improvement potential"],
+          warnings: ["Prediction accuracy limited"],
+          bestPractices: ["Regular system reviews"],
+        },
       };
     }
 
     const response: PredictiveAnalyticsResponse = {
-      status: 'success',
+      status: "success",
       qualityForecast: aiResponse.qualityForecast,
       failurePredictions: aiResponse.failurePredictions,
       qualityTrends: aiResponse.qualityTrends,
@@ -198,46 +206,45 @@ Respond with a JSON structure containing:
       insights: aiResponse.insights,
       metrics: {
         ...aiResponse.metrics,
-        analysisTime
-      }
+        analysisTime,
+      },
     };
 
     return NextResponse.json(response);
-
   } catch (error) {
-    console.error('Predictive analytics error:', error);
+    console.error("Predictive analytics error:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to perform predictive analytics',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        status: 'error'
+      {
+        error: "Failed to perform predictive analytics",
+        details: error instanceof Error ? error.message : "Unknown error",
+        status: "error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: 'OptiTest AI Predictive Quality Assurance Analytics API',
-    version: '1.0.0',
+    message: "OptiTest AI Predictive Quality Assurance Analytics API",
+    version: "1.0.0",
     endpoints: {
-      'POST /api/testing/predictive': 'Perform predictive quality analytics',
-      'GET /api/testing/predictive': 'Get API status and capabilities'
+      "POST /api/testing/predictive": "Perform predictive quality analytics",
+      "GET /api/testing/predictive": "Get API status and capabilities",
     },
     capabilities: [
-      'Quality forecasting and trend analysis',
-      'Failure prediction and risk assessment',
-      'Machine learning-powered insights',
-      'Multi-dimensional quality metrics',
-      'Strategic improvement recommendations',
-      'Advanced statistical analysis'
+      "Quality forecasting and trend analysis",
+      "Failure prediction and risk assessment",
+      "Machine learning-powered insights",
+      "Multi-dimensional quality metrics",
+      "Strategic improvement recommendations",
+      "Advanced statistical analysis",
     ],
     features: {
-      predictionHorizons: ['short', 'medium', 'long'],
-      analysisDepths: ['basic', 'comprehensive', 'deep'],
-      dataSources: ['historical', 'real-time', 'contextual'],
-      outputTypes: ['forecasts', 'predictions', 'recommendations', 'insights']
-    }
+      predictionHorizons: ["short", "medium", "long"],
+      analysisDepths: ["basic", "comprehensive", "deep"],
+      dataSources: ["historical", "real-time", "contextual"],
+      outputTypes: ["forecasts", "predictions", "recommendations", "insights"],
+    },
   });
 }

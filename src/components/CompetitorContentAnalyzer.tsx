@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { 
+import {
   Search,
   Target,
   Users,
@@ -16,10 +16,16 @@ import {
   Zap,
   Award,
   FileText,
-  ArrowRight
+  ArrowRight,
 } from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -44,10 +50,15 @@ interface CompetitorContent {
 
 interface ContentGap {
   id: string;
-  type: 'missing_topic' | 'content_depth' | 'format_opportunity' | 'keyword_gap' | 'multimedia_gap';
+  type:
+    | "missing_topic"
+    | "content_depth"
+    | "format_opportunity"
+    | "keyword_gap"
+    | "multimedia_gap";
   title: string;
   description: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   competitorCount: number;
   estimatedImpact: number;
 }
@@ -55,7 +66,7 @@ interface ContentGap {
 interface StrengthWeakness {
   id: string;
   competitor: string;
-  type: 'strength' | 'weakness';
+  type: "strength" | "weakness";
   category: string;
   description: string;
   impact: number;
@@ -86,7 +97,7 @@ export default function CompetitorContentAnalyzer() {
       engagementScore: 78,
       backlinks: 245,
       socialShares: 1200,
-      ranking: 1
+      ranking: 1,
     },
     {
       id: "2",
@@ -102,8 +113,8 @@ export default function CompetitorContentAnalyzer() {
       engagementScore: 72,
       backlinks: 189,
       socialShares: 890,
-      ranking: 3
-    }
+      ranking: 3,
+    },
   ];
 
   const mockContentGaps: ContentGap[] = [
@@ -111,10 +122,11 @@ export default function CompetitorContentAnalyzer() {
       id: "1",
       type: "missing_topic",
       title: "AI Assistant Optimization",
-      description: "None of the competitors cover optimization for AI assistants like ChatGPT and Claude",
+      description:
+        "None of the competitors cover optimization for AI assistants like ChatGPT and Claude",
       priority: "high",
       competitorCount: 0,
-      estimatedImpact: 90
+      estimatedImpact: 90,
     },
     {
       id: "2",
@@ -123,7 +135,7 @@ export default function CompetitorContentAnalyzer() {
       description: "Competitors lack real-world case studies and examples",
       priority: "medium",
       competitorCount: 1,
-      estimatedImpact: 75
+      estimatedImpact: 75,
     },
     {
       id: "3",
@@ -132,17 +144,18 @@ export default function CompetitorContentAnalyzer() {
       description: "Missing video tutorials and visual explanations",
       priority: "medium",
       competitorCount: 2,
-      estimatedImpact: 65
+      estimatedImpact: 65,
     },
     {
       id: "4",
       type: "keyword_gap",
       title: "Long-tail Voice Queries",
-      description: "Opportunity to target specific long-tail voice search keywords",
+      description:
+        "Opportunity to target specific long-tail voice search keywords",
       priority: "high",
       competitorCount: 1,
-      estimatedImpact: 85
-    }
+      estimatedImpact: 85,
+    },
   ];
 
   const mockStrengthsWeaknesses: StrengthWeakness[] = [
@@ -152,7 +165,7 @@ export default function CompetitorContentAnalyzer() {
       type: "strength",
       category: "Content Depth",
       description: "Comprehensive coverage with detailed examples",
-      impact: 85
+      impact: 85,
     },
     {
       id: "2",
@@ -160,7 +173,7 @@ export default function CompetitorContentAnalyzer() {
       type: "weakness",
       category: "Readability",
       description: "Technical jargon makes it hard for beginners",
-      impact: 60
+      impact: 60,
     },
     {
       id: "3",
@@ -168,7 +181,7 @@ export default function CompetitorContentAnalyzer() {
       type: "strength",
       category: "Structure",
       description: "Clear, well-organized content hierarchy",
-      impact: 80
+      impact: 80,
     },
     {
       id: "4",
@@ -176,14 +189,14 @@ export default function CompetitorContentAnalyzer() {
       type: "weakness",
       category: "Freshness",
       description: "Some statistics and examples are outdated",
-      impact: 70
-    }
+      impact: 70,
+    },
   ];
 
   const handleAnalyzeCompetitors = async () => {
-    const validUrls = competitorUrls.filter(url => url.trim() !== "");
+    const validUrls = competitorUrls.filter((url) => url.trim() !== "");
     if (validUrls.length === 0) return;
-    
+
     setIsAnalyzing(true);
     // Simulate API call
     setTimeout(() => {
@@ -195,8 +208,8 @@ export default function CompetitorContentAnalyzer() {
           averageContentScore: 85,
           averageSeoScore: 82,
           topOpportunities: 4,
-          contentGapsFound: 12
-        }
+          contentGapsFound: 12,
+        },
       });
       setIsAnalyzing(false);
     }, 3500);
@@ -218,21 +231,31 @@ export default function CompetitorContentAnalyzer() {
 
   const getGapIcon = (type: string) => {
     switch (type) {
-      case 'missing_topic': return <Target className="w-4 h-4 text-red-500" />;
-      case 'content_depth': return <FileText className="w-4 h-4 text-blue-500" />;
-      case 'format_opportunity': return <Eye className="w-4 h-4 text-purple-500" />;
-      case 'keyword_gap': return <Search className="w-4 h-4 text-green-500" />;
-      case 'multimedia_gap': return <Zap className="w-4 h-4 text-orange-500" />;
-      default: return <AlertTriangle className="w-4 h-4 text-gray-500" />;
+      case "missing_topic":
+        return <Target className="w-4 h-4 text-red-500" />;
+      case "content_depth":
+        return <FileText className="w-4 h-4 text-blue-500" />;
+      case "format_opportunity":
+        return <Eye className="w-4 h-4 text-purple-500" />;
+      case "keyword_gap":
+        return <Search className="w-4 h-4 text-green-500" />;
+      case "multimedia_gap":
+        return <Zap className="w-4 h-4 text-orange-500" />;
+      default:
+        return <AlertTriangle className="w-4 h-4 text-gray-500" />;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'text-red-600';
-      case 'medium': return 'text-yellow-600';
-      case 'low': return 'text-green-600';
-      default: return 'text-gray-600';
+      case "high":
+        return "text-red-600";
+      case "medium":
+        return "text-yellow-600";
+      case "low":
+        return "text-green-600";
+      default:
+        return "text-gray-600";
     }
   };
 
@@ -243,7 +266,8 @@ export default function CompetitorContentAnalyzer() {
         <div>
           <h3 className="text-2xl font-bold">Competitor Content Analyzer</h3>
           <p className="text-muted-foreground">
-            Analyze competitor content to identify gaps, opportunities, and improvement areas
+            Analyze competitor content to identify gaps, opportunities, and
+            improvement areas
           </p>
         </div>
       </div>
@@ -256,7 +280,8 @@ export default function CompetitorContentAnalyzer() {
             Competitor URLs
           </CardTitle>
           <CardDescription>
-            Enter competitor URLs to analyze their content strategy and identify opportunities
+            Enter competitor URLs to analyze their content strategy and identify
+            opportunities
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -281,7 +306,7 @@ export default function CompetitorContentAnalyzer() {
               </div>
             ))}
           </div>
-          
+
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -292,7 +317,10 @@ export default function CompetitorContentAnalyzer() {
             </Button>
             <Button
               onClick={handleAnalyzeCompetitors}
-              disabled={competitorUrls.filter(url => url.trim() !== "").length === 0 || isAnalyzing}
+              disabled={
+                competitorUrls.filter((url) => url.trim() !== "").length ===
+                  0 || isAnalyzing
+              }
               className="flex-1"
             >
               {isAnalyzing ? (
@@ -324,27 +352,47 @@ export default function CompetitorContentAnalyzer() {
             <CardContent>
               <div className="grid md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{analysisResults.summary.averageContentScore}%</div>
-                  <div className="text-sm text-muted-foreground">Avg Content Score</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {analysisResults.summary.averageContentScore}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Avg Content Score
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">{analysisResults.summary.averageSeoScore}%</div>
-                  <div className="text-sm text-muted-foreground">Avg SEO Score</div>
+                  <div className="text-2xl font-bold text-green-600">
+                    {analysisResults.summary.averageSeoScore}%
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Avg SEO Score
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{analysisResults.summary.topOpportunities}</div>
-                  <div className="text-sm text-muted-foreground">Top Opportunities</div>
+                  <div className="text-2xl font-bold text-purple-600">
+                    {analysisResults.summary.topOpportunities}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Top Opportunities
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">{analysisResults.summary.contentGapsFound}</div>
-                  <div className="text-sm text-muted-foreground">Content Gaps Found</div>
+                  <div className="text-2xl font-bold text-orange-600">
+                    {analysisResults.summary.contentGapsFound}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Content Gaps Found
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Main Analysis Tabs */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="competitors">Competitors</TabsTrigger>
               <TabsTrigger value="gaps">Content Gaps</TabsTrigger>
@@ -353,63 +401,103 @@ export default function CompetitorContentAnalyzer() {
 
             <TabsContent value="competitors" className="space-y-6">
               <div className="space-y-4">
-                {analysisResults.competitors.map((competitor: CompetitorContent) => (
-                  <Card key={competitor.id} className="hover:shadow-md transition-shadow">
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <h4 className="font-semibold mb-1">{competitor.title}</h4>
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                            <span className="flex items-center gap-1">
-                              <Globe className="w-4 h-4" />
-                              {competitor.domain}
-                            </span>
-                            <span>Rank: #{competitor.ranking}</span>
-                            <span>{competitor.wordCount} words</span>
-                            <span>{new Date(competitor.publishDate).toLocaleDateString()}</span>
+                {analysisResults.competitors.map(
+                  (competitor: CompetitorContent) => (
+                    <Card
+                      key={competitor.id}
+                      className="hover:shadow-md transition-shadow"
+                    >
+                      <CardContent className="pt-4">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <h4 className="font-semibold mb-1">
+                              {competitor.title}
+                            </h4>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                              <span className="flex items-center gap-1">
+                                <Globe className="w-4 h-4" />
+                                {competitor.domain}
+                              </span>
+                              <span>Rank: #{competitor.ranking}</span>
+                              <span>{competitor.wordCount} words</span>
+                              <span>
+                                {new Date(
+                                  competitor.publishDate,
+                                ).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <Badge variant="outline" className="mb-3">
+                              {competitor.backlinks} backlinks •{" "}
+                              {competitor.socialShares} shares
+                            </Badge>
                           </div>
-                          <Badge variant="outline" className="mb-3">
-                            {competitor.backlinks} backlinks • {competitor.socialShares} shares
-                          </Badge>
+                          <Button variant="outline" size="sm">
+                            View Content
+                          </Button>
                         </div>
-                        <Button variant="outline" size="sm">
-                          View Content
-                        </Button>
-                      </div>
 
-                      <div className="grid grid-cols-4 gap-4">
-                        <div>
-                          <div className="text-sm text-muted-foreground">Content Score</div>
-                          <div className="flex items-center gap-2">
-                            <Progress value={competitor.contentScore} className="flex-1 h-2" />
-                            <span className="text-sm font-medium">{competitor.contentScore}%</span>
+                        <div className="grid grid-cols-4 gap-4">
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              Content Score
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={competitor.contentScore}
+                                className="flex-1 h-2"
+                              />
+                              <span className="text-sm font-medium">
+                                {competitor.contentScore}%
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              SEO Score
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={competitor.seoScore}
+                                className="flex-1 h-2"
+                              />
+                              <span className="text-sm font-medium">
+                                {competitor.seoScore}%
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              Readability
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={competitor.readabilityScore}
+                                className="flex-1 h-2"
+                              />
+                              <span className="text-sm font-medium">
+                                {competitor.readabilityScore}%
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-sm text-muted-foreground">
+                              Engagement
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Progress
+                                value={competitor.engagementScore}
+                                className="flex-1 h-2"
+                              />
+                              <span className="text-sm font-medium">
+                                {competitor.engagementScore}%
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">SEO Score</div>
-                          <div className="flex items-center gap-2">
-                            <Progress value={competitor.seoScore} className="flex-1 h-2" />
-                            <span className="text-sm font-medium">{competitor.seoScore}%</span>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Readability</div>
-                          <div className="flex items-center gap-2">
-                            <Progress value={competitor.readabilityScore} className="flex-1 h-2" />
-                            <span className="text-sm font-medium">{competitor.readabilityScore}%</span>
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-sm text-muted-foreground">Engagement</div>
-                          <div className="flex items-center gap-2">
-                            <Progress value={competitor.engagementScore} className="flex-1 h-2" />
-                            <span className="text-sm font-medium">{competitor.engagementScore}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  ),
+                )}
               </div>
             </TabsContent>
 
@@ -427,12 +515,21 @@ export default function CompetitorContentAnalyzer() {
                 <CardContent>
                   <div className="space-y-4">
                     {analysisResults.gaps.map((gap: ContentGap) => (
-                      <Card key={gap.id} className="border-l-4 border-l-green-500">
+                      <Card
+                        key={gap.id}
+                        className="border-l-4 border-l-green-500"
+                      >
                         <CardContent className="pt-4">
                           <div className="flex items-start justify-between mb-3">
                             <div className="flex items-center gap-2">
                               {getGapIcon(gap.type)}
-                              <Badge variant={gap.priority === 'high' ? 'destructive' : 'secondary'}>
+                              <Badge
+                                variant={
+                                  gap.priority === "high"
+                                    ? "destructive"
+                                    : "secondary"
+                                }
+                              >
                                 {gap.priority}
                               </Badge>
                             </div>
@@ -440,16 +537,19 @@ export default function CompetitorContentAnalyzer() {
                               Impact: {gap.estimatedImpact}%
                             </div>
                           </div>
-                          
+
                           <h4 className="font-semibold mb-2">{gap.title}</h4>
-                          <p className="text-sm text-muted-foreground mb-3">{gap.description}</p>
-                          
+                          <p className="text-sm text-muted-foreground mb-3">
+                            {gap.description}
+                          </p>
+
                           <div className="flex items-center justify-between">
                             <div className="text-sm text-muted-foreground">
                               {gap.competitorCount} competitors cover this
                             </div>
                             <Button variant="outline" size="sm">
-                              Create Content <ArrowRight className="w-4 h-4 ml-1" />
+                              Create Content{" "}
+                              <ArrowRight className="w-4 h-4 ml-1" />
                             </Button>
                           </div>
                         </CardContent>
@@ -471,9 +571,14 @@ export default function CompetitorContentAnalyzer() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {analysisResults.analysis
-                      .filter((item: StrengthWeakness) => item.type === 'strength')
+                      .filter(
+                        (item: StrengthWeakness) => item.type === "strength",
+                      )
                       .map((item: StrengthWeakness) => (
-                        <div key={item.id} className="p-3 bg-green-50 rounded-lg">
+                        <div
+                          key={item.id}
+                          className="p-3 bg-green-50 rounded-lg"
+                        >
                           <div className="flex items-center justify-between mb-2">
                             <Badge variant="outline" className="text-green-700">
                               {item.category}
@@ -482,7 +587,9 @@ export default function CompetitorContentAnalyzer() {
                               {item.competitor}
                             </span>
                           </div>
-                          <p className="text-sm text-green-800">{item.description}</p>
+                          <p className="text-sm text-green-800">
+                            {item.description}
+                          </p>
                           <div className="text-xs text-green-600 mt-1">
                             Impact: {item.impact}%
                           </div>
@@ -500,7 +607,9 @@ export default function CompetitorContentAnalyzer() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {analysisResults.analysis
-                      .filter((item: StrengthWeakness) => item.type === 'weakness')
+                      .filter(
+                        (item: StrengthWeakness) => item.type === "weakness",
+                      )
                       .map((item: StrengthWeakness) => (
                         <div key={item.id} className="p-3 bg-red-50 rounded-lg">
                           <div className="flex items-center justify-between mb-2">
@@ -511,7 +620,9 @@ export default function CompetitorContentAnalyzer() {
                               {item.competitor}
                             </span>
                           </div>
-                          <p className="text-sm text-red-800">{item.description}</p>
+                          <p className="text-sm text-red-800">
+                            {item.description}
+                          </p>
                           <div className="text-xs text-red-600 mt-1">
                             Impact: {item.impact}%
                           </div>
@@ -535,25 +646,33 @@ export default function CompetitorContentAnalyzer() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 p-2 bg-blue-50 rounded">
                           <Zap className="w-4 h-4 text-blue-500" />
-                          <span className="text-sm">Target AI assistant optimization gap</span>
+                          <span className="text-sm">
+                            Target AI assistant optimization gap
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
                           <TrendingUp className="w-4 h-4 text-green-500" />
-                          <span className="text-sm">Create comprehensive case studies</span>
+                          <span className="text-sm">
+                            Create comprehensive case studies
+                          </span>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <h4 className="font-semibold">Long-term Strategy</h4>
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 p-2 bg-purple-50 rounded">
                           <Eye className="w-4 h-4 text-purple-500" />
-                          <span className="text-sm">Develop video content series</span>
+                          <span className="text-sm">
+                            Develop video content series
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 p-2 bg-orange-50 rounded">
                           <FileText className="w-4 h-4 text-orange-500" />
-                          <span className="text-sm">Build out long-tail keyword strategy</span>
+                          <span className="text-sm">
+                            Build out long-tail keyword strategy
+                          </span>
                         </div>
                       </div>
                     </div>

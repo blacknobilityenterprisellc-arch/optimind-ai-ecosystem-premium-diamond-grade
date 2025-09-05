@@ -1,19 +1,19 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { 
-  X, 
-  Shield, 
-  Fingerprint, 
-  Eye, 
-  EyeOff, 
+import {
+  X,
+  Shield,
+  Fingerprint,
+  Eye,
+  EyeOff,
   Lock,
   Unlock,
   Key,
   Cloud,
   CheckCircle,
   AlertCircle,
-  Loader2
+  Loader2,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -36,16 +36,22 @@ interface EncryptedVaultProps {
   isPremium?: boolean;
 }
 
-export function EncryptedVault({ isOpen, onClose, isPremium = false }: EncryptedVaultProps) {
+export function EncryptedVault({
+  isOpen,
+  onClose,
+  isPremium = false,
+}: EncryptedVaultProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showVault, setShowVault] = useState(false);
-  const [authMethod, setAuthMethod] = useState<"biometric" | "pin">("biometric");
+  const [authMethod, setAuthMethod] = useState<"biometric" | "pin">(
+    "biometric",
+  );
   const [pin, setPin] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [vaultPhotos, setVaultPhotos] = useState<VaultPhoto[]>([]);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
 
@@ -59,24 +65,24 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "2.4 MB",
-          addedDate: "2025-01-15"
+          addedDate: "2025-01-15",
         },
         {
-          id: "2", 
+          id: "2",
           name: "birthday_party.jpg",
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "3.1 MB",
-          addedDate: "2025-01-10"
+          addedDate: "2025-01-10",
         },
         {
           id: "3",
-          name: "private_moment.jpg", 
+          name: "private_moment.jpg",
           url: "/api/placeholder/200/200",
           isEncrypted: true,
           size: "1.8 MB",
-          addedDate: "2025-01-05"
-        }
+          addedDate: "2025-01-05",
+        },
       ]);
     }
   }, [showVault]);
@@ -93,7 +99,7 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       // Outer ring
       ctx.beginPath();
       ctx.arc(100, 100, 80, 0, 2 * Math.PI);
@@ -130,13 +136,13 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
 
   const handleBiometricAuth = async () => {
     setIsScanning(true);
-    
+
     // Simulate biometric scanning
     setTimeout(() => {
       setIsScanning(false);
       setIsAuthenticated(true);
       setShowVault(true);
-      
+
       // Simulate vault unlock
       setTimeout(() => {
         setIsUnlocked(true);
@@ -201,19 +207,22 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                   <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center">
                     <Shield className="w-10 h-10 text-white" />
                   </div>
-                  
+
                   <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
                     Encrypted Vault
                   </h2>
-                  
+
                   <p className="text-gray-400 mb-6">
-                    Your private photos are secured with military-grade encryption
+                    Your private photos are secured with military-grade
+                    encryption
                   </p>
 
                   {!isPremium && (
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-yellow-500/20 border border-yellow-500/50 rounded-full mb-6">
                       <PremiumBadge size="sm" text="PRO" />
-                      <span className="text-yellow-400 text-sm">Premium Feature</span>
+                      <span className="text-yellow-400 text-sm">
+                        Premium Feature
+                      </span>
                     </div>
                   )}
                 </div>
@@ -258,9 +267,11 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                         </div>
                       )}
                     </div>
-                    
+
                     <p className="text-gray-400 mb-6">
-                      {isScanning ? "Scanning fingerprint..." : "Place your finger on the sensor"}
+                      {isScanning
+                        ? "Scanning fingerprint..."
+                        : "Place your finger on the sensor"}
                     </p>
 
                     <Button
@@ -268,7 +279,9 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                       disabled={isScanning || !isPremium}
                       className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600"
                     >
-                      {isScanning ? "Scanning..." : "Authenticate with Biometric"}
+                      {isScanning
+                        ? "Scanning..."
+                        : "Authenticate with Biometric"}
                     </Button>
 
                     {!isPremium && (
@@ -294,7 +307,9 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                           className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center"
                         >
                           {showPassword ? (
-                            <span className="text-white text-xl">{pin[index] || ""}</span>
+                            <span className="text-white text-xl">
+                              {pin[index] || ""}
+                            </span>
                           ) : (
                             <div
                               className={`w-3 h-3 rounded-full ${
@@ -313,29 +328,35 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                       onClick={() => setShowPassword(!showPassword)}
                       className="mb-6 text-gray-400 hover:text-white"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showPassword ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
                       {showPassword ? "Hide PIN" : "Show PIN"}
                     </Button>
 
                     {/* PIN Pad */}
                     <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto mb-6">
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "delete"].map((num) => (
-                        <Button
-                          key={num}
-                          variant="outline"
-                          onClick={() => {
-                            if (num === "delete") {
-                              handlePinDelete();
-                            } else if (num !== "") {
-                              handlePinInput(num.toString());
-                            }
-                          }}
-                          disabled={num === ""}
-                          className="h-12 bg-gray-800 border-gray-700 hover:bg-gray-700"
-                        >
-                          {num === "delete" ? <X className="w-4 h-4" /> : num}
-                        </Button>
-                      ))}
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "delete"].map(
+                        (num) => (
+                          <Button
+                            key={num}
+                            variant="outline"
+                            onClick={() => {
+                              if (num === "delete") {
+                                handlePinDelete();
+                              } else if (num !== "") {
+                                handlePinInput(num.toString());
+                              }
+                            }}
+                            disabled={num === ""}
+                            className="h-12 bg-gray-800 border-gray-700 hover:bg-gray-700"
+                          >
+                            {num === "delete" ? <X className="w-4 h-4" /> : num}
+                          </Button>
+                        ),
+                      )}
                     </div>
 
                     <Button
@@ -355,16 +376,22 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
-                      {isUnlocked ? <Unlock className="w-6 h-6 text-white" /> : <Lock className="w-6 h-6 text-white" />}
+                      {isUnlocked ? (
+                        <Unlock className="w-6 h-6 text-white" />
+                      ) : (
+                        <Lock className="w-6 h-6 text-white" />
+                      )}
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold">Secure Vault</h2>
                       <p className="text-gray-400">
-                        {isUnlocked ? "Unlocked and accessible" : "Decrypting contents..."}
+                        {isUnlocked
+                          ? "Unlocked and accessible"
+                          : "Decrypting contents..."}
                       </p>
                     </div>
                   </div>
-                  
+
                   <Button
                     onClick={lockVault}
                     variant="outline"
@@ -380,32 +407,46 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                   <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <CheckCircle className="w-5 h-5 text-green-400" />
-                      <span className="text-green-400 font-medium">End-to-End Encrypted</span>
+                      <span className="text-green-400 font-medium">
+                        End-to-End Encrypted
+                      </span>
                     </div>
-                    <p className="text-sm text-gray-400">Military-grade AES-256 encryption</p>
+                    <p className="text-sm text-gray-400">
+                      Military-grade AES-256 encryption
+                    </p>
                   </div>
 
                   <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Shield className="w-5 h-5 text-blue-400" />
-                      <span className="text-blue-400 font-medium">Biometric Protected</span>
+                      <span className="text-blue-400 font-medium">
+                        Biometric Protected
+                      </span>
                     </div>
-                    <p className="text-sm text-gray-400">Multi-factor authentication</p>
+                    <p className="text-sm text-gray-400">
+                      Multi-factor authentication
+                    </p>
                   </div>
 
                   <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Cloud className="w-5 h-5 text-purple-400" />
-                      <span className="text-purple-400 font-medium">Cloud Backup</span>
+                      <span className="text-purple-400 font-medium">
+                        Cloud Backup
+                      </span>
                     </div>
-                    <p className="text-sm text-gray-400">Secure cloud synchronization</p>
+                    <p className="text-sm text-gray-400">
+                      Secure cloud synchronization
+                    </p>
                   </div>
                 </div>
 
                 {/* Vault Photos */}
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Protected Photos ({vaultPhotos.length})</h3>
-                  
+                  <h3 className="text-lg font-semibold mb-4">
+                    Protected Photos ({vaultPhotos.length})
+                  </h3>
+
                   {vaultPhotos.length === 0 ? (
                     <div className="text-center py-12 text-gray-400">
                       <Shield className="w-16 h-16 mx-auto mb-4 opacity-50" />
@@ -423,19 +464,26 @@ export function EncryptedVault({ isOpen, onClose, isPremium = false }: Encrypted
                               className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                            
+
                             {/* Encryption indicator */}
                             <div className="absolute top-2 right-2">
-                              <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/50">
+                              <Badge
+                                variant="secondary"
+                                className="bg-green-500/20 text-green-400 border-green-500/50"
+                              >
                                 <Lock className="w-3 h-3 mr-1" />
                                 Encrypted
                               </Badge>
                             </div>
                           </div>
-                          
+
                           <div className="mt-2">
-                            <p className="text-sm font-medium truncate">{photo.name}</p>
-                            <p className="text-xs text-gray-400">{photo.size} • {photo.addedDate}</p>
+                            <p className="text-sm font-medium truncate">
+                              {photo.name}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {photo.size} • {photo.addedDate}
+                            </p>
                           </div>
                         </div>
                       ))}

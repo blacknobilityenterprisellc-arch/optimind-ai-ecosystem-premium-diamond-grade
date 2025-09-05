@@ -1,18 +1,18 @@
 /**
  * OptiMind AI Ecosystem - Main Dashboard
  * Premium Diamond Grade AI Services Platform
- * 
+ *
  * Enterprise-grade dashboard with modular architecture,
  * optimized performance, and clean code principles.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import LoadingState from "@/components/dashboard/LoadingState";
@@ -21,13 +21,8 @@ import { useDashboardData } from "@/components/dashboard/DashboardDataHooks";
 import { aiCapabilities } from "@/components/dashboard/AICapabilitiesData";
 
 const Dashboard: React.FC = () => {
-  const {
-    metrics,
-    alerts,
-    activities,
-    isConnected,
-    isLoading
-  } = useDashboardData();
+  const { metrics, alerts, activities, isConnected, isLoading } =
+    useDashboardData();
 
   if (isLoading) {
     return <LoadingState />;

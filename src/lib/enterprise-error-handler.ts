@@ -1,9 +1,9 @@
 /**
  * Premium World-Class Professional-Grade Enterprise Diamond-Grade Error Handler
- * 
+ *
  * This module implements comprehensive error handling and monitoring strategies for enterprise applications,
  * ensuring maximum reliability, debugging capabilities, and user experience.
- * 
+ *
  * Features:
  * - Centralized error handling with classification
  * - Real-time error monitoring and alerting
@@ -13,44 +13,44 @@
  * - Security-sensitive error handling
  * - Integration with monitoring services
  * - Automated error recovery mechanisms
- * 
+ *
  * @author: Enterprise Reliability Team
  * @version: 1.0.0
  * @compliance: Enterprise Reliability Standards
  */
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 // Error classification and severity levels
 export enum ErrorSeverity {
-  CRITICAL = 'CRITICAL',      // System-down, data loss, security breach
-  HIGH = 'HIGH',            // Major functionality impacted
-  MEDIUM = 'MEDIUM',        // Partial functionality impacted
-  LOW = 'LOW',              // Minor issue, workaround available
-  INFO = 'INFO'             // Informational only
+  CRITICAL = "CRITICAL", // System-down, data loss, security breach
+  HIGH = "HIGH", // Major functionality impacted
+  MEDIUM = "MEDIUM", // Partial functionality impacted
+  LOW = "LOW", // Minor issue, workaround available
+  INFO = "INFO", // Informational only
 }
 
 export enum ErrorCategory {
-  SECURITY = 'SECURITY',           // Security-related errors
-  DATABASE = 'DATABASE',           // Database connection/query errors
-  API = 'API',                     // External API failures
-  NETWORK = 'NETWORK',             // Network connectivity issues
-  VALIDATION = 'VALIDATION',       // Input validation failures
-  AUTHENTICATION = 'AUTHENTICATION', // Auth/authorization issues
-  PERFORMANCE = 'PERFORMANCE',     // Performance-related errors
-  BUSINESS_LOGIC = 'BUSINESS_LOGIC', // Business rule violations
-  EXTERNAL_SERVICE = 'EXTERNAL_SERVICE', // Third-party service failures
-  SYSTEM = 'SYSTEM',               // System-level errors
-  USER_ERROR = 'USER_ERROR'        // User-generated errors
+  SECURITY = "SECURITY", // Security-related errors
+  DATABASE = "DATABASE", // Database connection/query errors
+  API = "API", // External API failures
+  NETWORK = "NETWORK", // Network connectivity issues
+  VALIDATION = "VALIDATION", // Input validation failures
+  AUTHENTICATION = "AUTHENTICATION", // Auth/authorization issues
+  PERFORMANCE = "PERFORMANCE", // Performance-related errors
+  BUSINESS_LOGIC = "BUSINESS_LOGIC", // Business rule violations
+  EXTERNAL_SERVICE = "EXTERNAL_SERVICE", // Third-party service failures
+  SYSTEM = "SYSTEM", // System-level errors
+  USER_ERROR = "USER_ERROR", // User-generated errors
 }
 
 export enum ErrorRecoveryStrategy {
-  RETRY = 'RETRY',                 // Automatic retry with exponential backoff
-  FALLBACK = 'FALLBACK',           // Use alternative service/data
-  CIRCUIT_BREAKER = 'CIRCUIT_BREAKER', // Temporarily disable service
-  GRACEFUL_DEGRADATION = 'GRACEFUL_DEGRADATION', // Reduce functionality
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION', // Require human intervention
-  IGNORE = 'IGNORE'                 // Log and continue
+  RETRY = "RETRY", // Automatic retry with exponential backoff
+  FALLBACK = "FALLBACK", // Use alternative service/data
+  CIRCUIT_BREAKER = "CIRCUIT_BREAKER", // Temporarily disable service
+  GRACEFUL_DEGRADATION = "GRACEFUL_DEGRADATION", // Reduce functionality
+  MANUAL_INTERVENTION = "MANUAL_INTERVENTION", // Require human intervention
+  IGNORE = "IGNORE", // Log and continue
 }
 
 // Error context and metadata
@@ -79,7 +79,7 @@ interface EnterpriseError {
   impact: {
     usersAffected: number;
     functionalityImpacted: string[];
-    businessImpact: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+    businessImpact: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   };
   metadata: Record<string, any>;
 }
@@ -88,11 +88,11 @@ interface EnterpriseError {
 interface ErrorMonitoringConfig {
   enableRealTimeAlerting: boolean;
   alertThresholds: {
-    critical: number;  // Alert after N critical errors
-    high: number;     // Alert after N high errors
-    window: number;   // Time window in ms
+    critical: number; // Alert after N critical errors
+    high: number; // Alert after N high errors
+    window: number; // Time window in ms
   };
-  notificationChannels: ('email' | 'slack' | 'pagerduty' | 'webhook')[];
+  notificationChannels: ("email" | "slack" | "pagerduty" | "webhook")[];
   logLevels: {
     console: boolean;
     file: boolean;
@@ -110,7 +110,14 @@ export class EnterpriseErrorHandler {
   private config: ErrorMonitoringConfig;
   private errorCounts = new Map<string, number>();
   private alertTimers = new Map<string, NodeJS.Timeout>();
-  private circuitBreakers = new Map<string, { state: 'CLOSED' | 'OPEN' | 'HALF_OPEN'; failures: number; lastFailure: number }>();
+  private circuitBreakers = new Map<
+    string,
+    {
+      state: "CLOSED" | "OPEN" | "HALF_OPEN";
+      failures: number;
+      lastFailure: number;
+    }
+  >();
 
   constructor(config: Partial<ErrorMonitoringConfig> = {}) {
     this.config = {
@@ -118,20 +125,20 @@ export class EnterpriseErrorHandler {
       alertThresholds: {
         critical: 1,
         high: 5,
-        window: 300000 // 5 minutes
+        window: 300000, // 5 minutes
       },
-      notificationChannels: ['email', 'slack'],
+      notificationChannels: ["email", "slack"],
       logLevels: {
         console: true,
         file: true,
-        external: true
+        external: true,
       },
       security: {
         sanitizeErrorMessages: true,
         hideSensitiveData: true,
-        maxErrorSize: 10000
+        maxErrorSize: 10000,
       },
-      ...config
+      ...config,
     };
 
     this.startErrorMonitoring();
@@ -153,40 +160,42 @@ export class EnterpriseErrorHandler {
       category?: ErrorCategory;
       recovery?: ErrorRecoveryStrategy;
       isRetryable?: boolean;
-    } = {}
+    } = {},
   ): Promise<EnterpriseError> {
     const errorId = this.generateErrorId();
     const timestamp = Date.now();
-    
+
     // Classify error
     const severity = options.severity || this.classifySeverity(error);
     const category = options.category || this.classifyCategory(error);
-    const recovery = options.recovery || this.determineRecoveryStrategy(error, category);
-    const isRetryable = options.isRetryable ?? this.isRetryable(error, category);
+    const recovery =
+      options.recovery || this.determineRecoveryStrategy(error, category);
+    const isRetryable =
+      options.isRetryable ?? this.isRetryable(error, category);
 
     // Build error context
     const fullContext: ErrorContext = {
       timestamp,
-      environment: process.env.NODE_ENV || 'development',
-      component: context.component || 'unknown',
-      action: context.action || 'unknown',
-      ...context
+      environment: process.env.NODE_ENV || "development",
+      component: context.component || "unknown",
+      action: context.action || "unknown",
+      ...context,
     };
 
     // Sanitize error for security
     const sanitizedError = this.sanitizeError(error);
-    
+
     // Create enterprise error
     const enterpriseError: EnterpriseError = {
       id: errorId,
-      message: typeof error === 'string' ? error : error.message,
+      message: typeof error === "string" ? error : error.message,
       severity,
       category,
       context: fullContext,
       recovery,
       isRetryable,
       impact: this.assessImpact(error, category, severity),
-      metadata: this.extractMetadata(error)
+      metadata: this.extractMetadata(error),
     };
 
     // Log error
@@ -203,62 +212,83 @@ export class EnterpriseErrorHandler {
 
   // Error classification methods
   private classifySeverity(error: Error | string): ErrorSeverity {
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    
-    if (errorMessage.includes('CRITICAL') || errorMessage.includes('FATAL')) {
+    const errorMessage = typeof error === "string" ? error : error.message;
+
+    if (errorMessage.includes("CRITICAL") || errorMessage.includes("FATAL")) {
       return ErrorSeverity.CRITICAL;
     }
-    
-    if (errorMessage.includes('unauthorized') || errorMessage.includes('forbidden')) {
+
+    if (
+      errorMessage.includes("unauthorized") ||
+      errorMessage.includes("forbidden")
+    ) {
       return ErrorSeverity.HIGH;
     }
-    
-    if (errorMessage.includes('timeout') || errorMessage.includes('connection')) {
+
+    if (
+      errorMessage.includes("timeout") ||
+      errorMessage.includes("connection")
+    ) {
       return ErrorSeverity.MEDIUM;
     }
-    
-    if (errorMessage.includes('not found') || errorMessage.includes('invalid')) {
+
+    if (
+      errorMessage.includes("not found") ||
+      errorMessage.includes("invalid")
+    ) {
       return ErrorSeverity.LOW;
     }
-    
+
     return ErrorSeverity.INFO;
   }
 
   private classifyCategory(error: Error | string): ErrorCategory {
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    
-    if (errorMessage.includes('security') || errorMessage.includes('unauthorized')) {
+    const errorMessage = typeof error === "string" ? error : error.message;
+
+    if (
+      errorMessage.includes("security") ||
+      errorMessage.includes("unauthorized")
+    ) {
       return ErrorCategory.SECURITY;
     }
-    
-    if (errorMessage.includes('database') || errorMessage.includes('connection')) {
+
+    if (
+      errorMessage.includes("database") ||
+      errorMessage.includes("connection")
+    ) {
       return ErrorCategory.DATABASE;
     }
-    
-    if (errorMessage.includes('api') || errorMessage.includes('http')) {
+
+    if (errorMessage.includes("api") || errorMessage.includes("http")) {
       return ErrorCategory.API;
     }
-    
-    if (errorMessage.includes('network') || errorMessage.includes('timeout')) {
+
+    if (errorMessage.includes("network") || errorMessage.includes("timeout")) {
       return ErrorCategory.NETWORK;
     }
-    
-    if (errorMessage.includes('validation') || errorMessage.includes('invalid')) {
+
+    if (
+      errorMessage.includes("validation") ||
+      errorMessage.includes("invalid")
+    ) {
       return ErrorCategory.VALIDATION;
     }
-    
-    if (errorMessage.includes('auth') || errorMessage.includes('login')) {
+
+    if (errorMessage.includes("auth") || errorMessage.includes("login")) {
       return ErrorCategory.AUTHENTICATION;
     }
-    
-    if (errorMessage.includes('performance') || errorMessage.includes('slow')) {
+
+    if (errorMessage.includes("performance") || errorMessage.includes("slow")) {
       return ErrorCategory.PERFORMANCE;
     }
-    
+
     return ErrorCategory.SYSTEM;
   }
 
-  private determineRecoveryStrategy(error: Error | string, category: ErrorCategory): ErrorRecoveryStrategy {
+  private determineRecoveryStrategy(
+    error: Error | string,
+    category: ErrorCategory,
+  ): ErrorRecoveryStrategy {
     switch (category) {
       case ErrorCategory.NETWORK:
         return ErrorRecoveryStrategy.RETRY;
@@ -280,49 +310,62 @@ export class EnterpriseErrorHandler {
       ErrorCategory.SECURITY,
       ErrorCategory.VALIDATION,
       ErrorCategory.USER_ERROR,
-      ErrorCategory.BUSINESS_LOGIC
+      ErrorCategory.BUSINESS_LOGIC,
     ];
-    
+
     return !nonRetryableCategories.includes(category);
   }
 
   // Security and sanitization
   private sanitizeError(error: Error | string): string {
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    
+    const errorMessage = typeof error === "string" ? error : error.message;
+
     if (!this.config.security.sanitizeErrorMessages) {
       return errorMessage;
     }
 
     // Remove sensitive information
     let sanitized = errorMessage
-      .replace(/password=[^&]*/gi, 'password=***')
-      .replace(/token=[^&]*/gi, 'token=***')
-      .replace(/key=[^&]*/gi, 'key=***')
-      .replace(/secret=[^&]*/gi, 'secret=***')
-      .replace(/api[_-]?key=[^&]*/gi, 'api_key=***')
-      .replace(/authorization=[^&]*/gi, 'authorization=***');
+      .replace(/password=[^&]*/gi, "password=***")
+      .replace(/token=[^&]*/gi, "token=***")
+      .replace(/key=[^&]*/gi, "key=***")
+      .replace(/secret=[^&]*/gi, "secret=***")
+      .replace(/api[_-]?key=[^&]*/gi, "api_key=***")
+      .replace(/authorization=[^&]*/gi, "authorization=***");
 
     // Limit error size
     if (sanitized.length > this.config.security.maxErrorSize) {
-      sanitized = sanitized.slice(0, Math.max(0, this.config.security.maxErrorSize)) + '...';
+      sanitized =
+        sanitized.slice(0, Math.max(0, this.config.security.maxErrorSize)) +
+        "...";
     }
 
     return sanitized;
   }
 
   // Impact assessment
-  private assessImpact(error: Error | string, category: ErrorCategory, severity: ErrorSeverity) {
+  private assessImpact(
+    error: Error | string,
+    category: ErrorCategory,
+    severity: ErrorSeverity,
+  ) {
     const impact = {
       usersAffected: this.estimateUsersAffected(category, severity),
       functionalityImpacted: this.getImpactedFunctionality(category),
-      businessImpact: this.getBusinessImpact(severity) as 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL'
+      businessImpact: this.getBusinessImpact(severity) as
+        | "LOW"
+        | "MEDIUM"
+        | "HIGH"
+        | "CRITICAL",
     };
 
     return impact;
   }
 
-  private estimateUsersAffected(category: ErrorCategory, severity: ErrorSeverity): number {
+  private estimateUsersAffected(
+    category: ErrorCategory,
+    severity: ErrorSeverity,
+  ): number {
     if (severity === ErrorSeverity.CRITICAL) return 1000;
     if (severity === ErrorSeverity.HIGH) return 500;
     if (severity === ErrorSeverity.MEDIUM) return 100;
@@ -332,46 +375,55 @@ export class EnterpriseErrorHandler {
 
   private getImpactedFunctionality(category: ErrorCategory): string[] {
     const impactMap: Record<ErrorCategory, string[]> = {
-      [ErrorCategory.SECURITY]: ['authentication', 'authorization', 'data-access'],
-      [ErrorCategory.DATABASE]: ['data-retrieval', 'data-storage', 'search'],
-      [ErrorCategory.API]: ['external-integrations', 'data-sync'],
-      [ErrorCategory.NETWORK]: ['connectivity', 'real-time-features'],
-      [ErrorCategory.VALIDATION]: ['form-submission', 'data-input'],
-      [ErrorCategory.AUTHENTICATION]: ['login', 'user-management'],
-      [ErrorCategory.PERFORMANCE]: ['response-time', 'user-experience'],
-      [ErrorCategory.BUSINESS_LOGIC]: ['core-features', 'business-rules'],
-      [ErrorCategory.EXTERNAL_SERVICE]: ['third-party-integrations'],
-      [ErrorCategory.SYSTEM]: ['system-availability', 'core-functionality'],
-      [ErrorCategory.USER_ERROR]: ['user-interface', 'input-handling']
+      [ErrorCategory.SECURITY]: [
+        "authentication",
+        "authorization",
+        "data-access",
+      ],
+      [ErrorCategory.DATABASE]: ["data-retrieval", "data-storage", "search"],
+      [ErrorCategory.API]: ["external-integrations", "data-sync"],
+      [ErrorCategory.NETWORK]: ["connectivity", "real-time-features"],
+      [ErrorCategory.VALIDATION]: ["form-submission", "data-input"],
+      [ErrorCategory.AUTHENTICATION]: ["login", "user-management"],
+      [ErrorCategory.PERFORMANCE]: ["response-time", "user-experience"],
+      [ErrorCategory.BUSINESS_LOGIC]: ["core-features", "business-rules"],
+      [ErrorCategory.EXTERNAL_SERVICE]: ["third-party-integrations"],
+      [ErrorCategory.SYSTEM]: ["system-availability", "core-functionality"],
+      [ErrorCategory.USER_ERROR]: ["user-interface", "input-handling"],
     };
 
-    return impactMap[category] || ['general-functionality'];
+    return impactMap[category] || ["general-functionality"];
   }
 
   private getBusinessImpact(severity: ErrorSeverity): string {
     switch (severity) {
-      case ErrorSeverity.CRITICAL: return 'CRITICAL';
-      case ErrorSeverity.HIGH: return 'HIGH';
-      case ErrorSeverity.MEDIUM: return 'MEDIUM';
-      case ErrorSeverity.LOW: return 'LOW';
-      default: return 'LOW';
+      case ErrorSeverity.CRITICAL:
+        return "CRITICAL";
+      case ErrorSeverity.HIGH:
+        return "HIGH";
+      case ErrorSeverity.MEDIUM:
+        return "MEDIUM";
+      case ErrorSeverity.LOW:
+        return "LOW";
+      default:
+        return "LOW";
     }
   }
 
   // Metadata extraction
   private extractMetadata(error: Error | string): Record<string, any> {
     const metadata: Record<string, any> = {};
-    
+
     if (error instanceof Error) {
       metadata.name = error.name;
       metadata.stack = error.stack;
       metadata.cause = error.cause;
     }
-    
+
     metadata.timestamp = Date.now();
     metadata.environment = process.env.NODE_ENV;
-    metadata.version = process.env.npm_package_version || 'unknown';
-    
+    metadata.version = process.env.npm_package_version || "unknown";
+
     return metadata;
   }
 
@@ -385,7 +437,7 @@ export class EnterpriseErrorHandler {
       context: error.context,
       impact: error.impact,
       metadata: error.metadata,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     // Console logging
@@ -407,11 +459,11 @@ export class EnterpriseErrorHandler {
   private logToConsole(error: EnterpriseError): void {
     const logMethod = this.getConsoleMethod(error.severity);
     const prefix = `[${error.severity}] [${error.category}] [${error.id}]`;
-    
+
     logMethod(`${prefix} ${error.message}`, {
       context: error.context,
       impact: error.impact,
-      recovery: error.recovery
+      recovery: error.recovery,
     });
   }
 
@@ -433,13 +485,13 @@ export class EnterpriseErrorHandler {
   private async logToFile(logEntry: any): Promise<void> {
     // Implementation would write to structured log file
     // For now, we'll simulate with console
-    console.log('📁 File Logging:', JSON.stringify(logEntry, null, 2));
+    console.log("📁 File Logging:", JSON.stringify(logEntry, null, 2));
   }
 
   private async logToExternal(logEntry: any): Promise<void> {
     // Implementation would integrate with external monitoring services
     // For now, we'll simulate with console
-    console.log('🌐 External Logging:', JSON.stringify(logEntry, null, 2));
+    console.log("🌐 External Logging:", JSON.stringify(logEntry, null, 2));
   }
 
   // Error monitoring and alerting
@@ -457,29 +509,33 @@ export class EnterpriseErrorHandler {
     this.updateCircuitBreaker(error);
   }
 
-  private checkAlertConditions(error: EnterpriseError, errorKey: string, count: number): void {
+  private checkAlertConditions(
+    error: EnterpriseError,
+    errorKey: string,
+    count: number,
+  ): void {
     const { critical, high } = this.config.alertThresholds;
-    
+
     if (error.severity === ErrorSeverity.CRITICAL && count >= critical) {
-      this.triggerAlert(error, 'CRITICAL_THRESHOLD_EXCEEDED');
+      this.triggerAlert(error, "CRITICAL_THRESHOLD_EXCEEDED");
     } else if (error.severity === ErrorSeverity.HIGH && count >= high) {
-      this.triggerAlert(error, 'HIGH_THRESHOLD_EXCEEDED');
+      this.triggerAlert(error, "HIGH_THRESHOLD_EXCEEDED");
     }
   }
 
   private triggerAlert(error: EnterpriseError, reason: string): void {
     const alert = {
       id: this.generateErrorId(),
-      type: 'ERROR_ALERT',
+      type: "ERROR_ALERT",
       reason,
       error: {
         id: error.id,
         severity: error.severity,
         category: error.category,
-        message: error.message
+        message: error.message,
       },
       timestamp: new Date().toISOString(),
-      impact: error.impact
+      impact: error.impact,
     };
 
     // Send to configured notification channels
@@ -487,29 +543,35 @@ export class EnterpriseErrorHandler {
       this.sendNotification(alert, channel);
     }
 
-    console.error('🚨 ALERT TRIGGERED:', JSON.stringify(alert, null, 2));
+    console.error("🚨 ALERT TRIGGERED:", JSON.stringify(alert, null, 2));
   }
 
   private sendNotification(alert: any, channel: string): void {
     // Implementation would integrate with notification services
-    console.log(`📧 Sending ${channel} notification:`, JSON.stringify(alert, null, 2));
+    console.log(
+      `📧 Sending ${channel} notification:`,
+      JSON.stringify(alert, null, 2),
+    );
   }
 
   // Circuit breaker implementation
   private updateCircuitBreaker(error: EnterpriseError): void {
     const breakerKey = `${error.category}_breaker`;
     const breaker = this.circuitBreakers.get(breakerKey) || {
-      state: 'CLOSED',
+      state: "CLOSED",
       failures: 0,
-      lastFailure: 0
+      lastFailure: 0,
     };
 
-    if (error.severity === ErrorSeverity.CRITICAL || error.severity === ErrorSeverity.HIGH) {
+    if (
+      error.severity === ErrorSeverity.CRITICAL ||
+      error.severity === ErrorSeverity.HIGH
+    ) {
       breaker.failures++;
       breaker.lastFailure = Date.now();
 
       if (breaker.failures >= 5) {
-        breaker.state = 'OPEN';
+        breaker.state = "OPEN";
         console.warn(`⚡ Circuit breaker OPEN for ${error.category}`);
       }
     }
@@ -548,12 +610,16 @@ export class EnterpriseErrorHandler {
     // Implementation would switch to alternative service/data source
   }
 
-  private async executeGracefulDegradation(error: EnterpriseError): Promise<void> {
+  private async executeGracefulDegradation(
+    error: EnterpriseError,
+  ): Promise<void> {
     console.log(`🔄 Executing graceful degradation for error ${error.id}`);
     // Implementation would reduce functionality while maintaining core operations
   }
 
-  private async executeManualIntervention(error: EnterpriseError): Promise<void> {
+  private async executeManualIntervention(
+    error: EnterpriseError,
+  ): Promise<void> {
     console.log(`🔄 Executing manual intervention for error ${error.id}`);
     // Implementation would notify administrators and provide intervention options
   }
@@ -566,16 +632,16 @@ export class EnterpriseErrorHandler {
   // Public API for error handling
   public async createErrorBoundary(
     component: string,
-    errorHandler: (error: Error, context: any) => Promise<any>
+    errorHandler: (error: Error, context: any) => Promise<any>,
   ) {
     return async (error: Error, context: any) => {
       try {
         return await this.handleError(error, {
           component,
-          action: context.action || 'unknown'
+          action: context.action || "unknown",
         });
       } catch (handlingError) {
-        console.error('Error in error handler:', handlingError);
+        console.error("Error in error handler:", handlingError);
         throw error; // Re-throw original error
       }
     };
@@ -583,38 +649,43 @@ export class EnterpriseErrorHandler {
 
   // Health check
   public getHealthStatus(): {
-    status: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY';
+    status: "HEALTHY" | "DEGRADED" | "UNHEALTHY";
     errorCounts: Record<string, number>;
     circuitBreakers: Record<string, any>;
     recommendations: string[];
   } {
-    const totalErrors = Array.from(this.errorCounts.values()).reduce((sum, count) => sum + count, 0);
-    const criticalErrors = this.errorCounts.get('CRITICAL_SECURITY') || 0;
-    
-    let status: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY' = 'HEALTHY';
-    
+    const totalErrors = Array.from(this.errorCounts.values()).reduce(
+      (sum, count) => sum + count,
+      0,
+    );
+    const criticalErrors = this.errorCounts.get("CRITICAL_SECURITY") || 0;
+
+    let status: "HEALTHY" | "DEGRADED" | "UNHEALTHY" = "HEALTHY";
+
     if (criticalErrors > 0) {
-      status = 'UNHEALTHY';
+      status = "UNHEALTHY";
     } else if (totalErrors > 50) {
-      status = 'DEGRADED';
+      status = "DEGRADED";
     }
 
     const errorCountsObj = Object.fromEntries(this.errorCounts);
     const circuitBreakersObj = Object.fromEntries(this.circuitBreakers);
-    
+
     const recommendations: string[] = [];
-    
-    if (status === 'UNHEALTHY') {
-      recommendations.push('Immediate intervention required - critical errors detected');
-    } else if (status === 'DEGRADED') {
-      recommendations.push('Monitor closely - elevated error rates detected');
+
+    if (status === "UNHEALTHY") {
+      recommendations.push(
+        "Immediate intervention required - critical errors detected",
+      );
+    } else if (status === "DEGRADED") {
+      recommendations.push("Monitor closely - elevated error rates detected");
     }
 
     return {
       status,
       errorCounts: errorCountsObj,
       circuitBreakers: circuitBreakersObj,
-      recommendations
+      recommendations,
     };
   }
 }
@@ -623,6 +694,11 @@ export class EnterpriseErrorHandler {
 export const enterpriseErrorHandler = new EnterpriseErrorHandler();
 
 // Utility functions for common error handling patterns
-export const handleError = enterpriseErrorHandler.handleError.bind(enterpriseErrorHandler);
-export const createErrorBoundary = enterpriseErrorHandler.createErrorBoundary.bind(enterpriseErrorHandler);
-export const getHealthStatus = enterpriseErrorHandler.getHealthStatus.bind(enterpriseErrorHandler);
+export const handleError = enterpriseErrorHandler.handleError.bind(
+  enterpriseErrorHandler,
+);
+export const createErrorBoundary =
+  enterpriseErrorHandler.createErrorBoundary.bind(enterpriseErrorHandler);
+export const getHealthStatus = enterpriseErrorHandler.getHealthStatus.bind(
+  enterpriseErrorHandler,
+);

@@ -65,7 +65,7 @@ export function OptimizedImage({
       {
         rootMargin: "50px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (imgRef.current) {
@@ -103,7 +103,7 @@ export function OptimizedImage({
       className={cn(
         "relative overflow-hidden bg-gray-100",
         isLoading && "animate-pulse",
-        className
+        className,
       )}
       style={{
         width: calculatedWidth || width,
@@ -119,25 +119,27 @@ export function OptimizedImage({
           height={calculatedHeight || height || 0}
           className={cn(
             "transition-opacity duration-300",
-            isLoading ? "opacity-0" : "opacity-100"
+            isLoading ? "opacity-0" : "opacity-100",
           )}
           style={{ objectFit }}
           priority={priority}
           placeholder={placeholder}
-          blurDataURL={placeholder === "blur" ? generateBlurDataURL() : undefined}
+          blurDataURL={
+            placeholder === "blur" ? generateBlurDataURL() : undefined
+          }
           onLoad={handleLoad}
           onError={handleError}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       )}
-      
+
       {/* Loading skeleton */}
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-200">
           <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
         </div>
       )}
-      
+
       {/* Error fallback */}
       {hasError && !fallback && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400">
@@ -177,7 +179,12 @@ interface PhotoGridProps {
 
 export function PhotoGrid({ photos, onPhotoClick, className }: PhotoGridProps) {
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4", className)}>
+    <div
+      className={cn(
+        "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
+        className,
+      )}
+    >
       {photos.map((photo) => (
         <div
           key={photo.id}
@@ -192,7 +199,7 @@ export function PhotoGrid({ photos, onPhotoClick, className }: PhotoGridProps) {
             aspectRatio={1}
             className="w-full h-full transition-transform duration-300 group-hover:scale-105"
           />
-          
+
           {/* Status overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300">
             <div className="absolute top-2 right-2">
@@ -202,11 +209,11 @@ export function PhotoGrid({ photos, onPhotoClick, className }: PhotoGridProps) {
                   photo.status === "safe" && "bg-green-500",
                   photo.status === "flagged" && "bg-red-500",
                   photo.status === "pending" && "bg-yellow-500",
-                  photo.status === "scanning" && "bg-blue-500 animate-pulse"
+                  photo.status === "scanning" && "bg-blue-500 animate-pulse",
                 )}
               />
             </div>
-            
+
             <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <p className="text-white text-xs truncate">{photo.name}</p>
             </div>
@@ -225,7 +232,12 @@ interface LazyLoadProps {
   height?: number;
 }
 
-export function LazyLoad({ children, placeholder, className, height = 200 }: LazyLoadProps) {
+export function LazyLoad({
+  children,
+  placeholder,
+  className,
+  height = 200,
+}: LazyLoadProps) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -240,7 +252,7 @@ export function LazyLoad({ children, placeholder, className, height = 200 }: Laz
       {
         rootMargin: "100px",
         threshold: 0.1,
-      }
+      },
     );
 
     if (ref.current) {
@@ -253,16 +265,14 @@ export function LazyLoad({ children, placeholder, className, height = 200 }: Laz
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={className}
-      style={{ height: height }}
-    >
-      {isInView ? children : placeholder || (
-        <div className="flex items-center justify-center h-full bg-gray-100">
-          <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
-        </div>
-      )}
+    <div ref={ref} className={className} style={{ height: height }}>
+      {isInView
+        ? children
+        : placeholder || (
+            <div className="flex items-center justify-center h-full bg-gray-100">
+              <div className="w-8 h-8 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+            </div>
+          )}
     </div>
   );
 }

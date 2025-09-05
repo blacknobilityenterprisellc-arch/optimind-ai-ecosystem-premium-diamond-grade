@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { 
-  Brain, 
-  Shield, 
-  Eye, 
-  Heart, 
-  Star, 
-  Zap, 
+import {
+  Brain,
+  Shield,
+  Eye,
+  Heart,
+  Star,
+  Zap,
   Camera,
   FileText,
   Users,
@@ -17,7 +17,7 @@ import {
   BarChart3,
   Tag,
   Lock,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -40,24 +40,24 @@ export function AIEnhancedAnalyzer({
   photoId,
   file,
   onAnalysisComplete,
-  className = ""
+  className = "",
 }: AIEnhancedAnalyzerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const [description, setDescription] = useState("");
   const [privacyConcerns, setPrivacyConcerns] = useState<string[]>([]);
   const [privacySuggestions, setPrivacySuggestions] = useState<string[]>([]);
-  
+
   const { isPremium } = useSecureSubscription();
-  const { 
-    isAnalyzing, 
-    analyzePhoto, 
-    getAnalysisResult, 
-    generateDescription, 
+  const {
+    isAnalyzing,
+    analyzePhoto,
+    getAnalysisResult,
+    generateDescription,
     getPrivacyConcerns,
-    getPrivacySuggestions 
+    getPrivacySuggestions,
   } = useAIEnhancement();
-  
+
   const analysisResult = getAnalysisResult(photoId);
 
   // Auto-analyze when component mounts
@@ -69,24 +69,33 @@ export function AIEnhancedAnalyzer({
 
   const handleAnalyze = useCallback(async () => {
     if (!isPremium) return;
-    
+
     try {
       const result = await analyzePhoto(photoId, file);
       onAnalysisComplete?.(result);
-      
+
       // Generate additional insights
       const desc = await generateDescription(photoId);
       setDescription(desc);
-      
+
       const concerns = await getPrivacyConcerns(photoId);
       setPrivacyConcerns(concerns);
-      
+
       const suggestions = await getPrivacySuggestions(photoId);
       setPrivacySuggestions(suggestions);
     } catch (error) {
       console.error("AI analysis failed:", error);
     }
-  }, [photoId, file, isPremium, analyzePhoto, onAnalysisComplete, generateDescription, getPrivacyConcerns, getPrivacySuggestions]);
+  }, [
+    photoId,
+    file,
+    isPremium,
+    analyzePhoto,
+    onAnalysisComplete,
+    generateDescription,
+    getPrivacyConcerns,
+    getPrivacySuggestions,
+  ]);
 
   const getSafetyColor = (score: number) => {
     if (score >= 0.8) return "text-green-600";
@@ -134,7 +143,10 @@ export function AIEnhancedAnalyzer({
             <Brain className="w-5 h-5 text-purple-600" />
             AI Analysis
             {analysisResult && (
-              <Badge variant="outline" className="text-green-600 border-green-600">
+              <Badge
+                variant="outline"
+                className="text-green-600 border-green-600"
+              >
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Complete
               </Badge>
@@ -155,17 +167,24 @@ export function AIEnhancedAnalyzer({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-medium">AI Analysis in Progress...</span>
+              <span className="text-sm font-medium">
+                AI Analysis in Progress...
+              </span>
             </div>
             <Progress value={75} className="w-full" />
             <p className="text-xs text-muted-foreground">
-              Analyzing content, detecting objects, recognizing emotions, and assessing quality...
+              Analyzing content, detecting objects, recognizing emotions, and
+              assessing quality...
             </p>
           </div>
         )}
 
         {analysisResult && isExpanded && (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-4 gap-1">
               <TabsTrigger value="overview" className="text-xs">
                 <Eye className="w-3 h-3 mr-1" />
@@ -194,11 +213,16 @@ export function AIEnhancedAnalyzer({
                     <span className="text-sm font-medium">Safety Score</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <span className={getSafetyColor(analysisResult.safetyScore)}>
+                    <span
+                      className={getSafetyColor(analysisResult.safetyScore)}
+                    >
                       {Math.round(analysisResult.safetyScore * 100)}%
                     </span>
                   </div>
-                  <Progress value={analysisResult.safetyScore * 100} className="w-full" />
+                  <Progress
+                    value={analysisResult.safetyScore * 100}
+                    className="w-full"
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -207,11 +231,18 @@ export function AIEnhancedAnalyzer({
                     <span className="text-sm font-medium">Aesthetic Score</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <span className={getAestheticColor(analysisResult.aestheticScore)}>
+                    <span
+                      className={getAestheticColor(
+                        analysisResult.aestheticScore,
+                      )}
+                    >
                       {Math.round(analysisResult.aestheticScore * 100)}%
                     </span>
                   </div>
-                  <Progress value={analysisResult.aestheticScore * 100} className="w-full" />
+                  <Progress
+                    value={analysisResult.aestheticScore * 100}
+                    className="w-full"
+                  />
                 </div>
               </div>
 
@@ -256,7 +287,11 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">Detected Objects</h4>
                   <div className="flex flex-wrap gap-2">
                     {analysisResult.objects.map((obj, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {obj}
                       </Badge>
                     ))}
@@ -285,7 +320,10 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">Text Content</h4>
                   <div className="space-y-1">
                     {analysisResult.text.map((text, index) => (
-                      <div key={index} className="text-sm bg-gray-50 p-2 rounded">
+                      <div
+                        key={index}
+                        className="text-sm bg-gray-50 p-2 rounded"
+                      >
                         {text}
                       </div>
                     ))}
@@ -330,38 +368,55 @@ export function AIEnhancedAnalyzer({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Overall Quality</span>
-                    <span className={`text-sm font-bold ${getQualityColor(analysisResult.quality)}`}>
+                    <span
+                      className={`text-sm font-bold ${getQualityColor(analysisResult.quality)}`}
+                    >
                       {Math.round(analysisResult.quality * 100)}%
                     </span>
                   </div>
-                  <Progress value={analysisResult.quality * 100} className="w-full" />
+                  <Progress
+                    value={analysisResult.quality * 100}
+                    className="w-full"
+                  />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Brightness</span>
-                    <Progress value={analysisResult.metadata.brightness * 100} className="w-full" />
+                    <Progress
+                      value={analysisResult.metadata.brightness * 100}
+                      className="w-full"
+                    />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.brightness * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Contrast</span>
-                    <Progress value={analysisResult.metadata.contrast * 100} className="w-full" />
+                    <Progress
+                      value={analysisResult.metadata.contrast * 100}
+                      className="w-full"
+                    />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.contrast * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Saturation</span>
-                    <Progress value={analysisResult.metadata.saturation * 100} className="w-full" />
+                    <Progress
+                      value={analysisResult.metadata.saturation * 100}
+                      className="w-full"
+                    />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.saturation * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Sharpness</span>
-                    <Progress value={analysisResult.metadata.sharpness * 100} className="w-full" />
+                    <Progress
+                      value={analysisResult.metadata.sharpness * 100}
+                      className="w-full"
+                    />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.sharpness * 100)}%
                     </span>
@@ -375,7 +430,10 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">AI Suggestions</h4>
                   <div className="space-y-2">
                     {analysisResult.suggestions.map((suggestion, index) => (
-                      <div key={index} className="flex items-start gap-2 text-sm">
+                      <div
+                        key={index}
+                        className="flex items-start gap-2 text-sm"
+                      >
                         <Lightbulb className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
                         <span>{suggestion}</span>
                       </div>
@@ -413,10 +471,15 @@ export function AIEnhancedAnalyzer({
               {/* Privacy Suggestions */}
               {privacySuggestions.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-medium">Privacy Protection Suggestions</h4>
+                  <h4 className="font-medium">
+                    Privacy Protection Suggestions
+                  </h4>
                   <div className="space-y-2">
                     {privacySuggestions.map((suggestion, index) => (
-                      <div key={index} className="flex items-start gap-2 text-sm p-3 bg-blue-50 rounded-lg">
+                      <div
+                        key={index}
+                        className="flex items-start gap-2 text-sm p-3 bg-blue-50 rounded-lg"
+                      >
                         <Lock className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                         <span>{suggestion}</span>
                       </div>
@@ -431,7 +494,8 @@ export function AIEnhancedAnalyzer({
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-green-600" />
                   <span className="text-sm">
-                    This image is marked as {analysisResult.isNsfw ? 'sensitive' : 'safe'} content
+                    This image is marked as{" "}
+                    {analysisResult.isNsfw ? "sensitive" : "safe"} content
                   </span>
                 </div>
                 <div className="text-xs text-muted-foreground">

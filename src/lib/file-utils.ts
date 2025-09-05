@@ -6,7 +6,7 @@ export async function fileToBase64(file: File): Promise<string> {
     reader.onload = () => {
       const result = reader.result as string;
       // Remove the data URL prefix to get pure base64
-      const base64 = result.split(',')[1];
+      const base64 = result.split(",")[1];
       resolve(base64);
     };
     reader.onerror = (error) => reject(error);
