@@ -31,7 +31,7 @@ export interface TestScenario {
   description: string;
   category: string;
   difficulty: 'easy' | 'medium' | 'hard' | 'expert';
-  initialState: Record<string, any>;
+  initialState: Record<string, unknown>;
   expectedBehavior: string;
   successCriteria: string[];
   failureConditions: string[];
@@ -45,7 +45,7 @@ export interface SimulationEnvironment {
   complexity: 'simple' | 'moderate' | 'complex' | 'extreme';
   dynamicElements: boolean;
   uncertaintyLevel: number;
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
   constraints: string[];
 }
 
@@ -79,7 +79,7 @@ export interface TestObservation {
   timestamp: Date;
   type: 'decision' | 'action' | 'interaction' | 'state_change' | 'error';
   description: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   significance: 'low' | 'medium' | 'high' | 'critical';
 }
 
@@ -89,7 +89,7 @@ export interface TestError {
   severity: 'low' | 'medium' | 'high' | 'critical';
   message: string;
   stack?: string;
-  context: Record<string, any>;
+  context: Record<string, unknown>;
 }
 
 export interface ResourceUsage {
@@ -105,7 +105,7 @@ export class AgentTestingFramework extends EventEmitter {
   private logger: Logger;
   private testScenarios: Map<string, TestScenario> = new Map();
   private testResults: Map<string, TestResult[]> = new Map();
-  private activeTests: Map<string, any> = new Map();
+  private activeTests: Map<string, unknown> = new Map();
 
   constructor() {
     super();
@@ -398,7 +398,7 @@ export class AgentTestingFramework extends EventEmitter {
   /**
    * Determine test status based on scenario and results
    */
-  private determineTestStatus(scenario: TestScenario, simulationResult: any): 'passed' | 'failed' | 'partial' | 'timeout' | 'error' {
+  private determineTestStatus(scenario: TestScenario, simulationResult: unknown): 'passed' | 'failed' | 'partial' | 'timeout' | 'error' {
     // Simple logic for demonstration - in practice, this would be more sophisticated
     const errorCount = simulationResult.errors.length;
     const criticalErrors = simulationResult.errors.filter((e: TestError) => e.severity === 'critical').length;

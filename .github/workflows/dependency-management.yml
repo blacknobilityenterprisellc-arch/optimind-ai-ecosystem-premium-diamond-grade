@@ -190,7 +190,9 @@ jobs:
         title: 'chore: Update dependencies'
         body: 'Automated dependency update'
         branch: 'auto-dependency-update'
-        labels: ['dependencies', 'automated']
+        labels: |
+          dependencies
+          automated
       continue-on-error: true
 
   license-check:

@@ -30,11 +30,18 @@ exports.handler = async (event, context) => {
     body: '',
     
     setHeader(name, value) {
-      this.headers[name] = value;
+      // Validate header name to prevent injection
+      if (typeof name === 'string' && /^[a-zA-Z0-9-]+$/.test(name)) {
+        this.headers[name] = value;
+      }
     },
     
     getHeader(name) {
-      return this.headers[name];
+      // Validate header name to prevent injection
+      if (typeof name === 'string' && /^[a-zA-Z0-9-]+$/.test(name)) {
+        return this.headers[name];
+      }
+      return undefined;
     },
     
     end(data) {

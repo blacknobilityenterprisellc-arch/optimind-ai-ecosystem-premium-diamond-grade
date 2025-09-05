@@ -230,6 +230,40 @@ const premiumDiamondGradeConfig = [
       "unicorn/prefer-event-target": "error",
       "unicorn/prefer-keyboard-event-key": "error",
       "unicorn/prefer-add-event-listener": "error",
+      "unicorn/prevent-abbreviations": ["error", {
+        "replacements": {
+          "err": { "error": true },
+          "req": { "request": true },
+          "res": { "response": true },
+          "param": { "parameter": true },
+          "params": { "parameters": true },
+          "prop": { "property": true },
+          "props": { "properties": true },
+          "ctx": { "context": true },
+          "env": { "environment": true },
+          "ref": { "reference": true },
+          "refs": { "references": true },
+          "num": { "number": true },
+          "str": { "string": true },
+          "bool": { "boolean": true },
+          "obj": { "object": true },
+          "arr": { "array": true },
+          "fn": { "function": true },
+          "func": { "function": true },
+          "val": { "value": true },
+          "vals": { "values": true },
+          "len": { "length": true },
+          "conf": { "config": true },
+          "opts": { "options": true },
+          "e": { "error": true },
+          "cb": { "callback": true },
+          "evt": { "event": true },
+          "el": { "element": true },
+          "elem": { "element": true },
+          "doc": { "document": true },
+          "win": { "window": true }
+        }
+      }],
       
       // === AI/ML SPECIFIC SECURITY RULES ===
       "no-alert": "error", // Prevent alert in AI applications
@@ -363,6 +397,7 @@ const premiumDiamondGradeConfig = [
       "no-obj-calls": "error",
       "no-self-compare": "error",
       "no-sequences": "error",
+      "no-throw-literal": "error",
       
       // === ENTERPRISE CODE QUALITY METRICS ===
       "complexity": ["error", { "max": 10 }], // Reduced for AI maintainability
@@ -413,6 +448,7 @@ const premiumDiamondGradeConfig = [
       // === ERROR HANDLING & RESILIENCE ===
       "no-unsafe-finally": "error",
       "no-unsafe-negation": "error",
+      "no-unsafe-optional-chaining": "error",
       "no-unsafe-optional-chaining": "error",
       "require-atomic-updates": "error",
       "no-async-promise-executor": "error",

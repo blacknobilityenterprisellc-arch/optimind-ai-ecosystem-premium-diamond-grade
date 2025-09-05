@@ -21,7 +21,7 @@ export interface EvaluationResult {
   details: EvaluationDetail[];
   recommendations: string[];
   status: 'completed' | 'partial' | 'failed';
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 export interface EvaluationDetail {
@@ -32,7 +32,7 @@ export interface EvaluationDetail {
   threshold: number;
   passed: boolean;
   details: string;
-  evidence: any[];
+  evidence: unknown[];
 }
 
 export interface EvaluationFramework {
@@ -58,7 +58,7 @@ export interface EvaluationMetric {
   range: [number, number];
   threshold: number;
   weight: number;
-  evaluate: (input: any) => Promise<EvaluationDetail>;
+  evaluate: (input: unknown) => Promise<EvaluationDetail>;
 }
 
 // Framework Implementations
@@ -251,8 +251,8 @@ export class ModelEvaluationFramework implements EvaluationFramework {
 
   async evaluate(input: {
     modelId: string;
-    testCases: any[];
-    configuration?: any;
+    testCases: unknown[];
+    configuration?: unknown;
   }): Promise<EvaluationResult> {
     const startTime = Date.now();
     this.logger.info(`Starting model evaluation: ${input.modelId}`);
@@ -361,7 +361,10 @@ export class ModelEvaluationFramework implements EvaluationFramework {
 
     // Calculate category scores
     for (const [category, totals] of Object.entries(categoryTotals)) {
-      categoryScores[category] = totals.weight > 0 ? totals.sum / totals.weight : 0;
+      // Validate category name to prevent injection
+      if (typeof category === 'string' && category.length > 0 && /^[a-zA-Z0-9_-]+$/.test(category)) {
+        categoryScores[category] = totals.weight > 0 ? totals.sum / totals.weight : 0;
+      }
     }
 
     return categoryScores;
@@ -416,7 +419,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
   }
 
   // Metric evaluation methods
-  private async evaluateAccuracy(input: any): Promise<EvaluationDetail> {
+  private async evaluateAccuracy(input: unknown): Promise<EvaluationDetail> {
     // Simulate accuracy evaluation
     const accuracy = 0.85 + Math.random() * 0.1; // 0.85-0.95
     
@@ -435,7 +438,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateLatency(input: any): Promise<EvaluationDetail> {
+  private async evaluateLatency(input: unknown): Promise<EvaluationDetail> {
     // Simulate latency evaluation
     const latency = 500 + Math.random() * 2000; // 500-2500ms
     
@@ -455,7 +458,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateThroughput(input: any): Promise<EvaluationDetail> {
+  private async evaluateThroughput(input: unknown): Promise<EvaluationDetail> {
     // Simulate throughput evaluation
     const throughput = 30 + Math.random() * 70; // 30-100 RPS
     
@@ -475,7 +478,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateEfficiency(input: any): Promise<EvaluationDetail> {
+  private async evaluateEfficiency(input: unknown): Promise<EvaluationDetail> {
     // Simulate efficiency evaluation
     const efficiency = 0.6 + Math.random() * 0.3; // 0.6-0.9
     
@@ -495,7 +498,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateCoherence(input: any): Promise<EvaluationDetail> {
+  private async evaluateCoherence(input: unknown): Promise<EvaluationDetail> {
     // Simulate coherence evaluation
     const coherence = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
@@ -515,7 +518,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateRelevance(input: any): Promise<EvaluationDetail> {
+  private async evaluateRelevance(input: unknown): Promise<EvaluationDetail> {
     // Simulate relevance evaluation
     const relevance = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
@@ -535,7 +538,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateCompleteness(input: any): Promise<EvaluationDetail> {
+  private async evaluateCompleteness(input: unknown): Promise<EvaluationDetail> {
     // Simulate completeness evaluation
     const completeness = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
@@ -555,7 +558,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateClarity(input: any): Promise<EvaluationDetail> {
+  private async evaluateClarity(input: unknown): Promise<EvaluationDetail> {
     // Simulate clarity evaluation
     const clarity = 0.8 + Math.random() * 0.15; // 0.8-0.95
     
@@ -575,7 +578,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateHarmPrevention(input: any): Promise<EvaluationDetail> {
+  private async evaluateHarmPrevention(input: unknown): Promise<EvaluationDetail> {
     // Simulate harm prevention evaluation
     const harmPrevention = 0.9 + Math.random() * 0.09; // 0.9-0.99
     
@@ -595,7 +598,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateBiasDetection(input: any): Promise<EvaluationDetail> {
+  private async evaluateBiasDetection(input: unknown): Promise<EvaluationDetail> {
     // Simulate bias detection evaluation
     const biasDetection = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
@@ -615,7 +618,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateSecurityCompliance(input: any): Promise<EvaluationDetail> {
+  private async evaluateSecurityCompliance(input: unknown): Promise<EvaluationDetail> {
     // Simulate security compliance evaluation
     const securityCompliance = 0.85 + Math.random() * 0.1; // 0.85-0.95
     
@@ -635,7 +638,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateContentSafety(input: any): Promise<EvaluationDetail> {
+  private async evaluateContentSafety(input: unknown): Promise<EvaluationDetail> {
     // Simulate content safety evaluation
     const contentSafety = 0.88 + Math.random() * 0.1; // 0.88-0.98
     
@@ -655,7 +658,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateConsistency(input: any): Promise<EvaluationDetail> {
+  private async evaluateConsistency(input: unknown): Promise<EvaluationDetail> {
     // Simulate consistency evaluation
     const consistency = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
@@ -675,7 +678,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateErrorHandling(input: any): Promise<EvaluationDetail> {
+  private async evaluateErrorHandling(input: unknown): Promise<EvaluationDetail> {
     // Simulate error handling evaluation
     const errorHandling = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
@@ -695,7 +698,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateRobustness(input: any): Promise<EvaluationDetail> {
+  private async evaluateRobustness(input: unknown): Promise<EvaluationDetail> {
     // Simulate robustness evaluation
     const robustness = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
@@ -715,7 +718,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateAvailability(input: any): Promise<EvaluationDetail> {
+  private async evaluateAvailability(input: unknown): Promise<EvaluationDetail> {
     // Simulate availability evaluation
     const availability = 0.95 + Math.random() * 0.04; // 0.95-0.99
     
@@ -925,8 +928,8 @@ export class AgentEvaluationFramework implements EvaluationFramework {
 
   async evaluate(input: {
     agentId: string;
-    testScenarios: any[];
-    environment?: any;
+    testScenarios: unknown[];
+    environment?: unknown;
   }): Promise<EvaluationResult> {
     const startTime = Date.now();
     this.logger.info(`Starting agent evaluation: ${input.agentId}`);
@@ -1035,7 +1038,10 @@ export class AgentEvaluationFramework implements EvaluationFramework {
 
     // Calculate category scores
     for (const [category, totals] of Object.entries(categoryTotals)) {
-      categoryScores[category] = totals.weight > 0 ? totals.sum / totals.weight : 0;
+      // Validate category name to prevent injection
+      if (typeof category === 'string' && category.length > 0 && /^[a-zA-Z0-9_-]+$/.test(category)) {
+        categoryScores[category] = totals.weight > 0 ? totals.sum / totals.weight : 0;
+      }
     }
 
     return categoryScores;
@@ -1087,7 +1093,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
   }
 
   // Agent-specific evaluation methods
-  private async evaluateDecisionQuality(input: any): Promise<EvaluationDetail> {
+  private async evaluateDecisionQuality(input: unknown): Promise<EvaluationDetail> {
     const quality = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
     return {
@@ -1106,7 +1112,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateInitiative(input: any): Promise<EvaluationDetail> {
+  private async evaluateInitiative(input: unknown): Promise<EvaluationDetail> {
     const initiative = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
     return {
@@ -1125,7 +1131,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateIndependence(input: any): Promise<EvaluationDetail> {
+  private async evaluateIndependence(input: unknown): Promise<EvaluationDetail> {
     const independence = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
     return {
@@ -1144,7 +1150,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateGoalAchievement(input: any): Promise<EvaluationDetail> {
+  private async evaluateGoalAchievement(input: unknown): Promise<EvaluationDetail> {
     const goalAchievement = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
     return {
@@ -1163,7 +1169,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateLearningSpeed(input: any): Promise<EvaluationDetail> {
+  private async evaluateLearningSpeed(input: unknown): Promise<EvaluationDetail> {
     const learningSpeed = 0.6 + Math.random() * 0.35; // 0.6-0.95
     
     return {
@@ -1182,7 +1188,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateAdaptationQuality(input: any): Promise<EvaluationDetail> {
+  private async evaluateAdaptationQuality(input: unknown): Promise<EvaluationDetail> {
     const adaptationQuality = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
     return {
@@ -1201,7 +1207,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateFlexibility(input: any): Promise<EvaluationDetail> {
+  private async evaluateFlexibility(input: unknown): Promise<EvaluationDetail> {
     const flexibility = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
     return {
@@ -1220,7 +1226,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateInnovation(input: any): Promise<EvaluationDetail> {
+  private async evaluateInnovation(input: unknown): Promise<EvaluationDetail> {
     const innovation = 0.5 + Math.random() * 0.4; // 0.5-0.9
     
     return {
@@ -1239,7 +1245,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateCommunication(input: any): Promise<EvaluationDetail> {
+  private async evaluateCommunication(input: unknown): Promise<EvaluationDetail> {
     const communication = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
     return {
@@ -1258,7 +1264,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateTeamwork(input: any): Promise<EvaluationDetail> {
+  private async evaluateTeamwork(input: unknown): Promise<EvaluationDetail> {
     const teamwork = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
     return {
@@ -1277,7 +1283,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateCoordination(input: any): Promise<EvaluationDetail> {
+  private async evaluateCoordination(input: unknown): Promise<EvaluationDetail> {
     const coordination = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
     return {
@@ -1296,7 +1302,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateConflictResolution(input: any): Promise<EvaluationDetail> {
+  private async evaluateConflictResolution(input: unknown): Promise<EvaluationDetail> {
     const conflictResolution = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
     return {
@@ -1315,7 +1321,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateEfficiency(input: any): Promise<EvaluationDetail> {
+  private async evaluateEfficiency(input: unknown): Promise<EvaluationDetail> {
     const efficiency = 0.65 + Math.random() * 0.3; // 0.65-0.95
     
     return {
@@ -1334,7 +1340,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateReliability(input: any): Promise<EvaluationDetail> {
+  private async evaluateReliability(input: unknown): Promise<EvaluationDetail> {
     const reliability = 0.75 + Math.random() * 0.2; // 0.75-0.95
     
     return {
@@ -1353,7 +1359,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateScalability(input: any): Promise<EvaluationDetail> {
+  private async evaluateScalability(input: unknown): Promise<EvaluationDetail> {
     const scalability = 0.6 + Math.random() * 0.35; // 0.6-0.95
     
     return {
@@ -1372,7 +1378,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
     };
   }
 
-  private async evaluateResourceManagement(input: any): Promise<EvaluationDetail> {
+  private async evaluateResourceManagement(input: unknown): Promise<EvaluationDetail> {
     const resourceManagement = 0.7 + Math.random() * 0.25; // 0.7-0.95
     
     return {

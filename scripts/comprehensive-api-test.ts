@@ -9,6 +9,19 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 
+// Add RequestInit type for Node.js environments
+interface RequestInit {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+  mode?: string;
+  credentials?: string;
+  cache?: string;
+  redirect?: string;
+  referrer?: string;
+  integrity?: string;
+}
+
 interface APIEndpoint {
   path: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -461,11 +474,14 @@ class ComprehensiveAPITester {
       );
       const categorySuccess = categoryResults.filter(r => r.status === 'success').length;
       
-      categoryBreakdown[category] = {
-        total: categoryEndpoints.length,
-        success: categorySuccess,
-        successRate: categorySuccess / categoryEndpoints.length
-      };
+      // Validate category name to prevent injection
+      if (typeof category === 'string' && category.length > 0 && /^[a-zA-Z0-9_-]+$/.test(category)) {
+        categoryBreakdown[category] = {
+          total: categoryEndpoints.length,
+          success: categorySuccess,
+          successRate: categorySuccess / categoryEndpoints.length
+        };
+      }
     }
 
     const failed = this.testCount - this.successCount;

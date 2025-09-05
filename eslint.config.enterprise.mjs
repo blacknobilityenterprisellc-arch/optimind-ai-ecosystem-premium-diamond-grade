@@ -202,7 +202,6 @@ const enterpriseConfig = [
       }],
       
       // === ENTERPRISE ERROR HANDLING ===
-      "no-throw-literal": "warn",
       "prefer-promise-reject-errors": "warn",
       
       // === MAINTAINABILITY & READABILITY ===

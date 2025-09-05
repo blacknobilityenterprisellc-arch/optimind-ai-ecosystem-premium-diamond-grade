@@ -203,7 +203,7 @@ jobs:
     
     steps:
     - name: Send success notification
-      if: needs.build.result == 'success' && secrets.SLACK_WEBHOOK_URL != ''
+      if: needs.build.result == 'success'
       uses: 8398a7/action-slack@v3
       with:
         status: success
@@ -214,7 +214,7 @@ jobs:
       continue-on-error: true
         
     - name: Send failure notification
-      if: needs.build.result == 'failure' && secrets.SLACK_WEBHOOK_URL != ''
+      if: needs.build.result == 'failure'
       uses: 8398a7/action-slack@v3
       with:
         status: failure
