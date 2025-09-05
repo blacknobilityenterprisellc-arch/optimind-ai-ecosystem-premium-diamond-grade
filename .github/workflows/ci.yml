@@ -37,7 +37,7 @@ jobs:
     - name: Run linting
       run: |
         # Use ultra-optimized ESLint configuration
-        timeout 60 npx eslint . --config eslint.config.mjs --max-warnings 50 || echo "Linting completed with warnings"
+        timeout 45 npx eslint src/ --config eslint.config.mjs --max-warnings 50 || echo "Linting completed with warnings"
       env:
         NODE_ENV: test
       

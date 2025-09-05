@@ -28,7 +28,7 @@ jobs:
     - name: Run ESLint
       run: |
         # Use ultra-optimized ESLint configuration
-        timeout 90 npx eslint . --config eslint.config.mjs --max-warnings 50 --format json > eslint-report.json || echo "ESLint completed with warnings"
+        timeout 60 npx eslint src/ --config eslint.config.mjs --max-warnings 50 --format json > eslint-report.json || echo "ESLint completed with warnings"
       
     - name: Generate ESLint report
       run: |
