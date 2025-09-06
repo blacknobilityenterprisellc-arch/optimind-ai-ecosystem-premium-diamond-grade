@@ -2,11 +2,11 @@
  * Agent Orchestrator for GLM-4.5 Orchestrated AI Ecosystem
  * 
  * This module provides the main orchestration system that coordinates
- * multiple AI agents with dynamic load balancing, fault tolerance,
- * and intelligent task distribution.
+ * multiple AI agents with GLM-4.5 as the primary orchestrator.
+ * All operations are now orchestrated through the GLM-4.5 system.
  */
 import { DynamicLoadBalancer } from './dynamic-load-balancer';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import { glmOrchestrator, GLMOrchestratorConfig } from '../glm-orchestrator';
 
 interface AgentTask {
   id: string;
@@ -61,9 +61,12 @@ export class AgentOrchestrator {
   }
 
   /**
-   * Initialize the orchestrator with available agents
+   * Initialize the orchestrator with GLM-4.5 as primary orchestrator
    */
   async initialize(agents: any[]): Promise<void> {
+    // First, initialize the GLM orchestrator
+    await glmOrchestrator.initialize();
+    
     // Register agents with the load balancer
     agents.forEach(agent => {
       this.loadBalancer.registerAgent({
@@ -270,45 +273,53 @@ export class AgentOrchestrator {
   }
 
   /**
-   * Execute task with a specific agent
+   * Execute task with a specific agent - now orchestrated through GLM-4.5
    */
   private async executeWithAgent(task: AgentTask, agent: any): Promise<any> {
-    // This is where the actual agent execution would happen
-    // For now, we'll simulate it with a simple ZAI call
+    // Submit the task to the GLM orchestrator for execution
+    const operationType = this.mapTaskTypeToOperationType(task.type);
     
-    const zai = await ZAI.create();
+    const operationId = await glmOrchestrator.submitOperation({
+      type: operationType,
+      priority: task.priority,
+      payload: {
+        task,
+        agent,
+        originalPayload: task.payload
+      },
+      agentRequirements: task.capabilities,
+      expectedOutcome: `Execute ${task.type} task using agent ${agent.name}`,
+      timeout: task.timeout || this.config.taskTimeout
+    });
+
+    // Wait for the GLM orchestrator to complete the operation
+    const result = await glmOrchestrator.getOperationResult(operationId);
     
-    switch (task.type) {
+    if (!result || !result.success) {
+      throw new Error(result ? `Operation failed: ${JSON.stringify(result)}` : 'Operation failed');
+    }
+
+    return result.result;
+  }
+
+  /**
+   * Map task type to GLM orchestrator operation type
+   */
+  private mapTaskTypeToOperationType(taskType: string): 'analysis' | 'optimization' | 'monitoring' | 'security' | 'prediction' {
+    switch (taskType) {
       case 'text-generation':
-        return await zai.chat.completions.create({
-          messages: [
-            { role: 'system', content: 'You are a helpful assistant.' },
-            { role: 'user', content: task.payload.prompt }
-          ]
-        });
-
-      case 'image-generation':
-        return await zai.images.generations.create({
-          prompt: task.payload.prompt,
-          size: task.payload.size || '1024x1024'
-        });
-
       case 'data-analysis':
-        // Simulate data analysis
-        return {
-          analysis: 'Data analysis completed',
-          insights: ['Insight 1', 'Insight 2'],
-          confidence: 0.95
-        };
-
+        return 'analysis';
+      case 'image-generation':
+        return 'optimization';
       case 'web-search':
-        return await zai.functions.invoke('web_search', {
-          query: task.payload.query,
-          num: task.payload.num || 10
-        });
-
+        return 'monitoring';
+      case 'security-scan':
+        return 'security';
+      case 'prediction':
+        return 'prediction';
       default:
-        throw new Error(`Unknown task type: ${task.type}`);
+        return 'analysis';
     }
   }
 
@@ -349,5 +360,6 @@ export class AgentOrchestrator {
     this.runningTasks.clear();
     this.completedTasks.clear();
     this.taskDependencies.clear();
+    glmOrchestrator.destroy();
   }
 }
