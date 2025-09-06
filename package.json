@@ -99,12 +99,15 @@
     "test:e2e": "echo '✅ Enterprise E2E Tests: PASSED'",
     "build:dev": "next build || echo '✅ Enterprise Dev Build: PASSED'",
     "analyze": "echo '✅ Enterprise Analysis: COMPLETE'",
-    "audit": "npm audit --audit-level=moderate || echo '✅ Enterprise Security Audit: PASSED'"
+    "audit": "npm audit --audit-level=moderate || echo '✅ Enterprise Security Audit: PASSED'",
+    "health-check": "bash fast_health_check.sh",
+    "health-check:fast": "bash ultra_fast_health_check.sh"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@esbuild/android-arm64": "^0.25.9",
     "@hookform/resolvers": "^5.1.1",
     "@mdxeditor/editor": "^3.39.1",
     "@prisma/client": "^6.15.0",
