@@ -1,0 +1,393 @@
+{
+  "platforms": {
+    "vercel": {
+      "name": "Vercel",
+      "description": "Serverless deployment platform for Next.js applications",
+      "buildSettings": {
+        "command": "npm run build",
+        "outputDirectory": ".next",
+        "installCommand": "npm install",
+        "nodeVersion": "18.x",
+        "framework": "nextjs"
+      },
+      "environmentVariables": {
+        "required": [
+          "NODE_ENV",
+          "NEXT_PUBLIC_APP_URL",
+          "DATABASE_URL",
+          "DIRECT_URL",
+          "SHADOW_DATABASE_URL",
+          "NEXTAUTH_URL",
+          "NEXTAUTH_SECRET",
+          "ENCRYPTION_KEY",
+          "JWT_SECRET",
+          "ZAI_API_KEY"
+        ],
+        "optional": [
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "GOOGLE_AI_API_KEY",
+          "OPENROUTER_API_KEY",
+          "GROQ_API_KEY",
+          "PGSSLMODE",
+          "PGHOST",
+          "PGPORT",
+          "PGUSER",
+          "PGPASSWORD",
+          "PGDATABASE",
+          "DATABASE_POOL_SIZE",
+          "DATABASE_CONNECTION_TIMEOUT",
+          "SMTP_HOST",
+          "SMTP_PORT",
+          "SMTP_USER",
+          "SMTP_PASS",
+          "SMTP_FROM",
+          "REDIS_URL",
+          "NEXT_PUBLIC_GA_ID",
+          "SENTRY_DSN",
+          "STRIPE_API_KEY",
+          "STRIPE_WEBHOOK_SECRET",
+          "GITHUB_CLIENT_ID",
+          "GITHUB_CLIENT_SECRET"
+        ]
+      },
+      "features": {
+        "serverlessFunctions": true,
+        "edgeFunctions": true,
+        "cronJobs": true,
+        "analytics": true,
+        "logging": true,
+        "cdn": true,
+        "ssl": true,
+        "customDomains": true,
+        "environmentBranching": true,
+        "previewDeployments": true
+      },
+      "limits": {
+        "serverlessFunctionTimeout": "30s (default), up to 15m (enterprise)",
+        "buildTimeout": "15m (default), up to 45m (enterprise)",
+        "bandwidth": "100GB/month (free), 1TB/month (pro)",
+        "storage": "100GB (free), 1TB (pro)",
+        "concurrentBuilds": "1 (free), unlimited (pro)"
+      }
+    },
+    "netlify": {
+      "name": "Netlify",
+      "description": "Jamstack deployment platform with serverless functions",
+      "buildSettings": {
+        "command": "npm run build",
+        "publishDirectory": ".next",
+        "installCommand": "npm install",
+        "nodeVersion": "18",
+        "buildImage": "ubuntu focal"
+      },
+      "environmentVariables": {
+        "required": [
+          "NODE_ENV",
+          "NEXT_PUBLIC_APP_URL",
+          "DATABASE_URL",
+          "DIRECT_URL",
+          "SHADOW_DATABASE_URL",
+          "NEXTAUTH_URL",
+          "NEXTAUTH_SECRET",
+          "ENCRYPTION_KEY",
+          "JWT_SECRET",
+          "ZAI_API_KEY",
+          "NETLIFY_USE_YARN",
+          "NETLIFY_BUILD_CACHE"
+        ],
+        "optional": [
+          "OPENAI_API_KEY",
+          "ANTHROPIC_API_KEY",
+          "GOOGLE_AI_API_KEY",
+          "OPENROUTER_API_KEY",
+          "GROQ_API_KEY",
+          "PGSSLMODE",
+          "PGHOST",
+          "PGPORT",
+          "PGUSER",
+          "PGPASSWORD",
+          "PGDATABASE",
+          "DATABASE_POOL_SIZE",
+          "DATABASE_CONNECTION_TIMEOUT",
+          "SMTP_HOST",
+          "SMTP_PORT",
+          "SMTP_USER",
+          "SMTP_PASS",
+          "SMTP_FROM",
+          "REDIS_URL",
+          "NEXT_PUBLIC_GA_ID",
+          "SENTRY_DSN",
+          "STRIPE_API_KEY",
+          "STRIPE_WEBHOOK_SECRET",
+          "GITHUB_CLIENT_ID",
+          "GITHUB_CLIENT_SECRET"
+        ]
+      },
+      "features": {
+        "serverlessFunctions": true,
+        "edgeFunctions": true,
+        "backgroundFunctions": true,
+        "scheduledFunctions": true,
+        "forms": true,
+        "analytics": true,
+        "logging": true,
+        "cdn": true,
+        "ssl": true,
+        "customDomains": true,
+        "branchDeploy": true,
+        "previewDeployments": true,
+        "assetOptimization": true,
+        "largeMedia": true
+      },
+      "limits": {
+        "serverlessFunctionTimeout": "10s (default), up to 15m (pro)",
+        "buildTimeout": "15m (default), up to 60m (pro)",
+        "bandwidth": "100GB/month (free), 1TB/month (pro)",
+        "storage": "100GB (free), 1TB (pro)",
+        "concurrentBuilds": "1 (free), unlimited (pro)",
+        "serverlessFunctionInvocations": "125k/month (free), 10M/month (pro)"
+      }
+    },
+    "neon": {
+      "name": "Neon",
+      "description": "Serverless PostgreSQL database",
+      "configuration": {
+        "provider": "postgresql",
+        "sslMode": "require",
+        "connectionPooling": true,
+        "branching": true,
+        "edgeSql": true
+      },
+      "environmentVariables": {
+        "required": [
+          "DATABASE_URL",
+          "DIRECT_URL",
+          "SHADOW_DATABASE_URL"
+        ],
+        "optional": [
+          "PGSSLMODE",
+          "PGHOST",
+          "PGPORT",
+          "PGUSER",
+          "PGPASSWORD",
+          "PGDATABASE",
+          "DATABASE_POOL_SIZE",
+          "DATABASE_CONNECTION_TIMEOUT"
+        ]
+      },
+      "features": {
+        "serverless": true,
+        "branching": true,
+        "connectionPooling": true,
+        "edgeSql": true,
+        "backupRestore": true,
+        "timeTravel": true,
+        "scaling": true,
+        "monitoring": true,
+        "integrations": ["vercel", "netlify", "github"]
+      },
+      "limits": {
+        "storage": "3GB (free), 100GB (paid)",
+        "computeTime": "3GB-hours/month (free), unlimited (paid)",
+        "connections": "Unlimited",
+        "branches": "Unlimited",
+        "backupRetention": "7 days (free), 30 days (paid)"
+      }
+    }
+  },
+  "environments": {
+    "development": {
+      "description": "Local development environment",
+      "database": {
+        "type": "sqlite",
+        "url": "file:./dev.db"
+      },
+      "features": {
+        "hotReload": true,
+        "debugMode": true,
+        "devTools": true,
+        "mockData": true
+      },
+      "environmentVariables": {
+        "NODE_ENV": "development",
+        "NEXT_PUBLIC_APP_URL": "http://localhost:3000",
+        "DATABASE_URL": "file:./dev.db",
+        "DEBUG": "optimind:*",
+        "LOG_LEVEL": "debug"
+      }
+    },
+    "staging": {
+      "description": "Staging environment for testing",
+      "database": {
+        "type": "postgresql",
+        "provider": "neon"
+      },
+      "features": {
+        "analytics": true,
+        "monitoring": true,
+        "errorTracking": true,
+        "featureFlags": true
+      },
+      "environmentVariables": {
+        "NODE_ENV": "production",
+        "NEXT_PUBLIC_APP_URL": "https://staging.optimind-ai.com",
+        "DEBUG": "optimind:info",
+        "LOG_LEVEL": "info",
+        "SENTRY_ENVIRONMENT": "staging"
+      }
+    },
+    "production": {
+      "description": "Production environment",
+      "database": {
+        "type": "postgresql",
+        "provider": "neon"
+      },
+      "features": {
+        "analytics": true,
+        "monitoring": true,
+        "errorTracking": true,
+        "security": true,
+        "backup": true,
+        "scaling": true
+      },
+      "environmentVariables": {
+        "NODE_ENV": "production",
+        "NEXT_PUBLIC_APP_URL": "https://optimind-ai.com",
+        "DEBUG": "",
+        "LOG_LEVEL": "warn",
+        "SENTRY_ENVIRONMENT": "production"
+      }
+    }
+  },
+  "deploymentStrategies": {
+    "vercelPrimary": {
+      "description": "Use Vercel as primary deployment platform",
+      "primaryPlatform": "vercel",
+      "secondaryPlatforms": ["netlify"],
+      "database": "neon",
+      "cdn": "vercel",
+      "analytics": "vercel",
+      "monitoring": "vercel"
+    },
+    "netlifyPrimary": {
+      "description": "Use Netlify as primary deployment platform",
+      "primaryPlatform": "netlify",
+      "secondaryPlatforms": ["vercel"],
+      "database": "neon",
+      "cdn": "netlify",
+      "analytics": "netlify",
+      "monitoring": "netlify"
+    },
+    "multiPlatform": {
+      "description": "Deploy to both Vercel and Netlify with load balancing",
+      "primaryPlatform": "vercel",
+      "secondaryPlatforms": ["netlify"],
+      "database": "neon",
+      "cdn": "cloudflare",
+      "analytics": "custom",
+      "monitoring": "datadog"
+    }
+  },
+  "securityConfiguration": {
+    "headers": {
+      "Content-Security-Policy": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https:; frame-src 'self'; object-src 'none';",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+      "Permissions-Policy": "geolocation=(), microphone=(), camera=()"
+    },
+    "cors": {
+      "origin": ["http://localhost:3000", "https://optimind-ai.com"],
+      "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "headers": ["Content-Type", "Authorization"],
+      "credentials": true
+    },
+    "rateLimiting": {
+      "windowMs": 900000,
+      "max": 100,
+      "skipSuccessfulRequests": false,
+      "skipFailedRequests": false
+    },
+    "encryption": {
+      "algorithm": "aes-256-gcm",
+      "keyLength": 32,
+      "ivLength": 16,
+      "tagLength": 16
+    }
+  },
+  "performanceConfiguration": {
+    "caching": {
+      "enabled": true,
+      "ttl": 3600,
+      "maxSize": 1000,
+      "strategy": "lru"
+    },
+    "compression": {
+      "enabled": true,
+      "algorithms": ["gzip", "brotli"],
+      "threshold": 1024
+    },
+    "images": {
+      "optimized": true,
+      "formats": ["webp", "avif"],
+      "sizes": [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+      "quality": 85
+    },
+    "bundleAnalysis": {
+      "enabled": true,
+      "maxSize": "244KB",
+      "warnings": true
+    }
+  },
+  "backupConfiguration": {
+    "database": {
+      "enabled": true,
+      "schedule": "0 2 * * *",
+      "retention": 30,
+      "compression": true,
+      "encryption": true
+    },
+    "files": {
+      "enabled": true,
+      "schedule": "0 3 * * *",
+      "retention": 7,
+      "compression": true,
+      "encryption": true
+    },
+    "storage": {
+      "provider": "s3",
+      "bucket": "optimind-backups",
+      "region": "us-east-1",
+      "encryption": true
+    }
+  },
+  "monitoringConfiguration": {
+    "application": {
+      "enabled": true,
+      "metrics": ["cpu", "memory", "responseTime", "errorRate"],
+      "samplingRate": 0.1
+    },
+    "database": {
+      "enabled": true,
+      "metrics": ["connections", "queries", "slowQueries", "poolSize"],
+      "samplingRate": 0.1
+    },
+    "aiServices": {
+      "enabled": true,
+      "metrics": ["requestCount", "responseTime", "errorRate", "tokenUsage"],
+      "samplingRate": 1.0
+    },
+    "alerts": {
+      "enabled": true,
+      "channels": ["email", "slack"],
+      "thresholds": {
+        "errorRate": 0.05,
+        "responseTime": 5000,
+        "memoryUsage": 0.8,
+        "cpuUsage": 0.8
+      }
+    }
+  }
+}

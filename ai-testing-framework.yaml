@@ -1,0 +1,2761 @@
+openapi: 3.1.0
+info:
+  title: OptiMind AI Ecosystem - Comprehensive Testing Framework
+  version: 2.0.0
+  description: |
+    Enterprise-grade AI testing framework for rigorous quality assessment of AI systems and agents.
+    This framework provides comprehensive methodologies for evaluating performance, reliability, security,
+    and compliance of AI models and autonomous agents across multiple dimensions.
+    
+    **Key Features:**
+    - Multi-model benchmarking and comparison
+    - Agent behavior analysis and evaluation
+    - Performance metrics and reliability testing
+    - Security vulnerability assessment
+    - Compliance validation frameworks
+    - Real-time monitoring and analytics
+    
+    **Testing Methodologies:**
+    - Quantitative performance metrics
+    - Qualitative behavior analysis
+    - Stress testing and load balancing
+    - Security penetration testing
+    - Regulatory compliance verification
+    - User experience evaluation
+    
+  contact:
+    name: OptiMind AI Ecosystem Team
+    email: testing@optimind-ai-ecosystem.com
+    url: https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://optimind-ai-ecosystem.com/terms
+  x-logo:
+    url: https://optimind-ai-ecosystem.com/logo.png
+    backgroundColor: "#ffffff"
+    altText: OptiMind AI Ecosystem
+
+servers:
+  - url: https://api.optimind-ai-ecosystem.com/v1
+    description: Production server
+  - url: https://staging-api.optimind-ai-ecosystem.com/v1
+    description: Staging server
+  - url: http://localhost:3000/api
+    description: Local development server
+  - url: https://testing-api.optimind-ai-ecosystem.com/v1
+    description: Dedicated testing environment
+
+tags:
+  - name: Model Testing
+    description: Core AI model testing and evaluation endpoints
+  - name: Agent Testing
+    description: AI agent behavior and performance testing
+  - name: Performance Benchmarking
+    description: Performance metrics and benchmarking tools
+  - name: Security Testing
+    description: Security vulnerability and penetration testing
+  - name: Compliance Testing
+    description: Regulatory compliance validation frameworks
+  - name: Real-time Monitoring
+    description: Live monitoring and analytics endpoints
+  - name: Test Management
+    description: Test suite management and execution
+
+paths:
+  # Model Testing Endpoints
+  /testing/models/benchmark:
+    post:
+      tags:
+        - Model Testing
+      summary: Comprehensive model benchmarking
+      description: |
+        Execute comprehensive benchmarking tests on specified AI models across multiple dimensions
+        including accuracy, speed, cost, and reliability. Supports batch testing and comparative analysis.
+      operationId: benchmarkModels
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelBenchmarkRequest'
+            example:
+              models:
+                - modelId: "gpt-4o-mini"
+                  provider: "openai"
+                - modelId: "claude-3-haiku"
+                  provider: "anthropic"
+                - modelId: "gemini-pro"
+                  provider: "google"
+              testSuite:
+                - accuracy
+                - latency
+                - cost
+                - reliability
+              prompts:
+                - "Explain quantum computing in simple terms"
+                - "Write a Python function for bubble sort"
+                - "Analyze the following business case..."
+              iterations: 10
+              parallelExecution: true
+      responses:
+        '200':
+          description: Benchmarking completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelBenchmarkResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/models/evaluate:
+    post:
+      tags:
+        - Model Testing
+      summary: Single model evaluation
+      description: |
+        Perform detailed evaluation of a single AI model with comprehensive metrics
+        including response quality, coherence, relevance, and factual accuracy.
+      operationId: evaluateModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelEvaluationRequest'
+      responses:
+        '200':
+          description: Model evaluation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelEvaluationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/models/stress-test:
+    post:
+      tags:
+        - Model Testing
+      summary: Model stress testing
+      description: |
+        Execute stress tests on AI models under high load conditions to evaluate
+        performance degradation, error rates, and recovery capabilities.
+      operationId: stressTestModel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StressTestRequest'
+      responses:
+        '200':
+          description: Stress test completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StressTestResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Agent Testing Endpoints
+  /testing/agents/behavior:
+    post:
+      tags:
+        - Agent Testing
+      summary: Agent behavior analysis
+      description: |
+        Analyze AI agent behavior patterns, decision-making processes, and
+        autonomous capabilities through structured testing scenarios.
+      operationId: analyzeAgentBehavior
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentBehaviorRequest'
+      responses:
+        '200':
+          description: Agent behavior analysis completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentBehaviorResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/agents/autonomy:
+    post:
+      tags:
+        - Agent Testing
+      summary: Agent autonomy evaluation
+      description: |
+        Evaluate the autonomous capabilities of AI agents including decision-making,
+        problem-solving, and adaptive behavior in dynamic environments.
+      operationId: evaluateAgentAutonomy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentAutonomyRequest'
+      responses:
+        '200':
+          description: Agent autonomy evaluation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentAutonomyResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Performance Benchmarking Endpoints
+  /testing/performance/latency:
+    post:
+      tags:
+        - Performance Benchmarking
+      summary: Latency benchmarking
+      description: |
+        Measure and analyze response latency across different models and conditions
+        to identify performance bottlenecks and optimization opportunities.
+      operationId: benchmarkLatency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LatencyBenchmarkRequest'
+      responses:
+        '200':
+          description: Latency benchmarking completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatencyBenchmarkResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/performance/throughput:
+    post:
+      tags:
+        - Performance Benchmarking
+      summary: Throughput analysis
+      description: |
+        Analyze system throughput under various load conditions to determine
+        maximum capacity and optimal performance parameters.
+      operationId: analyzeThroughput
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThroughputAnalysisRequest'
+      responses:
+        '200':
+          description: Throughput analysis completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThroughputAnalysisResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Security Testing Endpoints
+  /testing/security/vulnerability:
+    post:
+      tags:
+        - Security Testing
+      summary: Security vulnerability assessment
+      description: |
+        Perform comprehensive security vulnerability assessment on AI models
+        including prompt injection, data leakage, and adversarial attack testing.
+      operationId: assessSecurityVulnerability
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SecurityVulnerabilityRequest'
+      responses:
+        '200':
+          description: Security vulnerability assessment completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityVulnerabilityResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/security/prompt-injection:
+    post:
+      tags:
+        - Security Testing
+      summary: Prompt injection testing
+      description: |
+        Test AI models against various prompt injection techniques to evaluate
+        security robustness and identify potential vulnerabilities.
+      operationId: testPromptInjection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromptInjectionTestRequest'
+      responses:
+        '200':
+          description: Prompt injection testing completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromptInjectionTestResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Compliance Testing Endpoints
+  /testing/compliance/regulatory:
+    post:
+      tags:
+        - Compliance Testing
+      summary: Regulatory compliance validation
+      description: |
+        Validate AI model compliance with regulatory frameworks including GDPR,
+        CCPA, HIPAA, and industry-specific requirements.
+      operationId: validateRegulatoryCompliance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegulatoryComplianceRequest'
+      responses:
+        '200':
+          description: Regulatory compliance validation completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegulatoryComplianceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/compliance/ethical:
+    post:
+      tags:
+        - Compliance Testing
+      summary: Ethical compliance assessment
+      description: |
+        Assess AI model compliance with ethical guidelines including bias detection,
+        fairness evaluation, and responsible AI principles.
+      operationId: assessEthicalCompliance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EthicalComplianceRequest'
+      responses:
+        '200':
+          description: Ethical compliance assessment completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EthicalComplianceResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Real-time Monitoring Endpoints
+  /testing/monitoring/metrics:
+    get:
+      tags:
+        - Real-time Monitoring
+      summary: Real-time performance metrics
+      description: |
+        Retrieve real-time performance metrics and analytics for active AI models
+        and agents including response times, error rates, and system health.
+      operationId: getRealtimeMetrics
+      parameters:
+        - $ref: '#/components/parameters/ModelId'
+        - $ref: '#/components/parameters/TimeRange'
+        - $ref: '#/components/parameters/MetricsType'
+      responses:
+        '200':
+          description: Real-time metrics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealtimeMetricsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/monitoring/alerts:
+    get:
+      tags:
+        - Real-time Monitoring
+      summary: System alerts and notifications
+      description: |
+        Retrieve active system alerts, warnings, and notifications related to
+        AI model performance, security issues, or compliance violations.
+      operationId: getSystemAlerts
+      parameters:
+        - $ref: '#/components/parameters/AlertLevel'
+        - $ref: '#/components/parameters/TimeRange'
+      responses:
+        '200':
+          description: System alerts retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemAlertsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  # Test Management Endpoints
+  /testing/suites:
+    get:
+      tags:
+        - Test Management
+      summary: List test suites
+      description: |
+        Retrieve a list of available test suites with their configurations,
+        status, and execution history.
+      operationId: listTestSuites
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Test suites listed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestSuitesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/suites:
+    post:
+      tags:
+        - Test Management
+      summary: Create test suite
+      description: |
+        Create a new test suite with specified configuration, test cases,
+        and execution parameters.
+      operationId: createTestSuite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTestSuiteRequest'
+      responses:
+        '201':
+          description: Test suite created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestSuiteResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /testing/suites/{suiteId}/execute:
+    post:
+      tags:
+        - Test Management
+      summary: Execute test suite
+      description: |
+        Execute a specified test suite with the provided parameters and
+        return detailed results and analysis.
+      operationId: executeTestSuite
+      parameters:
+        - $ref: '#/components/parameters/SuiteId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteTestSuiteRequest'
+      responses:
+        '200':
+          description: Test suite execution completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestSuiteExecutionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  # Parameters
+  parameters:
+    ModelId:
+      name: modelId
+      in: query
+      description: Unique identifier for the AI model
+      required: false
+      schema:
+        type: string
+        example: "gpt-4o-mini"
+    
+    TimeRange:
+      name: timeRange
+      in: query
+      description: Time range for data retrieval
+      required: false
+      schema:
+        type: string
+        enum: [1h, 6h, 24h, 7d, 30d]
+        example: "24h"
+    
+    MetricsType:
+      name: metricsType
+      in: query
+      description: Type of metrics to retrieve
+      required: false
+      schema:
+        type: string
+        enum: [performance, security, compliance, cost, usage]
+        example: "performance"
+    
+    AlertLevel:
+      name: alertLevel
+      in: query
+      description: Filter alerts by severity level
+      required: false
+      schema:
+        type: string
+        enum: [info, warning, error, critical]
+        example: "error"
+    
+    Page:
+      name: page
+      in: query
+      description: Page number for pagination
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+        example: 1
+    
+    PageSize:
+      name: pageSize
+      in: query
+      description: Number of items per page
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+        example: 20
+    
+    Filter:
+      name: filter
+      in: query
+      description: Filter criteria for results
+      required: false
+      schema:
+        type: string
+        example: "status:active"
+    
+    SuiteId:
+      name: suiteId
+      in: path
+      description: Unique identifier for the test suite
+      required: true
+      schema:
+        type: string
+        example: "ts_123456789"
+
+  # Request Schemas
+  schemas:
+    # Model Testing Schemas
+    ModelBenchmarkRequest:
+      type: object
+      required:
+        - models
+        - testSuite
+        - prompts
+      properties:
+        models:
+          type: array
+          description: List of models to benchmark
+          items:
+            $ref: '#/components/schemas/ModelConfiguration'
+        testSuite:
+          type: array
+          description: Types of tests to perform
+          items:
+            type: string
+            enum: [accuracy, latency, cost, reliability, coherence, relevance, creativity]
+        prompts:
+          type: array
+          description: Test prompts to use
+          items:
+            type: string
+            minItems: 1
+        iterations:
+          type: integer
+          description: Number of iterations per test
+          minimum: 1
+          maximum: 1000
+          default: 10
+        parallelExecution:
+          type: boolean
+          description: Execute tests in parallel
+          default: true
+        timeout:
+          type: integer
+          description: Timeout in seconds
+          minimum: 1
+          maximum: 3600
+          default: 300
+        environment:
+          $ref: '#/components/schemas/TestEnvironment'
+
+    ModelConfiguration:
+      type: object
+      required:
+        - modelId
+        - provider
+      properties:
+        modelId:
+          type: string
+          description: Model identifier
+          example: "gpt-4o-mini"
+        provider:
+          type: string
+          description: Model provider
+          example: "openai"
+        parameters:
+          type: object
+          description: Model-specific parameters
+          properties:
+            temperature:
+              type: number
+              minimum: 0
+              maximum: 2
+              default: 0.7
+            maxTokens:
+              type: integer
+              minimum: 1
+              maximum: 32000
+              default: 1000
+            topP:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 1
+            frequencyPenalty:
+              type: number
+              minimum: -2
+              maximum: 2
+              default: 0
+            presencePenalty:
+              type: number
+              minimum: -2
+              maximum: 2
+              default: 0
+
+    TestEnvironment:
+      type: object
+      properties:
+        temperature:
+          type: number
+          description: Environment temperature setting
+          minimum: 0
+          maximum: 2
+          default: 0.7
+        systemPrompt:
+          type: string
+          description: System prompt for all tests
+        contextWindow:
+          type: integer
+          description: Context window size
+          minimum: 1
+          maximum: 200000
+          default: 4000
+        tools:
+          type: array
+          description: Available tools for the model
+          items:
+            type: string
+
+    ModelEvaluationRequest:
+      type: object
+      required:
+        - model
+        - evaluationCriteria
+        - testCases
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelConfiguration'
+        evaluationCriteria:
+          type: array
+          description: Criteria for evaluation
+          items:
+            type: string
+            enum: [accuracy, coherence, relevance, creativity, helpfulness, safety, bias, fairness]
+        testCases:
+          type: array
+          description: Test cases to evaluate
+          items:
+            $ref: '#/components/schemas/TestCase'
+        groundTruth:
+          type: array
+          description: Ground truth data for comparison
+          items:
+            $ref: '#/components/schemas/GroundTruthData'
+        evaluationMethodology:
+          $ref: '#/components/schemas/EvaluationMethodology'
+
+    TestCase:
+      type: object
+      required:
+        - input
+        - expectedOutput
+      properties:
+        input:
+          type: string
+          description: Test input
+        expectedOutput:
+          type: string
+          description: Expected output
+        category:
+          type: string
+          description: Test category
+          example: "reasoning"
+        difficulty:
+          type: string
+          enum: [easy, medium, hard, expert]
+          default: "medium"
+        weight:
+          type: number
+          description: Test case weight in scoring
+          minimum: 0
+          maximum: 1
+          default: 1
+
+    GroundTruthData:
+      type: object
+      properties:
+        expectedResponse:
+          type: string
+        expectedMetrics:
+          type: object
+          properties:
+            accuracy:
+              type: number
+              minimum: 0
+              maximum: 1
+            relevance:
+              type: number
+              minimum: 0
+              maximum: 1
+            coherence:
+              type: number
+              minimum: 0
+              maximum: 1
+        references:
+          type: array
+          items:
+            type: string
+
+    EvaluationMethodology:
+      type: object
+      properties:
+        scoringMethod:
+          type: string
+          enum: [manual, automated, hybrid]
+          default: "automated"
+        evaluationModels:
+          type: array
+          description: Models to use for automated evaluation
+          items:
+            type: string
+        metrics:
+          type: array
+          description: Specific metrics to evaluate
+          items:
+            type: string
+            enum: [bleu, rouge, meteor, bertscore, perplexity, diversity]
+        thresholds:
+          type: object
+          description: Pass/fail thresholds
+          properties:
+            accuracy:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.8
+            relevance:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.7
+            coherence:
+              type: number
+              minimum: 0
+              maximum: 1
+              default: 0.8
+
+    StressTestRequest:
+      type: object
+      required:
+        - model
+        - loadProfile
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelConfiguration'
+        loadProfile:
+          $ref: '#/components/schemas/LoadProfile'
+        duration:
+          type: integer
+          description: Test duration in seconds
+          minimum: 60
+          maximum: 3600
+          default: 300
+        rampUp:
+          type: integer
+          description: Ramp up time in seconds
+          minimum: 0
+          maximum: 300
+          default: 30
+        monitoringInterval:
+          type: integer
+          description: Monitoring interval in seconds
+          minimum: 1
+          maximum: 60
+          default: 5
+
+    LoadProfile:
+      type: object
+      required:
+        - concurrentUsers
+        - requestsPerSecond
+      properties:
+        concurrentUsers:
+          type: integer
+          description: Number of concurrent users
+          minimum: 1
+          maximum: 10000
+          default: 100
+        requestsPerSecond:
+          type: integer
+          description: Requests per second
+          minimum: 1
+          maximum: 1000
+          default: 50
+        payloadSize:
+          type: integer
+          description: Payload size in bytes
+          minimum: 100
+          maximum: 1000000
+          default: 1000
+        testPattern:
+          type: string
+          enum: [constant, spike, step, ramp]
+          default: "constant"
+
+    # Agent Testing Schemas
+    AgentBehaviorRequest:
+      type: object
+      required:
+        - agent
+        - scenarios
+        - evaluationMetrics
+      properties:
+        agent:
+          $ref: '#/components/schemas/AgentConfiguration'
+        scenarios:
+          type: array
+          description: Test scenarios for agent behavior
+          items:
+            $ref: '#/components/schemas/AgentScenario'
+        evaluationMetrics:
+          type: array
+          description: Metrics to evaluate
+          items:
+            type: string
+            enum: [decision_quality, adaptability, efficiency, safety, compliance, creativity]
+        simulationEnvironment:
+          $ref: '#/components/schemas/SimulationEnvironment'
+
+    AgentConfiguration:
+      type: object
+      required:
+        - agentId
+        - agentType
+      properties:
+        agentId:
+          type: string
+          description: Unique agent identifier
+        agentType:
+          type: string
+          description: Type of agent
+          enum: [conversational, task-oriented, autonomous, collaborative, specialized]
+        capabilities:
+          type: array
+          description: Agent capabilities
+          items:
+            type: string
+        constraints:
+          type: array
+          description: Agent constraints
+          items:
+            type: string
+        learningMode:
+          type: boolean
+          description: Whether agent is in learning mode
+          default: false
+
+    AgentScenario:
+      type: object
+      required:
+        - name
+        - description
+        - initialState
+        - expectedBehavior
+      properties:
+        name:
+          type: string
+          description: Scenario name
+        description:
+          type: string
+          description: Scenario description
+        initialState:
+          type: object
+          description: Initial state of the environment
+        expectedBehavior:
+          type: string
+          description: Expected agent behavior
+        successCriteria:
+          type: array
+          description: Success criteria
+          items:
+            type: string
+        failureConditions:
+          type: array
+          description: Failure conditions
+          items:
+            type: string
+        timeLimit:
+          type: integer
+          description: Time limit in seconds
+          minimum: 1
+          maximum: 3600
+
+    SimulationEnvironment:
+      type: object
+      properties:
+        environmentType:
+          type: string
+          enum: [virtual, physical, mixed, digital]
+          default: "virtual"
+        complexity:
+          type: string
+          enum: [simple, moderate, complex, extreme]
+          default: "moderate"
+        dynamicElements:
+          type: boolean
+          description: Whether environment has dynamic elements
+          default: true
+        uncertaintyLevel:
+          type: number
+          description: Level of uncertainty in environment
+          minimum: 0
+          maximum: 1
+          default: 0.5
+        resources:
+          type: array
+          description: Available resources
+          items:
+            type: string
+
+    AgentAutonomyRequest:
+      type: object
+      required:
+        - agent
+        - autonomyTests
+      properties:
+        agent:
+          $ref: '#/components/schemas/AgentConfiguration'
+        autonomyTests:
+          type: array
+          description: Autonomy tests to perform
+          items:
+            $ref: '#/components/schemas/AutonomyTest'
+        evaluationFramework:
+          $ref: '#/components/schemas/AutonomyEvaluationFramework'
+
+    AutonomyTest:
+      type: object
+      required:
+        - testName
+        - testType
+        - scenario
+      properties:
+        testName:
+          type: string
+          description: Name of the autonomy test
+        testType:
+          type: string
+          enum: [decision_making, problem_solving, adaptation, learning, planning]
+        scenario:
+          type: object
+          description: Test scenario details
+        constraints:
+          type: array
+          description: Test constraints
+          items:
+            type: string
+        objectives:
+          type: array
+          description: Test objectives
+          items:
+            type: string
+
+    AutonomyEvaluationFramework:
+      type: object
+      properties:
+        evaluationCriteria:
+          type: array
+          description: Criteria for autonomy evaluation
+          items:
+            type: string
+            enum: [independence, initiative, creativity, adaptability, learning, efficiency]
+        scoringMethod:
+          type: string
+          enum: [quantitative, qualitative, hybrid]
+          default: "hybrid"
+        benchmarks:
+          type: array
+          description: Benchmark standards
+          items:
+            $ref: '#/components/schemas/AutonomyBenchmark'
+
+    AutonomyBenchmark:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Benchmark name
+        description:
+          type: string
+          description: Benchmark description
+        threshold:
+          type: number
+          description: Performance threshold
+          minimum: 0
+          maximum: 1
+        weight:
+          type: number
+          description: Benchmark weight
+          minimum: 0
+          maximum: 1
+
+    # Performance Testing Schemas
+    LatencyBenchmarkRequest:
+      type: object
+      required:
+        - models
+        - testConfiguration
+      properties:
+        models:
+          type: array
+          description: Models to test
+          items:
+            $ref: '#/components/schemas/ModelConfiguration'
+        testConfiguration:
+          $ref: '#/components/schemas/LatencyTestConfiguration'
+        sampleSize:
+          type: integer
+          description: Number of samples to collect
+          minimum: 10
+          maximum: 10000
+          default: 100
+        statisticalAnalysis:
+          type: boolean
+          description: Perform statistical analysis
+          default: true
+
+    LatencyTestConfiguration:
+      type: object
+      required:
+        - promptTypes
+        - payloadSizes
+      properties:
+        promptTypes:
+          type: array
+          description: Types of prompts to test
+          items:
+            type: string
+            enum: [short, medium, long, complex, conversational]
+        payloadSizes:
+          type: array
+          description: Payload sizes in bytes
+          items:
+            type: integer
+            minimum: 100
+            maximum: 100000
+        concurrencyLevels:
+          type: array
+          description: Concurrency levels to test
+          items:
+            type: integer
+            minimum: 1
+            maximum: 1000
+        testDuration:
+          type: integer
+          description: Test duration per configuration
+          minimum: 30
+          maximum: 3600
+          default: 300
+
+    ThroughputAnalysisRequest:
+      type: object
+      required:
+        - system
+        - loadConfiguration
+      properties:
+        system:
+          $ref: '#/components/schemas/SystemConfiguration'
+        loadConfiguration:
+          $ref: '#/components/schemas/LoadConfiguration'
+        duration:
+          type: integer
+          description: Analysis duration in seconds
+          minimum: 60
+          maximum: 3600
+          default: 600
+        metrics:
+          type: array
+          description: Metrics to analyze
+          items:
+            type: string
+            enum: [requests_per_second, response_time, error_rate, throughput, utilization]
+
+    SystemConfiguration:
+      type: object
+      required:
+        - systemId
+        - systemType
+      properties:
+        systemId:
+          type: string
+          description: System identifier
+        systemType:
+          type: string
+          enum: [single_model, multi_model, agent_system, hybrid]
+        components:
+          type: array
+          description: System components
+          items:
+            type: string
+        configuration:
+          type: object
+          description: System configuration details
+
+    LoadConfiguration:
+      type: object
+      required:
+        - maxLoad
+        - rampUpStrategy
+      properties:
+        maxLoad:
+          type: integer
+          description: Maximum load in requests per second
+          minimum: 1
+          maximum: 10000
+        rampUpStrategy:
+          type: string
+          enum: [linear, exponential, step, spike]
+          default: "linear"
+        loadDistribution:
+          type: string
+          enum: [uniform, normal, exponential, custom]
+          default: "uniform"
+        durationPerLevel:
+          type: integer
+          description: Duration per load level in seconds
+          minimum: 30
+          maximum: 600
+          default: 120
+
+    # Security Testing Schemas
+    SecurityVulnerabilityRequest:
+      type: object
+      required:
+        - target
+        - testTypes
+      properties:
+        target:
+          $ref: '#/components/schemas/SecurityTarget'
+        testTypes:
+          type: array
+          description: Types of security tests to perform
+          items:
+            type: string
+            enum: [prompt_injection, data_extraction, model_extraction, adversarial_attack, bypass_controls]
+        attackVectors:
+          type: array
+          description: Specific attack vectors to test
+          items:
+            $ref: '#/components/schemas/AttackVector'
+        testIntensity:
+          type: string
+          enum: [low, medium, high, extreme]
+          default: "medium"
+        complianceStandards:
+          type: array
+          description: Compliance standards to validate against
+          items:
+            type: string
+            enum: [owasp, nist, iso27001, gdpr, hipaa]
+
+    SecurityTarget:
+      type: object
+      required:
+        - targetId
+        - targetType
+      properties:
+        targetId:
+          type: string
+          description: Target identifier
+        targetType:
+          type: string
+          enum: [model, agent, api, system]
+        accessLevel:
+          type: string
+          enum: [public, restricted, confidential, classified]
+          default: "public"
+        securityControls:
+          type: array
+          description: Security controls in place
+          items:
+            type: string
+
+    AttackVector:
+      type: object
+      required:
+        - vectorName
+        - vectorType
+        - payload
+      properties:
+        vectorName:
+          type: string
+          description: Name of the attack vector
+        vectorType:
+          type: string
+          enum: [injection, extraction, manipulation, bypass, denial]
+        payload:
+          type: string
+          description: Attack payload
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+          default: "medium"
+        description:
+          type: string
+          description: Description of the attack vector
+
+    PromptInjectionTestRequest:
+      type: object
+      required:
+        - model
+        - injectionTechniques
+      properties:
+        model:
+          $ref: '#/components/schemas/ModelConfiguration'
+        injectionTechniques:
+          type: array
+          description: Injection techniques to test
+          items:
+            type: string
+            enum: [direct_injection, indirect_injection, context_overflow, token_manipulation, encoding_bypass]
+        testPrompts:
+          type: array
+          description: Test prompts with injection attempts
+          items:
+            type: string
+        defenseMechanisms:
+          type: array
+          description: Defense mechanisms to test
+          items:
+            type: string
+        evaluationCriteria:
+          type: array
+          description: Criteria for evaluation
+          items:
+            type: string
+            enum: [detection_rate, false_positive_rate, mitigation_effectiveness, performance_impact]
+
+    # Compliance Testing Schemas
+    RegulatoryComplianceRequest:
+      type: object
+      required:
+        - target
+        - regulatoryFrameworks
+      properties:
+        target:
+          $ref: '#/components/schemas/ComplianceTarget'
+        regulatoryFrameworks:
+          type: array
+          description: Regulatory frameworks to test against
+          items:
+            type: string
+            enum: [gdpr, ccpa, hipaa, sox, pci_dss, iso27001]
+        complianceAreas:
+          type: array
+          description: Areas of compliance to test
+          items:
+            type: string
+            enum: [data_privacy, security, transparency, accountability, fairness]
+        assessmentDepth:
+          type: string
+          enum: [basic, comprehensive, deep_dive]
+          default: "comprehensive"
+
+    ComplianceTarget:
+      type: object
+      required:
+        - targetId
+        - targetCategory
+      properties:
+        targetId:
+          type: string
+          description: Target identifier
+        targetCategory:
+          type: string
+          enum: [ai_model, ai_agent, data_processing, user_interaction, system_operation]
+        jurisdiction:
+          type: string
+          description: Jurisdiction for compliance
+          example: "EU"
+        dataTypes:
+          type: array
+          description: Types of data processed
+          items:
+            type: string
+            enum: [personal, sensitive, financial, health, behavioral]
+
+    EthicalComplianceRequest:
+      type: object
+      required:
+        - target
+        - ethicalPrinciples
+      properties:
+        target:
+          $ref: '#/components/schemas/ComplianceTarget'
+        ethicalPrinciples:
+          type: array
+          description: Ethical principles to evaluate
+          items:
+            type: string
+            enum: [fairness, transparency, accountability, privacy, safety, human_control]
+        testScenarios:
+          type: array
+          description: Test scenarios for ethical evaluation
+          items:
+            $ref: '#/components/schemas/EthicalTestScenario'
+        evaluationMethodology:
+          type: string
+          enum: [automated, manual, hybrid]
+          default: "hybrid"
+
+    EthicalTestScenario:
+      type: object
+      required:
+        - scenarioName
+        - ethicalConcern
+        - testMethod
+      properties:
+        scenarioName:
+          type: string
+          description: Name of the ethical test scenario
+        ethicalConcern:
+          type: string
+          description: Ethical concern being tested
+        testMethod:
+          type: string
+          description: Method of testing
+        expectedOutcome:
+          type: string
+          description: Expected ethical outcome
+        riskLevel:
+          type: string
+          enum: [low, medium, high, critical]
+          default: "medium"
+
+    # Test Management Schemas
+    CreateTestSuiteRequest:
+      type: object
+      required:
+        - name
+        - description
+        - testCases
+      properties:
+        name:
+          type: string
+          description: Test suite name
+        description:
+          type: string
+          description: Test suite description
+        testCases:
+          type: array
+          description: Test cases in the suite
+          items:
+            $ref: '#/components/schemas/TestCaseDefinition'
+        executionConfig:
+          $ref: '#/components/schemas/ExecutionConfiguration'
+        tags:
+          type: array
+          description: Tags for the test suite
+          items:
+            type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+          default: "medium"
+
+    TestCaseDefinition:
+      type: object
+      required:
+        - name
+        - type
+        - configuration
+      properties:
+        name:
+          type: string
+          description: Test case name
+        type:
+          type: string
+          enum: [model_test, agent_test, security_test, compliance_test, performance_test]
+        configuration:
+          type: object
+          description: Test case configuration
+        prerequisites:
+          type: array
+          description: Prerequisites for the test
+          items:
+            type: string
+        expectedResults:
+          type: array
+          description: Expected results
+          items:
+            type: string
+
+    ExecutionConfiguration:
+      type: object
+      properties:
+        executionOrder:
+          type: string
+          enum: [sequential, parallel, custom]
+          default: "sequential"
+        timeout:
+          type: integer
+          description: Timeout in seconds
+          minimum: 1
+          maximum: 3600
+          default: 300
+        retryCount:
+          type: integer
+          description: Number of retries on failure
+          minimum: 0
+          maximum: 10
+          default: 3
+        parallelism:
+          type: integer
+          description: Number of parallel executions
+          minimum: 1
+          maximum: 100
+          default: 1
+
+    ExecuteTestSuiteRequest:
+      type: object
+      properties:
+        executionParameters:
+          type: object
+          description: Execution parameters
+        environment:
+          $ref: '#/components/schemas/TestEnvironment'
+        schedule:
+          type: object
+          description: Schedule information
+          properties:
+            immediate:
+              type: boolean
+              default: true
+            scheduledTime:
+              type: string
+              format: date-time
+            recurrence:
+              type: string
+              enum: [once, daily, weekly, monthly]
+              default: "once"
+        notifications:
+          type: array
+          description: Notification settings
+          items:
+            type: string
+
+    # Response Schemas
+    ModelBenchmarkResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether benchmarking was successful
+        benchmarkId:
+          type: string
+          description: Unique benchmark identifier
+        timestamp:
+          type: string
+          format: date-time
+        results:
+          type: array
+          description: Benchmark results for each model
+          items:
+            $ref: '#/components/schemas/ModelBenchmarkResult'
+        summary:
+          $ref: '#/components/schemas/BenchmarkSummary'
+        metadata:
+          $ref: '#/components/schemas/BenchmarkMetadata'
+
+    ModelBenchmarkResult:
+      type: object
+      properties:
+        modelId:
+          type: string
+          description: Model identifier
+        provider:
+          type: string
+          description: Model provider
+        metrics:
+          type: object
+          description: Performance metrics
+          properties:
+            accuracy:
+              type: number
+              minimum: 0
+              maximum: 1
+            latency:
+              type: object
+              properties:
+                mean:
+                  type: number
+                median:
+                  type: number
+                p95:
+                  type: number
+                p99:
+                  type: number
+            cost:
+              type: object
+              properties:
+                total:
+                  type: number
+                average:
+                  type: number
+                currency:
+                  type: string
+            reliability:
+              type: number
+              minimum: 0
+              maximum: 1
+        rank:
+          type: integer
+          description: Overall rank
+        score:
+          type: number
+          description: Overall score
+          minimum: 0
+          maximum: 1
+
+    BenchmarkSummary:
+      type: object
+      properties:
+        totalModels:
+          type: integer
+          description: Total number of models tested
+        totalTests:
+          type: integer
+          description: Total number of tests executed
+        executionTime:
+          type: integer
+          description: Total execution time in seconds
+        bestModel:
+          type: string
+          description: Best performing model
+        recommendations:
+          type: array
+          description: Recommendations based on results
+          items:
+            type: string
+
+    BenchmarkMetadata:
+      type: object
+      properties:
+        testSuite:
+          type: array
+          description: Test suite executed
+          items:
+            type: string
+        environment:
+          type: string
+          description: Test environment
+        configuration:
+          type: object
+          description: Test configuration
+        version:
+          type: string
+          description: Framework version
+
+    ModelEvaluationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        evaluationId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        results:
+          $ref: '#/components/schemas/EvaluationResults'
+        overallScore:
+          type: number
+          minimum: 0
+          maximum: 1
+        passFail:
+          type: boolean
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    EvaluationResults:
+      type: object
+      properties:
+        criteria:
+          type: object
+          description: Results by criteria
+          additionalProperties:
+            type: object
+            properties:
+              score:
+                type: number
+                minimum: 0
+                maximum: 1
+              details:
+                type: string
+              passed:
+                type: boolean
+        testCases:
+          type: array
+          description: Individual test case results
+          items:
+            $ref: '#/components/schemas/TestCaseResult'
+
+    TestCaseResult:
+      type: object
+      properties:
+        testCaseId:
+          type: string
+        input:
+          type: string
+        expectedOutput:
+          type: string
+        actualOutput:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 1
+        passed:
+          type: boolean
+        feedback:
+          type: string
+
+    StressTestResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        testId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        performance:
+          $ref: '#/components/schemas/StressTestPerformance'
+        reliability:
+          $ref: '#/components/schemas/StressTestReliability'
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    StressTestPerformance:
+      type: object
+      properties:
+        throughput:
+          type: object
+          properties:
+            average:
+              type: number
+            peak:
+              type: number
+            minimum:
+              type: number
+        responseTime:
+          type: object
+          properties:
+            average:
+              type: number
+            p95:
+              type: number
+            p99:
+              type: number
+        resourceUtilization:
+          type: object
+          properties:
+            cpu:
+              type: number
+            memory:
+              type: number
+            network:
+              type: number
+
+    StressTestReliability:
+      type: object
+      properties:
+        successRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        errorRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        failurePoints:
+          type: array
+          items:
+            type: string
+        recoveryTime:
+          type: number
+          description: Average recovery time in seconds
+
+    AgentBehaviorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        analysisId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        behaviorAnalysis:
+          $ref: '#/components/schemas/BehaviorAnalysis'
+        performanceMetrics:
+          $ref: '#/components/schemas/AgentPerformanceMetrics'
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    BehaviorAnalysis:
+      type: object
+      properties:
+        decisionPatterns:
+          type: array
+          items:
+            $ref: '#/components/schemas/DecisionPattern'
+        adaptationLevel:
+          type: number
+          minimum: 0
+          maximum: 1
+        learningProgress:
+          type: object
+          properties:
+            initial:
+              type: number
+            final:
+              type: number
+            improvement:
+              type: number
+        behavioralIssues:
+          type: array
+          items:
+            type: string
+
+    DecisionPattern:
+      type: object
+      properties:
+        patternType:
+          type: string
+        frequency:
+          type: integer
+        effectiveness:
+          type: number
+          minimum: 0
+          maximum: 1
+        context:
+          type: string
+
+    AgentPerformanceMetrics:
+      type: object
+      properties:
+        taskCompletion:
+          type: number
+          minimum: 0
+          maximum: 1
+        efficiency:
+          type: number
+          minimum: 0
+          maximum: 1
+        safety:
+          type: number
+          minimum: 0
+          maximum: 1
+        compliance:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    AgentAutonomyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        autonomyId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        autonomyScore:
+          type: number
+          minimum: 0
+          maximum: 1
+        autonomyDimensions:
+          $ref: '#/components/schemas/AutonomyDimensions'
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapabilityAssessment'
+        limitations:
+          type: array
+          items:
+            type: string
+
+    AutonomyDimensions:
+      type: object
+      properties:
+        independence:
+          type: number
+          minimum: 0
+          maximum: 1
+        initiative:
+          type: number
+          minimum: 0
+          maximum: 1
+        creativity:
+          type: number
+          minimum: 0
+          maximum: 1
+        adaptability:
+          type: number
+          minimum: 0
+          maximum: 1
+        learning:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    CapabilityAssessment:
+      type: object
+      properties:
+        capability:
+          type: string
+        proficiency:
+          type: number
+          minimum: 0
+          maximum: 1
+        reliability:
+          type: number
+          minimum: 0
+          maximum: 1
+        improvementAreas:
+          type: array
+          items:
+            type: string
+
+    LatencyBenchmarkResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        benchmarkId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        latencyMetrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/LatencyMetrics'
+        statisticalAnalysis:
+          $ref: '#/components/schemas/StatisticalAnalysis'
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    LatencyMetrics:
+      type: object
+      properties:
+        modelId:
+          type: string
+        promptType:
+          type: string
+        payloadSize:
+          type: integer
+        concurrency:
+          type: integer
+        metrics:
+          type: object
+          properties:
+            mean:
+              type: number
+            median:
+              type: number
+            min:
+              type: number
+            max:
+              type: number
+            std:
+              type: number
+            p95:
+              type: number
+            p99:
+              type: number
+
+    StatisticalAnalysis:
+      type: object
+      properties:
+        normality:
+          type: boolean
+        outliers:
+          type: integer
+        confidenceInterval:
+          type: object
+          properties:
+            lower:
+              type: number
+            upper:
+              type: number
+            confidence:
+              type: number
+        significance:
+          type: object
+          additionalProperties:
+            type: number
+
+    ThroughputAnalysisResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        analysisId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        throughputMetrics:
+          $ref: '#/components/schemas/ThroughputMetrics'
+        performanceProfile:
+          $ref: '#/components/schemas/PerformanceProfile'
+        bottlenecks:
+          type: array
+          items:
+            type: string
+        optimizationSuggestions:
+          type: array
+          items:
+            type: string
+
+    ThroughputMetrics:
+      type: object
+      properties:
+        maxThroughput:
+          type: number
+        optimalThroughput:
+          type: number
+        sustainableThroughput:
+          type: number
+        efficiency:
+          type: number
+          minimum: 0
+          maximum: 1
+        scalability:
+          type: object
+          properties:
+            linear:
+              type: number
+            sublinear:
+              type: number
+            superlinear:
+              type: number
+
+    PerformanceProfile:
+      type: object
+      properties:
+        loadRanges:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoadRange'
+        breakingPoints:
+          type: array
+          items:
+            type: number
+        degradationPattern:
+          type: string
+        recoveryCharacteristics:
+          type: string
+
+    LoadRange:
+      type: object
+      properties:
+        minLoad:
+          type: number
+        maxLoad:
+          type: number
+        performance:
+          type: string
+        stability:
+          type: string
+
+    SecurityVulnerabilityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        assessmentId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        vulnerabilityReport:
+          $ref: '#/components/schemas/VulnerabilityReport'
+        riskAssessment:
+          $ref: '#/components/schemas/RiskAssessment'
+        remediation:
+          type: array
+          items:
+            type: string
+
+    VulnerabilityReport:
+      type: object
+      properties:
+        vulnerabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vulnerability'
+        attackSurface:
+          type: object
+          properties:
+            size:
+              type: string
+            criticality:
+              type: string
+            exposure:
+              type: string
+        securityPosture:
+          type: string
+          enum: [excellent, good, fair, poor, critical]
+
+    Vulnerability:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        description:
+          type: string
+        impact:
+          type: string
+        likelihood:
+          type: number
+          minimum: 0
+          maximum: 1
+        remediation:
+          type: string
+        cvssScore:
+          type: number
+          minimum: 0
+          maximum: 10
+
+    RiskAssessment:
+      type: object
+      properties:
+        overallRisk:
+          type: string
+          enum: [low, medium, high, critical]
+        riskFactors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskFactor'
+        mitigationPriority:
+          type: array
+          items:
+            type: string
+
+    RiskFactor:
+      type: object
+      properties:
+        factor:
+          type: string
+        severity:
+          type: string
+        impact:
+          type: string
+        probability:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    PromptInjectionTestResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        testId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        injectionResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/InjectionResult'
+        defenseEffectiveness:
+          $ref: '#/components/schemas/DefenseEffectiveness'
+        securityScore:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    InjectionResult:
+      type: object
+      properties:
+        technique:
+          type: string
+        success:
+          type: boolean
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        impact:
+          type: string
+        detection:
+          type: boolean
+        mitigation:
+          type: boolean
+
+    DefenseEffectiveness:
+      type: object
+      properties:
+        detectionRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        falsePositiveRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        mitigationSuccess:
+          type: number
+          minimum: 0
+          maximum: 1
+        performanceImpact:
+          type: number
+          minimum: 0
+          maximum: 1
+
+    RegulatoryComplianceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        complianceId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        complianceStatus:
+          $ref: '#/components/schemas/ComplianceStatus'
+        gaps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComplianceGap'
+        recommendations:
+          type: array
+          items:
+            type: string
+
+    ComplianceStatus:
+      type: object
+      properties:
+        overallCompliance:
+          type: number
+          minimum: 0
+          maximum: 1
+        frameworkCompliance:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+        areaCompliance:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+        lastAssessment:
+          type: string
+          format: date-time
+
+    ComplianceGap:
+      type: object
+      properties:
+        requirement:
+          type: string
+        currentStatus:
+          type: string
+        gapDescription:
+          type: string
+        severity:
+          type: string
+        remediation:
+          type: string
+        priority:
+          type: string
+
+    EthicalComplianceResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        assessmentId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        ethicalScore:
+          type: number
+          minimum: 0
+          maximum: 1
+        principleScores:
+          type: object
+          additionalProperties:
+            type: number
+            minimum: 0
+            maximum: 1
+        ethicalRisks:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthicalRisk'
+        improvementAreas:
+          type: array
+          items:
+            type: string
+
+    EthicalRisk:
+      type: object
+      properties:
+        risk:
+          type: string
+        principle:
+          type: string
+        severity:
+          type: string
+        likelihood:
+          type: number
+          minimum: 0
+          maximum: 1
+        impact:
+          type: string
+        mitigation:
+          type: string
+
+    RealtimeMetricsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        metrics:
+          type: object
+          additionalProperties:
+            type: number
+        trends:
+          type: object
+          additionalProperties:
+            type: string
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricAlert'
+
+    MetricAlert:
+      type: object
+      properties:
+        metric:
+          type: string
+        level:
+          type: string
+          enum: [info, warning, error, critical]
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        value:
+          type: number
+        threshold:
+          type: number
+
+    SystemAlertsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        timestamp:
+          type: string
+          format: date-time
+        alerts:
+          type: array
+          items:
+            $ref: '#/components/schemas/SystemAlert'
+        summary:
+          type: object
+          properties:
+            total:
+              type: integer
+            critical:
+              type: integer
+            high:
+              type: integer
+            medium:
+              type: integer
+            low:
+              type: integer
+
+    SystemAlert:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        level:
+          type: string
+          enum: [info, warning, error, critical]
+        message:
+          type: string
+        source:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [active, acknowledged, resolved, dismissed]
+        assignedTo:
+          type: string
+        resolution:
+          type: string
+
+    TestSuitesResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        testSuites:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestSuiteSummary'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    TestSuiteSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, archived]
+        testCount:
+          type: integer
+        lastExecution:
+          type: string
+          format: date-time
+        successRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        tags:
+          type: array
+          items:
+            type: string
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        pageSize:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    TestSuiteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        testSuite:
+          $ref: '#/components/schemas/TestSuite'
+        message:
+          type: string
+
+    TestSuite:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, archived]
+        testCases:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestCaseDefinition'
+        executionConfig:
+          $ref: '#/components/schemas/ExecutionConfiguration'
+        tags:
+          type: array
+          items:
+            type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+        lastModifiedBy:
+          type: string
+
+    TestSuiteExecutionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        executionId:
+          type: string
+        testSuiteId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [running, completed, failed, cancelled]
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestCaseExecutionResult'
+        summary:
+          $ref: '#/components/schemas/ExecutionSummary'
+        artifacts:
+          type: array
+          items:
+            type: string
+
+    TestCaseExecutionResult:
+      type: object
+      properties:
+        testCaseId:
+          type: string
+        status:
+          type: string
+          enum: [passed, failed, skipped, error]
+        duration:
+          type: integer
+        result:
+          type: object
+        error:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    ExecutionSummary:
+      type: object
+      properties:
+        totalTests:
+          type: integer
+        passed:
+          type: integer
+        failed:
+          type: integer
+        skipped:
+          type: integer
+        errors:
+          type: integer
+        successRate:
+          type: number
+          minimum: 0
+          maximum: 1
+        totalDuration:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+
+    # Error Schemas
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          example: "Invalid request parameters"
+        code:
+          type: integer
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+        details:
+          type: object
+        correlationId:
+          type: string
+
+  # Response Templates
+  responses:
+    BadRequest:
+      description: Bad request - invalid parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Invalid request parameters"
+            code: 400
+            timestamp: "2025-09-04T00:00:00Z"
+
+    Unauthorized:
+      description: Unauthorized - authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Authentication required"
+            code: 401
+            timestamp: "2025-09-04T00:00:00Z"
+
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Insufficient permissions"
+            code: 403
+            timestamp: "2025-09-04T00:00:00Z"
+
+    NotFound:
+      description: Not found - resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Resource not found"
+            code: 404
+            timestamp: "2025-09-04T00:00:00Z"
+
+    TooManyRequests:
+      description: Too many requests - rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Rate limit exceeded"
+            code: 429
+            timestamp: "2025-09-04T00:00:00Z"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error: "Internal server error"
+            code: 500
+            timestamp: "2025-09-04T00:00:00Z"
+
+  # Security Schemes
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for authentication
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.optimind-ai-ecosystem.com/oauth/authorize
+          tokenUrl: https://auth.optimind-ai-ecosystem.com/oauth/token
+          scopes:
+            testing:read: Read access to testing data
+            testing:write: Write access to testing data
+            testing:admin: Administrative access
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
+
+# External Documentation
+externalDocs:
+  description: OptiMind AI Ecosystem Testing Framework Documentation
+  url: https://docs.optimind-ai-ecosystem.com/testing-framework
+
+# Tags Documentation
+x-tagGroups:
+  - name: Core Testing
+    tags:
+      - Model Testing
+      - Agent Testing
+      - Performance Benchmarking
+  - name: Security & Compliance
+    tags:
+      - Security Testing
+      - Compliance Testing
+  - name: Operations
+    tags:
+      - Real-time Monitoring
+      - Test Management
+
+# Extensions
+x-extensions:
+  rateLimiting:
+    requests: 1000
+    per: hour
+  monitoring:
+    enabled: true
+    endpoint: /monitoring
+  analytics:
+    enabled: true
+    trackingId: UA-123456789-1
+  support:
+    email: support@optimind-ai-ecosystem.com
+    documentation: https://docs.optimind-ai-ecosystem.com
+    statusPage: https://status.optimind-ai-ecosystem.com
