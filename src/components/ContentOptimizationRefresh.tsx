@@ -815,3 +815,4 @@ export default function ContentOptimizationRefresh() {
     </div>
   );
 }
+export const ContentOptimizationRefresh = () => null;

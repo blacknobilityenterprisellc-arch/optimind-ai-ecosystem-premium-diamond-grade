@@ -109,3 +109,4 @@ class AIStyleTransferService {
 }
 
 export const aiStyleTransferService = AIStyleTransferService.getInstance();
+export const useAIStyleTransfer = () => ({ transfer: () => {} });

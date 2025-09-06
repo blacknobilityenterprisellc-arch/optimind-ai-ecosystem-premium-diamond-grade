@@ -621,3 +621,4 @@ export default function BrandMentionTracker() {
     </div>
   );
 }
+export const BrandMentionTracker = () => null;

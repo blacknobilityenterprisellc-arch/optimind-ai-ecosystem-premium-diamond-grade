@@ -71,8 +71,8 @@ interface StrengthWeakness {
   description: string;
   impact: number;
 }
-
-export default function CompetitorContentAnalyzer() {
+export const CompetitorContentAnalyzer = () => {
+export default CompetitorContentAnalyzer;
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [competitorUrls, setCompetitorUrls] = useState<string[]>(["", ""]);
   const [analysisResults, setAnalysisResults] = useState<any>(null);

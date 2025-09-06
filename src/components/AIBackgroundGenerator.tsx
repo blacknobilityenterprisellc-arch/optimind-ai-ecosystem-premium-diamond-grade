@@ -64,8 +64,8 @@ interface BackgroundPreset {
   thumbnail: string;
   category: string;
 }
-
-export default function AIBackgroundGenerator() {
+export const AIBackgroundGenerator = () => {
+export default AIBackgroundGenerator;
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [isReplacingBackground, setIsReplacingBackground] = useState(false);

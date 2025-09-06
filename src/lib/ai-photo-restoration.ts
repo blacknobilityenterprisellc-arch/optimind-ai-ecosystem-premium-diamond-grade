@@ -83,3 +83,4 @@ class AIPhotoRestorationService {
 
 export const aiPhotoRestorationService =
   AIPhotoRestorationService.getInstance();
+export const useAIPhotoRestoration = () => ({ restore: () => {} });
