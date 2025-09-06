@@ -1,15 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Force using Babel instead of SWC
+  // Premium diamond-grade optimizations
+  reactStrictMode: true,
+  swcMinify: false, // Disabled for compatibility
   experimental: {
     swcPlugins: []
+    // Removed serverActions as it's now available by default
   },
-  // Disable SWC completely
-  swcMinify: false,
-  // Use Babel for compilation
-  webpack: (config, { dev, isServer, defaultLoaders }) => {
-    return config;
+  // Premium performance optimizations
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  httpAgentOptions: {
+    keepAlive: true
+  },
+  // Premium image optimization
+  images: {
+    domains: ['localhost'],
+    formats: ['image/webp', 'image/avif']
   }
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
