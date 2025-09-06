@@ -64,7 +64,7 @@ jobs:
     - name: Run TypeScript check
       run: |
         # Run type check with timeout and skip lib check for performance
-        timeout 60 npx tsc --noEmit --skipLibCheck > typescript-report.txt 2>&1 || echo "TypeScript check completed with timeout"
+        timeout 60 npm run type-check > typescript-report.txt 2>&1 || echo "TypeScript check completed with timeout"
       
     - name: Generate TypeScript report
       run: |
@@ -189,7 +189,7 @@ jobs:
       run: npm ci
       
     - name: Run tests with coverage
-      run: echo "No coverage tests configured - skipping coverage test phase"
+      run: npm run test:coverage
       
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
