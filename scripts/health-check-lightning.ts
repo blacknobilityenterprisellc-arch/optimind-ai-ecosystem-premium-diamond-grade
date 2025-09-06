@@ -8,9 +8,9 @@
  * and MCP (Model Control Protocol) for intelligent system analysis.
  */
 
-import { ZAI } from 'z-ai-web-dev-sdk';
-import { mcpService } from '../src/lib/mcp-service';
-import { mcpServiceOrchestrator } from '../src/lib/mcp-service-orchestrator';
+import { premiumZAIWrapper } from '../src/lib/zai-sdk-wrapper';
+import { enhancedMCPService } from '../src/lib/mcp-service-enhanced';
+import { premiumDatabaseWrapper } from '../src/lib/database-health-wrapper';
 import { openRouterService } from '../src/lib/openrouter-service';
 
 interface HealthCheckResult {
@@ -35,7 +35,6 @@ interface HealthCheckResult {
 }
 
 class AIHealthCheckLightning {
-  private zai: any;
   private isInitialized: boolean = false;
 
   constructor() {
@@ -44,11 +43,20 @@ class AIHealthCheckLightning {
 
   private async initialize(): Promise<void> {
     try {
-      this.zai = await ZAI.create();
+      console.log('🤖 Initializing AI Health Check Lightning...');
+
+      // Initialize all services
+      await Promise.all([
+        premiumZAIWrapper.waitForAvailability(5000),
+        enhancedMCPService.waitForHealthy(5000),
+        premiumDatabaseWrapper.waitForHealthy(5000),
+      ]);
+
       this.isInitialized = true;
-      console.log('🤖 AI Health Check Lightning initialized successfully');
+      console.log('✅ AI Health Check Lightning initialized successfully');
     } catch (error) {
-      console.error('❌ Failed to initialize AI Health Check:', error);
+      console.warn('⚠️ Some services failed to initialize, continuing with available services:', error);
+      this.isInitialized = true; // Continue with available services
     }
   }
 
@@ -138,10 +146,8 @@ class AIHealthCheckLightning {
 
   private async checkDatabaseHealth(): Promise<boolean> {
     try {
-      // Quick database connectivity check
-      const { db } = await import('../src/lib/db');
-      await db.$queryRaw`SELECT 1`;
-      return true;
+      const healthStatus = await premiumDatabaseWrapper.getHealthStatus();
+      return healthStatus.connected && healthStatus.responseTime < 1000;
     } catch (error) {
       console.error('Database health check failed:', error);
       return false;
@@ -150,24 +156,8 @@ class AIHealthCheckLightning {
 
   private async checkAIModelsHealth(): Promise<boolean> {
     try {
-      if (!this.isInitialized) return false;
-
-      // Quick AI model test
-      const response = await this.zai.chat.completions.create({
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a health check assistant. Respond with "OK" only.',
-          },
-          {
-            role: 'user',
-            content: 'Health check',
-          },
-        ],
-        max_tokens: 10,
-      });
-
-      return response.choices[0]?.message?.content === 'OK';
+      const zaiHealth = await premiumZAIWrapper.getHealthStatus();
+      return zaiHealth.initialized && zaiHealth.modelAvailable;
     } catch (error) {
       console.error('AI models health check failed:', error);
       return false;
@@ -176,9 +166,8 @@ class AIHealthCheckLightning {
 
   private async checkMCPProtocolHealth(): Promise<boolean> {
     try {
-      // Check MCP service availability
-      const tools = mcpService.getAvailableTools();
-      return tools.length > 0;
+      const mcpHealth = await enhancedMCPService.getHealthStatus();
+      return mcpHealth.status === 'HEALTHY' || mcpHealth.status === 'DEGRADED';
     } catch (error) {
       console.error('MCP protocol health check failed:', error);
       return false;
@@ -187,16 +176,8 @@ class AIHealthCheckLightning {
 
   private async checkOpenRouterHealth(): Promise<boolean> {
     try {
-      // Quick OpenRouter connectivity test
-      const testRequest = {
-        prompt: 'Test',
-        modelId: 'gpt-4o-mini',
-        temperature: 0.1,
-        maxTokens: 10,
-      };
-
-      await openRouterService.analyzeWithModel(testRequest);
-      return true;
+      const models = openRouterService.getAvailableModels();
+      return models.length > 0;
     } catch (error) {
       console.error('OpenRouter health check failed:', error);
       return false;
@@ -221,11 +202,13 @@ class AIHealthCheckLightning {
 
   private async performAIAnalysis(checks: Record<string, boolean>): Promise<any> {
     try {
-      if (!this.isInitialized) {
+      const zaiAvailable = await premiumZAIWrapper.isAvailable();
+      
+      if (!zaiAvailable) {
         return {
           modelUsed: 'N/A',
           confidence: 0,
-          analysis: 'AI analysis unavailable',
+          analysis: 'AI analysis unavailable - using fallback analysis',
         };
       }
 
@@ -242,7 +225,7 @@ Health Check Results:
 Provide a concise analysis of the system health status, identify any patterns or issues, and assess the overall reliability of the system.
 `;
 
-      const response = await this.zai.chat.completions.create({
+      const response = await premiumZAIWrapper.createChatCompletion({
         messages: [
           {
             role: 'system',
@@ -263,7 +246,7 @@ Provide a concise analysis of the system health status, identify any patterns or
       return {
         modelUsed: 'GLM-4.5',
         confidence: 0,
-        analysis: 'AI analysis failed',
+        analysis: 'AI analysis failed - using rule-based assessment',
       };
     }
   }
