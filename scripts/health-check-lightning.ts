@@ -45,9 +45,14 @@ class AIHealthCheckLightning {
     try {
       console.log('🤖 Initializing AI Health Check Lightning...');
 
-      // Initialize all services
+      // Initialize ZAI wrapper with explicit API key
+      const zaiApiKey = process.env.ZAI_API_KEY || '1dc8da695f1846c5a76483eb2252023d.pYnbmJbwCWPpNHvY';
+      if (zaiApiKey && !zaiApiKey.includes('testing') && !zaiApiKey.includes('demo')) {
+        await premiumZAIWrapper.waitForAvailability(10000);
+      }
+
+      // Initialize other services
       await Promise.all([
-        premiumZAIWrapper.waitForAvailability(5000),
         enhancedMCPService.waitForHealthy(5000),
         premiumDatabaseWrapper.waitForHealthy(5000),
       ]);

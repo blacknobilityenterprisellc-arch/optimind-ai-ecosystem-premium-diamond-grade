@@ -66,15 +66,18 @@ class PremiumZAIWrapper {
     try {
       console.log('🚀 Initializing Premium ZAI SDK...');
 
-      // Attempt to create ZAI instance
-      if (this.config.fallbackMode) {
-        console.log('⚠️ Using fallback mode for ZAI SDK');
+      // Check if we have a real API key
+      const apiKey = this.config.apiKey || process.env.ZAI_API_KEY;
+      
+      if (!apiKey || apiKey.includes('testing') || apiKey.includes('demo')) {
+        console.log('⚠️ Using fallback mode for ZAI SDK (no valid API key)');
         this.setupFallbackMode();
         return;
       }
 
+      // Attempt to create ZAI instance with real API key
       this.zai = await ZAI.create({
-        apiKey: this.config.apiKey,
+        apiKey: apiKey,
         baseUrl: this.config.baseUrl,
         timeout: this.config.timeout,
       });
@@ -89,7 +92,7 @@ class PremiumZAIWrapper {
           lastCheck: new Date(),
           responseTime: testResult.responseTime,
         };
-        console.log('✅ Premium ZAI SDK initialized successfully');
+        console.log('✅ Premium ZAI SDK initialized successfully with real API');
       } else {
         throw new Error(testResult.error || 'Connection test failed');
       }
