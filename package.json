@@ -111,7 +111,13 @@
     "health-check:ai-lightning": "tsx scripts/health-check-lightning.ts",
     "health-check:ai-premium": "tsx scripts/health-check-premium.ts",
     "health-check:ai-monitor": "tsx scripts/health-check-monitor.ts",
-    "health-check:ai-all": "tsx scripts/health-check-comprehensive.ts"
+    "health-check:ai-all": "tsx scripts/health-check-comprehensive.ts",
+    "security-check": "./scripts/security-check.sh",
+    "security:verify": "./scripts/security-check.sh",
+    "security:setup": "npm run security-check && echo '✅ Security configuration verified'",
+    "preinstall": "./scripts/security-check.sh",
+    "postinstall": "./scripts/security-check.sh",
+    "precommit": "./scripts/security-check.sh"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
