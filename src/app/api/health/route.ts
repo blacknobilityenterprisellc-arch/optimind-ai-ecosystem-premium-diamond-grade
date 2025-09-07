@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 // Health status constants
 const HEALTH_STATUS = {
-  HEALTHY: "healthy" as const,
-  DEGRADED: "degraded" as const,
-  UNHEALTHY: "unhealthy" as const,
+  HEALTHY: 'healthy' as const,
+  DEGRADED: 'degraded' as const,
+  UNHEALTHY: 'unhealthy' as const,
 } as const;
 
 // Health thresholds
@@ -56,25 +56,25 @@ interface HealthData {
 function createHealthAlerts(): HealthAlert[] {
   return [
     {
-      id: "1",
-      type: "success",
-      title: "System Performance Optimized",
-      description: "All systems are running at peak efficiency",
-      timestamp: "5 minutes ago",
+      id: '1',
+      type: 'success',
+      title: 'System Performance Optimized',
+      description: 'All systems are running at peak efficiency',
+      timestamp: '5 minutes ago',
     },
     {
-      id: "2",
-      type: "info",
-      title: "New Features Available",
-      description: "Check out the latest AI optimization tools",
-      timestamp: "1 hour ago",
+      id: '2',
+      type: 'info',
+      title: 'New Features Available',
+      description: 'Check out the latest AI optimization tools',
+      timestamp: '1 hour ago',
     },
     {
-      id: "3",
-      type: "warning",
-      title: "API Rate Limit Approaching",
-      description: "Consider upgrading your plan for higher limits",
-      timestamp: "3 hours ago",
+      id: '3',
+      type: 'warning',
+      title: 'API Rate Limit Approaching',
+      description: 'Consider upgrading your plan for higher limits',
+      timestamp: '3 hours ago',
     },
   ];
 }
@@ -115,8 +115,8 @@ function buildHealthData(): HealthData {
     services: createServiceHealth(),
     alerts: createHealthAlerts(),
     metrics: generateSystemMetrics(),
-    version: "1.0.0",
-    environment: process.env.NODE_ENV || "development",
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
   };
 }
 
@@ -124,11 +124,8 @@ function buildHealthData(): HealthData {
  * Handles health check errors with proper response
  */
 function handleHealthError(error: unknown): NextResponse {
-  console.error("Error fetching health data:", error);
-  return NextResponse.json(
-    { error: "Failed to fetch health data" },
-    { status: 500 },
-  );
+  console.error('Error fetching health data:', error);
+  return NextResponse.json({ error: 'Failed to fetch health data' }, { status: 500 });
 }
 
 export async function GET(): Promise<NextResponse> {

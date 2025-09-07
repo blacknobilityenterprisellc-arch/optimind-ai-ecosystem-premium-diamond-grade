@@ -4,16 +4,16 @@
  * with exclusive key management and comprehensive audit logging
  */
 
-import { prisma } from "@/lib/db";
-import { securityService } from "@/lib/security-service";
-import { quantumSecurityV2 } from "./v2/quantum-security";
+import { prisma } from '@/lib/db';
+import { securityService } from '@/lib/security-service';
+import { quantumSecurityV2 } from './v2/quantum-security';
 
 export interface DeveloperAccessKey {
   id: string;
   keyId: string;
   userId: string;
-  keyType: "EXCLUSIVE" | "STANDARD" | "TEMPORARY";
-  accessLevel: "READONLY" | "WRITE" | "ADMIN" | "SUPER_ADMIN";
+  keyType: 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY';
+  accessLevel: 'READONLY' | 'WRITE' | 'ADMIN' | 'SUPER_ADMIN';
   permissions: string[];
   allowedEndpoints: string[];
   rateLimit: {
@@ -26,7 +26,7 @@ export interface DeveloperAccessKey {
   metadata: {
     createdBy?: string;
     purpose?: string;
-    environment?: "development" | "staging" | "production";
+    environment?: 'development' | 'staging' | 'production';
     ipRestrictions?: string[];
     timeRestrictions?: {
       allowedHours: number[];
@@ -39,20 +39,14 @@ export interface DeveloperAccessKey {
 
 export interface DeveloperAccessRequest {
   userId: string;
-  keyType: "EXCLUSIVE" | "STANDARD" | "TEMPORARY";
-  accessLevel:
-    | "PUBLIC"
-    | "INTERNAL"
-    | "RESTRICTED"
-    | "CONFIDENTIAL"
-    | "SECRET"
-    | "TOP_SECRET";
+  keyType: 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY';
+  accessLevel: 'PUBLIC' | 'INTERNAL' | 'RESTRICTED' | 'CONFIDENTIAL' | 'SECRET' | 'TOP_SECRET';
   permissions: string[];
   allowedEndpoints: string[];
   expiresInSeconds?: number;
   metadata?: {
     purpose?: string;
-    environment?: "development" | "staging" | "production";
+    environment?: 'development' | 'staging' | 'production';
     ipRestrictions?: string[];
     timeRestrictions?: {
       allowedHours: number[];
@@ -84,20 +78,20 @@ export interface DeveloperAccessEvent {
   keyId: string;
   userId: string;
   eventType:
-    | "KEY_GENERATED"
-    | "KEY_USED"
-    | "KEY_REVOKED"
-    | "KEY_EXPIRED"
-    | "ACCESS_GRANTED"
-    | "ACCESS_DENIED"
-    | "QUOTA_EXCEEDED";
+    | 'KEY_GENERATED'
+    | 'KEY_USED'
+    | 'KEY_REVOKED'
+    | 'KEY_EXPIRED'
+    | 'ACCESS_GRANTED'
+    | 'ACCESS_DENIED'
+    | 'QUOTA_EXCEEDED';
   endpoint?: string;
   method?: string;
   ipAddress: string;
   userAgent: string;
   details: Record<string, any>;
   timestamp: Date;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
 export interface DeveloperAccessMetrics {
@@ -121,7 +115,7 @@ export interface DeveloperAccessMetrics {
 
 class ExclusiveDeveloperAccessService {
   private static instance: ExclusiveDeveloperAccessService;
-  private readonly serviceName = "ExclusiveDeveloperAccessService";
+  private readonly serviceName = 'ExclusiveDeveloperAccessService';
   private readonly defaultRateLimits = {
     EXCLUSIVE: {
       requestsPerMinute: 1000,
@@ -151,8 +145,7 @@ class ExclusiveDeveloperAccessService {
 
   static getInstance(): ExclusiveDeveloperAccessService {
     if (!ExclusiveDeveloperAccessService.instance) {
-      ExclusiveDeveloperAccessService.instance =
-        new ExclusiveDeveloperAccessService();
+      ExclusiveDeveloperAccessService.instance = new ExclusiveDeveloperAccessService();
     }
     return ExclusiveDeveloperAccessService.instance;
   }
@@ -172,17 +165,17 @@ class ExclusiveDeveloperAccessService {
       });
 
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found');
       }
 
-      if (user.role !== "DEVELOPER" && user.role !== "ADMIN") {
-        throw new Error("User does not have developer privileges");
+      if (user.role !== 'DEVELOPER' && user.role !== 'ADMIN') {
+        throw new Error('User does not have developer privileges');
       }
 
       // Generate quantum-secure key pair
       const quantumKeyPair = await quantumSecurityV2.generateQuantumKeyPair(
         request.userId,
-        request.expiresInSeconds || this.defaultExpiry[request.keyType],
+        request.expiresInSeconds || this.defaultExpiry[request.keyType]
       );
 
       // Create access key record
@@ -191,16 +184,16 @@ class ExclusiveDeveloperAccessService {
           userId: request.userId,
           keyId: quantumKeyPair.keyId,
           keyType: request.keyType,
-          accessLevel: request.accessLevel || "INTERNAL",
+          accessLevel: request.accessLevel || 'INTERNAL',
           permissions: request.permissions,
           allowedEndpoints: request.allowedEndpoints,
           rateLimit: this.defaultRateLimits[request.keyType],
           expiresAt: quantumKeyPair.expiresAt,
           isActive: true,
           metadata: {
-            createdBy: "system",
-            purpose: request.metadata?.purpose || "Developer access",
-            environment: request.metadata?.environment || "development",
+            createdBy: 'system',
+            purpose: request.metadata?.purpose || 'Developer access',
+            environment: request.metadata?.environment || 'development',
             ipRestrictions: request.metadata?.ipRestrictions || [],
             timeRestrictions: request.metadata?.timeRestrictions,
           },
@@ -211,16 +204,16 @@ class ExclusiveDeveloperAccessService {
       await this.logAccessEvent({
         keyId: quantumKeyPair.keyId,
         userId: request.userId,
-        eventType: "KEY_GENERATED",
-        ipAddress: "127.0.0.1",
-        userAgent: "system",
+        eventType: 'KEY_GENERATED',
+        ipAddress: '127.0.0.1',
+        userAgent: 'system',
         details: {
           keyType: request.keyType,
-          accessLevel: request.accessLevel || "INTERNAL",
+          accessLevel: request.accessLevel || 'INTERNAL',
           permissions: request.permissions,
           allowedEndpoints: request.allowedEndpoints,
         },
-        severity: "medium",
+        severity: 'medium',
       });
 
       return {
@@ -250,7 +243,7 @@ class ExclusiveDeveloperAccessService {
       method: string;
       ipAddress: string;
       userAgent: string;
-    },
+    }
   ): Promise<DeveloperAccessValidation> {
     const startTime = Date.now();
 
@@ -263,29 +256,29 @@ class ExclusiveDeveloperAccessService {
       if (!accessKey) {
         await this.logAccessEvent({
           keyId,
-          userId: "unknown",
-          eventType: "ACCESS_DENIED",
+          userId: 'unknown',
+          eventType: 'ACCESS_DENIED',
           endpoint: request.endpoint,
           method: request.method,
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
-          details: { reason: "Key not found" },
-          severity: "high",
+          details: { reason: 'Key not found' },
+          severity: 'high',
         });
-        return this.createInvalidValidation(keyId, "unknown");
+        return this.createInvalidValidation(keyId, 'unknown');
       }
 
       if (!accessKey.isActive) {
         await this.logAccessEvent({
           keyId,
           userId: accessKey.userId,
-          eventType: "ACCESS_DENIED",
+          eventType: 'ACCESS_DENIED',
           endpoint: request.endpoint,
           method: request.method,
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
-          details: { reason: "Key is inactive" },
-          severity: "medium",
+          details: { reason: 'Key is inactive' },
+          severity: 'medium',
         });
         return this.createInvalidValidation(keyId, accessKey.userId);
       }
@@ -300,33 +293,33 @@ class ExclusiveDeveloperAccessService {
         await this.logAccessEvent({
           keyId,
           userId: accessKey.userId,
-          eventType: "KEY_EXPIRED",
+          eventType: 'KEY_EXPIRED',
           endpoint: request.endpoint,
           method: request.method,
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
-          details: { reason: "Key has expired" },
-          severity: "medium",
+          details: { reason: 'Key has expired' },
+          severity: 'medium',
         });
         return this.createInvalidValidation(keyId, accessKey.userId);
       }
 
       // Check endpoint permissions
       const endpointAllowed =
-        accessKey.allowedEndpoints.includes("*") ||
+        accessKey.allowedEndpoints.includes('*') ||
         accessKey.allowedEndpoints.includes(request.endpoint);
 
       if (!endpointAllowed) {
         await this.logAccessEvent({
           keyId,
           userId: accessKey.userId,
-          eventType: "ACCESS_DENIED",
+          eventType: 'ACCESS_DENIED',
           endpoint: request.endpoint,
           method: request.method,
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
-          details: { reason: "Endpoint not allowed" },
-          severity: "medium",
+          details: { reason: 'Endpoint not allowed' },
+          severity: 'medium',
         });
         return this.createInvalidValidation(keyId, accessKey.userId, {
           endpointValid: false,
@@ -334,25 +327,22 @@ class ExclusiveDeveloperAccessService {
       }
 
       // Check rate limits
-      const rateLimitCheck = await this.checkRateLimits(
-        accessKey,
-        request.ipAddress,
-      );
+      const rateLimitCheck = await this.checkRateLimits(accessKey, request.ipAddress);
       if (!rateLimitCheck.allowed) {
         await this.logAccessEvent({
           keyId,
           userId: accessKey.userId,
-          eventType: "QUOTA_EXCEEDED",
+          eventType: 'QUOTA_EXCEEDED',
           endpoint: request.endpoint,
           method: request.method,
           ipAddress: request.ipAddress,
           userAgent: request.userAgent,
           details: {
-            reason: "Rate limit exceeded",
+            reason: 'Rate limit exceeded',
             limit: rateLimitCheck.limit,
             current: rateLimitCheck.current,
           },
-          severity: "high",
+          severity: 'high',
         });
         return this.createInvalidValidation(keyId, accessKey.userId);
       }
@@ -361,7 +351,7 @@ class ExclusiveDeveloperAccessService {
       await this.logAccessEvent({
         keyId,
         userId: accessKey.userId,
-        eventType: "KEY_USED",
+        eventType: 'KEY_USED',
         endpoint: request.endpoint,
         method: request.method,
         ipAddress: request.ipAddress,
@@ -370,7 +360,7 @@ class ExclusiveDeveloperAccessService {
           processingTime: Date.now() - startTime,
           rateLimitRemaining: rateLimitCheck.remaining,
         },
-        severity: "low",
+        severity: 'low',
       });
 
       return {
@@ -384,16 +374,16 @@ class ExclusiveDeveloperAccessService {
     } catch (error) {
       await this.logAccessEvent({
         keyId,
-        userId: "unknown",
-        eventType: "ACCESS_DENIED",
+        userId: 'unknown',
+        eventType: 'ACCESS_DENIED',
         endpoint: request.endpoint,
         method: request.method,
         ipAddress: request.ipAddress,
         userAgent: request.userAgent,
         details: { error: error.message },
-        severity: "high",
+        severity: 'high',
       });
-      return this.createInvalidValidation(keyId, "unknown");
+      return this.createInvalidValidation(keyId, 'unknown');
     }
   }
 
@@ -402,7 +392,7 @@ class ExclusiveDeveloperAccessService {
    */
   async revokeAccessKey(
     keyId: string,
-    revokedBy: string,
+    revokedBy: string
   ): Promise<{
     success: boolean;
     message?: string;
@@ -414,7 +404,7 @@ class ExclusiveDeveloperAccessService {
       });
 
       if (!accessKey) {
-        throw new Error("Access key not found");
+        throw new Error('Access key not found');
       }
 
       await prisma.developerAccessKey.update({
@@ -432,16 +422,16 @@ class ExclusiveDeveloperAccessService {
       await this.logAccessEvent({
         keyId,
         userId: accessKey.userId,
-        eventType: "KEY_REVOKED",
-        ipAddress: "127.0.0.1",
-        userAgent: "system",
+        eventType: 'KEY_REVOKED',
+        ipAddress: '127.0.0.1',
+        userAgent: 'system',
         details: { revokedBy },
-        severity: "medium",
+        severity: 'medium',
       });
 
       return {
         success: true,
-        message: "Access key revoked successfully",
+        message: 'Access key revoked successfully',
       };
     } catch (error) {
       return {
@@ -462,28 +452,27 @@ class ExclusiveDeveloperAccessService {
     try {
       const whereClause = userId ? { userId } : {};
 
-      const [totalKeys, activeKeys, expiredKeys, revokedKeys, totalEvents] =
-        await Promise.all([
-          prisma.developerAccessKey.count({ where: whereClause }),
-          prisma.developerAccessKey.count({
-            where: { ...whereClause, isActive: true },
-          }),
-          prisma.developerAccessKey.count({
-            where: {
-              ...whereClause,
-              isActive: false,
-              expiresAt: { lt: new Date() },
-            },
-          }),
-          prisma.developerAccessKey.count({
-            where: {
-              ...whereClause,
-              isActive: false,
-              metadata: { path: ["revokedAt"], not: null },
-            },
-          }),
-          prisma.developerAccessEvent.count({ where: whereClause }),
-        ]);
+      const [totalKeys, activeKeys, expiredKeys, revokedKeys, totalEvents] = await Promise.all([
+        prisma.developerAccessKey.count({ where: whereClause }),
+        prisma.developerAccessKey.count({
+          where: { ...whereClause, isActive: true },
+        }),
+        prisma.developerAccessKey.count({
+          where: {
+            ...whereClause,
+            isActive: false,
+            expiresAt: { lt: new Date() },
+          },
+        }),
+        prisma.developerAccessKey.count({
+          where: {
+            ...whereClause,
+            isActive: false,
+            metadata: { path: ['revokedAt'], not: null },
+          },
+        }),
+        prisma.developerAccessEvent.count({ where: whereClause }),
+      ]);
 
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -504,21 +493,21 @@ class ExclusiveDeveloperAccessService {
 
       const [quotaViolations, securityAlerts] = await Promise.all([
         prisma.developerAccessEvent.count({
-          where: { ...whereClause, eventType: "QUOTA_EXCEEDED" },
+          where: { ...whereClause, eventType: 'QUOTA_EXCEEDED' },
         }),
         prisma.developerAccessEvent.count({
-          where: { ...whereClause, severity: { in: ["high", "critical"] } },
+          where: { ...whereClause, severity: { in: ['high', 'critical'] } },
         }),
       ]);
 
       const topUsers = await prisma.developerAccessKey.groupBy({
-        by: ["userId"],
+        by: ['userId'],
         _count: {
           id: true,
         },
         orderBy: {
           _count: {
-            id: "desc",
+            id: 'desc',
           },
         },
         take: 5,
@@ -536,7 +525,7 @@ class ExclusiveDeveloperAccessService {
         eventsThisWeek,
         eventsThisMonth,
         averageUsagePerKey,
-        topUsers: topUsers.map((user) => ({
+        topUsers: topUsers.map(user => ({
           userId: user.userId,
           keyCount: user._count.id,
           eventCount: 0, // Would need to calculate separately
@@ -563,7 +552,7 @@ class ExclusiveDeveloperAccessService {
   async getAccessEvents(
     userId?: string,
     limit: number = 100,
-    offset: number = 0,
+    offset: number = 0
   ): Promise<{
     success: boolean;
     events?: DeveloperAccessEvent[];
@@ -576,7 +565,7 @@ class ExclusiveDeveloperAccessService {
       const [events, total] = await Promise.all([
         prisma.developerAccessEvent.findMany({
           where: whereClause,
-          orderBy: { timestamp: "desc" },
+          orderBy: { timestamp: 'desc' },
           take: limit,
           skip: offset,
         }),
@@ -585,7 +574,7 @@ class ExclusiveDeveloperAccessService {
 
       return {
         success: true,
-        events: events.map((event) => ({
+        events: events.map(event => ({
           id: event.id,
           keyId: event.keyId,
           userId: event.userId,
@@ -613,7 +602,7 @@ class ExclusiveDeveloperAccessService {
    */
   private async checkRateLimits(
     accessKey: any,
-    ipAddress: string,
+    ipAddress: string
   ): Promise<{
     allowed: boolean;
     remaining: {
@@ -641,21 +630,21 @@ class ExclusiveDeveloperAccessService {
       prisma.developerAccessEvent.count({
         where: {
           keyId: accessKey.keyId,
-          eventType: "KEY_USED",
+          eventType: 'KEY_USED',
           timestamp: { gte: minuteAgo },
         },
       }),
       prisma.developerAccessEvent.count({
         where: {
           keyId: accessKey.keyId,
-          eventType: "KEY_USED",
+          eventType: 'KEY_USED',
           timestamp: { gte: hourAgo },
         },
       }),
       prisma.developerAccessEvent.count({
         where: {
           keyId: accessKey.keyId,
-          eventType: "KEY_USED",
+          eventType: 'KEY_USED',
           timestamp: { gte: dayAgo },
         },
       }),
@@ -698,13 +687,13 @@ class ExclusiveDeveloperAccessService {
       ipValid?: boolean;
       timeValid?: boolean;
       endpointValid?: boolean;
-    },
+    }
   ): DeveloperAccessValidation {
     return {
       isValid: false,
       keyId,
       userId,
-      accessLevel: "NONE",
+      accessLevel: 'NONE',
       permissions: [],
       remainingQuota: { minute: 0, hour: 0, day: 0 },
       restrictions,
@@ -715,7 +704,7 @@ class ExclusiveDeveloperAccessService {
    * Log access event
    */
   private async logAccessEvent(
-    event: Omit<DeveloperAccessEvent, "id" | "timestamp">,
+    event: Omit<DeveloperAccessEvent, 'id' | 'timestamp'>
   ): Promise<void> {
     await prisma.developerAccessEvent.create({
       data: {
@@ -743,10 +732,10 @@ class ExclusiveDeveloperAccessService {
         try {
           await this.cleanupExpiredKeys();
         } catch (error) {
-          console.error("Failed to cleanup expired keys:", error);
+          console.error('Failed to cleanup expired keys:', error);
         }
       },
-      60 * 60 * 1000,
+      60 * 60 * 1000
     );
 
     // Archive old events daily
@@ -755,10 +744,10 @@ class ExclusiveDeveloperAccessService {
         try {
           await this.archiveOldEvents();
         } catch (error) {
-          console.error("Failed to archive old events:", error);
+          console.error('Failed to archive old events:', error);
         }
       },
-      24 * 60 * 60 * 1000,
+      24 * 60 * 60 * 1000
     );
   }
 
@@ -782,11 +771,11 @@ class ExclusiveDeveloperAccessService {
       await this.logAccessEvent({
         keyId: key.keyId,
         userId: key.userId,
-        eventType: "KEY_EXPIRED",
-        ipAddress: "127.0.0.1",
-        userAgent: "system",
-        details: { reason: "Automatic cleanup" },
-        severity: "low",
+        eventType: 'KEY_EXPIRED',
+        ipAddress: '127.0.0.1',
+        userAgent: 'system',
+        details: { reason: 'Automatic cleanup' },
+        severity: 'low',
       });
     }
   }
@@ -812,5 +801,4 @@ class ExclusiveDeveloperAccessService {
   }
 }
 
-export const exclusiveDeveloperAccessService =
-  ExclusiveDeveloperAccessService.getInstance();
+export const exclusiveDeveloperAccessService = ExclusiveDeveloperAccessService.getInstance();

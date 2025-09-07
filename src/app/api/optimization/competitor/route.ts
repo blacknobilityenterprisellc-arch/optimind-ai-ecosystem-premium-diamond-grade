@@ -1,19 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 export async function POST(request: NextRequest) {
   try {
     const { competitorUrls, topic } = await request.json();
 
-    if (
-      !competitorUrls ||
-      !Array.isArray(competitorUrls) ||
-      competitorUrls.length === 0
-    ) {
-      return NextResponse.json(
-        { error: "Competitor URLs are required" },
-        { status: 400 },
-      );
+    if (!competitorUrls || !Array.isArray(competitorUrls) || competitorUrls.length === 0) {
+      return NextResponse.json({ error: 'Competitor URLs are required' }, { status: 400 });
     }
 
     const zai = await ZAI.create();
@@ -22,8 +15,8 @@ export async function POST(request: NextRequest) {
     const competitorPrompt = `
     Analyze the following competitor URLs for content strategy and identify opportunities:
 
-    Competitor URLs: ${competitorUrls.join(", ")}
-    Topic: ${topic || "general"}
+    Competitor URLs: ${competitorUrls.join(', ')}
+    Topic: ${topic || 'general'}
 
     For each competitor, analyze:
     1. Content quality and depth
@@ -103,12 +96,12 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are an expert competitor analyst specializing in content strategy and SEO. Analyze competitor content to identify gaps, opportunities, and strategic insights.",
+            'You are an expert competitor analyst specializing in content strategy and SEO. Analyze competitor content to identify gaps, opportunities, and strategic insights.',
         },
         {
-          role: "user",
+          role: 'user',
           content: competitorPrompt,
         },
       ],
@@ -119,7 +112,7 @@ export async function POST(request: NextRequest) {
     const analysisContent = completion.choices[0]?.message?.content;
 
     if (!analysisContent) {
-      throw new Error("No competitor analysis received from AI");
+      throw new Error('No competitor analysis received from AI');
     }
 
     // Parse the JSON response
@@ -127,7 +120,7 @@ export async function POST(request: NextRequest) {
     try {
       competitorResult = JSON.parse(analysisContent);
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       // Fallback response if JSON parsing fails
       competitorResult = {
         competitors: [],
@@ -148,14 +141,14 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Competitor analysis error:", error);
+    console.error('Competitor analysis error:', error);
     return NextResponse.json(
-      { error: "Failed to analyze competitors", details: error.message },
+      { error: 'Failed to analyze competitors', details: error.message },
       {
-        error: "Failed to analyze competitors",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to analyze competitors',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

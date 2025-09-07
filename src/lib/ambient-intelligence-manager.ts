@@ -5,7 +5,7 @@
 
 export class AmbientIntelligenceManager {
   private isInitialized: boolean = false;
-  private intelligenceLevel: string = "ADVANCED";
+  private intelligenceLevel: string = 'ADVANCED';
 
   constructor() {
     this.initialize();
@@ -14,12 +14,9 @@ export class AmbientIntelligenceManager {
   private async initialize(): Promise<void> {
     try {
       this.isInitialized = true;
-      console.log("🌟 Ambient Intelligence Manager initialized");
+      console.log('🌟 Ambient Intelligence Manager initialized');
     } catch (error) {
-      console.error(
-        "Failed to initialize Ambient Intelligence Manager:",
-        error,
-      );
+      console.error('Failed to initialize Ambient Intelligence Manager:', error);
     }
   }
 
@@ -39,12 +36,12 @@ export class AmbientIntelligenceManager {
 
   public getEcosystemAwareness(): { level: string } {
     return {
-      level: "high",
+      level: 'high',
     };
   }
 
   public enableAmbientSupport(): void {
-    console.log("🌟 Enabling ambient support...");
+    console.log('🌟 Enabling ambient support...');
   }
 }
 

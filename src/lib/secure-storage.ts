@@ -15,11 +15,11 @@ export class SecureStorage {
   }
 
   private async initializeEncryptionKey(): Promise<void> {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
       // Try to get existing key from sessionStorage
-      let key = sessionStorage.getItem("secure_storage_key");
+      let key = sessionStorage.getItem('secure_storage_key');
 
       if (!key) {
         // Generate a new key for this session
@@ -27,38 +27,36 @@ export class SecureStorage {
         const array = new Uint8Array(32);
         crypto.getRandomValues(array);
         key = Array.from(array)
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join("");
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
 
-        sessionStorage.setItem("secure_storage_key", key);
+        sessionStorage.setItem('secure_storage_key', key);
       }
 
       this.encryptionKey = key;
     } catch (error) {
-      console.error("Failed to initialize encryption key:", error);
+      console.error('Failed to initialize encryption key:', error);
       this.encryptionKey = null;
     }
   }
 
   private async encrypt(data: string): Promise<string> {
     if (!this.encryptionKey) {
-      throw new Error("Encryption key not available");
+      throw new Error('Encryption key not available');
     }
 
     try {
       const encoder = new TextEncoder();
       const dataBuffer = encoder.encode(data);
-      const keyBuffer = encoder.encode(
-        this.encryptionKey.padEnd(32, "0").slice(0, 32),
-      );
+      const keyBuffer = encoder.encode(this.encryptionKey.padEnd(32, '0').slice(0, 32));
 
       // Import the key
       const cryptoKey = await window.crypto.subtle.importKey(
-        "raw",
+        'raw',
         keyBuffer,
-        { name: "AES-GCM" },
+        { name: 'AES-GCM' },
         false,
-        ["encrypt"],
+        ['encrypt']
       );
 
       // Generate IV
@@ -67,11 +65,11 @@ export class SecureStorage {
       // Encrypt
       const encryptedBuffer = await window.crypto.subtle.encrypt(
         {
-          name: "AES-GCM",
+          name: 'AES-GCM',
           iv: iv,
         },
         cryptoKey,
-        dataBuffer,
+        dataBuffer
       );
 
       // Combine IV and encrypted data
@@ -82,22 +80,22 @@ export class SecureStorage {
       // Convert to base64
       return btoa(String.fromCharCode.apply(null, Array.from(combined)));
     } catch (error) {
-      console.error("Encryption failed:", error);
-      throw new Error("Failed to encrypt data");
+      console.error('Encryption failed:', error);
+      throw new Error('Failed to encrypt data');
     }
   }
 
   private async decrypt(encryptedData: string): Promise<string> {
     if (!this.encryptionKey) {
-      throw new Error("Encryption key not available");
+      throw new Error('Encryption key not available');
     }
 
     try {
       // Convert from base64
       const combined = new Uint8Array(
         atob(encryptedData)
-          .split("")
-          .map((char) => char.charCodeAt(0)),
+          .split('')
+          .map(char => char.charCodeAt(0))
       );
 
       // Extract IV and encrypted data
@@ -105,40 +103,38 @@ export class SecureStorage {
       const encrypted = combined.slice(12);
 
       const encoder = new TextEncoder();
-      const keyBuffer = encoder.encode(
-        this.encryptionKey.padEnd(32, "0").slice(0, 32),
-      );
+      const keyBuffer = encoder.encode(this.encryptionKey.padEnd(32, '0').slice(0, 32));
 
       // Import the key
       const cryptoKey = await window.crypto.subtle.importKey(
-        "raw",
+        'raw',
         keyBuffer,
-        { name: "AES-GCM" },
+        { name: 'AES-GCM' },
         false,
-        ["decrypt"],
+        ['decrypt']
       );
 
       // Decrypt
       const decryptedBuffer = await window.crypto.subtle.decrypt(
         {
-          name: "AES-GCM",
+          name: 'AES-GCM',
           iv: iv,
         },
         cryptoKey,
-        encrypted,
+        encrypted
       );
 
       // Convert back to string
       return new TextDecoder().decode(decryptedBuffer);
     } catch (error) {
-      console.error("Decryption failed:", error);
-      throw new Error("Failed to decrypt data");
+      console.error('Decryption failed:', error);
+      throw new Error('Failed to decrypt data');
     }
   }
 
   // Store encrypted data
   async setItem(key: string, value: any): Promise<void> {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
       const serialized = JSON.stringify(value);
@@ -153,7 +149,7 @@ export class SecureStorage {
 
   // Retrieve and decrypt data
   async getItem<T>(key: string): Promise<T | null> {
-    if (typeof window === "undefined") return null;
+    if (typeof window === 'undefined') return null;
 
     try {
       // Try encrypted storage first
@@ -181,7 +177,7 @@ export class SecureStorage {
 
   // Remove item
   removeItem(key: string): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     localStorage.removeItem(`secure_${key}`);
     localStorage.removeItem(key);
@@ -189,12 +185,12 @@ export class SecureStorage {
 
   // Clear all secure storage
   clear(): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     // Remove all secure items
     const keys = Object.keys(localStorage);
     for (const key of keys) {
-      if (key.startsWith("secure_")) {
+      if (key.startsWith('secure_')) {
         localStorage.removeItem(key);
       }
     }
@@ -202,26 +198,23 @@ export class SecureStorage {
 
   // Check if key exists
   hasItem(key: string): boolean {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
 
-    return (
-      localStorage.getItem(`secure_${key}`) !== null ||
-      localStorage.getItem(key) !== null
-    );
+    return localStorage.getItem(`secure_${key}`) !== null || localStorage.getItem(key) !== null;
   }
 
   // Get all keys (without secure_ prefix)
   getKeys(): string[] {
-    if (typeof window === "undefined") return [];
+    if (typeof window === 'undefined') return [];
 
     const keys: string[] = [];
     const allKeys = Object.keys(localStorage);
 
     for (const key of allKeys) {
-      if (key.startsWith("secure_")) {
+      if (key.startsWith('secure_')) {
         keys.push(key.slice(7)); // Remove 'secure_' prefix
       } else if (
-        !key.startsWith("secure_") && // Only add non-secure keys if they don't have a secure counterpart
+        !key.startsWith('secure_') && // Only add non-secure keys if they don't have a secure counterpart
         !localStorage.getItem(`secure_${key}`)
       ) {
         keys.push(key);
@@ -236,7 +229,7 @@ export class SecureStorage {
 export const secureStorage = SecureStorage.getInstance();
 
 // React hook for secure storage
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useSecureStorage<T>(key: string, initialValue: T) {
   const [storedValue, setStoredValue] = useState<T>(initialValue);
@@ -261,8 +254,7 @@ export function useSecureStorage<T>(key: string, initialValue: T) {
 
   const setValue = async (value: T | ((val: T) => T)) => {
     try {
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
+      const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
       await secureStorage.setItem(key, valueToStore);
     } catch (error) {

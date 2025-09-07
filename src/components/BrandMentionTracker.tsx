@@ -1,8 +1,6 @@
 // Brand Mention Tracker Component Stub
-"use client";
+'use client';
 
 export default function BrandMentionTracker() {
   return <div>Brand Mention Tracker (Placeholder)</div>;
 }
-
-export { BrandMentionTracker };

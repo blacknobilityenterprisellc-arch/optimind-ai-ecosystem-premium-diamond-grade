@@ -3,7 +3,7 @@
  * Enhanced initialization and error handling for Z.AI services
  */
 
-import ZAI from "z-ai-web-dev-sdk";
+import ZAI from 'z-ai-web-dev-sdk';
 
 export interface ZAIInitializationConfig {
   apiKey?: string;
@@ -30,7 +30,7 @@ class PremiumZAIWrapper {
 
   private constructor(config: ZAIInitializationConfig = {}) {
     this.config = {
-      apiKey: config.apiKey || process.env.ZAI_API_KEY || "demo_key",
+      apiKey: config.apiKey || process.env.ZAI_API_KEY || 'demo_key',
       baseUrl: config.baseUrl || process.env.ZAI_BASE_URL,
       timeout: config.timeout || 30000,
       retries: config.retries || 3,
@@ -64,13 +64,13 @@ class PremiumZAIWrapper {
 
   private async performInitialization(): Promise<void> {
     try {
-      console.log("🚀 Initializing Premium ZAI SDK...");
+      console.log('🚀 Initializing Premium ZAI SDK...');
 
       // Check if we have a real API key
       const apiKey = this.config.apiKey || process.env.ZAI_API_KEY;
 
-      if (!apiKey || apiKey.includes("testing") || apiKey.includes("demo")) {
-        console.log("⚠️ Using fallback mode for ZAI SDK (no valid API key)");
+      if (!apiKey || apiKey.includes('testing') || apiKey.includes('demo')) {
+        console.log('⚠️ Using fallback mode for ZAI SDK (no valid API key)');
         this.setupFallbackMode();
         return;
       }
@@ -92,17 +92,12 @@ class PremiumZAIWrapper {
           lastCheck: new Date(),
           responseTime: testResult.responseTime,
         };
-        console.log(
-          "✅ Premium ZAI SDK initialized successfully with real API",
-        );
+        console.log('✅ Premium ZAI SDK initialized successfully with real API');
       } else {
-        throw new Error(testResult.error || "Connection test failed");
+        throw new Error(testResult.error || 'Connection test failed');
       }
     } catch (error) {
-      console.warn(
-        "⚠️ ZAI SDK initialization failed, falling back to mock mode:",
-        error,
-      );
+      console.warn('⚠️ ZAI SDK initialization failed, falling back to mock mode:', error);
       this.setupFallbackMode();
     }
   }
@@ -118,13 +113,12 @@ class PremiumZAIWrapper {
       const response = await this.zai.chat.completions.create({
         messages: [
           {
-            role: "system",
-            content:
-              'You are a health check assistant. Respond with "OK" only.',
+            role: 'system',
+            content: 'You are a health check assistant. Respond with "OK" only.',
           },
           {
-            role: "user",
-            content: "Health check",
+            role: 'user',
+            content: 'Health check',
           },
         ],
         max_tokens: 10,
@@ -134,15 +128,15 @@ class PremiumZAIWrapper {
       const responseTime = Date.now() - startTime;
       const content = response.choices[0]?.message?.content;
 
-      if (content === "OK") {
+      if (content === 'OK') {
         return { success: true, responseTime };
       } else {
-        return { success: false, error: "Unexpected response content" };
+        return { success: false, error: 'Unexpected response content' };
       }
     } catch (error: any) {
       return {
         success: false,
-        error: error?.message || "Unknown error during connection test",
+        error: error?.message || 'Unknown error during connection test',
       };
     }
   }
@@ -173,7 +167,7 @@ class PremiumZAIWrapper {
           create: async (params: any) => ({
             data: [
               {
-                base64: "mock_base64_image_data",
+                base64: 'mock_base64_image_data',
               },
             ],
           }),
@@ -191,28 +185,27 @@ class PremiumZAIWrapper {
       initialized: true,
       modelAvailable: true,
       lastCheck: new Date(),
-      error: "Using fallback mode",
+      error: 'Using fallback mode',
     };
 
-    console.log("✅ Fallback mode activated for ZAI SDK");
+    console.log('✅ Fallback mode activated for ZAI SDK');
   }
 
   private generateMockResponse(messages: any[]): string {
     const lastMessage = messages[messages.length - 1];
-    const content = lastMessage?.content || "";
+    const content = lastMessage?.content || '';
 
-    if (content.toLowerCase().includes("health check")) {
-      return "OK";
+    if (content.toLowerCase().includes('health check')) {
+      return 'OK';
     }
 
-    return `Mock response for: "${content.substring(0, 100)}${content.length > 100 ? "..." : ""}"`;
+    return `Mock response for: "${content.substring(0, 100)}${content.length > 100 ? '...' : ''}"`;
   }
 
   async getHealthStatus(): Promise<ZAIHealthStatus> {
     // Refresh health status if needed
     const now = new Date();
-    const timeSinceLastCheck =
-      now.getTime() - this.healthStatus.lastCheck.getTime();
+    const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
 
     if (timeSinceLastCheck > 60000) {
       // Check every minute
@@ -238,7 +231,7 @@ class PremiumZAIWrapper {
         initialized: false,
         modelAvailable: false,
         lastCheck: new Date(),
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -249,7 +242,7 @@ class PremiumZAIWrapper {
     }
 
     if (!this.zai) {
-      throw new Error("ZAI SDK not available");
+      throw new Error('ZAI SDK not available');
     }
 
     return this.zai;
@@ -260,7 +253,7 @@ class PremiumZAIWrapper {
       const zai = await this.getZAIInstance();
       return await zai.chat.completions.create(params);
     } catch (error) {
-      console.error("Chat completion failed:", error);
+      console.error('Chat completion failed:', error);
       throw error;
     }
   }
@@ -270,7 +263,7 @@ class PremiumZAIWrapper {
       const zai = await this.getZAIInstance();
       return await zai.images.generations.create(params);
     } catch (error) {
-      console.error("Image generation failed:", error);
+      console.error('Image generation failed:', error);
       throw error;
     }
   }
@@ -280,7 +273,7 @@ class PremiumZAIWrapper {
       const zai = await this.getZAIInstance();
       return await zai.functions.invoke(functionName, params);
     } catch (error) {
-      console.error("Function invocation failed:", error);
+      console.error('Function invocation failed:', error);
       throw error;
     }
   }
@@ -297,7 +290,7 @@ class PremiumZAIWrapper {
         return true;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     return false;
@@ -309,9 +302,7 @@ export const premiumZAIWrapper = PremiumZAIWrapper.getInstance();
 
 // Export convenience functions
 export const getZAIInstance = () => premiumZAIWrapper.getZAIInstance();
-export const createChatCompletion = (params: any) =>
-  premiumZAIWrapper.createChatCompletion(params);
-export const generateImage = (params: any) =>
-  premiumZAIWrapper.generateImage(params);
+export const createChatCompletion = (params: any) => premiumZAIWrapper.createChatCompletion(params);
+export const generateImage = (params: any) => premiumZAIWrapper.generateImage(params);
 export const invokeZAIFunction = (name: string, params: any) =>
   premiumZAIWrapper.invokeFunction(name, params);

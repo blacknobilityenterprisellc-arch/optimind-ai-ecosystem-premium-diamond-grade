@@ -13,12 +13,12 @@
  * - Deterministic output with structured JSON schema
  */
 
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
-import { ModelResult, ModelLabel } from "../types/index";
+import { ModelResult, ModelLabel } from '../types/index';
 
-import { ZaiClient } from "./zaiClient";
+import { ZaiClient } from './zaiClient';
 
 addFormats(Ajv);
 
@@ -31,168 +31,162 @@ export interface AirOptions {
   enableMultiStepReasoning?: boolean;
   includeRelationshipAnalysis?: boolean;
   allowLenientParse?: boolean;
-  analysisDepth?: "basic" | "detailed" | "comprehensive";
+  analysisDepth?: 'basic' | 'detailed' | 'comprehensive';
 }
 
 /** JSON schema for GLM-4.5 AIR advanced reasoning output */
 const airSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     scene_analysis: {
-      type: "object",
+      type: 'object',
       properties: {
         primary_subjects: {
-          type: "array",
+          type: 'array',
           items: {
-            type: "object",
+            type: 'object',
             properties: {
-              subject: { type: "string" },
-              confidence: { type: "number", minimum: 0, maximum: 1 },
-              attributes: { type: "array", items: { type: "string" } },
+              subject: { type: 'string' },
+              confidence: { type: 'number', minimum: 0, maximum: 1 },
+              attributes: { type: 'array', items: { type: 'string' } },
               bounding_box: {
-                type: "object",
+                type: 'object',
                 properties: {
-                  x: { type: "number", minimum: 0, maximum: 1 },
-                  y: { type: "number", minimum: 0, maximum: 1 },
-                  width: { type: "number", minimum: 0, maximum: 1 },
-                  height: { type: "number", minimum: 0, maximum: 1 },
+                  x: { type: 'number', minimum: 0, maximum: 1 },
+                  y: { type: 'number', minimum: 0, maximum: 1 },
+                  width: { type: 'number', minimum: 0, maximum: 1 },
+                  height: { type: 'number', minimum: 0, maximum: 1 },
                 },
-                required: ["x", "y", "width", "height"],
+                required: ['x', 'y', 'width', 'height'],
               },
             },
-            required: ["subject", "confidence"],
+            required: ['subject', 'confidence'],
           },
         },
         scene_composition: {
-          type: "object",
+          type: 'object',
           properties: {
-            setting: { type: "string" },
-            atmosphere: { type: "string" },
-            lighting: { type: "string" },
-            perspective: { type: "string" },
+            setting: { type: 'string' },
+            atmosphere: { type: 'string' },
+            lighting: { type: 'string' },
+            perspective: { type: 'string' },
           },
         },
         spatial_relationships: {
-          type: "array",
+          type: 'array',
           items: {
-            type: "object",
+            type: 'object',
             properties: {
-              subject_a: { type: "string" },
-              subject_b: { type: "string" },
-              relationship: { type: "string" },
-              confidence: { type: "number", minimum: 0, maximum: 1 },
+              subject_a: { type: 'string' },
+              subject_b: { type: 'string' },
+              relationship: { type: 'string' },
+              confidence: { type: 'number', minimum: 0, maximum: 1 },
             },
-            required: ["subject_a", "subject_b", "relationship", "confidence"],
+            required: ['subject_a', 'subject_b', 'relationship', 'confidence'],
           },
         },
       },
-      required: ["primary_subjects"],
+      required: ['primary_subjects'],
     },
     contextual_analysis: {
-      type: "object",
+      type: 'object',
       properties: {
         intent_inference: {
-          type: "object",
+          type: 'object',
           properties: {
-            primary_intent: { type: "string" },
-            confidence: { type: "number", minimum: 0, maximum: 1 },
+            primary_intent: { type: 'string' },
+            confidence: { type: 'number', minimum: 0, maximum: 1 },
             alternative_intents: {
-              type: "array",
+              type: 'array',
               items: {
-                type: "object",
+                type: 'object',
                 properties: {
-                  intent: { type: "string" },
-                  confidence: { type: "number", minimum: 0, maximum: 1 },
+                  intent: { type: 'string' },
+                  confidence: { type: 'number', minimum: 0, maximum: 1 },
                 },
-                required: ["intent", "confidence"],
+                required: ['intent', 'confidence'],
               },
             },
           },
-          required: ["primary_intent", "confidence"],
+          required: ['primary_intent', 'confidence'],
         },
         emotional_tone: {
-          type: "object",
+          type: 'object',
           properties: {
-            dominant_emotion: { type: "string" },
-            intensity: { type: "number", minimum: 0, maximum: 1 },
+            dominant_emotion: { type: 'string' },
+            intensity: { type: 'number', minimum: 0, maximum: 1 },
             emotional_complexity: {
-              type: "string",
-              enum: ["simple", "moderate", "complex"],
+              type: 'string',
+              enum: ['simple', 'moderate', 'complex'],
             },
           },
-          required: ["dominant_emotion", "intensity"],
+          required: ['dominant_emotion', 'intensity'],
         },
         narrative_elements: {
-          type: "array",
+          type: 'array',
           items: {
-            type: "object",
+            type: 'object',
             properties: {
-              element: { type: "string" },
-              role: { type: "string" },
-              significance: { type: "number", minimum: 0, maximum: 1 },
+              element: { type: 'string' },
+              role: { type: 'string' },
+              significance: { type: 'number', minimum: 0, maximum: 1 },
             },
-            required: ["element", "role", "significance"],
+            required: ['element', 'role', 'significance'],
           },
         },
       },
     },
     risk_assessment: {
-      type: "object",
+      type: 'object',
       properties: {
         content_categories: {
-          type: "array",
+          type: 'array',
           items: {
-            type: "object",
+            type: 'object',
             properties: {
-              category: { type: "string" },
-              severity: { type: "number", minimum: 0, maximum: 1 },
-              confidence: { type: "number", minimum: 0, maximum: 1 },
-              justification: { type: "string" },
+              category: { type: 'string' },
+              severity: { type: 'number', minimum: 0, maximum: 1 },
+              confidence: { type: 'number', minimum: 0, maximum: 1 },
+              justification: { type: 'string' },
             },
-            required: ["category", "severity", "confidence"],
+            required: ['category', 'severity', 'confidence'],
           },
         },
         contextual_risk_factors: {
-          type: "array",
-          items: { type: "string" },
+          type: 'array',
+          items: { type: 'string' },
         },
         recommended_action: {
-          type: "string",
-          enum: [
-            "allow",
-            "monitor",
-            "hold_for_review",
-            "quarantine",
-            "escalate",
-          ],
+          type: 'string',
+          enum: ['allow', 'monitor', 'hold_for_review', 'quarantine', 'escalate'],
         },
       },
-      required: ["content_categories", "recommended_action"],
+      required: ['content_categories', 'recommended_action'],
     },
     reasoning_chain: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          step: { type: "number" },
-          observation: { type: "string" },
-          inference: { type: "string" },
-          confidence: { type: "number", minimum: 0, maximum: 1 },
+          step: { type: 'number' },
+          observation: { type: 'string' },
+          inference: { type: 'string' },
+          confidence: { type: 'number', minimum: 0, maximum: 1 },
         },
-        required: ["step", "observation", "inference", "confidence"],
+        required: ['step', 'observation', 'inference', 'confidence'],
       },
     },
     provenance: {
-      type: "object",
+      type: 'object',
       properties: {
-        model: { type: "string" },
-        version: { type: "string" },
-        analysis_timestamp: { type: "string" },
+        model: { type: 'string' },
+        version: { type: 'string' },
+        analysis_timestamp: { type: 'string' },
       },
-      required: ["model", "version"],
+      required: ['model', 'version'],
     },
   },
-  required: ["scene_analysis", "risk_assessment", "provenance"],
+  required: ['scene_analysis', 'risk_assessment', 'provenance'],
 };
 
 const validateAir = ajv.compile(airSchema);
@@ -200,15 +194,14 @@ const validateAir = ajv.compile(airSchema);
 function buildAirPrompt(
   imageDescription: string,
   metadata: Record<string, any>,
-  options: AirOptions,
+  options: AirOptions
 ): { system: string; user: string } {
   const depthInstructions = {
-    basic:
-      "Provide essential analysis with key observations and risk assessment.",
+    basic: 'Provide essential analysis with key observations and risk assessment.',
     detailed:
-      "Provide comprehensive analysis with detailed observations, relationships, and contextual understanding.",
+      'Provide comprehensive analysis with detailed observations, relationships, and contextual understanding.',
     comprehensive:
-      "Provide exhaustive analysis including multi-step reasoning, deep contextual understanding, and nuanced risk assessment.",
+      'Provide exhaustive analysis including multi-step reasoning, deep contextual understanding, and nuanced risk assessment.',
   };
 
   const system = `SYSTEM:
@@ -222,8 +215,8 @@ Your capabilities include:
 - Cross-modal reasoning with emotional and narrative analysis
 - Sophisticated risk assessment with contextual factors
 
-Analysis Depth: ${options.analysisDepth || "detailed"}
-${depthInstructions[options.analysisDepth || "detailed"]}
+Analysis Depth: ${options.analysisDepth || 'detailed'}
+${depthInstructions[options.analysisDepth || 'detailed']}
 
 You MUST respond with valid JSON ONLY following this schema:
 ${JSON.stringify(airSchema, null, 2)}
@@ -245,8 +238,8 @@ Analyze this image for advanced content understanding and risk assessment.
 Image Description: ${imageDescription}
 Metadata Context: ${JSON.stringify(metadata)}
 Analysis Requirements: 
-- Multi-step reasoning: ${options.enableMultiStepReasoning ? "enabled" : "disabled"}
-- Relationship analysis: ${options.includeRelationshipAnalysis ? "enabled" : "disabled"}
+- Multi-step reasoning: ${options.enableMultiStepReasoning ? 'enabled' : 'disabled'}
+- Relationship analysis: ${options.includeRelationshipAnalysis ? 'enabled' : 'disabled'}
 - Temperature: ${options.temperature || 0} (deterministic output)
 
 Provide comprehensive analysis following the specified schema.`;
@@ -260,7 +253,7 @@ function safeJsonParse(s: string) {
   } catch {
     // Attempt to extract first {...} block
     const m = s.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error("Unable to parse JSON from model output");
+    if (!m) throw new Error('Unable to parse JSON from model output');
     return JSON.parse(m[0]);
   }
 }
@@ -269,27 +262,27 @@ export async function zaiAirAnalyze(
   client: ZaiClient,
   imageBuffer: Buffer,
   metadata: Record<string, any> = {},
-  opts?: AirOptions,
+  opts?: AirOptions
 ): Promise<ModelResult> {
   const options: AirOptions = {
-    model: process.env.ZAI_AIR_MODEL || "GLM-4.5-AIR",
+    model: process.env.ZAI_AIR_MODEL || 'GLM-4.5-AIR',
     temperature: 0,
     max_tokens: 2048,
     enableMultiStepReasoning: true,
     includeRelationshipAnalysis: true,
     allowLenientParse: false,
-    analysisDepth: "detailed",
+    analysisDepth: 'detailed',
     ...opts,
   };
 
   // Encode image as base64
-  const imageB64 = imageBuffer.toString("base64");
+  const imageB64 = imageBuffer.toString('base64');
 
   // Create a basic image description for context
   const imageDescription = `Image analysis with metadata: ${JSON.stringify({
     size: imageBuffer.length,
-    type: metadata.contentType || "unknown",
-    filename: metadata.filename || "unknown",
+    type: metadata.contentType || 'unknown',
+    filename: metadata.filename || 'unknown',
   })}`;
 
   const promptParts = buildAirPrompt(imageDescription, metadata, options);
@@ -298,18 +291,18 @@ export async function zaiAirAnalyze(
     model: options.model,
     inputs: [
       {
-        modality: "image",
+        modality: 'image',
         content_base64: imageB64,
       },
       {
-        modality: "text",
+        modality: 'text',
         content: `${promptParts.system}\n\n${promptParts.user}`,
       },
     ],
     parameters: {
       temperature: options.temperature,
       max_tokens: options.max_tokens,
-      output_format: "json",
+      output_format: 'json',
       // Enable advanced reasoning features if supported
       reasoning_depth: options.analysisDepth,
       multi_step: options.enableMultiStepReasoning,
@@ -338,17 +331,13 @@ export async function zaiAirAnalyze(
       parsed = {
         scene_analysis: { primary_subjects: [] },
         risk_assessment: {
-          content_categories: [
-            { category: "analysis_error", severity: 0.5, confidence: 1 },
-          ],
-          recommended_action: "hold_for_review",
+          content_categories: [{ category: 'analysis_error', severity: 0.5, confidence: 1 }],
+          recommended_action: 'hold_for_review',
         },
         provenance: { model: options.model },
       };
     } else {
-      throw new Error(
-        `[zaiAirAnalyze] Failed to parse model JSON: ${(err as Error).message}`,
-      );
+      throw new Error(`[zaiAirAnalyze] Failed to parse model JSON: ${(err as Error).message}`);
     }
   }
 
@@ -357,12 +346,12 @@ export async function zaiAirAnalyze(
   if (!valid) {
     if (options.allowLenientParse) {
       console.warn(
-        "[zaiAirAnalyze] Schema validation failed - continuing with fallback",
-        validateAir.errors,
+        '[zaiAirAnalyze] Schema validation failed - continuing with fallback',
+        validateAir.errors
       );
     } else {
       throw new Error(
-        `[zaiAirAnalyze] Schema validation failed: ${JSON.stringify(validateAir.errors)}`,
+        `[zaiAirAnalyze] Schema validation failed: ${JSON.stringify(validateAir.errors)}`
       );
     }
   }
@@ -384,7 +373,7 @@ export async function zaiAirAnalyze(
   if (parsed.scene_analysis?.primary_subjects) {
     parsed.scene_analysis.primary_subjects.forEach((subject: any) => {
       labels.push({
-        label: `subject_${subject.subject.toLowerCase().replace(/\s+/g, "_")}`,
+        label: `subject_${subject.subject.toLowerCase().replace(/\s+/g, '_')}`,
         score: subject.confidence * 0.7, // Lower weight for subject detection
         region: subject.bounding_box,
       });
@@ -395,7 +384,7 @@ export async function zaiAirAnalyze(
   if (parsed.contextual_analysis?.intent_inference) {
     const intent = parsed.contextual_analysis.intent_inference;
     labels.push({
-      label: `intent_${intent.primary_intent.toLowerCase().replace(/\s+/g, "_")}`,
+      label: `intent_${intent.primary_intent.toLowerCase().replace(/\s+/g, '_')}`,
       score: intent.confidence * 0.8,
     });
   }
@@ -404,7 +393,7 @@ export async function zaiAirAnalyze(
   if (parsed.contextual_analysis?.emotional_tone) {
     const emotion = parsed.contextual_analysis.emotional_tone;
     labels.push({
-      label: `emotion_${emotion.dominant_emotion.toLowerCase().replace(/\s+/g, "_")}`,
+      label: `emotion_${emotion.dominant_emotion.toLowerCase().replace(/\s+/g, '_')}`,
       score: emotion.intensity * 0.6,
     });
   }
@@ -422,7 +411,7 @@ export async function zaiAirAnalyze(
     modelVersion: parsed.provenance?.version || undefined,
     labels,
     rawOutput: parsed,
-    latencyMs: typeof resp?.latencyMs === "number" ? resp.latencyMs : undefined,
+    latencyMs: typeof resp?.latencyMs === 'number' ? resp.latencyMs : undefined,
   };
 
   // Add AIR-specific metadata

@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   Loader2,
   RefreshCw,
@@ -21,7 +15,7 @@ import {
   AlertTriangle,
   TrendingUp,
   Download,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface OptimizationResult {
   originalScore: number;
@@ -38,24 +32,23 @@ interface OptimizationResult {
 }
 
 export function ContentOptimizationRefresh() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const [isOptimizing, setIsOptimizing] = useState(false);
-  const [optimizationResult, setOptimizationResult] =
-    useState<OptimizationResult | null>(null);
+  const [optimizationResult, setOptimizationResult] = useState<OptimizationResult | null>(null);
   const [progress, setProgress] = useState(0);
 
   const optimizationOptions = [
-    { value: "seo", label: "SEO Optimization" },
-    { value: "readability", label: "Readability" },
-    { value: "engagement", label: "User Engagement" },
-    { value: "keywords", label: "Keyword Optimization" },
-    { value: "structure", label: "Content Structure" },
-    { value: "headings", label: "Heading Optimization" },
+    { value: 'seo', label: 'SEO Optimization' },
+    { value: 'readability', label: 'Readability' },
+    { value: 'engagement', label: 'User Engagement' },
+    { value: 'keywords', label: 'Keyword Optimization' },
+    { value: 'structure', label: 'Content Structure' },
+    { value: 'headings', label: 'Heading Optimization' },
   ];
 
   const handleOptimize = async () => {
     if (!content.trim()) {
-      toast.error("Please enter content to optimize");
+      toast.error('Please enter content to optimize');
       return;
     }
 
@@ -65,7 +58,7 @@ export function ContentOptimizationRefresh() {
     try {
       // Simulate optimization progress
       const progressInterval = setInterval(() => {
-        setProgress((prev) => {
+        setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -75,7 +68,7 @@ export function ContentOptimizationRefresh() {
       }, 400);
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       setProgress(100);
 
@@ -87,29 +80,29 @@ export function ContentOptimizationRefresh() {
         originalScore,
         optimizedScore,
         improvements: [
-          "Improved keyword placement and density",
-          "Enhanced readability with better sentence structure",
-          "Added engaging subheadings and formatting",
-          "Optimized meta description potential",
-          "Improved content flow and logical structure",
+          'Improved keyword placement and density',
+          'Enhanced readability with better sentence structure',
+          'Added engaging subheadings and formatting',
+          'Optimized meta description potential',
+          'Improved content flow and logical structure',
         ],
         optimizedContent: content
-          .split("\n\n")
-          .map((paragraph) => paragraph.trim())
-          .filter((p) => p.length > 0)
+          .split('\n\n')
+          .map(paragraph => paragraph.trim())
+          .filter(p => p.length > 0)
           .map((paragraph, index) => {
             if (index === 0) {
-              return `## ${paragraph}\n\nThis comprehensive guide explores the key aspects of ${paragraph.toLowerCase().split(" ")[0]} in detail, providing actionable insights and strategies for success.`;
+              return `## ${paragraph}\n\nThis comprehensive guide explores the key aspects of ${paragraph.toLowerCase().split(' ')[0]} in detail, providing actionable insights and strategies for success.`;
             }
             return `${paragraph}\n\nThis section delves deeper into the topic, offering practical examples and expert insights to enhance understanding.`;
           })
-          .join("\n\n"),
+          .join('\n\n'),
         recommendations: [
-          "Add more specific examples and case studies",
-          "Include relevant statistics and data points",
-          "Consider adding multimedia elements",
-          "Implement schema markup for better SEO",
-          "Add internal links to related content",
+          'Add more specific examples and case studies',
+          'Include relevant statistics and data points',
+          'Consider adding multimedia elements',
+          'Implement schema markup for better SEO',
+          'Add internal links to related content',
         ],
         metrics: {
           readability: Math.floor(Math.random() * 30) + 70,
@@ -120,9 +113,9 @@ export function ContentOptimizationRefresh() {
       };
 
       setOptimizationResult(mockResult);
-      toast.success("Content optimization completed!");
+      toast.success('Content optimization completed!');
     } catch (error) {
-      toast.error("Failed to optimize content");
+      toast.error('Failed to optimize content');
     } finally {
       setIsOptimizing(false);
     }
@@ -130,23 +123,21 @@ export function ContentOptimizationRefresh() {
 
   const handleDownload = () => {
     if (optimizationResult) {
-      const blob = new Blob([optimizationResult.optimizedContent], {
-        type: "text/plain",
-      });
+      const blob = new Blob([optimizationResult.optimizedContent], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.download = "optimized-content.txt";
+      link.download = 'optimized-content.txt';
       link.click();
       URL.revokeObjectURL(url);
-      toast.success("Optimized content downloaded!");
+      toast.success('Optimized content downloaded!');
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   return (
@@ -158,29 +149,24 @@ export function ContentOptimizationRefresh() {
             <span>Content Optimization Refresh</span>
           </CardTitle>
           <CardDescription>
-            Refresh and optimize your content for better SEO, readability, and
-            user engagement.
+            Refresh and optimize your content for better SEO, readability, and user engagement.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Enter your content to optimize
-            </label>
+            <label className="text-sm font-medium mb-2 block">Enter your content to optimize</label>
             <Textarea
               placeholder="Paste your content here for optimization..."
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
               className="min-h-[200px]"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Optimization Focus Areas
-            </label>
+            <label className="text-sm font-medium mb-2 block">Optimization Focus Areas</label>
             <div className="flex flex-wrap gap-2">
-              {optimizationOptions.map((option) => (
+              {optimizationOptions.map(option => (
                 <Badge
                   key={option.value}
                   variant="outline"
@@ -228,14 +214,9 @@ export function ContentOptimizationRefresh() {
             <CardTitle className="flex items-center justify-between">
               <span>Optimization Results</span>
               <div className="flex items-center space-x-2">
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-800"
-                >
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
                   <TrendingUp className="w-3 h-3 mr-1" />+
-                  {optimizationResult.optimizedScore -
-                    optimizationResult.originalScore}
-                  %
+                  {optimizationResult.optimizedScore - optimizationResult.originalScore}%
                 </Badge>
               </div>
             </CardTitle>
@@ -247,13 +228,8 @@ export function ContentOptimizationRefresh() {
                 <div className="text-3xl font-bold text-gray-600">
                   {optimizationResult.originalScore}%
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Original Score
-                </div>
-                <Progress
-                  value={optimizationResult.originalScore}
-                  className="w-full mt-2"
-                />
+                <div className="text-sm text-muted-foreground">Original Score</div>
+                <Progress value={optimizationResult.originalScore} className="w-full mt-2" />
               </div>
               <div className="text-center">
                 <div
@@ -261,13 +237,8 @@ export function ContentOptimizationRefresh() {
                 >
                   {optimizationResult.optimizedScore}%
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Optimized Score
-                </div>
-                <Progress
-                  value={optimizationResult.optimizedScore}
-                  className="w-full mt-2"
-                />
+                <div className="text-sm text-muted-foreground">Optimized Score</div>
+                <Progress value={optimizationResult.optimizedScore} className="w-full mt-2" />
               </div>
             </div>
 
@@ -336,9 +307,9 @@ export function ContentOptimizationRefresh() {
               <h4 className="font-semibold mb-2">Optimized Content</h4>
               <Textarea
                 value={optimizationResult.optimizedContent}
-                onChange={(e) =>
-                  setOptimizationResult((prev) =>
-                    prev ? { ...prev, optimizedContent: e.target.value } : null,
+                onChange={e =>
+                  setOptimizationResult(prev =>
+                    prev ? { ...prev, optimizedContent: e.target.value } : null
                   )
                 }
                 className="min-h-[200px]"
@@ -346,10 +317,7 @@ export function ContentOptimizationRefresh() {
             </div>
 
             <div className="flex justify-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setOptimizationResult(null)}
-              >
+              <Button variant="outline" onClick={() => setOptimizationResult(null)}>
                 Optimize New Content
               </Button>
               <Button onClick={handleDownload}>

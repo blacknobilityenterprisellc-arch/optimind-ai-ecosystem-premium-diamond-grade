@@ -5,7 +5,7 @@
 
 export class IntelligentSecurityOrchestrator {
   private isInitialized: boolean = false;
-  private securityLevel: string = "PREMIUM_DIAMOND";
+  private securityLevel: string = 'PREMIUM_DIAMOND';
 
   constructor() {
     this.initialize();
@@ -14,12 +14,9 @@ export class IntelligentSecurityOrchestrator {
   private async initialize(): Promise<void> {
     try {
       this.isInitialized = true;
-      console.log("🛡️ Intelligent Security Orchestrator initialized");
+      console.log('🛡️ Intelligent Security Orchestrator initialized');
     } catch (error) {
-      console.error(
-        "Failed to initialize Intelligent Security Orchestrator:",
-        error,
-      );
+      console.error('Failed to initialize Intelligent Security Orchestrator:', error);
     }
   }
 
@@ -39,14 +36,13 @@ export class IntelligentSecurityOrchestrator {
 
   public getEcosystemStatus(): { securityPosture: string } {
     return {
-      securityPosture: "excellent",
+      securityPosture: 'excellent',
     };
   }
 
   public ensureIntelligentSecurity(): void {
-    console.log("🛡️ Ensuring intelligent security...");
+    console.log('🛡️ Ensuring intelligent security...');
   }
 }
 
-export const intelligentSecurityOrchestrator =
-  new IntelligentSecurityOrchestrator();
+export const intelligentSecurityOrchestrator = new IntelligentSecurityOrchestrator();

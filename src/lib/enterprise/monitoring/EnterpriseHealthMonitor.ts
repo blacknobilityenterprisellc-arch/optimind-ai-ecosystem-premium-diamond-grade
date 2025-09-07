@@ -21,51 +21,51 @@
  * @compliance: Enterprise Monitoring Standards
  */
 
-import { EventEmitter } from "events";
-import { EnterpriseEnvironmentConfig } from "../environment/EnterpriseEnvironmentConfig";
-import { EnterpriseServiceContainer } from "../container/EnterpriseServiceContainer";
+import { EventEmitter } from 'events';
+import { EnterpriseEnvironmentConfig } from '../environment/EnterpriseEnvironmentConfig';
+import { EnterpriseServiceContainer } from '../container/EnterpriseServiceContainer';
 
 // Health status types
 export enum HealthStatus {
-  HEALTHY = "HEALTHY",
-  DEGRADED = "DEGRADED",
-  UNHEALTHY = "UNHEALTHY",
-  UNKNOWN = "UNKNOWN",
-  MAINTENANCE = "MAINTENANCE",
+  HEALTHY = 'HEALTHY',
+  DEGRADED = 'DEGRADED',
+  UNHEALTHY = 'UNHEALTHY',
+  UNKNOWN = 'UNKNOWN',
+  MAINTENANCE = 'MAINTENANCE',
 }
 
 // Alert severity levels
 export enum AlertSeverity {
-  INFO = "INFO",
-  WARNING = "WARNING",
-  ERROR = "ERROR",
-  CRITICAL = "CRITICAL",
+  INFO = 'INFO',
+  WARNING = 'WARNING',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
 }
 
 // Alert types
 export enum AlertType {
-  THRESHOLD_EXCEEDED = "THRESHOLD_EXCEEDED",
-  SERVICE_DOWN = "SERVICE_DOWN",
-  PERFORMANCE_DEGRADED = "PERFORMANCE_DEGRADED",
-  SECURITY_BREACH = "SECURITY_BREACH",
-  RESOURCE_EXHAUSTED = "RESOURCE_EXHAUSTED",
-  CUSTOM = "CUSTOM",
+  THRESHOLD_EXCEEDED = 'THRESHOLD_EXCEEDED',
+  SERVICE_DOWN = 'SERVICE_DOWN',
+  PERFORMANCE_DEGRADED = 'PERFORMANCE_DEGRADED',
+  SECURITY_BREACH = 'SECURITY_BREACH',
+  RESOURCE_EXHAUSTED = 'RESOURCE_EXHAUSTED',
+  CUSTOM = 'CUSTOM',
 }
 
 // Metric types
 export enum MetricType {
-  COUNTER = "COUNTER",
-  GAUGE = "GAUGE",
-  HISTOGRAM = "HISTOGRAM",
-  SUMMARY = "SUMMARY",
+  COUNTER = 'COUNTER',
+  GAUGE = 'GAUGE',
+  HISTOGRAM = 'HISTOGRAM',
+  SUMMARY = 'SUMMARY',
 }
 
 // SLA compliance status
 export enum SLAStatus {
-  COMPLIANT = "COMPLIANT",
-  WARNING = "WARNING",
-  VIOLATION = "VIOLATION",
-  UNKNOWN = "UNKNOWN",
+  COMPLIANT = 'COMPLIANT',
+  WARNING = 'WARNING',
+  VIOLATION = 'VIOLATION',
+  UNKNOWN = 'UNKNOWN',
 }
 
 // Health check interface
@@ -124,7 +124,7 @@ export interface AlertDefinition {
   enabled: boolean;
   condition: {
     metric: string;
-    operator: "gt" | "lt" | "eq" | "ne" | "gte" | "lte";
+    operator: 'gt' | 'lt' | 'eq' | 'ne' | 'gte' | 'lte';
     threshold: number;
     duration?: number; // Duration threshold must be exceeded
   };
@@ -134,7 +134,7 @@ export interface AlertDefinition {
 
 // Alert action
 export interface AlertAction {
-  type: "email" | "slack" | "webhook" | "pagerduty" | "sms";
+  type: 'email' | 'slack' | 'webhook' | 'pagerduty' | 'sms';
   config: Record<string, any>;
 }
 
@@ -192,7 +192,7 @@ export interface SLAReport {
 // SLA violation
 export interface SLAViolation {
   timestamp: number;
-  type: "availability" | "performance" | "errorRate";
+  type: 'availability' | 'performance' | 'errorRate';
   actual: number;
   expected: number;
   duration: number;
@@ -261,7 +261,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   constructor(
     environment: EnterpriseEnvironmentConfig,
-    config: Partial<HealthMonitoringConfig> = {},
+    config: Partial<HealthMonitoringConfig> = {}
   ) {
     super();
     this.environment = environment;
@@ -282,21 +282,21 @@ export class EnterpriseHealthMonitor extends EventEmitter {
         email: {
           enabled: false,
           smtp: {
-            host: "",
+            host: '',
             port: 587,
             secure: false,
             auth: {
-              user: "",
-              pass: "",
+              user: '',
+              pass: '',
             },
           },
-          from: "",
+          from: '',
           to: [],
         },
         slack: {
           enabled: false,
-          webhook: "",
-          channel: "",
+          webhook: '',
+          channel: '',
         },
         webhook: {
           enabled: false,
@@ -320,10 +320,10 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private setupDefaultHealthChecks(): void {
     // System health check
     this.registerHealthCheck({
-      id: "system-health",
-      name: "System Health",
-      description: "Overall system health check",
-      component: "system",
+      id: 'system-health',
+      name: 'System Health',
+      description: 'Overall system health check',
+      component: 'system',
       interval: 30000,
       timeout: 5000,
       enabled: true,
@@ -331,23 +331,23 @@ export class EnterpriseHealthMonitor extends EventEmitter {
       checkFunction: async () => {
         const memUsage = process.memoryUsage();
         const cpuUsage = process.cpuUsage();
-        const totalMem = require("os").totalmem();
-        const freeMem = require("os").freemem();
+        const totalMem = require('os').totalmem();
+        const freeMem = require('os').freemem();
         const memUsagePercent = ((totalMem - freeMem) / totalMem) * 100;
 
         let status = HealthStatus.HEALTHY;
-        let message = "System is healthy";
+        let message = 'System is healthy';
 
         if (memUsagePercent > 95) {
           status = HealthStatus.UNHEALTHY;
-          message = "Memory usage critically high";
+          message = 'Memory usage critically high';
         } else if (memUsagePercent > 80) {
           status = HealthStatus.DEGRADED;
-          message = "Memory usage high";
+          message = 'Memory usage high';
         }
 
         return {
-          id: "system-health",
+          id: 'system-health',
           status,
           timestamp: Date.now(),
           duration: 0,
@@ -370,10 +370,10 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     // Database health check
     this.registerHealthCheck({
-      id: "database-health",
-      name: "Database Health",
-      description: "Database connectivity and performance",
-      component: "database",
+      id: 'database-health',
+      name: 'Database Health',
+      description: 'Database connectivity and performance',
+      component: 'database',
       interval: 30000,
       timeout: 10000,
       enabled: true,
@@ -383,19 +383,19 @@ export class EnterpriseHealthMonitor extends EventEmitter {
           const startTime = Date.now();
 
           // Simulate database query
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise(resolve => setTimeout(resolve, 100));
 
           const duration = Date.now() - startTime;
           let status = HealthStatus.HEALTHY;
-          let message = "Database is healthy";
+          let message = 'Database is healthy';
 
           if (duration > 5000) {
             status = HealthStatus.DEGRADED;
-            message = "Database response time high";
+            message = 'Database response time high';
           }
 
           return {
-            id: "database-health",
+            id: 'database-health',
             status,
             timestamp: Date.now(),
             duration,
@@ -407,11 +407,11 @@ export class EnterpriseHealthMonitor extends EventEmitter {
           };
         } catch (error) {
           return {
-            id: "database-health",
+            id: 'database-health',
             status: HealthStatus.UNHEALTHY,
             timestamp: Date.now(),
             duration: 0,
-            message: "Database connection failed",
+            message: 'Database connection failed',
             error: error as Error,
           };
         }
@@ -423,23 +423,19 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     if (!this.serviceContainer) return;
 
     // Service health checks will be dynamically added based on registered services
-    this.serviceContainer.on("service:registered", (descriptor) => {
+    this.serviceContainer.on('service:registered', descriptor => {
       this.registerHealthCheck({
         id: `service-${descriptor.name}`,
         name: `Service: ${descriptor.name}`,
         description: `Health check for ${descriptor.name} service`,
-        component: "service",
+        component: 'service',
         interval: 30000,
         timeout: 5000,
         enabled: true,
         checkFunction: async () => {
           try {
-            const service = await this.serviceContainer!.getService(
-              descriptor.name,
-            );
-            const health = await this.serviceContainer!.getServiceHealth(
-              descriptor.name,
-            );
+            const service = await this.serviceContainer!.getService(descriptor.name);
+            const health = await this.serviceContainer!.getServiceHealth(descriptor.name);
 
             return {
               id: `service-${descriptor.name}`,
@@ -467,11 +463,11 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   private mapServiceHealthStatus(serviceStatus: string): HealthStatus {
     switch (serviceStatus) {
-      case "HEALTHY":
+      case 'HEALTHY':
         return HealthStatus.HEALTHY;
-      case "DEGRADED":
+      case 'DEGRADED':
         return HealthStatus.DEGRADED;
-      case "UNHEALTHY":
+      case 'UNHEALTHY':
         return HealthStatus.UNHEALTHY;
       default:
         return HealthStatus.UNKNOWN;
@@ -481,65 +477,65 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private setupDefaultMetrics(): void {
     // System metrics
     this.registerMetric({
-      name: "system_memory_usage_percent",
+      name: 'system_memory_usage_percent',
       type: MetricType.GAUGE,
-      description: "System memory usage percentage",
+      description: 'System memory usage percentage',
     });
 
     this.registerMetric({
-      name: "system_cpu_usage_percent",
+      name: 'system_cpu_usage_percent',
       type: MetricType.GAUGE,
-      description: "System CPU usage percentage",
+      description: 'System CPU usage percentage',
     });
 
     this.registerMetric({
-      name: "system_uptime_seconds",
+      name: 'system_uptime_seconds',
       type: MetricType.COUNTER,
-      description: "System uptime in seconds",
+      description: 'System uptime in seconds',
     });
 
     // Application metrics
     this.registerMetric({
-      name: "app_requests_total",
+      name: 'app_requests_total',
       type: MetricType.COUNTER,
-      description: "Total number of requests",
+      description: 'Total number of requests',
     });
 
     this.registerMetric({
-      name: "app_request_duration_seconds",
+      name: 'app_request_duration_seconds',
       type: MetricType.HISTOGRAM,
-      description: "Request duration in seconds",
+      description: 'Request duration in seconds',
       buckets: [0.1, 0.5, 1, 2, 5, 10],
     });
 
     this.registerMetric({
-      name: "app_errors_total",
+      name: 'app_errors_total',
       type: MetricType.COUNTER,
-      description: "Total number of errors",
+      description: 'Total number of errors',
     });
   }
 
   private setupDefaultAlerts(): void {
     // High memory usage alert
     this.registerAlert({
-      id: "high-memory-usage",
-      name: "High Memory Usage",
-      description: "System memory usage is above threshold",
+      id: 'high-memory-usage',
+      name: 'High Memory Usage',
+      description: 'System memory usage is above threshold',
       severity: AlertSeverity.WARNING,
       type: AlertType.RESOURCE_EXHAUSTED,
       enabled: true,
       condition: {
-        metric: "system_memory_usage_percent",
-        operator: "gt",
+        metric: 'system_memory_usage_percent',
+        operator: 'gt',
         threshold: 80,
         duration: 300000, // 5 minutes
       },
       actions: [
         {
-          type: "email",
+          type: 'email',
           config: {
-            subject: "High Memory Usage Alert",
-            template: "memory_usage_alert",
+            subject: 'High Memory Usage Alert',
+            template: 'memory_usage_alert',
           },
         },
       ],
@@ -548,23 +544,23 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     // Service down alert
     this.registerAlert({
-      id: "service-down",
-      name: "Service Down",
-      description: "Critical service is down",
+      id: 'service-down',
+      name: 'Service Down',
+      description: 'Critical service is down',
       severity: AlertSeverity.CRITICAL,
       type: AlertType.SERVICE_DOWN,
       enabled: true,
       condition: {
-        metric: "service_health_status",
-        operator: "eq",
+        metric: 'service_health_status',
+        operator: 'eq',
         threshold: 2, // UNHEALTHY
         duration: 60000, // 1 minute
       },
       actions: [
         {
-          type: "pagerduty",
+          type: 'pagerduty',
           config: {
-            urgency: "high",
+            urgency: 'high',
           },
         },
       ],
@@ -575,9 +571,9 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private setupDefaultSLAs(): void {
     // Application availability SLA
     this.registerSLA({
-      id: "application-availability",
-      name: "Application Availability",
-      description: "Application availability SLA",
+      id: 'application-availability',
+      name: 'Application Availability',
+      description: 'Application availability SLA',
       target: 99.9,
       window: 86400000, // 24 hours
       metrics: {
@@ -593,9 +589,9 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     // API response time SLA
     this.registerSLA({
-      id: "api-response-time",
-      name: "API Response Time",
-      description: "API response time SLA",
+      id: 'api-response-time',
+      name: 'API Response Time',
+      description: 'API response time SLA',
       target: 95.0,
       window: 3600000, // 1 hour
       metrics: {
@@ -634,7 +630,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     if (this.isRunning) return;
 
     this.isRunning = true;
-    this.emit("starting");
+    this.emit('starting');
 
     // Start all enabled health checks
     for (const check of this.healthChecks.values()) {
@@ -652,14 +648,14 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // Start SLA reporting
     this.startSLAReporting();
 
-    this.emit("started");
+    this.emit('started');
   }
 
   async stop(): Promise<void> {
     if (!this.isRunning) return;
 
     this.isRunning = false;
-    this.emit("stopping");
+    this.emit('stopping');
 
     // Stop all health check timers
     for (const timer of this.checkTimers.values()) {
@@ -667,7 +663,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     }
     this.checkTimers.clear();
 
-    this.emit("stopped");
+    this.emit('stopped');
   }
 
   private scheduleHealthCheck(check: HealthCheck): void {
@@ -710,10 +706,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
       const result = await Promise.race([
         check.checkFunction(),
         new Promise<HealthCheckResult>((_, reject) =>
-          setTimeout(
-            () => reject(new Error("Health check timeout")),
-            check.timeout,
-          ),
+          setTimeout(() => reject(new Error('Health check timeout')), check.timeout)
         ),
       ]);
 
@@ -731,7 +724,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
       const cutoff = Date.now() - this.config.metricsRetention;
       results.splice(
         0,
-        results.findIndex((r) => r.timestamp > cutoff),
+        results.findIndex(r => r.timestamp > cutoff)
       );
 
       // Record metrics
@@ -745,14 +738,14 @@ export class EnterpriseHealthMonitor extends EventEmitter {
       await this.checkAlerts(check, result);
 
       // Emit event
-      this.emit("healthCheck:completed", check, result);
+      this.emit('healthCheck:completed', check, result);
     } catch (error) {
       const result: HealthCheckResult = {
         id: check.id,
         status: HealthStatus.UNHEALTHY,
         timestamp: Date.now(),
         duration: Date.now() - startTime,
-        message: "Health check failed",
+        message: 'Health check failed',
         error: error as Error,
       };
 
@@ -766,22 +759,15 @@ export class EnterpriseHealthMonitor extends EventEmitter {
       await this.checkAlerts(check, result);
 
       // Emit event
-      this.emit("healthCheck:failed", check, result, error);
+      this.emit('healthCheck:failed', check, result, error);
     }
   }
 
-  private async checkAlerts(
-    check: HealthCheck,
-    result: HealthCheckResult,
-  ): Promise<void> {
+  private async checkAlerts(check: HealthCheck, result: HealthCheckResult): Promise<void> {
     for (const alert of this.alerts.values()) {
       if (!alert.enabled) continue;
 
-      const shouldAlert = await this.evaluateAlertCondition(
-        alert,
-        check,
-        result,
-      );
+      const shouldAlert = await this.evaluateAlertCondition(alert, check, result);
       if (shouldAlert) {
         await this.triggerAlert(alert, check, result);
       }
@@ -791,27 +777,23 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private async evaluateAlertCondition(
     alert: AlertDefinition,
     check: HealthCheck,
-    result: HealthCheckResult,
+    result: HealthCheckResult
   ): Promise<boolean> {
     // This is a simplified alert evaluation
     // In a real implementation, this would be much more sophisticated
 
-    if (alert.condition.metric === "health_status") {
+    if (alert.condition.metric === 'health_status') {
       const statusValue = this.getStatusValue(result.status);
       return this.evaluateCondition(
         statusValue,
         alert.condition.operator,
-        alert.condition.threshold,
+        alert.condition.threshold
       );
     }
 
     if (result.metrics && alert.condition.metric in result.metrics) {
       const value = result.metrics[alert.condition.metric];
-      return this.evaluateCondition(
-        value,
-        alert.condition.operator,
-        alert.condition.threshold,
-      );
+      return this.evaluateCondition(value, alert.condition.operator, alert.condition.threshold);
     }
 
     return false;
@@ -834,23 +816,19 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     }
   }
 
-  private evaluateCondition(
-    value: number,
-    operator: string,
-    threshold: number,
-  ): boolean {
+  private evaluateCondition(value: number, operator: string, threshold: number): boolean {
     switch (operator) {
-      case "gt":
+      case 'gt':
         return value > threshold;
-      case "lt":
+      case 'lt':
         return value < threshold;
-      case "eq":
+      case 'eq':
         return value === threshold;
-      case "ne":
+      case 'ne':
         return value !== threshold;
-      case "gte":
+      case 'gte':
         return value >= threshold;
-      case "lte":
+      case 'lte':
         return value <= threshold;
       default:
         return false;
@@ -860,7 +838,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private async triggerAlert(
     alert: AlertDefinition,
     check: HealthCheck,
-    result: HealthCheckResult,
+    result: HealthCheckResult
   ): Promise<void> {
     const alertId = `${alert.id}_${Date.now()}`;
     const alertInstance: Alert = {
@@ -882,7 +860,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     // Check cooldown
     const lastAlert = Array.from(this.activeAlerts.values())
-      .filter((a) => a.definitionId === alert.id)
+      .filter(a => a.definitionId === alert.id)
       .pop();
 
     if (lastAlert && Date.now() - lastAlert.timestamp < alert.cooldown) {
@@ -896,26 +874,23 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     await this.sendAlertNotifications(alertInstance, alert.actions);
 
     // Emit event
-    this.emit("alert:triggered", alertInstance);
+    this.emit('alert:triggered', alertInstance);
   }
 
-  private async sendAlertNotifications(
-    alert: Alert,
-    actions: AlertAction[],
-  ): Promise<void> {
+  private async sendAlertNotifications(alert: Alert, actions: AlertAction[]): Promise<void> {
     for (const action of actions) {
       try {
         switch (action.type) {
-          case "email":
+          case 'email':
             await this.sendEmailAlert(alert, action.config);
             break;
-          case "slack":
+          case 'slack':
             await this.sendSlackAlert(alert, action.config);
             break;
-          case "webhook":
+          case 'webhook':
             await this.sendWebhookAlert(alert, action.config);
             break;
-          case "pagerduty":
+          case 'pagerduty':
             await this.sendPagerDutyAlert(alert, action.config);
             break;
         }
@@ -925,43 +900,27 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     }
   }
 
-  private async sendEmailAlert(
-    alert: Alert,
-    config: Record<string, any>,
-  ): Promise<void> {
+  private async sendEmailAlert(alert: Alert, config: Record<string, any>): Promise<void> {
     // Implementation would send email
     console.log(`Email alert: ${alert.title} - ${alert.message}`);
   }
 
-  private async sendSlackAlert(
-    alert: Alert,
-    config: Record<string, any>,
-  ): Promise<void> {
+  private async sendSlackAlert(alert: Alert, config: Record<string, any>): Promise<void> {
     // Implementation would send Slack notification
     console.log(`Slack alert: ${alert.title} - ${alert.message}`);
   }
 
-  private async sendWebhookAlert(
-    alert: Alert,
-    config: Record<string, any>,
-  ): Promise<void> {
+  private async sendWebhookAlert(alert: Alert, config: Record<string, any>): Promise<void> {
     // Implementation would send webhook
     console.log(`Webhook alert: ${alert.title} - ${alert.message}`);
   }
 
-  private async sendPagerDutyAlert(
-    alert: Alert,
-    config: Record<string, any>,
-  ): Promise<void> {
+  private async sendPagerDutyAlert(alert: Alert, config: Record<string, any>): Promise<void> {
     // Implementation would send PagerDuty alert
     console.log(`PagerDuty alert: ${alert.title} - ${alert.message}`);
   }
 
-  recordMetric(
-    name: string,
-    value: number,
-    labels?: Record<string, string>,
-  ): void {
+  recordMetric(name: string, value: number, labels?: Record<string, string>): void {
     const metric: MetricValue = {
       name,
       type: this.metrics.get(name)?.type || MetricType.GAUGE,
@@ -976,24 +935,24 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     const cutoff = Date.now() - this.config.metricsRetention;
     this.metricValues.splice(
       0,
-      this.metricValues.findIndex((m) => m.timestamp > cutoff),
+      this.metricValues.findIndex(m => m.timestamp > cutoff)
     );
 
     // Emit event
-    this.emit("metric:recorded", metric);
+    this.emit('metric:recorded', metric);
   }
 
   private startMetricsCleanup(): void {
     setInterval(() => {
       const cutoff = Date.now() - this.config.metricsRetention;
-      this.metricValues = this.metricValues.filter((m) => m.timestamp > cutoff);
+      this.metricValues = this.metricValues.filter(m => m.timestamp > cutoff);
     }, 300000); // Clean up every 5 minutes
   }
 
   private startAlertCleanup(): void {
     setInterval(() => {
       const cutoff = Date.now() - this.config.alertRetention;
-      this.alertHistory = this.alertHistory.filter((a) => a.timestamp > cutoff);
+      this.alertHistory = this.alertHistory.filter(a => a.timestamp > cutoff);
     }, 3600000); // Clean up every hour
   }
 
@@ -1052,13 +1011,13 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     const cutoff = Date.now() - this.config.slaRetention;
     reports.splice(
       0,
-      reports.findIndex((r) => r.window.end > cutoff),
+      reports.findIndex(r => r.window.end > cutoff)
     );
 
     this.slaReports.set(sla.id, reports);
 
     // Emit event
-    this.emit("sla:report:generated", report);
+    this.emit('sla:report:generated', report);
   }
 
   private calculateAvailability(start: number, end: number): number {
@@ -1066,17 +1025,14 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // In a real implementation, this would be based on actual service uptime
     const totalChecks = Array.from(this.healthCheckResults.values())
       .flat()
-      .filter((r) => r.timestamp >= start && r.timestamp <= end).length;
+      .filter(r => r.timestamp >= start && r.timestamp <= end).length;
 
     if (totalChecks === 0) return 100;
 
     const healthyChecks = Array.from(this.healthCheckResults.values())
       .flat()
       .filter(
-        (r) =>
-          r.timestamp >= start &&
-          r.timestamp <= end &&
-          r.status === HealthStatus.HEALTHY,
+        r => r.timestamp >= start && r.timestamp <= end && r.status === HealthStatus.HEALTHY
       ).length;
 
     return (healthyChecks / totalChecks) * 100;
@@ -1087,17 +1043,13 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // In a real implementation, this would be based on response times and throughput
     const responseTimes = this.metricValues
       .filter(
-        (m) =>
-          m.name === "app_request_duration_seconds" &&
-          m.timestamp >= start &&
-          m.timestamp <= end,
+        m => m.name === 'app_request_duration_seconds' && m.timestamp >= start && m.timestamp <= end
       )
-      .map((m) => m.value);
+      .map(m => m.value);
 
     if (responseTimes.length === 0) return 100;
 
-    const avgResponseTime =
-      responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
+    const avgResponseTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
 
     // Assume target response time is 1 second
     return Math.max(0, 100 - (avgResponseTime - 1) * 10);
@@ -1106,21 +1058,11 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private calculateErrorRate(start: number, end: number): number {
     // Simplified error rate calculation
     const totalRequests = this.metricValues
-      .filter(
-        (m) =>
-          m.name === "app_requests_total" &&
-          m.timestamp >= start &&
-          m.timestamp <= end,
-      )
+      .filter(m => m.name === 'app_requests_total' && m.timestamp >= start && m.timestamp <= end)
       .reduce((sum, m) => sum + m.value, 0);
 
     const totalErrors = this.metricValues
-      .filter(
-        (m) =>
-          m.name === "app_errors_total" &&
-          m.timestamp >= start &&
-          m.timestamp <= end,
-      )
+      .filter(m => m.name === 'app_errors_total' && m.timestamp >= start && m.timestamp <= end)
       .reduce((sum, m) => sum + m.value, 0);
 
     if (totalRequests === 0) return 0;
@@ -1128,11 +1070,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     return (totalErrors / totalRequests) * 100;
   }
 
-  private calculateSLAViolations(
-    sla: SLADefinition,
-    start: number,
-    end: number,
-  ): SLAViolation[] {
+  private calculateSLAViolations(sla: SLADefinition, start: number, end: number): SLAViolation[] {
     // Simplified violation calculation
     const violations: SLAViolation[] = [];
 
@@ -1145,16 +1083,12 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   getHealthStatus(): HealthStatus {
     const results = Array.from(this.healthCheckResults.values())
       .flat()
-      .filter((r) => r.timestamp > Date.now() - 300000); // Last 5 minutes
+      .filter(r => r.timestamp > Date.now() - 300000); // Last 5 minutes
 
     if (results.length === 0) return HealthStatus.UNKNOWN;
 
-    const unhealthyCount = results.filter(
-      (r) => r.status === HealthStatus.UNHEALTHY,
-    ).length;
-    const degradedCount = results.filter(
-      (r) => r.status === HealthStatus.DEGRADED,
-    ).length;
+    const unhealthyCount = results.filter(r => r.status === HealthStatus.UNHEALTHY).length;
+    const degradedCount = results.filter(r => r.status === HealthStatus.DEGRADED).length;
 
     if (unhealthyCount > 0) return HealthStatus.UNHEALTHY;
     if (degradedCount > results.length * 0.1) return HealthStatus.DEGRADED;
@@ -1163,15 +1097,13 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   getMetrics(metricName?: string): MetricValue[] {
     if (metricName) {
-      return this.metricValues.filter((m) => m.name === metricName);
+      return this.metricValues.filter(m => m.name === metricName);
     }
     return [...this.metricValues];
   }
 
   getAlerts(includeResolved = false): Alert[] {
-    const alerts = includeResolved
-      ? this.alertHistory
-      : Array.from(this.activeAlerts.values());
+    const alerts = includeResolved ? this.alertHistory : Array.from(this.activeAlerts.values());
     return [...alerts].sort((a, b) => b.timestamp - a.timestamp);
   }
 
@@ -1193,7 +1125,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 // Factory function to create enterprise health monitor
 export function createEnterpriseHealthMonitor(
   environment: EnterpriseEnvironmentConfig,
-  config?: Partial<HealthMonitoringConfig>,
+  config?: Partial<HealthMonitoringConfig>
 ): EnterpriseHealthMonitor {
   return new EnterpriseHealthMonitor(environment, config);
 }

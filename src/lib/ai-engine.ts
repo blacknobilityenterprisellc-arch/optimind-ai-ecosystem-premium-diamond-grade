@@ -1,5 +1,5 @@
 // src/lib/ai-engine.ts - Premium Diamond-Grade AI Engine
-import { OpenAI } from "openai";
+import { OpenAI } from 'openai';
 
 let openai: OpenAI;
 
@@ -11,19 +11,16 @@ export async function initializeAIEngine() {
   });
 
   // Premium AI models configuration
-  console.log("🧠 Premium AI models configured");
+  console.log('🧠 Premium AI models configured');
 }
 
 export async function processPremiumPrompt(prompt: string, options: any = {}) {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo-preview", // Premium model
+      model: 'gpt-4-turbo-preview', // Premium model
       messages: [
-        {
-          role: "system",
-          content: "You are OptiMind AI, a premium diamond-grade AI assistant.",
-        },
-        { role: "user", content: prompt },
+        { role: 'system', content: 'You are OptiMind AI, a premium diamond-grade AI assistant.' },
+        { role: 'user', content: prompt },
       ],
       temperature: 0.7,
       max_tokens: 2000,
@@ -32,7 +29,7 @@ export async function processPremiumPrompt(prompt: string, options: any = {}) {
 
     return completion.choices[0].message.content;
   } catch (error) {
-    console.error("Error processing premium prompt:", error);
+    console.error('Error processing premium prompt:', error);
     throw error;
   }
 }
@@ -40,7 +37,7 @@ export async function processPremiumPrompt(prompt: string, options: any = {}) {
 export async function generatePremiumInsights(data: any) {
   // Premium insight generation logic
   const insights = await processPremiumPrompt(
-    `Generate premium insights for the following data: ${JSON.stringify(data)}`,
+    `Generate premium insights for the following data: ${JSON.stringify(data)}`
   );
 
   return {

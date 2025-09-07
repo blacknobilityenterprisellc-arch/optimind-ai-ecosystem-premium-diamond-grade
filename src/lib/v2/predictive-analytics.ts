@@ -6,22 +6,17 @@
  * machine learning models, statistical analysis, and AI-driven forecasting.
  */
 
-import * as tf from "@tensorflow/tfjs";
+import * as tf from '@tensorflow/tfjs';
 
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
 export interface PredictiveModel {
   id: string;
   name: string;
-  type:
-    | "REGRESSION"
-    | "CLASSIFICATION"
-    | "TIME_SERIES"
-    | "CLUSTERING"
-    | "NEURAL_NETWORK";
+  type: 'REGRESSION' | 'CLASSIFICATION' | 'TIME_SERIES' | 'CLUSTERING' | 'NEURAL_NETWORK';
   version: string;
   description: string;
-  status: "TRAINING" | "TRAINED" | "DEPLOYED" | "DEPRECATED";
+  status: 'TRAINING' | 'TRAINED' | 'DEPLOYED' | 'DEPRECATED';
   accuracy: number;
   features: string[];
   target: string;
@@ -93,9 +88,9 @@ class PredictiveAnalyticsV2 {
     try {
       // Set up TensorFlow.js backend
       await tf.ready();
-      console.log("TensorFlow.js initialized successfully");
+      console.log('TensorFlow.js initialized successfully');
     } catch (error) {
-      console.error("TensorFlow.js initialization failed:", error);
+      console.error('TensorFlow.js initialization failed:', error);
       throw error;
     }
   }
@@ -106,7 +101,7 @@ class PredictiveAnalyticsV2 {
   private async loadPretrainedModels(): Promise<void> {
     try {
       const models = await db.predictiveModel.findMany({
-        where: { status: "DEPLOYED" },
+        where: { status: 'DEPLOYED' },
       });
 
       for (const model of models) {
@@ -117,11 +112,11 @@ class PredictiveAnalyticsV2 {
           name: model.name,
           type: model.type as any,
           version: model.version,
-          description: model.description || "",
+          description: model.description || '',
           status: model.status as any,
           accuracy: model.accuracy,
           features: model.trainingData?.features || [],
-          target: model.trainingData?.target || "",
+          target: model.trainingData?.target || '',
           hyperparameters: model.hyperparameters || {},
           performance: model.performance || {},
           createdAt: model.createdAt,
@@ -131,7 +126,7 @@ class PredictiveAnalyticsV2 {
         this.metrics.modelsDeployed++;
       }
     } catch (error) {
-      console.error("Failed to load pretrained models:", error);
+      console.error('Failed to load pretrained models:', error);
     }
   }
 
@@ -139,7 +134,7 @@ class PredictiveAnalyticsV2 {
    * Create a new predictive model
    */
   async createModel(
-    config: Omit<PredictiveModel, "id" | "createdAt" | "updatedAt">,
+    config: Omit<PredictiveModel, 'id' | 'createdAt' | 'updatedAt'>
   ): Promise<PredictiveModel> {
     const model: PredictiveModel = {
       ...config,
@@ -178,83 +173,81 @@ class PredictiveAnalyticsV2 {
    * Build TensorFlow model based on configuration
    */
   private buildTensorFlowModel(
-    config: Omit<PredictiveModel, "id" | "createdAt" | "updatedAt">,
+    config: Omit<PredictiveModel, 'id' | 'createdAt' | 'updatedAt'>
   ): tf.LayersModel {
     const model = tf.sequential();
 
     switch (config.type) {
-      case "NEURAL_NETWORK":
+      case 'NEURAL_NETWORK':
         // Build neural network
         model.add(
           tf.layers.dense({
             units: 128,
-            activation: "relu",
+            activation: 'relu',
             inputShape: [config.features.length],
-          }),
+          })
         );
         model.add(tf.layers.dropout({ rate: 0.2 }));
         model.add(
           tf.layers.dense({
             units: 64,
-            activation: "relu",
-          }),
+            activation: 'relu',
+          })
         );
         model.add(tf.layers.dropout({ rate: 0.2 }));
         model.add(
           tf.layers.dense({
             units: 32,
-            activation: "relu",
-          }),
+            activation: 'relu',
+          })
         );
         model.add(
           tf.layers.dense({
             units: 1,
-            activation: config.target.includes("classification")
-              ? "softmax"
-              : "linear",
-          }),
+            activation: config.target.includes('classification') ? 'softmax' : 'linear',
+          })
         );
         break;
 
-      case "REGRESSION":
+      case 'REGRESSION':
         // Build regression model
         model.add(
           tf.layers.dense({
             units: 64,
-            activation: "relu",
+            activation: 'relu',
             inputShape: [config.features.length],
-          }),
+          })
         );
         model.add(
           tf.layers.dense({
             units: 32,
-            activation: "relu",
-          }),
+            activation: 'relu',
+          })
         );
         model.add(tf.layers.dense({ units: 1 }));
         break;
 
-      case "CLASSIFICATION":
+      case 'CLASSIFICATION':
         // Build classification model
         model.add(
           tf.layers.dense({
             units: 128,
-            activation: "relu",
+            activation: 'relu',
             inputShape: [config.features.length],
-          }),
+          })
         );
         model.add(tf.layers.dropout({ rate: 0.3 }));
         model.add(
           tf.layers.dense({
             units: 64,
-            activation: "relu",
-          }),
+            activation: 'relu',
+          })
         );
         model.add(
           tf.layers.dense({
             units: config.hyperparameters?.numClasses || 2,
-            activation: "softmax",
-          }),
+            activation: 'softmax',
+          })
         );
         break;
 
@@ -263,13 +256,11 @@ class PredictiveAnalyticsV2 {
     }
 
     // Compile model
-    const optimizer = tf.train.adam(
-      config.hyperparameters?.learningRate || 0.001,
-    );
+    const optimizer = tf.train.adam(config.hyperparameters?.learningRate || 0.001);
     model.compile({
       optimizer,
       loss: this.getLossFunction(config.type),
-      metrics: ["accuracy"],
+      metrics: ['accuracy'],
     });
 
     return model;
@@ -280,14 +271,14 @@ class PredictiveAnalyticsV2 {
    */
   private getLossFunction(type: string): string {
     switch (type) {
-      case "REGRESSION":
-        return "meanSquaredError";
-      case "CLASSIFICATION":
-        return "categoricalCrossentropy";
-      case "NEURAL_NETWORK":
-        return "meanSquaredError";
+      case 'REGRESSION':
+        return 'meanSquaredError';
+      case 'CLASSIFICATION':
+        return 'categoricalCrossentropy';
+      case 'NEURAL_NETWORK':
+        return 'meanSquaredError';
       default:
-        return "meanSquaredError";
+        return 'meanSquaredError';
     }
   }
 
@@ -302,13 +293,13 @@ class PredictiveAnalyticsV2 {
       batchSize?: number;
       validationSplit?: number;
       callbacks?: any[];
-    },
+    }
   ): Promise<{ trained: boolean; accuracy: number; loss: number }> {
     const model = this.models.get(modelId);
     const config = this.modelConfigs.get(modelId);
 
     if (!model || !config) {
-      throw new Error("Model not found");
+      throw new Error('Model not found');
     }
 
     try {
@@ -326,7 +317,7 @@ class PredictiveAnalyticsV2 {
       });
 
       // Update model status
-      config.status = "TRAINED";
+      config.status = 'TRAINED';
       config.accuracy = history.history.acc
         ? history.history.acc[history.history.acc.length - 1]
         : 0;
@@ -336,7 +327,7 @@ class PredictiveAnalyticsV2 {
       await db.predictiveModel.update({
         where: { id: modelId },
         data: {
-          status: "TRAINED",
+          status: 'TRAINED',
           accuracy: config.accuracy,
           performance: {
             loss: history.history.loss[history.history.loss.length - 1],
@@ -356,7 +347,7 @@ class PredictiveAnalyticsV2 {
         loss: history.history.loss[history.history.loss.length - 1],
       };
     } catch (error) {
-      console.error("Model training failed:", error);
+      console.error('Model training failed:', error);
       throw error;
     }
   }
@@ -364,10 +355,7 @@ class PredictiveAnalyticsV2 {
   /**
    * Make a prediction
    */
-  async predict(
-    modelId: string,
-    input: PredictionInput,
-  ): Promise<PredictionResult> {
+  async predict(modelId: string, input: PredictionInput): Promise<PredictionResult> {
     const startTime = Date.now();
 
     try {
@@ -375,7 +363,7 @@ class PredictiveAnalyticsV2 {
       const config = this.modelConfigs.get(modelId);
 
       if (!model || !config) {
-        throw new Error("Model not found");
+        throw new Error('Model not found');
       }
 
       // Convert input to tensor
@@ -389,11 +377,7 @@ class PredictiveAnalyticsV2 {
       const confidence = this.calculateConfidence(predictionData, config.type);
 
       // Generate explanation
-      const explanation = await this.generateExplanation(
-        input,
-        predictionData,
-        config,
-      );
+      const explanation = await this.generateExplanation(input, predictionData, config);
 
       const result: PredictionResult = {
         prediction: this.formatPrediction(predictionData, config.type),
@@ -425,7 +409,7 @@ class PredictiveAnalyticsV2 {
 
       return result;
     } catch (error) {
-      console.error("Prediction failed:", error);
+      console.error('Prediction failed:', error);
       throw error;
     }
   }
@@ -433,18 +417,15 @@ class PredictiveAnalyticsV2 {
   /**
    * Calculate confidence score
    */
-  private calculateConfidence(
-    predictionData: Float32Array,
-    modelType: string,
-  ): number {
+  private calculateConfidence(predictionData: Float32Array, modelType: string): number {
     switch (modelType) {
-      case "CLASSIFICATION":
+      case 'CLASSIFICATION':
         // For classification, use the maximum probability
         return Math.max(...Array.from(predictionData));
-      case "REGRESSION":
+      case 'REGRESSION':
         // For regression, use inverse of prediction variance (simplified)
         return Math.min(0.95, 0.5 + Math.random() * 0.45);
-      case "NEURAL_NETWORK":
+      case 'NEURAL_NETWORK':
         // For neural networks, use activation strength
         return Math.min(0.98, Math.abs(predictionData[0]) + 0.5);
       default:
@@ -458,19 +439,16 @@ class PredictiveAnalyticsV2 {
   private async generateExplanation(
     input: PredictionInput,
     predictionData: Float32Array,
-    config: PredictiveModel,
+    config: PredictiveModel
   ): Promise<string> {
     // Simplified explanation generation
-    const featureImportance = this.calculateFeatureImportance(
-      input.features,
-      config.features,
-    );
+    const featureImportance = this.calculateFeatureImportance(input.features, config.features);
     const topFeatures = featureImportance.slice(0, 3);
 
     let explanation = `Prediction based on `;
     explanation += topFeatures
       .map((f, i) => `${f.name} (${(f.importance * 100).toFixed(1)}%)`)
-      .join(", ");
+      .join(', ');
     explanation += `. The model shows ${config.type.toLowerCase()} behavior with `;
     explanation += `${(this.calculateConfidence(predictionData, config.type) * 100).toFixed(1)}% confidence.`;
 
@@ -482,14 +460,12 @@ class PredictiveAnalyticsV2 {
    */
   private calculateFeatureImportance(
     features: number[],
-    featureNames: string[],
+    featureNames: string[]
   ): Array<{ name: string; importance: number }> {
     return features
       .map((value, index) => ({
         name: featureNames[index] || `Feature ${index + 1}`,
-        importance:
-          Math.abs(value) /
-          features.reduce((sum, val) => sum + Math.abs(val), 0),
+        importance: Math.abs(value) / features.reduce((sum, val) => sum + Math.abs(val), 0),
       }))
       .sort((a, b) => b.importance - a.importance);
   }
@@ -499,15 +475,15 @@ class PredictiveAnalyticsV2 {
    */
   private formatPrediction(
     predictionData: Float32Array,
-    modelType: string,
+    modelType: string
   ): number | number[] | string {
     switch (modelType) {
-      case "CLASSIFICATION":
+      case 'CLASSIFICATION':
         const maxIndex = predictionData.indexOf(Math.max(...predictionData));
         return `Class ${maxIndex}`;
-      case "REGRESSION":
+      case 'REGRESSION':
         return predictionData[0];
-      case "NEURAL_NETWORK":
+      case 'NEURAL_NETWORK':
         return Array.from(predictionData);
       default:
         return predictionData[0];
@@ -520,8 +496,7 @@ class PredictiveAnalyticsV2 {
   private updateMetrics(result: PredictionResult): void {
     this.metrics.totalPredictions++;
     this.metrics.averageConfidence =
-      (this.metrics.averageConfidence * (this.metrics.totalPredictions - 1) +
-        result.confidence) /
+      (this.metrics.averageConfidence * (this.metrics.totalPredictions - 1) + result.confidence) /
       this.metrics.totalPredictions;
     this.metrics.averageResponseTime =
       (this.metrics.averageResponseTime * (this.metrics.totalPredictions - 1) +
@@ -532,10 +507,7 @@ class PredictiveAnalyticsV2 {
   /**
    * Batch prediction
    */
-  async batchPredict(
-    modelId: string,
-    inputs: PredictionInput[],
-  ): Promise<PredictionResult[]> {
+  async batchPredict(modelId: string, inputs: PredictionInput[]): Promise<PredictionResult[]> {
     const results: PredictionResult[] = [];
 
     for (const input of inputs) {
@@ -543,7 +515,7 @@ class PredictiveAnalyticsV2 {
         const result = await this.predict(modelId, input);
         results.push(result);
       } catch (error) {
-        console.error("Batch prediction failed for input:", input, error);
+        console.error('Batch prediction failed for input:', input, error);
         results.push({
           prediction: 0,
           confidence: 0,
@@ -570,12 +542,10 @@ class PredictiveAnalyticsV2 {
   }> {
     const config = this.modelConfigs.get(modelId);
     if (!config) {
-      throw new Error("Model not found");
+      throw new Error('Model not found');
     }
 
-    const modelPredictions = this.predictionHistory.filter(
-      (p) => p.result.modelUsed === config.name,
-    );
+    const modelPredictions = this.predictionHistory.filter(p => p.result.modelUsed === config.name);
     const recentPredictions = modelPredictions.slice(-10);
 
     return {
@@ -583,8 +553,7 @@ class PredictiveAnalyticsV2 {
       loss: config.performance?.loss || 0,
       predictions: modelPredictions.length,
       averageConfidence:
-        modelPredictions.reduce((sum, p) => sum + p.result.confidence, 0) /
-        modelPredictions.length,
+        modelPredictions.reduce((sum, p) => sum + p.result.confidence, 0) / modelPredictions.length,
       recentPredictions,
     };
   }
@@ -602,15 +571,15 @@ class PredictiveAnalyticsV2 {
   async deployModel(modelId: string): Promise<void> {
     const config = this.modelConfigs.get(modelId);
     if (!config) {
-      throw new Error("Model not found");
+      throw new Error('Model not found');
     }
 
-    config.status = "DEPLOYED";
+    config.status = 'DEPLOYED';
     config.updatedAt = new Date();
 
     await db.predictiveModel.update({
       where: { id: modelId },
-      data: { status: "DEPLOYED" },
+      data: { status: 'DEPLOYED' },
     });
   }
 
@@ -619,7 +588,7 @@ class PredictiveAnalyticsV2 {
    */
   async generatePredictionReport(
     startDate: Date,
-    endDate: Date,
+    endDate: Date
   ): Promise<{
     totalPredictions: number;
     averageConfidence: number;
@@ -632,15 +601,12 @@ class PredictiveAnalyticsV2 {
     confidenceDistribution: { low: number; medium: number; high: number };
   }> {
     const periodPredictions = this.predictionHistory.filter(
-      (p) => p.timestamp >= startDate && p.timestamp <= endDate,
+      p => p.timestamp >= startDate && p.timestamp <= endDate
     );
 
-    const modelStats = new Map<
-      string,
-      { predictions: number; confidenceSum: number }
-    >();
+    const modelStats = new Map<string, { predictions: number; confidenceSum: number }>();
     const accuracies: number[] = [];
-    const confidences = periodPredictions.map((p) => p.result.confidence);
+    const confidences = periodPredictions.map(p => p.result.confidence);
 
     for (const p of periodPredictions) {
       const stats = modelStats.get(p.result.modelUsed) || {
@@ -663,14 +629,13 @@ class PredictiveAnalyticsV2 {
 
     return {
       totalPredictions: periodPredictions.length,
-      averageConfidence:
-        confidences.reduce((sum, c) => sum + c, 0) / confidences.length,
+      averageConfidence: confidences.reduce((sum, c) => sum + c, 0) / confidences.length,
       topModels,
       accuracyTrend: accuracies,
       confidenceDistribution: {
-        low: confidences.filter((c) => c < 0.5).length,
-        medium: confidences.filter((c) => c >= 0.5 && c < 0.8).length,
-        high: confidences.filter((c) => c >= 0.8).length,
+        low: confidences.filter(c => c < 0.5).length,
+        medium: confidences.filter(c => c >= 0.5 && c < 0.8).length,
+        high: confidences.filter(c => c >= 0.8).length,
       },
     };
   }
@@ -679,15 +644,15 @@ class PredictiveAnalyticsV2 {
    * Generate unique ID
    */
   private async generateId(): Promise<string> {
-    const crypto = await import("crypto");
-    return crypto.randomBytes(16).toString("hex");
+    const crypto = await import('crypto');
+    return crypto.randomBytes(16).toString('hex');
   }
 
   /**
    * Health check
    */
   async healthCheck(): Promise<{
-    status: "healthy" | "degraded" | "unhealthy";
+    status: 'healthy' | 'degraded' | 'unhealthy';
     models: number;
     metrics: AnalyticsMetrics;
     tensorflow: boolean;
@@ -699,10 +664,10 @@ class PredictiveAnalyticsV2 {
 
     const status =
       this.metrics.modelsDeployed > 0 && this.metrics.averageConfidence > 0.7
-        ? "healthy"
+        ? 'healthy'
         : this.metrics.modelsDeployed > 0
-          ? "degraded"
-          : "unhealthy";
+          ? 'degraded'
+          : 'unhealthy';
 
     return {
       status,
@@ -717,13 +682,7 @@ class PredictiveAnalyticsV2 {
 export const predictiveAnalyticsV2 = new PredictiveAnalyticsV2();
 
 // Export types and utilities
-export type {
-  PredictiveModel,
-  PredictionInput,
-  PredictionResult,
-  TrainingData,
-  AnalyticsMetrics,
-};
+export type { PredictiveModel, PredictionInput, PredictionResult, TrainingData, AnalyticsMetrics };
 
 // Export factory function
 export const createPredictiveAnalytics = () => {

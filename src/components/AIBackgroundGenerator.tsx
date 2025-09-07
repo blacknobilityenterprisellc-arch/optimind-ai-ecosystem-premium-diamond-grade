@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Loader2, Download, Sparkles, Wand2 } from "lucide-react";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Loader2, Download, Sparkles, Wand2 } from 'lucide-react';
 
 export function AIBackgroundGenerator() {
-  const [prompt, setPrompt] = useState("");
-  const [style, setStyle] = useState("realistic");
+  const [prompt, setPrompt] = useState('');
+  const [style, setStyle] = useState('realistic');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
   const styles = [
-    { value: "realistic", label: "Realistic" },
-    { value: "abstract", label: "Abstract" },
-    { value: "gradient", label: "Gradient" },
-    { value: "texture", label: "Texture" },
-    { value: "pattern", label: "Pattern" },
-    { value: "nature", label: "Nature" },
-    { value: "tech", label: "Technology" },
-    { value: "minimalist", label: "Minimalist" },
+    { value: 'realistic', label: 'Realistic' },
+    { value: 'abstract', label: 'Abstract' },
+    { value: 'gradient', label: 'Gradient' },
+    { value: 'texture', label: 'Texture' },
+    { value: 'pattern', label: 'Pattern' },
+    { value: 'nature', label: 'Nature' },
+    { value: 'tech', label: 'Technology' },
+    { value: 'minimalist', label: 'Minimalist' },
   ];
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
-      toast.error("Please enter a description for the background");
+      toast.error('Please enter a description for the background');
       return;
     }
 
@@ -39,7 +39,7 @@ export function AIBackgroundGenerator() {
 
     try {
       // Simulate generation progress
-    progressInterval = setInterval(() => {
+      progressInterval = setInterval(() => {
         setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
@@ -50,16 +50,16 @@ export function AIBackgroundGenerator() {
       }, 200);
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
       setProgress(100);
       setGeneratedImage(
-        "https://via.placeholder.com/512x512/6366f1/ffffff?text=Generated+Background",
+        'https://via.placeholder.com/512x512/6366f1/ffffff?text=Generated+Background'
       );
 
-      toast.success("Background generated successfully!");
+      toast.success('Background generated successfully!');
     } catch {
-      toast.error("Failed to generate background");
+      toast.error('Failed to generate background');
     } finally {
       setIsGenerating(false);
       if (progressInterval) {
@@ -70,11 +70,11 @@ export function AIBackgroundGenerator() {
 
   const handleDownload = () => {
     if (generatedImage) {
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = generatedImage;
-      link.download = "ai-background.png";
+      link.download = 'ai-background.png';
       link.click();
-      toast.success("Background downloaded!");
+      toast.success('Background downloaded!');
     }
   };
 
@@ -94,19 +94,17 @@ export function AIBackgroundGenerator() {
             </Badge>
           </CardTitle>
           <CardDescription>
-            Generate stunning backgrounds using AI. Describe what you want and
-            let AI create it for you.
+            Generate stunning backgrounds using AI. Describe what you want and let AI create it for
+            you.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Describe your background
-            </label>
+            <label className="text-sm font-medium mb-2 block">Describe your background</label>
             <Textarea
               placeholder="e.g., A serene mountain landscape at sunset with purple and orange sky..."
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={e => setPrompt(e.target.value)}
               className="min-h-[100px]"
             />
           </div>
@@ -114,10 +112,10 @@ export function AIBackgroundGenerator() {
           <div>
             <label className="text-sm font-medium mb-2 block">Style</label>
             <div className="grid grid-cols-4 gap-2">
-              {styles.map((styleOption) => (
+              {styles.map(styleOption => (
                 <Button
                   key={styleOption.value}
-                  variant={style === styleOption.value ? "default" : "outline"}
+                  variant={style === styleOption.value ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStyle(styleOption.value)}
                   className="text-xs"
@@ -169,7 +167,7 @@ export function AIBackgroundGenerator() {
                 src={generatedImage}
                 alt="Generated background"
                 className="max-w-full h-auto rounded-lg border"
-                style={{ maxHeight: "400px" }}
+                style={{ maxHeight: '400px' }}
               />
             </div>
             <div className="flex justify-center space-x-2">

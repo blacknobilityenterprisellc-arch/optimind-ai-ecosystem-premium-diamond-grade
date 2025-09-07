@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
+import { useState, useMemo } from 'react';
 import {
   Eye,
   Download,
@@ -15,18 +15,12 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
+} from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import {
   Table,
   TableBody,
@@ -34,13 +28,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 interface ModerationResult {
   id: string;
   imageId: string;
   filename: string;
-  status: "safe" | "flagged" | "pending" | "quarantined";
+  status: 'safe' | 'flagged' | 'pending' | 'quarantined';
   category: string;
   confidence: number;
   recommendedAction: string;
@@ -67,12 +61,9 @@ export function ModerationResultsTable({
   loading = false,
 }: ModerationResultsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] =
-    useState<keyof ModerationResult>("createdAt");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [selectedResults, setSelectedResults] = useState<Set<string>>(
-    new Set(),
-  );
+  const [sortField, setSortField] = useState<keyof ModerationResult>('createdAt');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [selectedResults, setSelectedResults] = useState<Set<string>>(new Set());
 
   const itemsPerPage = 20;
 
@@ -82,12 +73,12 @@ export function ModerationResultsTable({
       let aValue = a[sortField];
       let bValue = b[sortField];
 
-      if (sortField === "createdAt") {
+      if (sortField === 'createdAt') {
         aValue = new Date(aValue as string).getTime();
         bValue = new Date(bValue as string).getTime();
       }
 
-      if (sortDirection === "asc") {
+      if (sortDirection === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
@@ -104,37 +95,37 @@ export function ModerationResultsTable({
 
   const handleSort = (field: keyof ModerationResult) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
-      setSortDirection("desc");
+      setSortDirection('desc');
     }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "safe":
+      case 'safe':
         return (
           <Badge className="bg-green-100 text-green-800">
             <CheckCircle className="h-3 w-3 mr-1" />
             Safe
           </Badge>
         );
-      case "flagged":
+      case 'flagged':
         return (
           <Badge className="bg-red-100 text-red-800">
             <AlertTriangle className="h-3 w-3 mr-1" />
             Flagged
           </Badge>
         );
-      case "pending":
+      case 'pending':
         return (
           <Badge className="bg-yellow-100 text-yellow-800">
             <Clock className="h-3 w-3 mr-1" />
             Pending
           </Badge>
         );
-      case "quarantined":
+      case 'quarantined':
         return (
           <Badge className="bg-orange-100 text-orange-800">
             <Shield className="h-3 w-3 mr-1" />
@@ -148,15 +139,15 @@ export function ModerationResultsTable({
 
   const getActionBadge = (action: string) => {
     const colors: Record<string, string> = {
-      allow: "bg-green-100 text-green-800",
-      monitor: "bg-blue-100 text-blue-800",
-      quarantine: "bg-red-100 text-red-800",
-      hold_for_review: "bg-yellow-100 text-yellow-800",
+      allow: 'bg-green-100 text-green-800',
+      monitor: 'bg-blue-100 text-blue-800',
+      quarantine: 'bg-red-100 text-red-800',
+      hold_for_review: 'bg-yellow-100 text-yellow-800',
     };
 
     return (
-      <Badge className={colors[action] || "bg-gray-100 text-gray-800"}>
-        {action.replace("_", " ")}
+      <Badge className={colors[action] || 'bg-gray-100 text-gray-800'}>
+        {action.replace('_', ' ')}
       </Badge>
     );
   };
@@ -172,7 +163,7 @@ export function ModerationResultsTable({
   };
 
   const exportSelected = () => {
-    const selectedData = results.filter((r) => selectedResults.has(r.id));
+    const selectedData = results.filter(r => selectedResults.has(r.id));
     onExport(selectedData);
   };
 
@@ -201,9 +192,7 @@ export function ModerationResultsTable({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Moderation Results</CardTitle>
-              <CardDescription>
-                {results.length} total results found
-              </CardDescription>
+              <CardDescription>{results.length} total results found</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               {selectedResults.size > 0 && (
@@ -232,15 +221,12 @@ export function ModerationResultsTable({
                     <input
                       type="checkbox"
                       checked={
-                        selectedResults.size ===
-                          sortedAndPaginatedResults.length &&
+                        selectedResults.size === sortedAndPaginatedResults.length &&
                         sortedAndPaginatedResults.length > 0
                       }
-                      onChange={(e) => {
+                      onChange={e => {
                         if (e.target.checked) {
-                          setSelectedResults(
-                            new Set(sortedAndPaginatedResults.map((r) => r.id)),
-                          );
+                          setSelectedResults(new Set(sortedAndPaginatedResults.map(r => r.id)));
                         } else {
                           setSelectedResults(new Set());
                         }
@@ -249,12 +235,12 @@ export function ModerationResultsTable({
                   </TableHead>
                   <TableHead
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleSort("imageId")}
+                    onClick={() => handleSort('imageId')}
                   >
                     <div className="flex items-center gap-1">
                       Image ID
-                      {sortField === "imageId" && (
-                        <span>{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      {sortField === 'imageId' && (
+                        <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
                       )}
                     </div>
                   </TableHead>
@@ -263,12 +249,12 @@ export function ModerationResultsTable({
                   <TableHead>Category</TableHead>
                   <TableHead
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleSort("confidence")}
+                    onClick={() => handleSort('confidence')}
                   >
                     <div className="flex items-center gap-1">
                       Confidence
-                      {sortField === "confidence" && (
-                        <span>{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      {sortField === 'confidence' && (
+                        <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
                       )}
                     </div>
                   </TableHead>
@@ -276,12 +262,12 @@ export function ModerationResultsTable({
                   <TableHead>Models</TableHead>
                   <TableHead
                     className="cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleSort("createdAt")}
+                    onClick={() => handleSort('createdAt')}
                   >
                     <div className="flex items-center gap-1">
                       Date
-                      {sortField === "createdAt" && (
-                        <span>{sortDirection === "asc" ? "↑" : "↓"}</span>
+                      {sortField === 'createdAt' && (
+                        <span>{sortDirection === 'asc' ? '↑' : '↓'}</span>
                       )}
                     </div>
                   </TableHead>
@@ -289,7 +275,7 @@ export function ModerationResultsTable({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {sortedAndPaginatedResults.map((result) => (
+                {sortedAndPaginatedResults.map(result => (
                   <TableRow key={result.id} className="hover:bg-gray-50">
                     <TableCell>
                       <input
@@ -298,40 +284,23 @@ export function ModerationResultsTable({
                         onChange={() => toggleResultSelection(result.id)}
                       />
                     </TableCell>
-                    <TableCell className="font-mono text-sm">
-                      {result.imageId}
-                    </TableCell>
-                    <TableCell className="max-w-xs truncate">
-                      {result.filename}
-                    </TableCell>
+                    <TableCell className="font-mono text-sm">{result.imageId}</TableCell>
+                    <TableCell className="max-w-xs truncate">{result.filename}</TableCell>
                     <TableCell>{getStatusBadge(result.status)}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">
-                        {result.category.replace("_", " ")}
-                      </Badge>
+                      <Badge variant="outline">{result.category.replace('_', ' ')}</Badge>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Progress
-                          value={result.confidence * 100}
-                          className="w-16"
-                        />
-                        <span className="text-sm">
-                          {(result.confidence * 100).toFixed(1)}%
-                        </span>
+                        <Progress value={result.confidence * 100} className="w-16" />
+                        <span className="text-sm">{(result.confidence * 100).toFixed(1)}%</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {getActionBadge(result.recommendedAction)}
-                    </TableCell>
+                    <TableCell>{getActionBadge(result.recommendedAction)}</TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
                         {result.modelsUsed.slice(0, 2).map((model, index) => (
-                          <Badge
-                            key={index}
-                            variant="outline"
-                            className="text-xs"
-                          >
+                          <Badge key={index} variant="outline" className="text-xs">
                             {model}
                           </Badge>
                         ))}
@@ -344,20 +313,14 @@ export function ModerationResultsTable({
                     </TableCell>
                     <TableCell>
                       <div className="text-sm">
-                        <div>
-                          {new Date(result.createdAt).toLocaleDateString()}
-                        </div>
+                        <div>{new Date(result.createdAt).toLocaleDateString()}</div>
                         <div className="text-gray-500">
                           {new Date(result.createdAt).toLocaleTimeString()}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onViewDetails(result)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => onViewDetails(result)}>
                         <Eye className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -375,17 +338,14 @@ export function ModerationResultsTable({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
-                {Math.min(currentPage * itemsPerPage, results.length)} of{" "}
-                {results.length} results
+                Showing {(currentPage - 1) * itemsPerPage + 1} to{' '}
+                {Math.min(currentPage * itemsPerPage, results.length)} of {results.length} results
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -406,9 +366,7 @@ export function ModerationResultsTable({
                     return (
                       <Button
                         key={pageNum}
-                        variant={
-                          currentPage === pageNum ? "default" : "outline"
-                        }
+                        variant={currentPage === pageNum ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => setCurrentPage(pageNum)}
                         className="w-8 h-8"
@@ -421,9 +379,7 @@ export function ModerationResultsTable({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
                   <ChevronRight className="h-4 w-4" />

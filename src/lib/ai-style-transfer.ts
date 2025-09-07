@@ -4,5 +4,5 @@ export const useSecureSubscription = () => {
 };
 
 export const useAIStyleTransfer = () => {
-  return { transfer: async () => ({ url: "" }), isLoading: false };
+  return { transfer: async () => ({ url: '' }), isLoading: false };
 };

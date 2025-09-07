@@ -1,31 +1,14 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useRef } from "react";
-import {
-  X,
-  Lock,
-  Shield,
-  CheckCircle,
-  AlertCircle,
-  Delete,
-  Fingerprint,
-} from "lucide-react";
+import { useState, useCallback, useRef } from 'react';
+import { X, Lock, Shield, CheckCircle, AlertCircle, Delete, Fingerprint } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import {
-  useFocusTrap,
-  useKeyboardNavigation,
-  useModalFocus,
-} from "@/lib/keyboard-navigation";
-import { useFocusManagement } from "@/lib/focus-manager";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { useFocusTrap, useKeyboardNavigation, useModalFocus } from '@/lib/keyboard-navigation';
+import { useFocusManagement } from '@/lib/focus-manager';
 
 interface PINPadProps {
   isOpen: boolean;
@@ -41,11 +24,11 @@ export function PINPad({
   onClose,
   onSuccess,
   onError,
-  title = "Premium Authentication",
-  description = "Enter your 4-digit PIN to access premium features",
+  title = 'Premium Authentication',
+  description = 'Enter your 4-digit PIN to access premium features',
 }: PINPadProps) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState("");
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showBiometric, setShowBiometric] = useState(false);
 
@@ -54,7 +37,7 @@ export function PINPad({
   const { containerRef, announce } = useFocusManagement();
   const { containerRef: navContainerRef } = useKeyboardNavigation({
     enabled: isOpen,
-    orientation: "grid",
+    orientation: 'grid',
     loop: true,
   });
 
@@ -63,7 +46,7 @@ export function PINPad({
       if (pin.length < 4) {
         const newPin = pin + number;
         setPin(newPin);
-        setError("");
+        setError('');
 
         // Auto-submit when 4 digits are entered
         if (newPin.length === 4) {
@@ -71,12 +54,12 @@ export function PINPad({
         }
       }
     },
-    [pin],
+    [pin]
   );
 
   const handleBackspace = useCallback(() => {
-    setPin((prev) => prev.slice(0, -1));
-    setError("");
+    setPin(prev => prev.slice(0, -1));
+    setError('');
   }, []);
 
   const handleSubmit = useCallback(
@@ -84,7 +67,7 @@ export function PINPad({
       const pinToCheck = enteredPin || pin;
 
       if (pinToCheck.length !== 4) {
-        setError("Please enter a complete 4-digit PIN");
+        setError('Please enter a complete 4-digit PIN');
         return;
       }
 
@@ -92,10 +75,10 @@ export function PINPad({
 
       try {
         // Call secure API endpoint for PIN validation
-        const response = await fetch("/api/auth/pin", {
-          method: "POST",
+        const response = await fetch('/api/auth/pin', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ pin: pinToCheck }),
         });
@@ -105,34 +88,33 @@ export function PINPad({
         if (response.ok && data.success) {
           // Store session token securely
           if (data.sessionToken) {
-            sessionStorage.setItem("auth_session", data.sessionToken);
+            sessionStorage.setItem('auth_session', data.sessionToken);
           }
-          announce("PIN verified successfully. Access granted.", "polite");
+          announce('PIN verified successfully. Access granted.', 'polite');
           onSuccess();
-          setPin("");
-          setError("");
+          setPin('');
+          setError('');
         } else {
-          const errorMsg = data.error || "Invalid PIN. Please try again.";
+          const errorMsg = data.error || 'Invalid PIN. Please try again.';
           setError(errorMsg);
           onError?.(errorMsg);
-          announce(`Authentication failed: ${errorMsg}`, "assertive");
+          announce(`Authentication failed: ${errorMsg}`, 'assertive');
 
           // Clear PIN after error
           setTimeout(() => {
-            setPin("");
-            setError("");
+            setPin('');
+            setError('');
           }, 2000);
         }
       } catch {
-        const errorMsg =
-          "Authentication failed. Please check your connection and try again.";
+        const errorMsg = 'Authentication failed. Please check your connection and try again.';
         setError(errorMsg);
         onError?.(errorMsg);
       } finally {
         setIsLoading(false);
       }
     },
-    [pin, onSuccess, onError],
+    [pin, onSuccess, onError]
   );
 
   const handleBiometricAuth = useCallback(async () => {
@@ -141,21 +123,18 @@ export function PINPad({
 
     try {
       // Simulate biometric authentication
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // For demo purposes, biometric auth always succeeds
-      announce(
-        "Biometric authentication successful. Access granted.",
-        "polite",
-      );
+      announce('Biometric authentication successful. Access granted.', 'polite');
       onSuccess();
-      setPin("");
-      setError("");
+      setPin('');
+      setError('');
     } catch {
-      const errorMsg = "Biometric authentication failed";
+      const errorMsg = 'Biometric authentication failed';
       setError(errorMsg);
       onError?.(errorMsg);
-      announce(`Biometric authentication failed: ${errorMsg}`, "assertive");
+      announce(`Biometric authentication failed: ${errorMsg}`, 'assertive');
     } finally {
       setIsLoading(false);
       setShowBiometric(false);
@@ -164,15 +143,15 @@ export function PINPad({
 
   const handleClose = useCallback(() => {
     if (!isLoading) {
-      setPin("");
-      setError("");
+      setPin('');
+      setError('');
       onClose();
     }
   }, [isLoading, onClose]);
 
   const resetPIN = useCallback(() => {
-    setPin("");
-    setError("");
+    setPin('');
+    setError('');
   }, []);
 
   if (!isOpen) return null;
@@ -210,22 +189,20 @@ export function PINPad({
           {/* PIN Display */}
           <div className="flex justify-center">
             <div className="flex gap-3">
-              {[0, 1, 2, 3].map((index) => (
+              {[0, 1, 2, 3].map(index => (
                 <div
                   key={index}
                   className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
                     pin[index]
                       ? error
-                        ? "border-red-500 bg-red-500/10"
-                        : "border-green-500 bg-green-500/10"
-                      : "border-gray-300 bg-gray-50"
+                        ? 'border-red-500 bg-red-500/10'
+                        : 'border-green-500 bg-green-500/10'
+                      : 'border-gray-300 bg-gray-50'
                   }`}
                 >
                   {pin[index] && (
                     <div
-                      className={`w-2 h-2 rounded-full ${
-                        error ? "bg-red-500" : "bg-green-500"
-                      }`}
+                      className={`w-2 h-2 rounded-full ${error ? 'bg-red-500' : 'bg-green-500'}`}
                     />
                   )}
                 </div>
@@ -246,18 +223,14 @@ export function PINPad({
             <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
               <span className="text-sm text-blue-600">
-                {showBiometric ? "Verifying biometrics..." : "Verifying PIN..."}
+                {showBiometric ? 'Verifying biometrics...' : 'Verifying PIN...'}
               </span>
             </div>
           )}
 
           {/* Number Pad */}
-          <div
-            className="grid grid-cols-3 gap-2"
-            role="grid"
-            aria-label="Number pad"
-          >
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
+          <div className="grid grid-cols-3 gap-2" role="grid" aria-label="Number pad">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(number => (
               <Button
                 key={number}
                 variant="outline"
@@ -290,7 +263,7 @@ export function PINPad({
             <Button
               variant="outline"
               size="lg"
-              onClick={() => handleNumberPress("0")}
+              onClick={() => handleNumberPress('0')}
               disabled={isLoading}
               className="h-14 text-lg font-semibold"
               role="gridcell"
@@ -332,7 +305,7 @@ export function PINPad({
               className="flex-1"
               data-nav-item
             >
-              {isLoading ? "Verifying..." : "Verify PIN"}
+              {isLoading ? 'Verifying...' : 'Verify PIN'}
             </Button>
           </div>
 
@@ -341,9 +314,7 @@ export function PINPad({
             <p className="text-xs text-muted-foreground">
               For security reasons, your PIN is securely stored and verified
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Or use biometric authentication
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">Or use biometric authentication</p>
           </div>
         </div>
       </DialogContent>

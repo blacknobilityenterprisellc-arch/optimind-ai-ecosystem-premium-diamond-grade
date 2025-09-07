@@ -3,19 +3,19 @@
  * Model Context Protocol service with comprehensive tool management and health monitoring
  */
 
-import { premiumZAIWrapper } from "./zai-sdk-wrapper";
-import { openRouterService } from "./openrouter-service";
+import { premiumZAIWrapper } from './zai-sdk-wrapper';
+import { openRouterService } from './openrouter-service';
 
 export interface EnhancedMCPTool {
   id: string;
   name: string;
   description: string;
-  category: "search" | "analysis" | "system" | "compliance" | "domain" | "ai";
+  category: 'search' | 'analysis' | 'system' | 'compliance' | 'domain' | 'ai';
   inputSchema: any;
   outputSchema: any;
-  provider: "zai" | "openrouter" | "internal";
+  provider: 'zai' | 'openrouter' | 'internal';
   version: string;
-  securityLevel: "public" | "restricted" | "confidential";
+  securityLevel: 'public' | 'restricted' | 'confidential';
   cost?: {
     input: number;
     output: number;
@@ -29,7 +29,7 @@ export interface EnhancedMCPTool {
 }
 
 export interface EnhancedMCPServiceHealth {
-  status: "HEALTHY" | "DEGRADED" | "UNHEALTHY";
+  status: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY';
   toolsAvailable: number;
   toolsHealthy: number;
   lastCheck: Date;
@@ -47,7 +47,7 @@ class EnhancedMCPService {
 
   private constructor() {
     this.healthStatus = {
-      status: "UNHEALTHY",
+      status: 'UNHEALTHY',
       toolsAvailable: 0,
       toolsHealthy: 0,
       lastCheck: new Date(),
@@ -68,7 +68,7 @@ class EnhancedMCPService {
 
   private async initialize(): Promise<void> {
     try {
-      console.log("🔗 Initializing Enhanced MCP Service...");
+      console.log('🔗 Initializing Enhanced MCP Service...');
 
       // Initialize tools
       await this.initializeTools();
@@ -77,9 +77,9 @@ class EnhancedMCPService {
       await this.performHealthCheck();
 
       this.isInitialized = true;
-      console.log("✅ Enhanced MCP Service initialized successfully");
+      console.log('✅ Enhanced MCP Service initialized successfully');
     } catch (error) {
-      console.error("❌ Enhanced MCP Service initialization failed:", error);
+      console.error('❌ Enhanced MCP Service initialization failed:', error);
       this.setupFallbackMode();
     }
   }
@@ -88,193 +88,163 @@ class EnhancedMCPService {
     const tools: EnhancedMCPTool[] = [
       // AI Model Tools
       {
-        id: "zai-chat-completion",
-        name: "ZAI Chat Completion",
-        description: "Generate text completions using ZAI models",
-        category: "ai",
+        id: 'zai-chat-completion',
+        name: 'ZAI Chat Completion',
+        description: 'Generate text completions using ZAI models',
+        category: 'ai',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            messages: {
-              type: "array",
-              description: "Array of message objects",
-            },
-            model: { type: "string", description: "Model to use" },
-            temperature: { type: "number", description: "Temperature setting" },
-            maxTokens: {
-              type: "number",
-              description: "Maximum tokens to generate",
-            },
+            messages: { type: 'array', description: 'Array of message objects' },
+            model: { type: 'string', description: 'Model to use' },
+            temperature: { type: 'number', description: 'Temperature setting' },
+            maxTokens: { type: 'number', description: 'Maximum tokens to generate' },
           },
-          required: ["messages"],
+          required: ['messages'],
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            content: { type: "string", description: "Generated content" },
-            usage: { type: "object", description: "Token usage information" },
+            content: { type: 'string', description: 'Generated content' },
+            usage: { type: 'object', description: 'Token usage information' },
           },
         },
-        provider: "zai",
-        version: "1.0.0",
-        securityLevel: "public",
-        cost: { input: 0.001, output: 0.002, currency: "USD" },
+        provider: 'zai',
+        version: '1.0.0',
+        securityLevel: 'public',
+        cost: { input: 0.001, output: 0.002, currency: 'USD' },
       },
       {
-        id: "openrouter-chat-completion",
-        name: "OpenRouter Chat Completion",
-        description: "Generate text completions using OpenRouter models",
-        category: "ai",
+        id: 'openrouter-chat-completion',
+        name: 'OpenRouter Chat Completion',
+        description: 'Generate text completions using OpenRouter models',
+        category: 'ai',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            messages: {
-              type: "array",
-              description: "Array of message objects",
-            },
-            model: { type: "string", description: "Model to use" },
-            temperature: { type: "number", description: "Temperature setting" },
-            maxTokens: {
-              type: "number",
-              description: "Maximum tokens to generate",
-            },
+            messages: { type: 'array', description: 'Array of message objects' },
+            model: { type: 'string', description: 'Model to use' },
+            temperature: { type: 'number', description: 'Temperature setting' },
+            maxTokens: { type: 'number', description: 'Maximum tokens to generate' },
           },
-          required: ["messages", "model"],
+          required: ['messages', 'model'],
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            content: { type: "string", description: "Generated content" },
-            usage: { type: "object", description: "Token usage information" },
+            content: { type: 'string', description: 'Generated content' },
+            usage: { type: 'object', description: 'Token usage information' },
           },
         },
-        provider: "openrouter",
-        version: "1.0.0",
-        securityLevel: "public",
-        cost: { input: 0.002, output: 0.004, currency: "USD" },
+        provider: 'openrouter',
+        version: '1.0.0',
+        securityLevel: 'public',
+        cost: { input: 0.002, output: 0.004, currency: 'USD' },
       },
       {
-        id: "zai-image-generation",
-        name: "ZAI Image Generation",
-        description: "Generate images using ZAI models",
-        category: "ai",
+        id: 'zai-image-generation',
+        name: 'ZAI Image Generation',
+        description: 'Generate images using ZAI models',
+        category: 'ai',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            prompt: { type: "string", description: "Image generation prompt" },
-            size: { type: "string", description: "Image size" },
-            style: { type: "string", description: "Image style" },
+            prompt: { type: 'string', description: 'Image generation prompt' },
+            size: { type: 'string', description: 'Image size' },
+            style: { type: 'string', description: 'Image style' },
           },
-          required: ["prompt"],
+          required: ['prompt'],
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            imageData: {
-              type: "string",
-              description: "Base64 encoded image data",
-            },
-            metadata: { type: "object", description: "Image metadata" },
+            imageData: { type: 'string', description: 'Base64 encoded image data' },
+            metadata: { type: 'object', description: 'Image metadata' },
           },
         },
-        provider: "zai",
-        version: "1.0.0",
-        securityLevel: "public",
-        cost: { input: 0.01, output: 0.02, currency: "USD" },
+        provider: 'zai',
+        version: '1.0.0',
+        securityLevel: 'public',
+        cost: { input: 0.01, output: 0.02, currency: 'USD' },
       },
       {
-        id: "web-search",
-        name: "Web Search",
-        description: "Search the web for real-time information",
-        category: "search",
+        id: 'web-search',
+        name: 'Web Search',
+        description: 'Search the web for real-time information',
+        category: 'search',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            query: { type: "string", description: "Search query" },
-            numResults: { type: "number", description: "Number of results" },
-            safeSearch: { type: "boolean", description: "Enable safe search" },
+            query: { type: 'string', description: 'Search query' },
+            numResults: { type: 'number', description: 'Number of results' },
+            safeSearch: { type: 'boolean', description: 'Enable safe search' },
           },
-          required: ["query"],
+          required: ['query'],
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            results: { type: "array", description: "Search results" },
-            searchTime: {
-              type: "number",
-              description: "Search execution time",
-            },
+            results: { type: 'array', description: 'Search results' },
+            searchTime: { type: 'number', description: 'Search execution time' },
           },
         },
-        provider: "zai",
-        version: "1.0.0",
-        securityLevel: "public",
+        provider: 'zai',
+        version: '1.0.0',
+        securityLevel: 'public',
       },
       {
-        id: "data-analysis",
-        name: "Data Analysis",
-        description: "Perform statistical analysis on datasets",
-        category: "analysis",
+        id: 'data-analysis',
+        name: 'Data Analysis',
+        description: 'Perform statistical analysis on datasets',
+        category: 'analysis',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            dataset: { type: "array", description: "Dataset to analyze" },
-            analysisType: { type: "string", description: "Type of analysis" },
-            parameters: { type: "object", description: "Analysis parameters" },
+            dataset: { type: 'array', description: 'Dataset to analyze' },
+            analysisType: { type: 'string', description: 'Type of analysis' },
+            parameters: { type: 'object', description: 'Analysis parameters' },
           },
-          required: ["dataset", "analysisType"],
+          required: ['dataset', 'analysisType'],
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            summary: { type: "object", description: "Analysis summary" },
-            statistics: { type: "object", description: "Statistical results" },
-            insights: { type: "array", description: "Generated insights" },
+            summary: { type: 'object', description: 'Analysis summary' },
+            statistics: { type: 'object', description: 'Statistical results' },
+            insights: { type: 'array', description: 'Generated insights' },
           },
         },
-        provider: "internal",
-        version: "1.0.0",
-        securityLevel: "public",
+        provider: 'internal',
+        version: '1.0.0',
+        securityLevel: 'public',
       },
       {
-        id: "system-health-check",
-        name: "System Health Check",
-        description: "Perform comprehensive system health monitoring",
-        category: "system",
+        id: 'system-health-check',
+        name: 'System Health Check',
+        description: 'Perform comprehensive system health monitoring',
+        category: 'system',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
             components: {
-              type: "array",
-              description: "Components to check",
-              items: { type: "string" },
+              type: 'array',
+              description: 'Components to check',
+              items: { type: 'string' },
             },
-            detailed: {
-              type: "boolean",
-              description: "Perform detailed analysis",
-            },
+            detailed: { type: 'boolean', description: 'Perform detailed analysis' },
           },
         },
         outputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
-            overallStatus: {
-              type: "string",
-              description: "Overall system status",
-            },
-            componentStatus: {
-              type: "object",
-              description: "Individual component status",
-            },
-            recommendations: {
-              type: "array",
-              description: "System recommendations",
-            },
+            overallStatus: { type: 'string', description: 'Overall system status' },
+            componentStatus: { type: 'object', description: 'Individual component status' },
+            recommendations: { type: 'array', description: 'System recommendations' },
           },
         },
-        provider: "internal",
-        version: "1.0.0",
-        securityLevel: "restricted",
+        provider: 'internal',
+        version: '1.0.0',
+        securityLevel: 'restricted',
       },
     ];
 
@@ -286,26 +256,20 @@ class EnhancedMCPService {
   }
 
   private setupFallbackMode(): void {
-    console.log("⚠️ Setting up fallback MCP service mode");
+    console.log('⚠️ Setting up fallback MCP service mode');
 
     // Create minimal fallback tools
     const fallbackTools: EnhancedMCPTool[] = [
       {
-        id: "fallback-chat",
-        name: "Fallback Chat",
-        description: "Basic chat functionality for development",
-        category: "ai",
-        inputSchema: {
-          type: "object",
-          properties: { message: { type: "string" } },
-        },
-        outputSchema: {
-          type: "object",
-          properties: { response: { type: "string" } },
-        },
-        provider: "internal",
-        version: "1.0.0",
-        securityLevel: "public",
+        id: 'fallback-chat',
+        name: 'Fallback Chat',
+        description: 'Basic chat functionality for development',
+        category: 'ai',
+        inputSchema: { type: 'object', properties: { message: { type: 'string' } } },
+        outputSchema: { type: 'object', properties: { response: { type: 'string' } } },
+        provider: 'internal',
+        version: '1.0.0',
+        securityLevel: 'public',
       },
     ];
 
@@ -316,13 +280,13 @@ class EnhancedMCPService {
     }
 
     this.healthStatus = {
-      status: "DEGRADED",
+      status: 'DEGRADED',
       toolsAvailable: this.tools.size,
       toolsHealthy: this.tools.size,
       lastCheck: new Date(),
       responseTime: 10,
-      errors: ["Using fallback mode"],
-      recommendations: ["Configure proper AI service credentials"],
+      errors: ['Using fallback mode'],
+      recommendations: ['Configure proper AI service credentials'],
     };
 
     this.isInitialized = true;
@@ -338,45 +302,41 @@ class EnhancedMCPService {
       // Check ZAI service
       const zaiHealth = await premiumZAIWrapper.getHealthStatus();
       if (!zaiHealth.initialized) {
-        errors.push("ZAI service not initialized");
-        recommendations.push("Check ZAI API configuration");
+        errors.push('ZAI service not initialized');
+        recommendations.push('Check ZAI API configuration');
       } else if (!zaiHealth.modelAvailable) {
-        errors.push("ZAI models not available");
-        recommendations.push("Check ZAI model availability");
+        errors.push('ZAI models not available');
+        recommendations.push('Check ZAI model availability');
       } else {
-        healthyTools += Array.from(this.tools.values()).filter(
-          (t) => t.provider === "zai",
-        ).length;
+        healthyTools += Array.from(this.tools.values()).filter(t => t.provider === 'zai').length;
       }
 
       // Check OpenRouter service
       const openRouterModels = openRouterService.getAvailableModels();
       if (openRouterModels.length === 0) {
-        errors.push("OpenRouter models not available");
-        recommendations.push("Check OpenRouter API configuration");
+        errors.push('OpenRouter models not available');
+        recommendations.push('Check OpenRouter API configuration');
       } else {
         healthyTools += Array.from(this.tools.values()).filter(
-          (t) => t.provider === "openrouter",
+          t => t.provider === 'openrouter'
         ).length;
       }
 
       // Internal tools are always available
-      healthyTools += Array.from(this.tools.values()).filter(
-        (t) => t.provider === "internal",
-      ).length;
+      healthyTools += Array.from(this.tools.values()).filter(t => t.provider === 'internal').length;
 
       const responseTime = Date.now() - startTime;
 
       // Determine overall status
-      let status: "HEALTHY" | "DEGRADED" | "UNHEALTHY";
+      let status: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY';
       const healthRatio = healthyTools / this.tools.size;
 
       if (healthRatio >= 0.9 && errors.length === 0) {
-        status = "HEALTHY";
+        status = 'HEALTHY';
       } else if (healthRatio >= 0.5) {
-        status = "DEGRADED";
+        status = 'DEGRADED';
       } else {
-        status = "UNHEALTHY";
+        status = 'UNHEALTHY';
       }
 
       this.healthStatus = {
@@ -390,13 +350,13 @@ class EnhancedMCPService {
       };
     } catch (error) {
       this.healthStatus = {
-        status: "UNHEALTHY",
+        status: 'UNHEALTHY',
         toolsAvailable: this.tools.size,
         toolsHealthy: 0,
         lastCheck: new Date(),
         responseTime: Date.now() - startTime,
-        errors: [error instanceof Error ? error.message : "Unknown error"],
-        recommendations: ["Check MCP service configuration"],
+        errors: [error instanceof Error ? error.message : 'Unknown error'],
+        recommendations: ['Check MCP service configuration'],
       };
     }
 
@@ -412,15 +372,11 @@ class EnhancedMCPService {
   }
 
   getToolsByCategory(category: string): EnhancedMCPTool[] {
-    return Array.from(this.tools.values()).filter(
-      (tool) => tool.category === category,
-    );
+    return Array.from(this.tools.values()).filter(tool => tool.category === category);
   }
 
   getToolsByProvider(provider: string): EnhancedMCPTool[] {
-    return Array.from(this.tools.values()).filter(
-      (tool) => tool.provider === provider,
-    );
+    return Array.from(this.tools.values()).filter(tool => tool.provider === provider);
   }
 
   async executeTool(toolId: string, parameters: any): Promise<any> {
@@ -436,13 +392,13 @@ class EnhancedMCPService {
       let result: any;
 
       switch (tool.provider) {
-        case "zai":
+        case 'zai':
           result = await this.executeZAITool(tool, parameters);
           break;
-        case "openrouter":
+        case 'openrouter':
           result = await this.executeOpenRouterTool(tool, parameters);
           break;
-        case "internal":
+        case 'internal':
           result = await this.executeInternalTool(tool, parameters);
           break;
         default:
@@ -462,30 +418,27 @@ class EnhancedMCPService {
     }
   }
 
-  private async executeZAITool(
-    tool: EnhancedMCPTool,
-    parameters: any,
-  ): Promise<any> {
+  private async executeZAITool(tool: EnhancedMCPTool, parameters: any): Promise<any> {
     try {
       const zai = await premiumZAIWrapper.getZAIInstance();
 
       switch (tool.id) {
-        case "zai-chat-completion":
+        case 'zai-chat-completion':
           return await zai.chat.completions.create({
             messages: parameters.messages,
-            model: parameters.model || "glm-45-flagship",
+            model: parameters.model || 'glm-45-flagship',
             temperature: parameters.temperature || 0.7,
             max_tokens: parameters.maxTokens || 1000,
           });
 
-        case "zai-image-generation":
+        case 'zai-image-generation':
           return await zai.images.generations.create({
             prompt: parameters.prompt,
-            size: parameters.size || "1024x1024",
+            size: parameters.size || '1024x1024',
           });
 
-        case "web-search":
-          return await zai.functions.invoke("web_search", {
+        case 'web-search':
+          return await zai.functions.invoke('web_search', {
             query: parameters.query,
             num: parameters.numResults || 10,
           });
@@ -495,18 +448,15 @@ class EnhancedMCPService {
       }
     } catch (error) {
       throw new Error(
-        `ZAI tool execution failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `ZAI tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
 
-  private async executeOpenRouterTool(
-    tool: EnhancedMCPTool,
-    parameters: any,
-  ): Promise<any> {
+  private async executeOpenRouterTool(tool: EnhancedMCPTool, parameters: any): Promise<any> {
     try {
       switch (tool.id) {
-        case "openrouter-chat-completion":
+        case 'openrouter-chat-completion':
           return await openRouterService.analyzeWithModel({
             prompt: parameters.messages[parameters.messages.length - 1].content,
             modelId: parameters.model,
@@ -519,30 +469,24 @@ class EnhancedMCPService {
       }
     } catch (error) {
       throw new Error(
-        `OpenRouter tool execution failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `OpenRouter tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
 
-  private async executeInternalTool(
-    tool: EnhancedMCPTool,
-    parameters: any,
-  ): Promise<any> {
+  private async executeInternalTool(tool: EnhancedMCPTool, parameters: any): Promise<any> {
     switch (tool.id) {
-      case "data-analysis":
+      case 'data-analysis':
         return this.performDataAnalysis(
           parameters.dataset,
           parameters.analysisType,
-          parameters.parameters,
+          parameters.parameters
         );
 
-      case "system-health-check":
-        return this.performSystemHealthCheck(
-          parameters.components,
-          parameters.detailed,
-        );
+      case 'system-health-check':
+        return this.performSystemHealthCheck(parameters.components, parameters.detailed);
 
-      case "fallback-chat":
+      case 'fallback-chat':
         return {
           response: `Fallback response to: "${parameters.message}"`,
           timestamp: new Date().toISOString(),
@@ -553,11 +497,7 @@ class EnhancedMCPService {
     }
   }
 
-  private performDataAnalysis(
-    dataset: any[],
-    analysisType: string,
-    parameters: any,
-  ): any {
+  private performDataAnalysis(dataset: any[], analysisType: string, parameters: any): any {
     // Mock data analysis
     return {
       summary: {
@@ -571,31 +511,31 @@ class EnhancedMCPService {
         max: Math.max(...dataset),
       },
       insights: [
-        "Data analysis completed successfully",
-        "Consider additional parameters for deeper insights",
+        'Data analysis completed successfully',
+        'Consider additional parameters for deeper insights',
       ],
     };
   }
 
   private async performSystemHealthCheck(
     components: string[] = [],
-    detailed: boolean = false,
+    detailed: boolean = false
   ): Promise<any> {
     const componentStatus: Record<string, any> = {};
 
-    if (components.length === 0 || components.includes("zai")) {
+    if (components.length === 0 || components.includes('zai')) {
       const zaiHealth = await premiumZAIWrapper.getHealthStatus();
       componentStatus.zai = zaiHealth;
     }
 
-    if (components.length === 0 || components.includes("openrouter")) {
+    if (components.length === 0 || components.includes('openrouter')) {
       componentStatus.openrouter = {
         available: openRouterService.getAvailableModels().length > 0,
         modelCount: openRouterService.getAvailableModels().length,
       };
     }
 
-    if (components.length === 0 || components.includes("mcp")) {
+    if (components.length === 0 || components.includes('mcp')) {
       componentStatus.mcp = await this.getHealthStatus();
     }
 
@@ -611,8 +551,7 @@ class EnhancedMCPService {
   async getHealthStatus(): Promise<EnhancedMCPServiceHealth> {
     // Refresh health status if needed
     const now = new Date();
-    const timeSinceLastCheck =
-      now.getTime() - this.healthStatus.lastCheck.getTime();
+    const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
 
     if (timeSinceLastCheck > 60000) {
       // Check every minute
@@ -642,7 +581,7 @@ class EnhancedMCPService {
   }
 
   isHealthy(): boolean {
-    return this.healthStatus.status === "HEALTHY";
+    return this.healthStatus.status === 'HEALTHY';
   }
 
   async waitForHealthy(timeout: number = 30000): Promise<boolean> {
@@ -653,7 +592,7 @@ class EnhancedMCPService {
         return true;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await this.performHealthCheck();
     }
 

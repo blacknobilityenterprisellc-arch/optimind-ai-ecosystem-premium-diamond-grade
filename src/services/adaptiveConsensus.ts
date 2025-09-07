@@ -4,7 +4,7 @@
  * Features dynamic weight adjustment, performance tracking, and confidence optimization
  */
 
-import { ModelResult, ConsensusResult } from "../types/index";
+import { ModelResult, ConsensusResult } from '../types/index';
 
 interface ModelPerformance {
   modelName: string;
@@ -47,9 +47,9 @@ export class AdaptiveConsensusEngine {
   constructor(config: Partial<ConsensusConfig> = {}) {
     this.config = {
       baseWeights: {
-        "GLM-4.5V": 0.4,
-        "GLM-4.5": 0.3,
-        "GLM-4.5-AIR": 0.3,
+        'GLM-4.5V': 0.4,
+        'GLM-4.5': 0.3,
+        'GLM-4.5-AIR': 0.3,
       },
       learningRate: 0.1,
       minWeight: 0.1,
@@ -82,24 +82,18 @@ export class AdaptiveConsensusEngine {
    */
   computeAdaptiveConsensus(modelResults: ModelResult[]): ConsensusResult {
     if (modelResults.length === 0) {
-      throw new Error("No model results provided for consensus computation");
+      throw new Error('No model results provided for consensus computation');
     }
 
     // Get current adaptive weights
     const adaptiveWeights = this.getAdaptiveWeights();
 
     // Calculate weighted consensus
-    const consensus = this.calculateWeightedConsensus(
-      modelResults,
-      adaptiveWeights,
-    );
+    const consensus = this.calculateWeightedConsensus(modelResults, adaptiveWeights);
 
     // Update performance tracking (async, don't block)
-    this.updatePerformanceTracking(modelResults, consensus).catch((err) => {
-      console.warn(
-        "[AdaptiveConsensus] Failed to update performance tracking:",
-        err,
-      );
+    this.updatePerformanceTracking(modelResults, consensus).catch(err => {
+      console.warn('[AdaptiveConsensus] Failed to update performance tracking:', err);
     });
 
     return consensus;
@@ -116,7 +110,7 @@ export class AdaptiveConsensusEngine {
     const weights: AdaptiveWeights = {};
     const totalPerformance = Array.from(this.modelPerformance.values()).reduce(
       (sum, perf) => sum + perf.reliability,
-      0,
+      0
     );
 
     // Calculate adaptive weights based on performance
@@ -124,8 +118,7 @@ export class AdaptiveConsensusEngine {
       const baseWeight = this.config.baseWeights[modelName] || 0.25;
       const performanceMultiplier =
         totalPerformance > 0
-          ? (performance.reliability / totalPerformance) *
-            this.modelPerformance.size
+          ? (performance.reliability / totalPerformance) * this.modelPerformance.size
           : 1;
 
       // Apply adaptive adjustment
@@ -134,7 +127,7 @@ export class AdaptiveConsensusEngine {
       // Apply bounds
       adaptiveWeight = Math.max(
         this.config.minWeight,
-        Math.min(this.config.maxWeight, adaptiveWeight),
+        Math.min(this.config.maxWeight, adaptiveWeight)
       );
 
       weights[modelName] = adaptiveWeight;
@@ -156,7 +149,7 @@ export class AdaptiveConsensusEngine {
    */
   private calculateWeightedConsensus(
     modelResults: ModelResult[],
-    weights: AdaptiveWeights,
+    weights: AdaptiveWeights
   ): ConsensusResult {
     const labelScores = new Map<
       string,
@@ -167,8 +160,7 @@ export class AdaptiveConsensusEngine {
     // Collect scores and weights for each label
     for (const result of modelResults) {
       const modelName = result.modelName;
-      const weight =
-        weights[modelName] || this.config.baseWeights[modelName] || 0.25;
+      const weight = weights[modelName] || this.config.baseWeights[modelName] || 0.25;
 
       provenanceModels.push({
         name: modelName,
@@ -189,44 +181,39 @@ export class AdaptiveConsensusEngine {
     }
 
     // Calculate weighted scores for each label
-    const aggregatedLabels = Array.from(labelScores.entries()).map(
-      ([label, data]) => {
-        // Calculate weighted average
-        let weightedSum = 0;
-        let totalWeight = 0;
+    const aggregatedLabels = Array.from(labelScores.entries()).map(([label, data]) => {
+      // Calculate weighted average
+      let weightedSum = 0;
+      let totalWeight = 0;
 
-        for (let i = 0; i < data.scores.length; i++) {
-          const score = data.scores[i];
-          const weight = data.weights[i];
+      for (let i = 0; i < data.scores.length; i++) {
+        const score = data.scores[i];
+        const weight = data.weights[i];
 
-          // Apply confidence boost for high-performing models
-          const modelPerf = this.modelPerformance.get(data.models[i]);
-          const confidenceBoost =
-            modelPerf && modelPerf.accuracy > this.config.confidenceThreshold
-              ? 1 + (modelPerf.accuracy - this.config.confidenceThreshold) * 0.5
-              : 1;
+        // Apply confidence boost for high-performing models
+        const modelPerf = this.modelPerformance.get(data.models[i]);
+        const confidenceBoost =
+          modelPerf && modelPerf.accuracy > this.config.confidenceThreshold
+            ? 1 + (modelPerf.accuracy - this.config.confidenceThreshold) * 0.5
+            : 1;
 
-          weightedSum += score * weight * confidenceBoost;
-          totalWeight += weight;
-        }
+        weightedSum += score * weight * confidenceBoost;
+        totalWeight += weight;
+      }
 
-        const weightedScore = totalWeight > 0 ? weightedSum / totalWeight : 0;
+      const weightedScore = totalWeight > 0 ? weightedSum / totalWeight : 0;
 
-        // Calculate agreement score (how much models agree on this label)
-        const agreement = this.calculateAgreementScore(
-          data.scores,
-          data.weights,
-        );
+      // Calculate agreement score (how much models agree on this label)
+      const agreement = this.calculateAgreementScore(data.scores, data.weights);
 
-        return {
-          label,
-          score: weightedScore,
-          agreement,
-          modelCount: data.models.length,
-          supportingModels: data.models,
-        };
-      },
-    );
+      return {
+        label,
+        score: weightedScore,
+        agreement,
+        modelCount: data.models.length,
+        supportingModels: data.models,
+      };
+    });
 
     // Sort by weighted score
     aggregatedLabels.sort((a, b) => b.score - a.score);
@@ -234,32 +221,19 @@ export class AdaptiveConsensusEngine {
 
     // Calculate consensus metrics
     const spread = this.calculateEnhancedSpread(aggregatedLabels);
-    const confidence = this.calculateEnhancedConfidence(
-      topLabel,
-      aggregatedLabels,
-      spread,
-    );
+    const confidence = this.calculateEnhancedConfidence(topLabel, aggregatedLabels, spread);
 
     // Determine recommended action with adaptive thresholds
-    const recommendedAction = this.determineAdaptiveAction(
-      topLabel,
-      confidence,
-      spread,
-    );
+    const recommendedAction = this.determineAdaptiveAction(topLabel, confidence, spread);
 
     // Generate enhanced reasons
-    const reasons = this.generateAdaptiveReasons(
-      topLabel,
-      aggregatedLabels,
-      weights,
-      spread,
-    );
+    const reasons = this.generateAdaptiveReasons(topLabel, aggregatedLabels, weights, spread);
 
     return {
       topLabel: topLabel.label,
       score: confidence,
       spread,
-      allLabels: aggregatedLabels.map((l) => ({
+      allLabels: aggregatedLabels.map(l => ({
         label: l.label,
         score: l.score,
       })),
@@ -299,7 +273,7 @@ export class AdaptiveConsensusEngine {
    * Calculate enhanced spread considering model agreement
    */
   private calculateEnhancedSpread(
-    labels: Array<{ label: string; score: number; agreement: number }>,
+    labels: Array<{ label: string; score: number; agreement: number }>
   ): number {
     if (labels.length <= 1) return 0;
 
@@ -325,7 +299,7 @@ export class AdaptiveConsensusEngine {
       modelCount: number;
     },
     allLabels: Array<{ label: string; score: number }>,
-    spread: number,
+    spread: number
   ): number {
     let confidence = topLabel.score;
 
@@ -358,36 +332,36 @@ export class AdaptiveConsensusEngine {
   private determineAdaptiveAction(
     topLabel: { label: string; score: number; agreement: number },
     confidence: number,
-    spread: number,
-  ): ConsensusResult["recommendedAction"] {
+    spread: number
+  ): ConsensusResult['recommendedAction'] {
     // Critical categories always get strict handling
     const criticalCategories = [
-      "child_exposed",
-      "sexual_nudity",
-      "violence_extreme",
-      "deepfake_confirmed",
+      'child_exposed',
+      'sexual_nudity',
+      'violence_extreme',
+      'deepfake_confirmed',
     ];
     if (criticalCategories.includes(topLabel.label)) {
-      return confidence > 0.8 ? "quarantine" : "hold_for_review";
+      return confidence > 0.8 ? 'quarantine' : 'hold_for_review';
     }
 
     // High confidence, high agreement
     if (confidence >= 0.85 && topLabel.agreement >= 0.8) {
-      return topLabel.score > 0.9 ? "quarantine" : "monitor";
+      return topLabel.score > 0.9 ? 'quarantine' : 'monitor';
     }
 
     // Medium confidence with good agreement
     if (confidence >= 0.7 && topLabel.agreement >= 0.6) {
-      return spread > 0.3 ? "hold_for_review" : "monitor";
+      return spread > 0.3 ? 'hold_for_review' : 'monitor';
     }
 
     // Low confidence or poor agreement
     if (confidence < 0.5 || topLabel.agreement < 0.4) {
-      return spread > 0.4 ? "hold_for_review" : "allow";
+      return spread > 0.4 ? 'hold_for_review' : 'allow';
     }
 
     // Default case
-    return confidence > 0.6 ? "monitor" : "allow";
+    return confidence > 0.6 ? 'monitor' : 'allow';
   }
 
   /**
@@ -402,45 +376,39 @@ export class AdaptiveConsensusEngine {
     },
     allLabels: Array<{ label: string; score: number }>,
     weights: AdaptiveWeights,
-    spread: number,
+    spread: number
   ): string[] {
     const reasons: string[] = [];
 
     reasons.push(
-      `Top detection: "${topLabel.label}" with ${(topLabel.score * 100).toFixed(1)}% confidence`,
+      `Top detection: "${topLabel.label}" with ${(topLabel.score * 100).toFixed(1)}% confidence`
     );
     reasons.push(
-      `Model agreement: ${(topLabel.agreement * 100).toFixed(1)}% (${topLabel.modelCount} models)`,
+      `Model agreement: ${(topLabel.agreement * 100).toFixed(1)}% (${topLabel.modelCount} models)`
     );
 
     // Add weight information
     const weightInfo = Object.entries(weights)
       .map(([model, weight]) => `${model}: ${(weight * 100).toFixed(0)}%`)
-      .join(", ");
+      .join(', ');
     reasons.push(`Adaptive weights: ${weightInfo}`);
 
     if (spread > 0.2) {
-      reasons.push(
-        `Model spread: ${(spread * 100).toFixed(1)}% (indicates disagreement)`,
-      );
+      reasons.push(`Model spread: ${(spread * 100).toFixed(1)}% (indicates disagreement)`);
     }
 
     // Add performance context
     const avgAccuracy =
-      Array.from(this.modelPerformance.values()).reduce(
-        (sum, perf) => sum + perf.accuracy,
-        0,
-      ) / this.modelPerformance.size;
+      Array.from(this.modelPerformance.values()).reduce((sum, perf) => sum + perf.accuracy, 0) /
+      this.modelPerformance.size;
     if (avgAccuracy > 0.8) {
-      reasons.push(
-        `High model accuracy: ${(avgAccuracy * 100).toFixed(1)}% average`,
-      );
+      reasons.push(`High model accuracy: ${(avgAccuracy * 100).toFixed(1)}% average`);
     }
 
     // Add runner-up information if relevant
     if (allLabels.length > 1 && allLabels[1].score > 0.3) {
       reasons.push(
-        `Secondary detection: "${allLabels[1].label}" at ${(allLabels[1].score * 100).toFixed(1)}%`,
+        `Secondary detection: "${allLabels[1].label}" at ${(allLabels[1].score * 100).toFixed(1)}%`
       );
     }
 
@@ -452,23 +420,21 @@ export class AdaptiveConsensusEngine {
    */
   private async updatePerformanceTracking(
     modelResults: ModelResult[],
-    consensus: ConsensusResult,
+    consensus: ConsensusResult
   ): Promise<void> {
     const timestamp = new Date();
 
     // Add to analysis history
     this.analysisHistory.push({
       imageId: `analysis_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
-      modelsUsed: modelResults.map((r) => r.modelName),
+      modelsUsed: modelResults.map(r => r.modelName),
       consensus,
       timestamp,
     });
 
     // Keep history within window
     if (this.analysisHistory.length > this.config.performanceWindow) {
-      this.analysisHistory = this.analysisHistory.slice(
-        -this.config.performanceWindow,
-      );
+      this.analysisHistory = this.analysisHistory.slice(-this.config.performanceWindow);
     }
 
     // Update individual model performance
@@ -479,32 +445,26 @@ export class AdaptiveConsensusEngine {
       // Update basic metrics
       performance.totalAnalyses++;
       performance.averageLatency =
-        (performance.averageLatency * (performance.totalAnalyses - 1) +
-          (result.latencyMs || 0)) /
+        (performance.averageLatency * (performance.totalAnalyses - 1) + (result.latencyMs || 0)) /
         performance.totalAnalyses;
 
       // Update confidence tracking
       const avgLabelScore =
-        result.labels.reduce((sum, label) => sum + label.score, 0) /
-        result.labels.length;
+        result.labels.reduce((sum, label) => sum + label.score, 0) / result.labels.length;
       performance.averageConfidence =
-        (performance.averageConfidence * (performance.totalAnalyses - 1) +
-          avgLabelScore) /
+        (performance.averageConfidence * (performance.totalAnalyses - 1) + avgLabelScore) /
         performance.totalAnalyses;
 
       // Update error rate (simplified - in real system, this would use ground truth)
       const hasError = result.labels.some(
-        (label) =>
-          label.label.includes("failed") || label.label.includes("error"),
+        label => label.label.includes('failed') || label.label.includes('error')
       );
       if (hasError) {
         performance.errorRate =
-          (performance.errorRate * (performance.totalAnalyses - 1) + 1) /
-          performance.totalAnalyses;
+          (performance.errorRate * (performance.totalAnalyses - 1) + 1) / performance.totalAnalyses;
       } else {
         performance.errorRate =
-          (performance.errorRate * (performance.totalAnalyses - 1)) /
-          performance.totalAnalyses;
+          (performance.errorRate * (performance.totalAnalyses - 1)) / performance.totalAnalyses;
       }
 
       // Update accuracy (simplified - in real system, this would use verified ground truth)
@@ -513,8 +473,7 @@ export class AdaptiveConsensusEngine {
       if (consensusMatch) {
         performance.correctPredictions++;
       }
-      performance.accuracy =
-        performance.correctPredictions / performance.totalAnalyses;
+      performance.accuracy = performance.correctPredictions / performance.totalAnalyses;
 
       // Update reliability (composite score)
       performance.reliability = this.calculateReliability(performance);
@@ -567,12 +526,8 @@ export class AdaptiveConsensusEngine {
   /**
    * Provide feedback to improve model weights (ground truth based)
    */
-  provideFeedback(
-    imageId: string,
-    groundTruth: string,
-    correctAction: string,
-  ): void {
-    const analysis = this.analysisHistory.find((a) => a.imageId === imageId);
+  provideFeedback(imageId: string, groundTruth: string, correctAction: string): void {
+    const analysis = this.analysisHistory.find(a => a.imageId === imageId);
     if (!analysis) return;
 
     analysis.groundTruth = groundTruth;
@@ -583,23 +538,19 @@ export class AdaptiveConsensusEngine {
       if (!performance) continue;
 
       // Find if this model predicted the ground truth
-      const modelResult = analysis.consensus.provenance.models.find(
-        (m) => m.name === modelName,
-      );
+      const modelResult = analysis.consensus.provenance.models.find(m => m.name === modelName);
       if (!modelResult) continue;
 
       // In a real system, we'd have the actual model prediction
       // For now, we'll use consensus as proxy
       const predictedCorrectly = analysis.consensus.topLabel === groundTruth;
-      const actionCorrect =
-        analysis.consensus.recommendedAction === correctAction;
+      const actionCorrect = analysis.consensus.recommendedAction === correctAction;
 
       if (predictedCorrectly && actionCorrect) {
         performance.correctPredictions++;
       }
 
-      performance.accuracy =
-        performance.correctPredictions / performance.totalAnalyses;
+      performance.accuracy = performance.correctPredictions / performance.totalAnalyses;
       performance.reliability = this.calculateReliability(performance);
       performance.lastUpdated = new Date();
     }

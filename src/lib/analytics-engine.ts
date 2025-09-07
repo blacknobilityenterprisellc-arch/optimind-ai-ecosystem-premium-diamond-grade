@@ -1,6 +1,6 @@
 // src/lib/analytics-engine.ts - Premium Diamond-Grade Analytics Engine
 export async function configureAnalytics() {
-  console.log("📊 Configuring premium analytics engine");
+  console.log('📊 Configuring premium analytics engine');
   // Premium analytics setup
 }
 
@@ -16,12 +16,12 @@ export function generatePremiumReport(userId: string) {
   // Generate comprehensive premium analytics report
   return {
     userId,
-    reportType: "premium-diamond-grade",
+    reportType: 'premium-diamond-grade',
     generatedAt: new Date().toISOString(),
     metrics: {
-      usage: "premium",
-      features: "all",
-      insights: "enhanced",
+      usage: 'premium',
+      features: 'all',
+      insights: 'enhanced',
     },
   };
 }

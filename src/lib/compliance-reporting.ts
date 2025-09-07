@@ -1,9 +1,9 @@
 // Enterprise Compliance and Reporting System
 // Comprehensive compliance management for GDPR, HIPAA, PCI DSS, SOX, and custom regulations
 
-import { autoQuarantineSystem, QuarantineEvent } from "./auto-quarantine";
-import { secureVault, VaultAccessLog } from "./secure-vault";
-import { secureDeletionService, DeletionJob } from "./secure-deletion";
+import { autoQuarantineSystem, QuarantineEvent } from './auto-quarantine';
+import { secureVault, VaultAccessLog } from './secure-vault';
+import { secureDeletionService, DeletionJob } from './secure-deletion';
 
 export interface ComplianceFramework {
   id: string;
@@ -20,11 +20,11 @@ export interface ComplianceRequirement {
   id: string;
   name: string;
   description: string;
-  category: "data_protection" | "privacy" | "security" | "audit" | "reporting";
-  severity: "low" | "medium" | "high" | "critical";
+  category: 'data_protection' | 'privacy' | 'security' | 'audit' | 'reporting';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   isMandatory: boolean;
   controls: ComplianceControl[];
-  status: "compliant" | "non_compliant" | "partial" | "not_assessed";
+  status: 'compliant' | 'non_compliant' | 'partial' | 'not_assessed';
   lastAssessed?: Date;
   evidence?: string[];
 }
@@ -35,15 +35,9 @@ export interface ComplianceControl {
   description: string;
   implementation: string;
   testing: string;
-  frequency:
-    | "continuous"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "quarterly"
-    | "annually";
+  frequency: 'continuous' | 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annually';
   owner: string;
-  status: "implemented" | "partial" | "not_implemented";
+  status: 'implemented' | 'partial' | 'not_implemented';
   lastTested?: Date;
   nextTest?: Date;
   testResults?: TestResult[];
@@ -53,7 +47,7 @@ export interface TestResult {
   id: string;
   date: Date;
   tester: string;
-  result: "pass" | "fail" | "warning" | "not_tested";
+  result: 'pass' | 'fail' | 'warning' | 'not_tested';
   findings: string;
   recommendations: string;
   evidence: string[];
@@ -61,12 +55,7 @@ export interface TestResult {
 
 export interface ComplianceReport {
   id: string;
-  reportType:
-    | "assessment"
-    | "audit"
-    | "certification"
-    | "incident"
-    | "periodic";
+  reportType: 'assessment' | 'audit' | 'certification' | 'incident' | 'periodic';
   title: string;
   description: string;
   period: {
@@ -75,7 +64,7 @@ export interface ComplianceReport {
   };
   frameworks: string[];
   overallScore: number;
-  status: "compliant" | "non_compliant" | "partial" | "in_progress";
+  status: 'compliant' | 'non_compliant' | 'partial' | 'in_progress';
   generatedAt: Date;
   generatedBy: string;
   reviewedBy?: string;
@@ -87,7 +76,7 @@ export interface ComplianceReport {
   attachments: ReportAttachment[];
   metadata: {
     version: string;
-    classification: "public" | "internal" | "confidential" | "restricted";
+    classification: 'public' | 'internal' | 'confidential' | 'restricted';
     retentionPeriod: number; // days
     nextReviewDate: Date;
   };
@@ -98,7 +87,7 @@ export interface ReportSection {
   title: string;
   content: string;
   order: number;
-  type: "narrative" | "data" | "chart" | "table" | "evidence";
+  type: 'narrative' | 'data' | 'chart' | 'table' | 'evidence';
   data?: any;
 }
 
@@ -106,11 +95,11 @@ export interface ComplianceFinding {
   id: string;
   title: string;
   description: string;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
   category: string;
   requirementId: string;
   controlId?: string;
-  status: "open" | "in_progress" | "resolved" | "deferred";
+  status: 'open' | 'in_progress' | 'resolved' | 'deferred';
   dueDate?: Date;
   assignedTo?: string;
   rootCause?: string;
@@ -123,11 +112,11 @@ export interface Recommendation {
   id: string;
   title: string;
   description: string;
-  priority: "low" | "medium" | "high" | "critical";
+  priority: 'low' | 'medium' | 'high' | 'critical';
   category: string;
   targetDate?: Date;
   assignedTo?: string;
-  status: "pending" | "in_progress" | "completed" | "deferred";
+  status: 'pending' | 'in_progress' | 'completed' | 'deferred';
   estimatedCost?: number;
   estimatedEffort?: string; // e.g., '40 hours'
   dependencies?: string[];
@@ -158,7 +147,7 @@ export interface FrameworkStatus {
   frameworkId: string;
   frameworkName: string;
   score: number;
-  status: "compliant" | "non_compliant" | "partial";
+  status: 'compliant' | 'non_compliant' | 'partial';
   lastAssessed: Date;
   nextAssessment: Date;
   requirementsCount: number;
@@ -174,7 +163,7 @@ export interface AssessmentSchedule {
   assessmentType: string;
   scheduledDate: Date;
   assignedTo: string;
-  status: "scheduled" | "in_progress" | "completed" | "overdue";
+  status: 'scheduled' | 'in_progress' | 'completed' | 'overdue';
   estimatedDuration: number; // hours
 }
 
@@ -193,7 +182,7 @@ export interface RiskMetrics {
   mediumRiskFindings: number;
   lowRiskFindings: number;
   overdueFindings: number;
-  riskTrend: "improving" | "stable" | "deteriorating";
+  riskTrend: 'improving' | 'stable' | 'deteriorating';
   riskCategories: RiskCategory[];
 }
 
@@ -201,17 +190,12 @@ export interface RiskCategory {
   category: string;
   riskScore: number;
   findingsCount: number;
-  trend: "improving" | "stable" | "deteriorating";
+  trend: 'improving' | 'stable' | 'deteriorating';
 }
 
 export interface ComplianceConfig {
   enabledFrameworks: string[];
-  assessmentFrequency:
-    | "continuous"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "quarterly";
+  assessmentFrequency: 'continuous' | 'daily' | 'weekly' | 'monthly' | 'quarterly';
   autoGenerateReports: boolean;
   reportRetentionPeriod: number; // days
   enableNotifications: boolean;
@@ -254,8 +238,8 @@ class ComplianceReportingService {
 
   constructor(config?: Partial<ComplianceConfig>) {
     this.config = {
-      enabledFrameworks: ["gdpr", "hipaa", "pci_dss", "sox"],
-      assessmentFrequency: "monthly",
+      enabledFrameworks: ['gdpr', 'hipaa', 'pci_dss', 'sox'],
+      assessmentFrequency: 'monthly',
       autoGenerateReports: true,
       reportRetentionPeriod: 2555, // 7 years
       enableNotifications: true,
@@ -280,120 +264,113 @@ class ComplianceReportingService {
       await this.initializeDefaultFrameworks();
 
       this.isInitialized = true;
-      console.log("Compliance Reporting Service initialized successfully");
+      console.log('Compliance Reporting Service initialized successfully');
     } catch (error) {
-      console.error(
-        "Failed to initialize Compliance Reporting Service:",
-        error,
-      );
-      throw new Error("Compliance Reporting Service initialization failed");
+      console.error('Failed to initialize Compliance Reporting Service:', error);
+      throw new Error('Compliance Reporting Service initialization failed');
     }
   }
 
   private async initializeDefaultFrameworks(): Promise<void> {
     const frameworks: ComplianceFramework[] = [
       {
-        id: "gdpr",
-        name: "General Data Protection Regulation (GDPR)",
+        id: 'gdpr',
+        name: 'General Data Protection Regulation (GDPR)',
         description:
-          "EU regulation on data protection and privacy for individuals within the European Union",
-        version: "2018",
-        jurisdiction: "European Union",
+          'EU regulation on data protection and privacy for individuals within the European Union',
+        version: '2018',
+        jurisdiction: 'European Union',
         isActive: true,
         lastUpdated: new Date(),
         requirements: [
           {
-            id: "gdpr_1",
-            name: "Lawful Basis for Processing",
-            description:
-              "Ensure all data processing has a lawful basis under GDPR",
-            category: "data_protection",
-            severity: "high",
+            id: 'gdpr_1',
+            name: 'Lawful Basis for Processing',
+            description: 'Ensure all data processing has a lawful basis under GDPR',
+            category: 'data_protection',
+            severity: 'high',
             isMandatory: true,
-            status: "compliant",
+            status: 'compliant',
             controls: [],
             lastAssessed: new Date(),
           },
           {
-            id: "gdpr_2",
-            name: "Data Subject Rights",
-            description:
-              "Implement procedures for handling data subject requests",
-            category: "privacy",
-            severity: "high",
+            id: 'gdpr_2',
+            name: 'Data Subject Rights',
+            description: 'Implement procedures for handling data subject requests',
+            category: 'privacy',
+            severity: 'high',
             isMandatory: true,
-            status: "partial",
-            controls: [],
-            lastAssessed: new Date(),
-          },
-        ],
-      },
-      {
-        id: "hipaa",
-        name: "Health Insurance Portability and Accountability Act (HIPAA)",
-        description:
-          "US law providing data privacy and security provisions for safeguarding medical information",
-        version: "1996",
-        jurisdiction: "United States",
-        isActive: true,
-        lastUpdated: new Date(),
-        requirements: [
-          {
-            id: "hipaa_1",
-            name: "Protected Health Information (PHI) Security",
-            description:
-              "Implement appropriate administrative, physical, and technical safeguards",
-            category: "security",
-            severity: "critical",
-            isMandatory: true,
-            status: "compliant",
+            status: 'partial',
             controls: [],
             lastAssessed: new Date(),
           },
         ],
       },
       {
-        id: "pci_dss",
-        name: "Payment Card Industry Data Security Standard (PCI DSS)",
+        id: 'hipaa',
+        name: 'Health Insurance Portability and Accountability Act (HIPAA)',
         description:
-          "Information security standard for organizations that handle credit card transactions",
-        version: "4.0",
-        jurisdiction: "Global",
+          'US law providing data privacy and security provisions for safeguarding medical information',
+        version: '1996',
+        jurisdiction: 'United States',
         isActive: true,
         lastUpdated: new Date(),
         requirements: [
           {
-            id: "pci_1",
-            name: "Network Security",
-            description: "Install and maintain network security controls",
-            category: "security",
-            severity: "high",
+            id: 'hipaa_1',
+            name: 'Protected Health Information (PHI) Security',
+            description: 'Implement appropriate administrative, physical, and technical safeguards',
+            category: 'security',
+            severity: 'critical',
             isMandatory: true,
-            status: "compliant",
+            status: 'compliant',
             controls: [],
             lastAssessed: new Date(),
           },
         ],
       },
       {
-        id: "sox",
-        name: "Sarbanes-Oxley Act (SOX)",
+        id: 'pci_dss',
+        name: 'Payment Card Industry Data Security Standard (PCI DSS)',
         description:
-          "US law that mandates strict reforms to improve financial disclosures from corporations",
-        version: "2002",
-        jurisdiction: "United States",
+          'Information security standard for organizations that handle credit card transactions',
+        version: '4.0',
+        jurisdiction: 'Global',
         isActive: true,
         lastUpdated: new Date(),
         requirements: [
           {
-            id: "sox_1",
-            name: "Internal Controls",
-            description:
-              "Maintain adequate internal control over financial reporting",
-            category: "audit",
-            severity: "high",
+            id: 'pci_1',
+            name: 'Network Security',
+            description: 'Install and maintain network security controls',
+            category: 'security',
+            severity: 'high',
             isMandatory: true,
-            status: "partial",
+            status: 'compliant',
+            controls: [],
+            lastAssessed: new Date(),
+          },
+        ],
+      },
+      {
+        id: 'sox',
+        name: 'Sarbanes-Oxley Act (SOX)',
+        description:
+          'US law that mandates strict reforms to improve financial disclosures from corporations',
+        version: '2002',
+        jurisdiction: 'United States',
+        isActive: true,
+        lastUpdated: new Date(),
+        requirements: [
+          {
+            id: 'sox_1',
+            name: 'Internal Controls',
+            description: 'Maintain adequate internal control over financial reporting',
+            category: 'audit',
+            severity: 'high',
+            isMandatory: true,
+            status: 'partial',
             controls: [],
             lastAssessed: new Date(),
           },
@@ -408,7 +385,7 @@ class ComplianceReportingService {
 
   // Generate compliance report
   async generateComplianceReport(
-    reportType: ComplianceReport["reportType"],
+    reportType: ComplianceReport['reportType'],
     frameworks: string[],
     period: { startDate: Date; endDate: Date },
     options?: {
@@ -416,25 +393,24 @@ class ComplianceReportingService {
       includeRecommendations?: boolean;
       includeTrends?: boolean;
       customSections?: ReportSection[];
-    },
+    }
   ): Promise<ComplianceReport> {
     if (!this.isInitialized) {
-      throw new Error("Compliance Reporting Service not initialized");
+      throw new Error('Compliance Reporting Service not initialized');
     }
 
     try {
-      const reportId = crypto.randomBytes(16).toString("hex");
+      const reportId = crypto.randomBytes(16).toString('hex');
       const frameworkStatuses = await this.assessFrameworks(frameworks);
 
       // Calculate overall score
       const overallScore =
-        frameworkStatuses.reduce((sum, status) => sum + status.score, 0) /
-        frameworkStatuses.length;
+        frameworkStatuses.reduce((sum, status) => sum + status.score, 0) / frameworkStatuses.length;
 
       // Determine overall status
-      let status: ComplianceReport["status"] = "compliant";
-      if (overallScore < 70) status = "non_compliant";
-      else if (overallScore < 90) status = "partial";
+      let status: ComplianceReport['status'] = 'compliant';
+      if (overallScore < 70) status = 'non_compliant';
+      else if (overallScore < 90) status = 'partial';
 
       // Generate findings
       const findings = await this.generateFindings(frameworks, period);
@@ -447,32 +423,28 @@ class ComplianceReportingService {
         reportType,
         frameworks,
         period,
-        frameworkStatuses,
+        frameworkStatuses
       );
 
       const report: ComplianceReport = {
         id: reportId,
         reportType,
-        title: `${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report - ${period.startDate.toISOString().split("T")[0]}`,
-        description: `Compliance assessment report for frameworks: ${frameworks.join(", ")}`,
+        title: `${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report - ${period.startDate.toISOString().split('T')[0]}`,
+        description: `Compliance assessment report for frameworks: ${frameworks.join(', ')}`,
         period,
         frameworks,
         overallScore,
         status,
         generatedAt: new Date(),
-        generatedBy: "system",
+        generatedBy: 'system',
         sections,
-        executiveSummary: this.generateExecutiveSummary(
-          overallScore,
-          frameworkStatuses,
-          findings,
-        ),
+        executiveSummary: this.generateExecutiveSummary(overallScore, frameworkStatuses, findings),
         findings,
         recommendations,
         attachments: [],
         metadata: {
-          version: "1.0",
-          classification: "confidential",
+          version: '1.0',
+          classification: 'confidential',
           retentionPeriod: this.config.reportRetentionPeriod,
           nextReviewDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
         },
@@ -483,17 +455,15 @@ class ComplianceReportingService {
       console.log(`Compliance report generated: ${reportId}`);
       return report;
     } catch (error) {
-      console.error("Failed to generate compliance report:", error);
+      console.error('Failed to generate compliance report:', error);
       throw new Error(
-        `Failed to generate compliance report: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to generate compliance report: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
   }
 
   // Assess compliance frameworks
-  private async assessFrameworks(
-    frameworkIds: string[],
-  ): Promise<FrameworkStatus[]> {
+  private async assessFrameworks(frameworkIds: string[]): Promise<FrameworkStatus[]> {
     const statuses: FrameworkStatus[] = [];
 
     for (const frameworkId of frameworkIds) {
@@ -501,24 +471,18 @@ class ComplianceReportingService {
       if (!framework) continue;
 
       const requirements = framework.requirements;
-      const compliantCount = requirements.filter(
-        (r) => r.status === "compliant",
-      ).length;
-      const nonCompliantCount = requirements.filter(
-        (r) => r.status === "non_compliant",
-      ).length;
-      const partialCount = requirements.filter(
-        (r) => r.status === "partial",
-      ).length;
+      const compliantCount = requirements.filter(r => r.status === 'compliant').length;
+      const nonCompliantCount = requirements.filter(r => r.status === 'non_compliant').length;
+      const partialCount = requirements.filter(r => r.status === 'partial').length;
 
       const score =
         requirements.length > 0
           ? (compliantCount * 100 + partialCount * 50) / requirements.length
           : 0;
 
-      let status: FrameworkStatus["status"] = "compliant";
-      if (score < 70) status = "non_compliant";
-      else if (score < 90) status = "partial";
+      let status: FrameworkStatus['status'] = 'compliant';
+      if (score < 70) status = 'non_compliant';
+      else if (score < 90) status = 'partial';
 
       statuses.push({
         frameworkId,
@@ -540,7 +504,7 @@ class ComplianceReportingService {
   // Generate compliance findings
   private async generateFindings(
     frameworkIds: string[],
-    period: { startDate: Date; endDate: Date },
+    period: { startDate: Date; endDate: Date }
   ): Promise<ComplianceFinding[]> {
     const findings: ComplianceFinding[] = [];
 
@@ -550,25 +514,22 @@ class ComplianceReportingService {
     });
 
     for (const event of quarantineEvents) {
-      if (
-        event.timestamp >= period.startDate &&
-        event.timestamp <= period.endDate
-      ) {
+      if (event.timestamp >= period.startDate && event.timestamp <= period.endDate) {
         findings.push({
-          id: crypto.randomBytes(8).toString("hex"),
+          id: crypto.randomBytes(8).toString('hex'),
           title: `Security Event: ${event.action}`,
           description: event.reason,
           severity:
-            event.riskLevel === "critical"
-              ? "critical"
-              : event.riskLevel === "high"
-                ? "high"
-                : event.riskLevel === "medium"
-                  ? "medium"
-                  : "low",
-          category: "security",
-          requirementId: "security_monitoring",
-          status: "open",
+            event.riskLevel === 'critical'
+              ? 'critical'
+              : event.riskLevel === 'high'
+                ? 'high'
+                : event.riskLevel === 'medium'
+                  ? 'medium'
+                  : 'low',
+          category: 'security',
+          requirementId: 'security_monitoring',
+          status: 'open',
           dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
           evidence: [JSON.stringify(event)],
         });
@@ -579,19 +540,15 @@ class ComplianceReportingService {
     const vaultLogs = secureVault.getAccessLogs(1000);
 
     for (const log of vaultLogs) {
-      if (
-        log.timestamp >= period.startDate &&
-        log.timestamp <= period.endDate &&
-        !log.success
-      ) {
+      if (log.timestamp >= period.startDate && log.timestamp <= period.endDate && !log.success) {
         findings.push({
-          id: crypto.randomBytes(8).toString("hex"),
-          title: "Unauthorized Access Attempt",
+          id: crypto.randomBytes(8).toString('hex'),
+          title: 'Unauthorized Access Attempt',
           description: `Failed access attempt: ${log.reason}`,
-          severity: "high",
-          category: "security",
-          requirementId: "access_control",
-          status: "open",
+          severity: 'high',
+          category: 'security',
+          requirementId: 'access_control',
+          status: 'open',
           dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days
           evidence: [JSON.stringify(log)],
         });
@@ -602,22 +559,20 @@ class ComplianceReportingService {
   }
 
   // Generate recommendations
-  private async generateRecommendations(
-    findings: ComplianceFinding[],
-  ): Promise<Recommendation[]> {
+  private async generateRecommendations(findings: ComplianceFinding[]): Promise<Recommendation[]> {
     const recommendations: Recommendation[] = [];
 
     for (const finding of findings) {
-      if (finding.severity === "critical" || finding.severity === "high") {
+      if (finding.severity === 'critical' || finding.severity === 'high') {
         recommendations.push({
-          id: crypto.randomBytes(8).toString("hex"),
+          id: crypto.randomBytes(8).toString('hex'),
           title: `Address ${finding.title}`,
           description: `Immediate action required to resolve ${finding.description}`,
           priority: finding.severity,
           category: finding.category,
           targetDate: finding.dueDate,
-          status: "pending",
-          estimatedEffort: "8 hours",
+          status: 'pending',
+          estimatedEffort: '8 hours',
           dependencies: [finding.id],
         });
       }
@@ -628,60 +583,57 @@ class ComplianceReportingService {
 
   // Generate report sections
   private async generateReportSections(
-    reportType: ComplianceReport["reportType"],
+    reportType: ComplianceReport['reportType'],
     frameworks: string[],
     period: { startDate: Date; endDate: Date },
-    frameworkStatuses: FrameworkStatus[],
+    frameworkStatuses: FrameworkStatus[]
   ): Promise<ReportSection[]> {
     const sections: ReportSection[] = [];
 
     // Executive Summary
     sections.push({
-      id: "executive_summary",
-      title: "Executive Summary",
-      content:
-        "This section provides a high-level overview of the compliance assessment results.",
+      id: 'executive_summary',
+      title: 'Executive Summary',
+      content: 'This section provides a high-level overview of the compliance assessment results.',
       order: 1,
-      type: "narrative",
+      type: 'narrative',
     });
 
     // Assessment Scope
     sections.push({
-      id: "scope",
-      title: "Assessment Scope",
-      content: `This assessment covers the period from ${period.startDate.toISOString().split("T")[0]} to ${period.endDate.toISOString().split("T")[0]}.`,
+      id: 'scope',
+      title: 'Assessment Scope',
+      content: `This assessment covers the period from ${period.startDate.toISOString().split('T')[0]} to ${period.endDate.toISOString().split('T')[0]}.`,
       order: 2,
-      type: "narrative",
+      type: 'narrative',
     });
 
     // Framework Results
     sections.push({
-      id: "framework_results",
-      title: "Framework Compliance Results",
-      content: "Detailed compliance results for each assessed framework.",
+      id: 'framework_results',
+      title: 'Framework Compliance Results',
+      content: 'Detailed compliance results for each assessed framework.',
       order: 3,
-      type: "table",
+      type: 'table',
       data: frameworkStatuses,
     });
 
     // Findings Summary
     sections.push({
-      id: "findings_summary",
-      title: "Findings Summary",
-      content:
-        "Summary of compliance findings identified during the assessment.",
+      id: 'findings_summary',
+      title: 'Findings Summary',
+      content: 'Summary of compliance findings identified during the assessment.',
       order: 4,
-      type: "table",
+      type: 'table',
     });
 
     // Recommendations
     sections.push({
-      id: "recommendations",
-      title: "Recommendations",
-      content:
-        "Recommended actions to address identified findings and improve compliance.",
+      id: 'recommendations',
+      title: 'Recommendations',
+      content: 'Recommended actions to address identified findings and improve compliance.',
       order: 5,
-      type: "narrative",
+      type: 'narrative',
     });
 
     return sections;
@@ -691,15 +643,11 @@ class ComplianceReportingService {
   private generateExecutiveSummary(
     overallScore: number,
     frameworkStatuses: FrameworkStatus[],
-    findings: ComplianceFinding[],
+    findings: ComplianceFinding[]
   ): string {
-    const compliantFrameworks = frameworkStatuses.filter(
-      (f) => f.status === "compliant",
-    ).length;
-    const criticalFindings = findings.filter(
-      (f) => f.severity === "critical",
-    ).length;
-    const highFindings = findings.filter((f) => f.severity === "high").length;
+    const compliantFrameworks = frameworkStatuses.filter(f => f.status === 'compliant').length;
+    const criticalFindings = findings.filter(f => f.severity === 'critical').length;
+    const highFindings = findings.filter(f => f.severity === 'high').length;
 
     return `
 Executive Summary
@@ -722,25 +670,22 @@ Immediate attention should be given to addressing critical and high-severity fin
   // Get compliance dashboard
   async getComplianceDashboard(): Promise<ComplianceDashboard> {
     if (!this.isInitialized) {
-      throw new Error("Compliance Reporting Service not initialized");
+      throw new Error('Compliance Reporting Service not initialized');
     }
 
-    const frameworkStatuses = await this.assessFrameworks(
-      this.config.enabledFrameworks,
-    );
+    const frameworkStatuses = await this.assessFrameworks(this.config.enabledFrameworks);
     const overallScore =
-      frameworkStatuses.reduce((sum, status) => sum + status.score, 0) /
-      frameworkStatuses.length;
+      frameworkStatuses.reduce((sum, status) => sum + status.score, 0) / frameworkStatuses.length;
 
     // Get recent findings
     const recentFindings = Array.from(this.findings.values())
-      .filter((f) => f.status === "open")
+      .filter(f => f.status === 'open')
       .sort((a, b) => b.severity.localeCompare(a.severity))
       .slice(0, 10);
 
     // Get open recommendations
     const openRecommendations = Array.from(this.recommendations.values())
-      .filter((r) => r.status === "pending" || r.status === "in_progress")
+      .filter(r => r.status === 'pending' || r.status === 'in_progress')
       .sort((a, b) => b.priority.localeCompare(a.priority))
       .slice(0, 10);
 
@@ -748,34 +693,30 @@ Immediate attention should be given to addressing critical and high-severity fin
     const riskMetrics: RiskMetrics = {
       overallRiskScore: 100 - overallScore,
       highRiskFindings: recentFindings.filter(
-        (f) => f.severity === "high" || f.severity === "critical",
+        f => f.severity === 'high' || f.severity === 'critical'
       ).length,
-      mediumRiskFindings: recentFindings.filter((f) => f.severity === "medium")
-        .length,
-      lowRiskFindings: recentFindings.filter((f) => f.severity === "low")
-        .length,
-      overdueFindings: recentFindings.filter(
-        (f) => f.dueDate && f.dueDate < new Date(),
-      ).length,
-      riskTrend: "stable",
+      mediumRiskFindings: recentFindings.filter(f => f.severity === 'medium').length,
+      lowRiskFindings: recentFindings.filter(f => f.severity === 'low').length,
+      overdueFindings: recentFindings.filter(f => f.dueDate && f.dueDate < new Date()).length,
+      riskTrend: 'stable',
       riskCategories: [
         {
-          category: "Security",
+          category: 'Security',
           riskScore: 75,
           findingsCount: 5,
-          trend: "stable",
+          trend: 'stable',
         },
         {
-          category: "Privacy",
+          category: 'Privacy',
           riskScore: 60,
           findingsCount: 3,
-          trend: "improving",
+          trend: 'improving',
         },
         {
-          category: "Data Protection",
+          category: 'Data Protection',
           riskScore: 45,
           findingsCount: 2,
-          trend: "stable",
+          trend: 'stable',
         },
       ],
     };
@@ -804,11 +745,11 @@ Immediate attention should be given to addressing critical and high-severity fin
 
   // Add custom framework
   addCustomFramework(
-    framework: Omit<ComplianceFramework, "id" | "lastUpdated">,
+    framework: Omit<ComplianceFramework, 'id' | 'lastUpdated'>
   ): ComplianceFramework {
     const newFramework: ComplianceFramework = {
       ...framework,
-      id: crypto.randomBytes(8).toString("hex"),
+      id: crypto.randomBytes(8).toString('hex'),
       lastUpdated: new Date(),
     };
 
@@ -827,23 +768,20 @@ Immediate attention should be given to addressing critical and high-severity fin
   }
 
   // Export report to various formats
-  async exportReport(
-    reportId: string,
-    format: "pdf" | "excel" | "json" | "xml",
-  ): Promise<string> {
+  async exportReport(reportId: string, format: 'pdf' | 'excel' | 'json' | 'xml'): Promise<string> {
     const report = this.reports.get(reportId);
     if (!report) {
-      throw new Error("Report not found");
+      throw new Error('Report not found');
     }
 
     switch (format) {
-      case "json":
+      case 'json':
         return JSON.stringify(report, null, 2);
-      case "xml":
+      case 'xml':
         return this.convertToXml(report);
-      case "excel":
+      case 'excel':
         return this.convertToExcel(report);
-      case "pdf":
+      case 'pdf':
         return this.convertToPdf(report);
       default:
         throw new Error(`Unsupported export format: ${format}`);
@@ -861,7 +799,7 @@ Immediate attention should be given to addressing critical and high-severity fin
   <status>${report.status}</status>
   <generated-at>${report.generatedAt.toISOString()}</generated-at>
   <frameworks>
-    ${report.frameworks.map((f) => `<framework>${f}</framework>`).join("\n    ")}
+    ${report.frameworks.map(f => `<framework>${f}</framework>`).join('\n    ')}
   </frameworks>
 </compliance-report>`;
   }
@@ -872,7 +810,7 @@ Immediate attention should be given to addressing critical and high-severity fin
     return `Report: ${report.title}
 Overall Score: ${report.overallScore}%
 Status: ${report.status}
-Frameworks: ${report.frameworks.join(", ")}
+Frameworks: ${report.frameworks.join(', ')}
 Generated: ${report.generatedAt.toISOString()}`;
   }
 

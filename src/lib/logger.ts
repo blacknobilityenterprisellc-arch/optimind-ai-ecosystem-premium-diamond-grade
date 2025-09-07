@@ -41,7 +41,7 @@ export class Logger {
     level: LogLevel,
     message: string,
     context?: Record<string, any>,
-    error?: Error,
+    error?: Error
   ): LogEntry {
     return {
       timestamp: new Date(),
@@ -56,7 +56,7 @@ export class Logger {
     level: LogLevel,
     message: string,
     context?: Record<string, any>,
-    error?: Error,
+    error?: Error
   ): void {
     if (level < this.level) return;
 
@@ -117,7 +117,7 @@ export class Logger {
     if (level === undefined) {
       return [...this.entries];
     }
-    return this.entries.filter((entry) => entry.level >= level);
+    return this.entries.filter(entry => entry.level >= level);
   }
 
   clearLogs(): void {
@@ -130,4 +130,4 @@ export class Logger {
 }
 
 // Default logger instance
-export const logger = Logger.create("OptiMindAI");
+export const logger = Logger.create('OptiMindAI');

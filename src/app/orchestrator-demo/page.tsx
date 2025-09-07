@@ -4,19 +4,13 @@
  * This page provides a web interface to demonstrate the enhanced
  * agent coordination system with real-time monitoring.
  */
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface OrchestratorStatus {
   orchestrator: {
@@ -48,24 +42,24 @@ export default function OrchestratorDemoPage() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch("/api/orchestrator/demo");
+      const response = await fetch('/api/orchestrator/demo');
       const data = await response.json();
       setStatus(data);
     } catch (err) {
-      setError("Failed to fetch orchestrator status");
+      setError('Failed to fetch orchestrator status');
     }
   };
 
   const startDemo = async () => {
     setLoading(true);
     setError(null);
-    addLog("Starting orchestrator demo...");
+    addLog('Starting orchestrator demo...');
 
     try {
-      const response = await fetch("/api/orchestrator/demo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "start" }),
+      const response = await fetch('/api/orchestrator/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'start' }),
       });
 
       const result: DemoResponse = await response.json();
@@ -84,12 +78,12 @@ export default function OrchestratorDemoPage() {
           clearInterval(interval);
         }, 30000);
       } else {
-        setError(result.error || "Failed to start demo");
-        addLog(`❌ ${result.error || "Failed to start demo"}`);
+        setError(result.error || 'Failed to start demo');
+        addLog(`❌ ${result.error || 'Failed to start demo'}`);
       }
     } catch (err) {
-      setError("Failed to start demo");
-      addLog("❌ Failed to start demo");
+      setError('Failed to start demo');
+      addLog('❌ Failed to start demo');
     } finally {
       setLoading(false);
     }
@@ -98,13 +92,13 @@ export default function OrchestratorDemoPage() {
   const stopDemo = async () => {
     setLoading(true);
     setError(null);
-    addLog("Stopping orchestrator demo...");
+    addLog('Stopping orchestrator demo...');
 
     try {
-      const response = await fetch("/api/orchestrator/demo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "stop" }),
+      const response = await fetch('/api/orchestrator/demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'stop' }),
       });
 
       const result: DemoResponse = await response.json();
@@ -113,12 +107,12 @@ export default function OrchestratorDemoPage() {
         setDemoRunning(false);
         addLog(`✅ ${result.message}`);
       } else {
-        setError(result.error || "Failed to stop demo");
-        addLog(`❌ ${result.error || "Failed to stop demo"}`);
+        setError(result.error || 'Failed to stop demo');
+        addLog(`❌ ${result.error || 'Failed to stop demo'}`);
       }
     } catch (err) {
-      setError("Failed to stop demo");
-      addLog("❌ Failed to stop demo");
+      setError('Failed to stop demo');
+      addLog('❌ Failed to stop demo');
     } finally {
       setLoading(false);
     }
@@ -126,7 +120,7 @@ export default function OrchestratorDemoPage() {
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setLogs((prev) => [...prev, `[${timestamp}] ${message}`]);
+    setLogs(prev => [...prev, `[${timestamp}] ${message}`]);
   };
 
   const clearLogs = () => {
@@ -137,9 +131,7 @@ export default function OrchestratorDemoPage() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold">Agent Orchestrator Demo</h1>
-        <p className="text-lg text-muted-foreground">
-          Enhanced AI Agent Coordination System
-        </p>
+        <p className="text-lg text-muted-foreground">Enhanced AI Agent Coordination System</p>
       </div>
 
       {/* Status Overview */}
@@ -148,19 +140,11 @@ export default function OrchestratorDemoPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               System Status
-              <Badge
-                variant={
-                  status.orchestrator.status === "running"
-                    ? "default"
-                    : "secondary"
-                }
-              >
+              <Badge variant={status.orchestrator.status === 'running' ? 'default' : 'secondary'}>
                 {status.orchestrator.status}
               </Badge>
             </CardTitle>
-            <CardDescription>
-              Version {status.orchestrator.version}
-            </CardDescription>
+            <CardDescription>Version {status.orchestrator.version}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -203,9 +187,7 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>Demo Controls</CardTitle>
-          <CardDescription>
-            Start and stop the orchestrator demonstration
-          </CardDescription>
+          <CardDescription>Start and stop the orchestrator demonstration</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4 items-center">
@@ -214,7 +196,7 @@ export default function OrchestratorDemoPage() {
               disabled={loading || demoRunning}
               className="flex items-center gap-2"
             >
-              {loading ? "Starting..." : "Start Demo"}
+              {loading ? 'Starting...' : 'Start Demo'}
             </Button>
             <Button
               onClick={stopDemo}
@@ -222,13 +204,9 @@ export default function OrchestratorDemoPage() {
               variant="outline"
               className="flex items-center gap-2"
             >
-              {loading ? "Stopping..." : "Stop Demo"}
+              {loading ? 'Stopping...' : 'Stop Demo'}
             </Button>
-            <Button
-              onClick={clearLogs}
-              variant="ghost"
-              disabled={logs.length === 0}
-            >
+            <Button onClick={clearLogs} variant="ghost" disabled={logs.length === 0}>
               Clear Logs
             </Button>
           </div>
@@ -246,16 +224,12 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>Activity Log</CardTitle>
-          <CardDescription>
-            Real-time system activity and events
-          </CardDescription>
+          <CardDescription>Real-time system activity and events</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="bg-muted p-4 rounded-md h-64 overflow-y-auto font-mono text-sm">
             {logs.length === 0 ? (
-              <p className="text-muted-foreground">
-                No activity yet. Start the demo to see logs.
-              </p>
+              <p className="text-muted-foreground">No activity yet. Start the demo to see logs.</p>
             ) : (
               logs.map((log, index) => (
                 <div key={index} className="mb-1">
@@ -271,9 +245,7 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>System Information</CardTitle>
-          <CardDescription>
-            Technical details about the orchestrator system
-          </CardDescription>
+          <CardDescription>Technical details about the orchestrator system</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">

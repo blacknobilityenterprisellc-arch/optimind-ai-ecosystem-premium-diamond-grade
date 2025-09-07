@@ -4,27 +4,27 @@
  * This script provides a quick demo of the enhanced agent coordination system
  * with real-time monitoring and interactive features.
  */
-import { AgentOrchestrator } from "./agent-orchestrator";
+import { AgentOrchestrator } from './agent-orchestrator';
 
 // Demo agents
 const demoAgents = [
   {
-    id: "text-agent",
-    name: "Text Generation Agent",
-    type: "primary" as const,
-    capabilities: ["text-generation", "content-creation"],
+    id: 'text-agent',
+    name: 'Text Generation Agent',
+    type: 'primary' as const,
+    capabilities: ['text-generation', 'content-creation'],
   },
   {
-    id: "analysis-agent",
-    name: "Data Analysis Agent",
-    type: "specialized" as const,
-    capabilities: ["data-analysis", "pattern-recognition"],
+    id: 'analysis-agent',
+    name: 'Data Analysis Agent',
+    type: 'specialized' as const,
+    capabilities: ['data-analysis', 'pattern-recognition'],
   },
   {
-    id: "search-agent",
-    name: "Web Search Agent",
-    type: "specialized" as const,
-    capabilities: ["web-search", "research"],
+    id: 'search-agent',
+    name: 'Web Search Agent',
+    type: 'specialized' as const,
+    capabilities: ['web-search', 'research'],
   },
 ];
 
@@ -34,7 +34,7 @@ const demoConfig = {
   taskTimeout: 15000,
   maxRetries: 2,
   loadBalancer: {
-    strategy: "weighted" as const,
+    strategy: 'weighted' as const,
     healthCheckInterval: 5000,
   },
   enableFaultTolerance: true,
@@ -50,18 +50,18 @@ export class OrchestratorDemo {
   }
 
   async start(): Promise<void> {
-    console.log("🎭 Starting Agent Orchestrator Demo");
-    console.log("===================================");
+    console.log('🎭 Starting Agent Orchestrator Demo');
+    console.log('===================================');
 
     try {
       // Initialize orchestrator
       await this.orchestrator.initialize(demoAgents);
-      console.log("✅ Demo initialized with", demoAgents.length, "agents");
+      console.log('✅ Demo initialized with', demoAgents.length, 'agents');
 
       // Start orchestrator
       this.orchestrator.start();
       this.isRunning = true;
-      console.log("✅ Orchestrator started");
+      console.log('✅ Orchestrator started');
 
       // Start monitoring
       this.startMonitoring();
@@ -69,7 +69,7 @@ export class OrchestratorDemo {
       // Run demo scenarios
       await this.runDemoScenarios();
     } catch (error) {
-      console.error("❌ Demo failed:", error);
+      console.error('❌ Demo failed:', error);
     }
   }
 
@@ -78,13 +78,13 @@ export class OrchestratorDemo {
       this.orchestrator.stop();
       this.orchestrator.destroy();
       this.isRunning = false;
-      console.log("🛑 Demo stopped");
+      console.log('🛑 Demo stopped');
     }
   }
 
   private async runDemoScenarios(): Promise<void> {
-    console.log("\n🎬 Running Demo Scenarios");
-    console.log("========================");
+    console.log('\n🎬 Running Demo Scenarios');
+    console.log('========================');
 
     // Scenario 1: Basic task execution
     await this.scenario1_BasicTasks();
@@ -98,31 +98,31 @@ export class OrchestratorDemo {
     // Scenario 4: Performance under load
     await this.scenario4_PerformanceTest();
 
-    console.log("\n🎊 All demo scenarios completed!");
+    console.log('\n🎊 All demo scenarios completed!');
   }
 
   private async scenario1_BasicTasks(): Promise<void> {
-    console.log("\n📝 Scenario 1: Basic Task Execution");
-    console.log("=====================================");
+    console.log('\n📝 Scenario 1: Basic Task Execution');
+    console.log('=====================================');
 
     const tasks = [
       {
-        type: "text-generation",
-        priority: "medium" as const,
-        capabilities: ["text-generation"],
-        payload: { prompt: "Hello, world!" },
+        type: 'text-generation',
+        priority: 'medium' as const,
+        capabilities: ['text-generation'],
+        payload: { prompt: 'Hello, world!' },
       },
       {
-        type: "data-analysis",
-        priority: "medium" as const,
-        capabilities: ["data-analysis"],
+        type: 'data-analysis',
+        priority: 'medium' as const,
+        capabilities: ['data-analysis'],
         payload: { data: [1, 2, 3, 4, 5] },
       },
       {
-        type: "web-search",
-        priority: "medium" as const,
-        capabilities: ["web-search"],
-        payload: { query: "AI technology" },
+        type: 'web-search',
+        priority: 'medium' as const,
+        capabilities: ['web-search'],
+        payload: { query: 'AI technology' },
       },
     ];
 
@@ -136,18 +136,18 @@ export class OrchestratorDemo {
 
     // Wait for completion
     await this.waitForTasks(taskIds);
-    console.log("✅ Scenario 1 completed");
+    console.log('✅ Scenario 1 completed');
   }
 
   private async scenario2_LoadBalancing(): Promise<void> {
-    console.log("\n⚖️ Scenario 2: Load Balancing Demo");
-    console.log("=================================");
+    console.log('\n⚖️ Scenario 2: Load Balancing Demo');
+    console.log('=================================');
 
     // Submit multiple tasks of the same type to test load balancing
     const tasks = Array.from({ length: 6 }, (_, i) => ({
-      type: "text-generation" as const,
-      priority: "medium" as const,
-      capabilities: ["text-generation"],
+      type: 'text-generation' as const,
+      priority: 'medium' as const,
+      capabilities: ['text-generation'],
       payload: { prompt: `Test prompt ${i + 1}` },
     }));
 
@@ -160,30 +160,30 @@ export class OrchestratorDemo {
     }
 
     // Monitor load balancing in action
-    console.log("📊 Monitoring load balancing...");
+    console.log('📊 Monitoring load balancing...');
     await this.waitForTasks(taskIds);
 
     // Show load balancer statistics
     const stats = this.orchestrator.getStatus().loadBalancerStats;
-    console.log("📈 Load Balancer Stats:");
+    console.log('📈 Load Balancer Stats:');
     console.log(`   Total Requests: ${stats.totalRequests}`);
     console.log(`   Successful: ${stats.successfulRequests}`);
     console.log(`   Failed: ${stats.failedRequests}`);
     console.log(`   Avg Response Time: ${stats.averageResponseTime}ms`);
 
-    console.log("✅ Scenario 2 completed");
+    console.log('✅ Scenario 2 completed');
   }
 
   private async scenario3_FaultTolerance(): Promise<void> {
-    console.log("\n🛡️ Scenario 3: Fault Tolerance");
-    console.log("===============================");
+    console.log('\n🛡️ Scenario 3: Fault Tolerance');
+    console.log('===============================');
 
     // Submit a task that will fail
     const failingTask = {
-      type: "invalid-task",
-      priority: "medium" as const,
-      capabilities: ["invalid-capability"],
-      payload: { test: "data" },
+      type: 'invalid-task',
+      priority: 'medium' as const,
+      capabilities: ['invalid-capability'],
+      payload: { test: 'data' },
     };
 
     const failingTaskId = await this.orchestrator.submitTask(failingTask);
@@ -191,10 +191,10 @@ export class OrchestratorDemo {
 
     // Submit a valid task after the failing one
     const validTask = {
-      type: "text-generation",
-      priority: "medium" as const,
-      capabilities: ["text-generation"],
-      payload: { prompt: "This should work" },
+      type: 'text-generation',
+      priority: 'medium' as const,
+      capabilities: ['text-generation'],
+      payload: { prompt: 'This should work' },
     };
 
     const validTaskId = await this.orchestrator.submitTask(validTask);
@@ -207,29 +207,25 @@ export class OrchestratorDemo {
     const failingResult = await this.orchestrator.getTaskResult(failingTaskId);
     const validResult = await this.orchestrator.getTaskResult(validTaskId);
 
-    console.log("📊 Results:");
+    console.log('📊 Results:');
     console.log(
-      `   Failing task: ${failingResult?.success ? "❌ Unexpected success" : "✅ Failed as expected"}`,
+      `   Failing task: ${failingResult?.success ? '❌ Unexpected success' : '✅ Failed as expected'}`
     );
-    console.log(
-      `   Valid task: ${validResult?.success ? "✅ Success" : "❌ Unexpected failure"}`,
-    );
+    console.log(`   Valid task: ${validResult?.success ? '✅ Success' : '❌ Unexpected failure'}`);
 
-    console.log("✅ Scenario 3 completed");
+    console.log('✅ Scenario 3 completed');
   }
 
   private async scenario4_PerformanceTest(): Promise<void> {
-    console.log("\n⚡ Scenario 4: Performance Under Load");
-    console.log("====================================");
+    console.log('\n⚡ Scenario 4: Performance Under Load');
+    console.log('====================================');
 
     // Submit many tasks to test performance
     const taskCount = 10;
     const tasks = Array.from({ length: taskCount }, (_, i) => ({
-      type: ["text-generation", "data-analysis", "web-search"][i % 3] as const,
-      priority: ["high", "medium", "low"][i % 3] as const,
-      capabilities: [["text-generation"], ["data-analysis"], ["web-search"]][
-        i % 3
-      ],
+      type: ['text-generation', 'data-analysis', 'web-search'][i % 3] as const,
+      priority: ['high', 'medium', 'low'][i % 3] as const,
+      capabilities: [['text-generation'], ['data-analysis'], ['web-search']][i % 3],
       payload: { prompt: `Performance test ${i + 1}` },
     }));
 
@@ -243,23 +239,21 @@ export class OrchestratorDemo {
       taskIds.push(taskId);
     }
 
-    console.log("⏳ Waiting for completion...");
+    console.log('⏳ Waiting for completion...');
     await this.waitForTasks(taskIds);
 
     const totalTime = Date.now() - startTime;
     const stats = this.orchestrator.getStatus().loadBalancerStats;
 
-    console.log("📊 Performance Results:");
+    console.log('📊 Performance Results:');
     console.log(`   Total Time: ${totalTime}ms`);
+    console.log(`   Tasks/Second: ${(taskCount / (totalTime / 1000)).toFixed(2)}`);
     console.log(
-      `   Tasks/Second: ${(taskCount / (totalTime / 1000)).toFixed(2)}`,
-    );
-    console.log(
-      `   Success Rate: ${((stats.successfulRequests / stats.totalRequests) * 100).toFixed(2)}%`,
+      `   Success Rate: ${((stats.successfulRequests / stats.totalRequests) * 100).toFixed(2)}%`
     );
     console.log(`   Avg Response Time: ${stats.averageResponseTime}ms`);
 
-    console.log("✅ Scenario 4 completed");
+    console.log('✅ Scenario 4 completed');
   }
 
   private async waitForTasks(taskIds: string[]): Promise<void> {
@@ -267,7 +261,7 @@ export class OrchestratorDemo {
     const startTime = Date.now();
 
     while (Date.now() - startTime < maxWaitTime) {
-      const completedCount = taskIds.filter(async (taskId) => {
+      const completedCount = taskIds.filter(async taskId => {
         const result = await this.orchestrator.getTaskResult(taskId);
         return result !== null;
       }).length;
@@ -276,7 +270,7 @@ export class OrchestratorDemo {
         break;
       }
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
 
@@ -285,7 +279,7 @@ export class OrchestratorDemo {
       if (this.isRunning) {
         const status = this.orchestrator.getStatus();
         console.log(
-          `📊 Status: ${status.runningTasks} running, ${status.queueLength} queued, ${status.completedTasks} completed`,
+          `📊 Status: ${status.runningTasks} running, ${status.queueLength} queued, ${status.completedTasks} completed`
         );
       }
     }, 5000);
@@ -298,7 +292,7 @@ export async function quickDemo(): Promise<void> {
   await demo.start();
 
   // Let it run for a bit
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  await new Promise(resolve => setTimeout(resolve, 10000));
 
   await demo.stop();
 }

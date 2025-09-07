@@ -5,9 +5,9 @@
  * to provide seamless self-healing capabilities
  */
 
-import { globalErrorHandler } from "./global-error-handler";
-import { premiumDiamondGradeScanner } from "./premium-diamond-grade-scanner";
-import { glmOrchestrator } from "./glm-orchestrator";
+import { globalErrorHandler } from './global-error-handler';
+import { premiumDiamondGradeScanner } from './premium-diamond-grade-scanner';
+import { glmOrchestrator } from './glm-orchestrator';
 
 export interface SelfHealingConfig {
   enableAutoDetection: boolean;
@@ -64,9 +64,9 @@ export class SelfHealingIntegration {
       }
 
       this.isInitialized = true;
-      console.log("Self-Healing Integration initialized successfully");
+      console.log('Self-Healing Integration initialized successfully');
     } catch (error) {
-      console.error("Failed to initialize Self-Healing Integration:", error);
+      console.error('Failed to initialize Self-Healing Integration:', error);
       throw error;
     }
   }
@@ -76,10 +76,10 @@ export class SelfHealingIntegration {
    */
   start(): void {
     if (!this.isInitialized) {
-      throw new Error("Self-Healing Integration not initialized");
+      throw new Error('Self-Healing Integration not initialized');
     }
 
-    console.log("Self-Healing Integration started");
+    console.log('Self-Healing Integration started');
   }
 
   /**
@@ -88,7 +88,7 @@ export class SelfHealingIntegration {
   stop(): void {
     premiumDiamondGradeScanner.stop();
     globalErrorHandler.stopMonitoring();
-    console.log("Self-Healing Integration stopped");
+    console.log('Self-Healing Integration stopped');
   }
 
   /**
@@ -96,7 +96,7 @@ export class SelfHealingIntegration {
    */
   async triggerHealingCycle(issue?: any): Promise<HealingReport> {
     if (!this.isInitialized) {
-      throw new Error("Self-Healing Integration not initialized");
+      throw new Error('Self-Healing Integration not initialized');
     }
 
     const healingId = this.generateHealingId();
@@ -109,10 +109,10 @@ export class SelfHealingIntegration {
       if (!issue) {
         issue = {
           id: `system_check_${Date.now()}`,
-          type: "system-health-check",
-          severity: "high" as const,
-          component: "system",
-          description: "Comprehensive system health check initiated",
+          type: 'system-health-check',
+          severity: 'high' as const,
+          component: 'system',
+          description: 'Comprehensive system health check initiated',
           detectedAt: new Date(),
           autoFixable: true,
           fixApplied: false,
@@ -128,12 +128,12 @@ export class SelfHealingIntegration {
         timestamp: new Date(),
         initialIssues: scanResult.issues.length,
         issuesDetected: scanResult.issues.length,
-        issuesFixed: scanResult.issues.filter((i) => i.fixApplied).length,
-        issuesRemaining: scanResult.issues.filter((i) => !i.fixApplied).length,
+        issuesFixed: scanResult.issues.filter(i => i.fixApplied).length,
+        issuesRemaining: scanResult.issues.filter(i => !i.fixApplied).length,
         scanScore: scanResult.score,
         scanGrade: scanResult.grade,
         healingTime: Date.now() - startTime,
-        success: scanResult.status === "completed",
+        success: scanResult.status === 'completed',
         summary: this.generateHealingSummary(scanResult),
       };
 
@@ -156,14 +156,14 @@ export class SelfHealingIntegration {
         issuesFixed: 0,
         issuesRemaining: 0,
         scanScore: 0,
-        scanGrade: "F",
+        scanGrade: 'F',
         healingTime: Date.now() - startTime,
         success: false,
-        summary: `Self-Healing Cycle failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        summary: `Self-Healing Cycle failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       };
 
       this.healingHistory.push(healingReport);
-      console.error("❌ Self-Healing Cycle failed:", error);
+      console.error('❌ Self-Healing Cycle failed:', error);
 
       return healingReport;
     }
@@ -172,11 +172,8 @@ export class SelfHealingIntegration {
   /**
    * Handle system errors automatically
    */
-  async handleSystemError(
-    error: Error,
-    context: any = {},
-  ): Promise<HealingReport> {
-    console.log("🚨 Handling System Error:", error.message);
+  async handleSystemError(error: Error, context: any = {}): Promise<HealingReport> {
+    console.log('🚨 Handling System Error:', error.message);
 
     // Report to global error handler
     globalErrorHandler.handleError(error, context);
@@ -184,9 +181,9 @@ export class SelfHealingIntegration {
     // Trigger healing cycle
     const healingReport = await this.triggerHealingCycle({
       id: `error_${Date.now()}`,
-      type: "system-error",
-      severity: "high" as const,
-      component: context.component || "system",
+      type: 'system-error',
+      severity: 'high' as const,
+      component: context.component || 'system',
       description: `System error: ${error.message}`,
       detectedAt: new Date(),
       autoFixable: true,
@@ -200,21 +197,18 @@ export class SelfHealingIntegration {
    * Monitor system health proactively
    */
   async monitorSystemHealth(): Promise<HealingReport> {
-    console.log("🔍 Proactive System Health Monitoring");
+    console.log('🔍 Proactive System Health Monitoring');
 
     // Use GLM orchestrator to analyze system health
     const healthStatus = await glmOrchestrator.analyzeSystemHealth();
 
     // Check if system health is degraded
-    if (
-      healthStatus.overall === "poor" ||
-      healthStatus.overall === "critical"
-    ) {
+    if (healthStatus.overall === 'poor' || healthStatus.overall === 'critical') {
       const issue = {
         id: `health_degraded_${Date.now()}`,
-        type: "system-health-degraded",
-        severity: "critical" as const,
-        component: "system",
+        type: 'system-health-degraded',
+        severity: 'critical' as const,
+        component: 'system',
         description: `System health degraded to ${healthStatus.overall}`,
         detectedAt: new Date(),
         autoFixable: true,
@@ -233,10 +227,10 @@ export class SelfHealingIntegration {
       issuesFixed: 0,
       issuesRemaining: 0,
       scanScore: 95,
-      scanGrade: "A",
+      scanGrade: 'A',
       healingTime: 0,
       success: true,
-      summary: "System health is optimal - no issues detected",
+      summary: 'System health is optimal - no issues detected',
     };
 
     this.healingHistory.push(healingReport);
@@ -266,7 +260,7 @@ export class SelfHealingIntegration {
       errorHandler: errorHandlerStatus,
       healingHistory: {
         total: this.healingHistory.length,
-        successful: this.healingHistory.filter((h) => h.success).length,
+        successful: this.healingHistory.filter(h => h.success).length,
         averageScore:
           this.healingHistory.length > 0
             ? this.healingHistory.reduce((sum, h) => sum + h.scanScore, 0) /
@@ -289,9 +283,9 @@ export class SelfHealingIntegration {
   private generateHealingSummary(scanResult: any): string {
     const { grade, score, summary, issues, fixesApplied } = scanResult;
 
-    if (grade === "A+" || grade === "A") {
+    if (grade === 'A+' || grade === 'A') {
       return `Excellent system health (${grade}, ${score}/100). All checks passed successfully.`;
-    } else if (grade === "B" || grade === "C") {
+    } else if (grade === 'B' || grade === 'C') {
       return `Good system health (${grade}, ${score}/100). ${fixesApplied} issues fixed out of ${issues.length} detected.`;
     } else {
       return `System needs attention (${grade}, ${score}/100). ${fixesApplied} issues fixed, ${issues.length - fixesApplied} remaining.`;
@@ -302,13 +296,13 @@ export class SelfHealingIntegration {
    * Send notifications
    */
   private sendNotifications(report: HealingReport): void {
-    console.log("📧 Sending healing notifications:", report.summary);
+    console.log('📧 Sending healing notifications:', report.summary);
 
-    this.notificationCallbacks.forEach((callback) => {
+    this.notificationCallbacks.forEach(callback => {
       try {
         callback(report);
       } catch (error) {
-        console.error("Notification callback failed:", error);
+        console.error('Notification callback failed:', error);
       }
     });
   }
@@ -329,7 +323,7 @@ export class SelfHealingIntegration {
     this.notificationCallbacks = [];
     globalErrorHandler.destroy();
     premiumDiamondGradeScanner.destroy();
-    console.log("Self-Healing Integration destroyed");
+    console.log('Self-Healing Integration destroyed');
   }
 }
 

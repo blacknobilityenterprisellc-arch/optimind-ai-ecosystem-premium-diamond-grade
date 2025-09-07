@@ -5,13 +5,13 @@
  * Provides automatic error detection, healing cycles, and system monitoring
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { selfHealingIntegration } from "@/lib/self-healing-integration";
+import { NextRequest, NextResponse } from 'next/server';
+import { selfHealingIntegration } from '@/lib/self-healing-integration';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const action = searchParams.get("action") || "status";
+    const action = searchParams.get('action') || 'status';
 
     // Initialize self-healing integration if not already initialized
     if (!selfHealingIntegration.getSystemStatus().selfHealing.isInitialized) {
@@ -19,22 +19,22 @@ export async function GET(request: NextRequest) {
     }
 
     switch (action) {
-      case "status":
+      case 'status':
         const systemStatus = selfHealingIntegration.getSystemStatus();
         return NextResponse.json({
           success: true,
-          action: "status",
-          system: "Self-Healing Integration",
+          action: 'status',
+          system: 'Self-Healing Integration',
           data: systemStatus,
           timestamp: new Date().toISOString(),
         });
 
-      case "history":
+      case 'history':
         const healingHistory = selfHealingIntegration.getHealingHistory(20);
         return NextResponse.json({
           success: true,
-          action: "history",
-          system: "Self-Healing Integration",
+          action: 'history',
+          system: 'Self-Healing Integration',
           data: {
             healingReports: healingHistory,
             totalReports: healingHistory.length,
@@ -42,12 +42,12 @@ export async function GET(request: NextRequest) {
           timestamp: new Date().toISOString(),
         });
 
-      case "monitor-health":
+      case 'monitor-health':
         const healthReport = await selfHealingIntegration.monitorSystemHealth();
         return NextResponse.json({
           success: true,
-          action: "monitor-health",
-          system: "Self-Healing Integration",
+          action: 'monitor-health',
+          system: 'Self-Healing Integration',
           data: healthReport,
           timestamp: new Date().toISOString(),
         });
@@ -56,23 +56,23 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: "Unknown action",
-            availableActions: ["status", "history", "monitor-health"],
+            error: 'Unknown action',
+            availableActions: ['status', 'history', 'monitor-health'],
             timestamp: new Date().toISOString(),
           },
-          { status: 400 },
+          { status: 400 }
         );
     }
   } catch (error) {
-    console.error("Self-Healing API Error:", error);
+    console.error('Self-Healing API Error:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-        system: "Self-Healing Integration",
+        error: error instanceof Error ? error.message : 'Unknown error',
+        system: 'Self-Healing Integration',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -88,76 +88,74 @@ export async function POST(request: NextRequest) {
     }
 
     switch (action) {
-      case "trigger-healing":
-        const healingReport =
-          await selfHealingIntegration.triggerHealingCycle(issue);
+      case 'trigger-healing':
+        const healingReport = await selfHealingIntegration.triggerHealingCycle(issue);
         return NextResponse.json({
           success: true,
-          action: "trigger-healing",
-          system: "Self-Healing Integration",
+          action: 'trigger-healing',
+          system: 'Self-Healing Integration',
           data: healingReport,
           timestamp: new Date().toISOString(),
         });
 
-      case "handle-error":
+      case 'handle-error':
         if (!error) {
           return NextResponse.json(
             {
               success: false,
-              error: "Error data is required",
+              error: 'Error data is required',
               timestamp: new Date().toISOString(),
             },
-            { status: 400 },
+            { status: 400 }
           );
         }
 
         const errorReport = await selfHealingIntegration.handleSystemError(
-          new Error(error.message || "Unknown error"),
-          error.context || {},
+          new Error(error.message || 'Unknown error'),
+          error.context || {}
         );
         return NextResponse.json({
           success: true,
-          action: "handle-error",
-          system: "Self-Healing Integration",
+          action: 'handle-error',
+          system: 'Self-Healing Integration',
           data: errorReport,
           timestamp: new Date().toISOString(),
         });
 
-      case "start-system":
+      case 'start-system':
         selfHealingIntegration.start();
         return NextResponse.json({
           success: true,
-          action: "start-system",
-          system: "Self-Healing Integration",
-          message: "Self-Healing system started successfully",
+          action: 'start-system',
+          system: 'Self-Healing Integration',
+          message: 'Self-Healing system started successfully',
           timestamp: new Date().toISOString(),
         });
 
-      case "stop-system":
+      case 'stop-system':
         selfHealingIntegration.stop();
         return NextResponse.json({
           success: true,
-          action: "stop-system",
-          system: "Self-Healing Integration",
-          message: "Self-Healing system stopped successfully",
+          action: 'stop-system',
+          system: 'Self-Healing Integration',
+          message: 'Self-Healing system stopped successfully',
           timestamp: new Date().toISOString(),
         });
 
-      case "comprehensive-healing":
+      case 'comprehensive-healing':
         // Simulate a critical system error to trigger comprehensive healing
         const criticalError = new Error(
-          "Critical system failure detected - requiring comprehensive healing",
+          'Critical system failure detected - requiring comprehensive healing'
         );
-        const comprehensiveReport =
-          await selfHealingIntegration.handleSystemError(criticalError, {
-            component: "system-core",
-            operation: "comprehensive-analysis",
-            severity: "critical",
-          });
+        const comprehensiveReport = await selfHealingIntegration.handleSystemError(criticalError, {
+          component: 'system-core',
+          operation: 'comprehensive-analysis',
+          severity: 'critical',
+        });
         return NextResponse.json({
           success: true,
-          action: "comprehensive-healing",
-          system: "Self-Healing Integration",
+          action: 'comprehensive-healing',
+          system: 'Self-Healing Integration',
           data: comprehensiveReport,
           timestamp: new Date().toISOString(),
         });
@@ -166,29 +164,29 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           {
             success: false,
-            error: "Unknown action",
+            error: 'Unknown action',
             availableActions: [
-              "trigger-healing",
-              "handle-error",
-              "start-system",
-              "stop-system",
-              "comprehensive-healing",
+              'trigger-healing',
+              'handle-error',
+              'start-system',
+              'stop-system',
+              'comprehensive-healing',
             ],
             timestamp: new Date().toISOString(),
           },
-          { status: 400 },
+          { status: 400 }
         );
     }
   } catch (error) {
-    console.error("Self-Healing API Error:", error);
+    console.error('Self-Healing API Error:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-        system: "Self-Healing Integration",
+        error: error instanceof Error ? error.message : 'Unknown error',
+        system: 'Self-Healing Integration',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

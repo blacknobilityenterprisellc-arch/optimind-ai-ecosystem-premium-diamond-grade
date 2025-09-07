@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { toast } from "sonner";
+import { useState, useCallback } from 'react';
+import { toast } from 'sonner';
 
 interface ApiCallOptions {
   onSuccess?: (data: any) => void;
@@ -26,26 +26,22 @@ export function useApi() {
   });
 
   const callApi = useCallback(
-    async (
-      url: string,
-      options: RequestInit = {},
-      apiOptions: ApiCallOptions = {},
-    ) => {
+    async (url: string, options: RequestInit = {}, apiOptions: ApiCallOptions = {}) => {
       const {
         onSuccess,
         onError,
         showSuccessToast = false,
         showErrorToast = true,
-        successMessage = "Operation completed successfully",
-        errorMessage = "An error occurred",
+        successMessage = 'Operation completed successfully',
+        errorMessage = 'An error occurred',
       } = apiOptions;
 
-      setState((prev) => ({ ...prev, loading: true, error: null }));
+      setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
         const response = await fetch(url, {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             ...options.headers,
           },
           ...options,
@@ -59,7 +55,7 @@ export function useApi() {
 
         const data = await response.json();
 
-        setState((prev) => ({ ...prev, data, loading: false, error: null }));
+        setState(prev => ({ ...prev, data, loading: false, error: null }));
 
         if (showSuccessToast) {
           toast.success(successMessage);
@@ -72,7 +68,7 @@ export function useApi() {
         return data;
       } catch (error) {
         const err = error as Error;
-        setState((prev) => ({ ...prev, loading: false, error: err }));
+        setState(prev => ({ ...prev, loading: false, error: err }));
 
         if (showErrorToast) {
           toast.error(err.message || errorMessage);
@@ -85,7 +81,7 @@ export function useApi() {
         throw err;
       }
     },
-    [],
+    []
   );
 
   const reset = useCallback(() => {
@@ -111,26 +107,22 @@ export function useLazyApi() {
   });
 
   const execute = useCallback(
-    async (
-      url: string,
-      options: RequestInit = {},
-      apiOptions: ApiCallOptions = {},
-    ) => {
+    async (url: string, options: RequestInit = {}, apiOptions: ApiCallOptions = {}) => {
       const {
         onSuccess,
         onError,
         showSuccessToast = false,
         showErrorToast = true,
-        successMessage = "Operation completed successfully",
-        errorMessage = "An error occurred",
+        successMessage = 'Operation completed successfully',
+        errorMessage = 'An error occurred',
       } = apiOptions;
 
-      setState((prev) => ({ ...prev, loading: true, error: null }));
+      setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
         const response = await fetch(url, {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             ...options.headers,
           },
           ...options,
@@ -144,7 +136,7 @@ export function useLazyApi() {
 
         const data = await response.json();
 
-        setState((prev) => ({ ...prev, data, loading: false, error: null }));
+        setState(prev => ({ ...prev, data, loading: false, error: null }));
 
         if (showSuccessToast) {
           toast.success(successMessage);
@@ -157,7 +149,7 @@ export function useLazyApi() {
         return data;
       } catch (error) {
         const err = error as Error;
-        setState((prev) => ({ ...prev, loading: false, error: err }));
+        setState(prev => ({ ...prev, loading: false, error: err }));
 
         if (showErrorToast) {
           toast.error(err.message || errorMessage);
@@ -170,7 +162,7 @@ export function useLazyApi() {
         throw err;
       }
     },
-    [],
+    []
   );
 
   const reset = useCallback(() => {

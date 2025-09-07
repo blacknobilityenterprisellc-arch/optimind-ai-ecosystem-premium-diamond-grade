@@ -1,9 +1,5 @@
 // src/lib/user-analytics.ts - Premium Diamond-Grade User Analytics
-export function trackUserActivity(
-  userId: string,
-  activity: string,
-  data?: any,
-) {
+export function trackUserActivity(userId: string, activity: string, data?: any) {
   console.log(`👤 Tracking user activity: ${userId} - ${activity}`);
 
   // Premium user activity tracking
@@ -23,8 +19,8 @@ export function getUserAnalytics(userId: string) {
   // Generate premium user analytics report
   return {
     userId,
-    report: "premium-diamond-grade",
-    activities: "all",
-    insights: "comprehensive",
+    report: 'premium-diamond-grade',
+    activities: 'all',
+    insights: 'comprehensive',
   };
 }

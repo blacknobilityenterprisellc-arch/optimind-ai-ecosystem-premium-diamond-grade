@@ -3,19 +3,13 @@
  * Provides comprehensive management interface for developer access control
  */
 
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Table,
   TableBody,
@@ -23,30 +17,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  AlertTriangle,
-  Key,
-  Shield,
-  Activity,
-  Users,
-  TrendingUp,
-} from "lucide-react";
+} from '@/components/ui/table';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AlertTriangle, Key, Shield, Activity, Users, TrendingUp } from 'lucide-react';
 
 interface DeveloperAccessKey {
   id: string;
   keyId: string;
   userId: string;
-  keyType: "EXCLUSIVE" | "STANDARD" | "TEMPORARY";
-  accessLevel:
-    | "PUBLIC"
-    | "INTERNAL"
-    | "RESTRICTED"
-    | "CONFIDENTIAL"
-    | "SECRET"
-    | "TOP_SECRET";
+  keyType: 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY';
+  accessLevel: 'PUBLIC' | 'INTERNAL' | 'RESTRICTED' | 'CONFIDENTIAL' | 'SECRET' | 'TOP_SECRET';
   permissions: string[];
   allowedEndpoints: string[];
   rateLimit: {
@@ -58,7 +39,7 @@ interface DeveloperAccessKey {
   isActive: boolean;
   metadata: {
     purpose?: string;
-    environment?: "development" | "staging" | "production";
+    environment?: 'development' | 'staging' | 'production';
     createdBy?: string;
   };
   createdAt: string;
@@ -70,20 +51,20 @@ interface DeveloperAccessEvent {
   keyId: string;
   userId: string;
   eventType:
-    | "KEY_GENERATED"
-    | "KEY_USED"
-    | "KEY_REVOKED"
-    | "KEY_EXPIRED"
-    | "ACCESS_GRANTED"
-    | "ACCESS_DENIED"
-    | "QUOTA_EXCEEDED";
+    | 'KEY_GENERATED'
+    | 'KEY_USED'
+    | 'KEY_REVOKED'
+    | 'KEY_EXPIRED'
+    | 'ACCESS_GRANTED'
+    | 'ACCESS_DENIED'
+    | 'QUOTA_EXCEEDED';
   endpoint?: string;
   method?: string;
   ipAddress: string;
   userAgent: string;
   details: Record<string, any>;
   timestamp: string;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
 interface DeveloperAccessMetrics {
@@ -121,28 +102,26 @@ export function DeveloperAccessDashboard() {
       setError(null);
 
       // Load metrics
-      const metricsResponse = await fetch("/api/developer-access/metrics");
+      const metricsResponse = await fetch('/api/developer-access/metrics');
       const metricsData = await metricsResponse.json();
 
       if (!metricsData.success) {
-        throw new Error(metricsData.error || "Failed to load metrics");
+        throw new Error(metricsData.error || 'Failed to load metrics');
       }
 
       setMetrics(metricsData.metrics);
 
       // Load recent events
-      const eventsResponse = await fetch(
-        "/api/developer-access/events?limit=50",
-      );
+      const eventsResponse = await fetch('/api/developer-access/events?limit=50');
       const eventsData = await eventsResponse.json();
 
       if (!eventsData.success) {
-        throw new Error(eventsData.error || "Failed to load events");
+        throw new Error(eventsData.error || 'Failed to load events');
       }
 
       setEvents(eventsData.events || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -150,48 +129,48 @@ export function DeveloperAccessDashboard() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low":
-        return "bg-green-100 text-green-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "critical":
-        return "bg-red-100 text-red-800";
+      case 'low':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'high':
+        return 'bg-orange-100 text-orange-800';
+      case 'critical':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getKeyTypeColor = (keyType: string) => {
     switch (keyType) {
-      case "EXCLUSIVE":
-        return "bg-purple-100 text-purple-800";
-      case "STANDARD":
-        return "bg-blue-100 text-blue-800";
-      case "TEMPORARY":
-        return "bg-gray-100 text-gray-800";
+      case 'EXCLUSIVE':
+        return 'bg-purple-100 text-purple-800';
+      case 'STANDARD':
+        return 'bg-blue-100 text-blue-800';
+      case 'TEMPORARY':
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getAccessLevelColor = (accessLevel: string) => {
     switch (accessLevel) {
-      case "PUBLIC":
-        return "bg-green-100 text-green-800";
-      case "INTERNAL":
-        return "bg-blue-100 text-blue-800";
-      case "RESTRICTED":
-        return "bg-yellow-100 text-yellow-800";
-      case "CONFIDENTIAL":
-        return "bg-orange-100 text-orange-800";
-      case "SECRET":
-        return "bg-red-100 text-red-800";
-      case "TOP_SECRET":
-        return "bg-purple-100 text-purple-800";
+      case 'PUBLIC':
+        return 'bg-green-100 text-green-800';
+      case 'INTERNAL':
+        return 'bg-blue-100 text-blue-800';
+      case 'RESTRICTED':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'CONFIDENTIAL':
+        return 'bg-orange-100 text-orange-800';
+      case 'SECRET':
+        return 'bg-red-100 text-red-800';
+      case 'TOP_SECRET':
+        return 'bg-purple-100 text-purple-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -252,12 +231,9 @@ export function DeveloperAccessDashboard() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Developer Access Control
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Developer Access Control</h1>
           <p className="text-muted-foreground">
-            Monitor and manage exclusive developer access keys with
-            comprehensive tracking
+            Monitor and manage exclusive developer access keys with comprehensive tracking
           </p>
         </div>
         <Button onClick={loadDashboardData} variant="outline">
@@ -282,9 +258,7 @@ export function DeveloperAccessDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Security Alerts
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Security Alerts</CardTitle>
             <Shield className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -297,16 +271,12 @@ export function DeveloperAccessDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Activity Today
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Activity Today</CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{metrics.eventsToday}</div>
-            <p className="text-xs text-muted-foreground">
-              {metrics.eventsThisWeek} this week
-            </p>
+            <p className="text-xs text-muted-foreground">{metrics.eventsThisWeek} this week</p>
           </CardContent>
         </Card>
 
@@ -316,12 +286,8 @@ export function DeveloperAccessDashboard() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {metrics.averageUsagePerKey.toFixed(1)}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Total events: {metrics.totalEvents}
-            </p>
+            <div className="text-2xl font-bold">{metrics.averageUsagePerKey.toFixed(1)}</div>
+            <p className="text-xs text-muted-foreground">Total events: {metrics.totalEvents}</p>
           </CardContent>
         </Card>
       </div>
@@ -339,46 +305,34 @@ export function DeveloperAccessDashboard() {
             <CardHeader>
               <CardTitle>Recent Access Events</CardTitle>
               <CardDescription>
-                Monitor real-time developer access activities and security
-                events
+                Monitor real-time developer access activities and security events
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4 max-h-96 overflow-y-auto">
                 {events.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">
-                    No recent events found
-                  </p>
+                  <p className="text-center text-muted-foreground py-8">No recent events found</p>
                 ) : (
-                  events.map((event) => (
+                  events.map(event => (
                     <div
                       key={event.id}
                       className="flex items-center justify-between p-3 border rounded-lg"
                     >
                       <div className="flex items-center space-x-3">
-                        <Badge className={getSeverityColor(event.severity)}>
-                          {event.severity}
-                        </Badge>
+                        <Badge className={getSeverityColor(event.severity)}>{event.severity}</Badge>
                         <div>
-                          <p className="font-medium">
-                            {event.eventType.replace(/_/g, " ")}
-                          </p>
+                          <p className="font-medium">{event.eventType.replace(/_/g, ' ')}</p>
                           <p className="text-sm text-muted-foreground">
-                            {event.endpoint
-                              ? `${event.method} ${event.endpoint}`
-                              : "System event"}
+                            {event.endpoint ? `${event.method} ${event.endpoint}` : 'System event'}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {event.ipAddress} •{" "}
-                            {formatDateTime(event.timestamp)}
+                            {event.ipAddress} • {formatDateTime(event.timestamp)}
                           </p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-medium">{event.userId}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {event.keyId}
-                        </p>
+                        <p className="text-xs text-muted-foreground">{event.keyId}</p>
                       </div>
                     </div>
                   ))
@@ -409,28 +363,21 @@ export function DeveloperAccessDashboard() {
                 <TableBody>
                   {metrics.topUsers.length === 0 ? (
                     <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        className="text-center text-muted-foreground"
-                      >
+                      <TableCell colSpan={4} className="text-center text-muted-foreground">
                         No user data available
                       </TableCell>
                     </TableRow>
                   ) : (
                     metrics.topUsers.map((user, index) => (
                       <TableRow key={user.userId}>
-                        <TableCell className="font-medium">
-                          {user.userId}
-                        </TableCell>
+                        <TableCell className="font-medium">{user.userId}</TableCell>
                         <TableCell>{user.keyCount}</TableCell>
                         <TableCell>{user.eventCount}</TableCell>
                         <TableCell>
-                          <Badge
-                            variant={index === 0 ? "default" : "secondary"}
-                          >
+                          <Badge variant={index === 0 ? 'default' : 'secondary'}>
                             {index === 0
-                              ? "Most Active"
-                              : `${index + 1}${index === 1 ? "st" : index === 2 ? "nd" : index === 3 ? "rd" : "th"}`}
+                              ? 'Most Active'
+                              : `${index + 1}${index === 1 ? 'st' : index === 2 ? 'nd' : index === 3 ? 'rd' : 'th'}`}
                           </Badge>
                         </TableCell>
                       </TableRow>
@@ -474,29 +421,19 @@ export function DeveloperAccessDashboard() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Security Alerts</span>
-                    <Badge
-                      variant={
-                        metrics.securityAlerts > 0 ? "destructive" : "default"
-                      }
-                    >
+                    <Badge variant={metrics.securityAlerts > 0 ? 'destructive' : 'default'}>
                       {metrics.securityAlerts}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Quota Violations</span>
-                    <Badge
-                      variant={
-                        metrics.quotaViolations > 0 ? "destructive" : "default"
-                      }
-                    >
+                    <Badge variant={metrics.quotaViolations > 0 ? 'destructive' : 'default'}>
                       {metrics.quotaViolations}
                     </Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>Avg Usage/Key</span>
-                    <span className="font-medium">
-                      {metrics.averageUsagePerKey.toFixed(1)}
-                    </span>
+                    <span className="font-medium">{metrics.averageUsagePerKey.toFixed(1)}</span>
                   </div>
                 </div>
               </CardContent>

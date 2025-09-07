@@ -5,11 +5,11 @@
  * for all critical system data and configurations.
  */
 
-import { promises as fs } from "fs";
-import path from "path";
-import crypto from "crypto";
-import zlib from "zlib";
-import { promisify } from "util";
+import { promises as fs } from 'fs';
+import path from 'path';
+import crypto from 'crypto';
+import zlib from 'zlib';
+import { promisify } from 'util';
 
 const gzip = promisify(zlib.gzip);
 const gunzip = promisify(zlib.gunzip);
@@ -31,7 +31,7 @@ export interface BackupMetadata {
   size: number;
   compressedSize: number;
   checksum: string;
-  type: "full" | "incremental" | "config";
+  type: 'full' | 'incremental' | 'config';
   description: string;
   tags: string[];
   version: string;
@@ -73,9 +73,9 @@ export class AutomatedBackupManager {
       // Load existing backup history
       await this.loadBackupHistory();
 
-      console.log("Automated Backup Manager initialized successfully");
+      console.log('Automated Backup Manager initialized successfully');
     } catch (error) {
-      console.error("Failed to initialize Automated Backup Manager:", error);
+      console.error('Failed to initialize Automated Backup Manager:', error);
       throw error;
     }
   }
@@ -85,7 +85,7 @@ export class AutomatedBackupManager {
    */
   start(): void {
     if (this.isRunning) {
-      console.log("Backup Manager is already running");
+      console.log('Backup Manager is already running');
       return;
     }
 
@@ -94,15 +94,13 @@ export class AutomatedBackupManager {
     // Schedule regular backups
     this.backupTimer = setInterval(async () => {
       try {
-        await this.createBackup("incremental", "Scheduled automated backup");
+        await this.createBackup('incremental', 'Scheduled automated backup');
       } catch (error) {
-        console.error("Scheduled backup failed:", error);
+        console.error('Scheduled backup failed:', error);
       }
     }, this.config.backupInterval);
 
-    console.log(
-      `Automated Backup Manager started with ${this.config.backupInterval}ms interval`,
-    );
+    console.log(`Automated Backup Manager started with ${this.config.backupInterval}ms interval`);
   }
 
   /**
@@ -120,16 +118,16 @@ export class AutomatedBackupManager {
       this.backupTimer = undefined;
     }
 
-    console.log("Automated Backup Manager stopped");
+    console.log('Automated Backup Manager stopped');
   }
 
   /**
    * Create a backup
    */
   async createBackup(
-    type: "full" | "incremental" | "config" = "full",
-    description: string = "Manual backup",
-    tags: string[] = [],
+    type: 'full' | 'incremental' | 'config' = 'full',
+    description: string = 'Manual backup',
+    tags: string[] = []
   ): Promise<BackupResult> {
     const startTime = Date.now();
     const backupId = this.generateBackupId();
@@ -161,18 +159,12 @@ export class AutomatedBackupManager {
         type,
         description,
         tags,
-        version: "1.0.0",
+        version: '1.0.0',
       };
 
       // Save backup files
-      const backupPath = path.join(
-        this.config.backupPath,
-        `${backupId}.backup`,
-      );
-      const metadataPath = path.join(
-        this.config.backupPath,
-        `${backupId}.meta`,
-      );
+      const backupPath = path.join(this.config.backupPath, `${backupId}.backup`);
+      const metadataPath = path.join(this.config.backupPath, `${backupId}.meta`);
 
       await Promise.all([
         fs.writeFile(backupPath, processedData),
@@ -185,9 +177,7 @@ export class AutomatedBackupManager {
 
       const duration = Date.now() - startTime;
 
-      console.log(
-        `✅ Backup created successfully: ${backupId} (${duration}ms)`,
-      );
+      console.log(`✅ Backup created successfully: ${backupId} (${duration}ms)`);
 
       return {
         success: true,
@@ -197,8 +187,7 @@ export class AutomatedBackupManager {
       };
     } catch (error) {
       const duration = Date.now() - startTime;
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
       console.error(`❌ Backup creation failed: ${backupId}`, error);
 
@@ -213,10 +202,7 @@ export class AutomatedBackupManager {
   /**
    * Restore from backup
    */
-  async restoreBackup(
-    backupId: string,
-    restorePath?: string,
-  ): Promise<RecoveryResult> {
+  async restoreBackup(backupId: string, restorePath?: string): Promise<RecoveryResult> {
     const startTime = Date.now();
 
     try {
@@ -229,10 +215,7 @@ export class AutomatedBackupManager {
       }
 
       // Load backup data
-      const backupPath = path.join(
-        this.config.backupPath,
-        `${backupId}.backup`,
-      );
+      const backupPath = path.join(this.config.backupPath, `${backupId}.backup`);
       let backupData = await fs.readFile(backupPath);
 
       // Verify checksum
@@ -255,15 +238,12 @@ export class AutomatedBackupManager {
       const backupContent = JSON.parse(backupData.toString());
 
       // Restore files and configurations
-      const restoredFiles = await this.restoreBackupData(
-        backupContent,
-        restorePath,
-      );
+      const restoredFiles = await this.restoreBackupData(backupContent, restorePath);
 
       const duration = Date.now() - startTime;
 
       console.log(
-        `✅ Backup restored successfully: ${backupId} (${restoredFiles.length} files, ${duration}ms)`,
+        `✅ Backup restored successfully: ${backupId} (${restoredFiles.length} files, ${duration}ms)`
       );
 
       return {
@@ -273,8 +253,7 @@ export class AutomatedBackupManager {
       };
     } catch (error) {
       const duration = Date.now() - startTime;
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
       console.error(`❌ Backup restoration failed: ${backupId}`, error);
 
@@ -299,11 +278,8 @@ export class AutomatedBackupManager {
    */
   async getBackupMetadata(backupId: string): Promise<BackupMetadata | null> {
     try {
-      const metadataPath = path.join(
-        this.config.backupPath,
-        `${backupId}.meta`,
-      );
-      const metadataContent = await fs.readFile(metadataPath, "utf-8");
+      const metadataPath = path.join(this.config.backupPath, `${backupId}.meta`);
+      const metadataContent = await fs.readFile(metadataPath, 'utf-8');
       return JSON.parse(metadataContent);
     } catch (error) {
       console.error(`Failed to load backup metadata: ${backupId}`, error);
@@ -316,19 +292,13 @@ export class AutomatedBackupManager {
    */
   async deleteBackup(backupId: string): Promise<boolean> {
     try {
-      const backupPath = path.join(
-        this.config.backupPath,
-        `${backupId}.backup`,
-      );
-      const metadataPath = path.join(
-        this.config.backupPath,
-        `${backupId}.meta`,
-      );
+      const backupPath = path.join(this.config.backupPath, `${backupId}.backup`);
+      const metadataPath = path.join(this.config.backupPath, `${backupId}.meta`);
 
       await Promise.all([fs.unlink(backupPath), fs.unlink(metadataPath)]);
 
       // Remove from history
-      this.backupHistory = this.backupHistory.filter((b) => b.id !== backupId);
+      this.backupHistory = this.backupHistory.filter(b => b.id !== backupId);
 
       console.log(`Backup deleted: ${backupId}`);
       return true;
@@ -341,17 +311,15 @@ export class AutomatedBackupManager {
   /**
    * Collect data for backup
    */
-  private async collectBackupData(
-    type: "full" | "incremental" | "config",
-  ): Promise<Buffer> {
+  private async collectBackupData(type: 'full' | 'incremental' | 'config'): Promise<Buffer> {
     const backupData: any = {
       timestamp: new Date().toISOString(),
       type,
-      version: "1.0.0",
+      version: '1.0.0',
       data: {},
     };
 
-    if (type === "full" || type === "config") {
+    if (type === 'full' || type === 'config') {
       // Backup configurations
       if (this.config.includeConfigs) {
         backupData.data.configs = await this.collectConfigurations();
@@ -361,7 +329,7 @@ export class AutomatedBackupManager {
       backupData.data.env = await this.collectEnvironmentVariables();
     }
 
-    if (type === "full") {
+    if (type === 'full') {
       // Backup databases
       if (this.config.includeDatabases) {
         backupData.data.databases = await this.collectDatabaseBackups();
@@ -387,22 +355,22 @@ export class AutomatedBackupManager {
 
     try {
       // Collect package.json
-      const packageJson = await fs.readFile("package.json", "utf-8");
+      const packageJson = await fs.readFile('package.json', 'utf-8');
       configs.packageJson = JSON.parse(packageJson);
 
       // Collect prisma schema
-      const prismaSchema = await fs.readFile("prisma/schema.prisma", "utf-8");
+      const prismaSchema = await fs.readFile('prisma/schema.prisma', 'utf-8');
       configs.prismaSchema = prismaSchema;
 
       // Collect tailwind config
-      const tailwindConfig = await fs.readFile("tailwind.config.ts", "utf-8");
+      const tailwindConfig = await fs.readFile('tailwind.config.ts', 'utf-8');
       configs.tailwindConfig = tailwindConfig;
 
       // Collect next config
-      const nextConfig = await fs.readFile("next.config.ts", "utf-8");
+      const nextConfig = await fs.readFile('next.config.ts', 'utf-8');
       configs.nextConfig = nextConfig;
     } catch (error) {
-      console.warn("Some configuration files could not be collected:", error);
+      console.warn('Some configuration files could not be collected:', error);
     }
 
     return configs;
@@ -416,15 +384,15 @@ export class AutomatedBackupManager {
 
     try {
       // Collect .env file
-      const envContent = await fs.readFile(".env", "utf-8");
-      envContent.split("\n").forEach((line) => {
-        const [key, value] = line.split("=");
+      const envContent = await fs.readFile('.env', 'utf-8');
+      envContent.split('\n').forEach(line => {
+        const [key, value] = line.split('=');
         if (key && value) {
           env[key.trim()] = value.trim();
         }
       });
     } catch (error) {
-      console.warn("Environment variables could not be collected:", error);
+      console.warn('Environment variables could not be collected:', error);
     }
 
     return env;
@@ -438,16 +406,16 @@ export class AutomatedBackupManager {
 
     try {
       // Collect prisma database files
-      const dbFiles = await fs.readdir("prisma/db");
+      const dbFiles = await fs.readdir('prisma/db');
       for (const file of dbFiles) {
-        if (file.endsWith(".db")) {
-          const dbPath = path.join("prisma/db", file);
+        if (file.endsWith('.db')) {
+          const dbPath = path.join('prisma/db', file);
           const dbContent = await fs.readFile(dbPath);
-          databases[file] = dbContent.toString("base64");
+          databases[file] = dbContent.toString('base64');
         }
       }
     } catch (error) {
-      console.warn("Database backups could not be collected:", error);
+      console.warn('Database backups could not be collected:', error);
     }
 
     return databases;
@@ -461,10 +429,10 @@ export class AutomatedBackupManager {
 
     try {
       // Collect dev.log
-      const devLog = await fs.readFile("dev.log", "utf-8");
+      const devLog = await fs.readFile('dev.log', 'utf-8');
       logs.devLog = devLog;
     } catch (error) {
-      console.warn("Logs could not be collected:", error);
+      console.warn('Logs could not be collected:', error);
     }
 
     return logs;
@@ -478,14 +446,14 @@ export class AutomatedBackupManager {
 
     try {
       // Collect eslint config
-      const eslintConfig = await fs.readFile("eslint.config.mjs", "utf-8");
+      const eslintConfig = await fs.readFile('eslint.config.mjs', 'utf-8');
       system.eslintConfig = eslintConfig;
 
       // Collect tsconfig
-      const tsConfig = await fs.readFile("tsconfig.json", "utf-8");
+      const tsConfig = await fs.readFile('tsconfig.json', 'utf-8');
       system.tsConfig = tsConfig;
     } catch (error) {
-      console.warn("System files could not be collected:", error);
+      console.warn('System files could not be collected:', error);
     }
 
     return system;
@@ -494,10 +462,7 @@ export class AutomatedBackupManager {
   /**
    * Restore backup data
    */
-  private async restoreBackupData(
-    backupContent: any,
-    restorePath?: string,
-  ): Promise<string[]> {
+  private async restoreBackupData(backupContent: any, restorePath?: string): Promise<string[]> {
     const restoredFiles: string[] = [];
 
     try {
@@ -507,35 +472,33 @@ export class AutomatedBackupManager {
       if (backupContent.data.configs) {
         if (backupContent.data.configs.packageJson) {
           await fs.writeFile(
-            path.join(basePath, "package.json"),
-            JSON.stringify(backupContent.data.configs.packageJson, null, 2),
+            path.join(basePath, 'package.json'),
+            JSON.stringify(backupContent.data.configs.packageJson, null, 2)
           );
-          restoredFiles.push("package.json");
+          restoredFiles.push('package.json');
         }
 
         if (backupContent.data.configs.prismaSchema) {
           await fs.writeFile(
-            path.join(basePath, "prisma/schema.prisma"),
-            backupContent.data.configs.prismaSchema,
+            path.join(basePath, 'prisma/schema.prisma'),
+            backupContent.data.configs.prismaSchema
           );
-          restoredFiles.push("prisma/schema.prisma");
+          restoredFiles.push('prisma/schema.prisma');
         }
       }
 
       // Restore databases
       if (backupContent.data.databases) {
-        for (const [fileName, content] of Object.entries(
-          backupContent.data.databases,
-        )) {
+        for (const [fileName, content] of Object.entries(backupContent.data.databases)) {
           await fs.writeFile(
-            path.join(basePath, "prisma/db", fileName),
-            Buffer.from(content as string, "base64"),
+            path.join(basePath, 'prisma/db', fileName),
+            Buffer.from(content as string, 'base64')
           );
           restoredFiles.push(`prisma/db/${fileName}`);
         }
       }
     } catch (error) {
-      console.error("Failed to restore backup data:", error);
+      console.error('Failed to restore backup data:', error);
       throw error;
     }
 
@@ -548,36 +511,29 @@ export class AutomatedBackupManager {
   private async loadBackupHistory(): Promise<void> {
     try {
       const files = await fs.readdir(this.config.backupPath);
-      const metaFiles = files.filter((file) => file.endsWith(".meta"));
+      const metaFiles = files.filter(file => file.endsWith('.meta'));
 
       for (const metaFile of metaFiles) {
         const metadataPath = path.join(this.config.backupPath, metaFile);
-        const metadataContent = await fs.readFile(metadataPath, "utf-8");
+        const metadataContent = await fs.readFile(metadataPath, 'utf-8');
         const metadata = JSON.parse(metadataContent);
         this.backupHistory.push(metadata);
       }
 
       // Sort by timestamp
-      this.backupHistory.sort(
-        (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
-      );
+      this.backupHistory.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
     } catch (error) {
-      console.warn("Could not load backup history:", error);
+      console.warn('Could not load backup history:', error);
     }
   }
 
   /**
    * Load backup metadata
    */
-  private async loadBackupMetadata(
-    backupId: string,
-  ): Promise<BackupMetadata | null> {
+  private async loadBackupMetadata(backupId: string): Promise<BackupMetadata | null> {
     try {
-      const metadataPath = path.join(
-        this.config.backupPath,
-        `${backupId}.meta`,
-      );
-      const metadataContent = await fs.readFile(metadataPath, "utf-8");
+      const metadataPath = path.join(this.config.backupPath, `${backupId}.meta`);
+      const metadataContent = await fs.readFile(metadataPath, 'utf-8');
       return JSON.parse(metadataContent);
     } catch (error) {
       return null;
@@ -595,14 +551,14 @@ export class AutomatedBackupManager {
 
       const toRemove = this.backupHistory.splice(
         0,
-        this.backupHistory.length - this.config.maxBackups,
+        this.backupHistory.length - this.config.maxBackups
       );
 
       for (const backup of toRemove) {
         await this.deleteBackup(backup.id);
       }
     } catch (error) {
-      console.error("Failed to cleanup old backups:", error);
+      console.error('Failed to cleanup old backups:', error);
     }
   }
 
@@ -617,14 +573,14 @@ export class AutomatedBackupManager {
    * Generate checksum
    */
   private async generateChecksum(data: Buffer): Promise<string> {
-    return crypto.createHash("sha256").update(data).digest("hex");
+    return crypto.createHash('sha256').update(data).digest('hex');
   }
 
   /**
    * Encrypt data
    */
   private async encryptData(data: Buffer): Promise<Buffer> {
-    const algorithm = "aes-256-cbc";
+    const algorithm = 'aes-256-cbc';
     const key = crypto.randomBytes(32);
     const iv = crypto.randomBytes(16);
 
@@ -640,7 +596,7 @@ export class AutomatedBackupManager {
    * Decrypt data
    */
   private async decryptData(encryptedData: Buffer): Promise<Buffer> {
-    const algorithm = "aes-256-cbc";
+    const algorithm = 'aes-256-cbc';
     const iv = encryptedData.slice(0, 16);
     const key = encryptedData.slice(16, 48);
     const data = encryptedData.slice(48);
@@ -673,7 +629,7 @@ export class AutomatedBackupManager {
   destroy(): void {
     this.stop();
     this.backupHistory = [];
-    console.log("Automated Backup Manager destroyed");
+    console.log('Automated Backup Manager destroyed');
   }
 }
 
@@ -683,7 +639,7 @@ export const automatedBackupManager = new AutomatedBackupManager({
   maxBackups: 24, // Keep 24 hours of backups
   compressionEnabled: true,
   encryptionEnabled: true,
-  backupPath: "./database_backups",
+  backupPath: './database_backups',
   includeDatabases: true,
   includeConfigs: true,
   includeLogs: true,

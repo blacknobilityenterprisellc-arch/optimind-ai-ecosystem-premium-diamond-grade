@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise Environment Configuration System
- * 
+ *
  * This module implements a comprehensive, type-safe environment configuration system
  * with validation, multi-environment support, secret management, and runtime monitoring.
- * 
+ *
  * Features:
  * - Type-safe configuration schemas with Zod validation
  * - Multi-environment support (development, staging, production, test)
@@ -13,7 +13,7 @@
  * - Fallback mechanisms and environment-specific defaults
  * - Security-sensitive configuration handling
  * - Performance-optimized configuration loading
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Security Standards
@@ -35,7 +35,7 @@ export enum ConfigStatus {
   VALID = 'VALID',
   INVALID = 'INVALID',
   RELOADING = 'RELOADING',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
 }
 
 // Configuration metadata
@@ -98,7 +98,7 @@ const baseConfigSchema = z.object({
     host: z.string().optional(),
     timezone: z.string().default('UTC'),
   }),
-  
+
   // Security settings
   security: z.object({
     apiKey: z.string().min(1),
@@ -106,30 +106,36 @@ const baseConfigSchema = z.object({
     encryptionKey: z.string().min(32),
     jwtSecret: z.string().min(32),
     corsOrigins: z.array(z.string()).default([]),
-    rateLimiting: z.object({
-      enabled: z.boolean().default(true),
-      windowMs: z.number().default(900000), // 15 minutes
-      max: z.number().default(100),
-    }).default({}),
+    rateLimiting: z
+      .object({
+        enabled: z.boolean().default(true),
+        windowMs: z.number().default(900000), // 15 minutes
+        max: z.number().default(100),
+      })
+      .default({}),
     sessionTimeout: z.number().default(3600000), // 1 hour
   }),
-  
+
   // Database settings
   database: z.object({
     url: z.string().min(1),
     ssl: z.boolean().default(false),
-    pool: z.object({
-      min: z.number().min(0).default(2),
-      max: z.number().min(1).default(10),
-      idleTimeoutMillis: z.number().default(30000),
-    }).default({}),
-    backup: z.object({
-      enabled: z.boolean().default(true),
-      interval: z.number().default(86400000), // 24 hours
-      retention: z.number().default(7), // 7 days
-    }).default({}),
+    pool: z
+      .object({
+        min: z.number().min(0).default(2),
+        max: z.number().min(1).default(10),
+        idleTimeoutMillis: z.number().default(30000),
+      })
+      .default({}),
+    backup: z
+      .object({
+        enabled: z.boolean().default(true),
+        interval: z.number().default(86400000), // 24 hours
+        retention: z.number().default(7), // 7 days
+      })
+      .default({}),
   }),
-  
+
   // AI service settings
   ai: z.object({
     provider: z.string().min(1),
@@ -140,32 +146,40 @@ const baseConfigSchema = z.object({
     retryAttempts: z.number().min(0).max(5).default(3),
     fallbackProviders: z.array(z.string()).default([]),
   }),
-  
+
   // Monitoring and logging
   monitoring: z.object({
     enabled: z.boolean().default(true),
     level: z.enum(['debug', 'info', 'warn', 'error']).default('info'),
-    metrics: z.object({
-      enabled: z.boolean().default(true),
-      interval: z.number().default(60000), // 1 minute
-    }).default({}),
-    alerts: z.object({
-      enabled: z.boolean().default(true),
-      channels: z.array(z.string()).default(['email']),
-    }).default({}),
+    metrics: z
+      .object({
+        enabled: z.boolean().default(true),
+        interval: z.number().default(60000), // 1 minute
+      })
+      .default({}),
+    alerts: z
+      .object({
+        enabled: z.boolean().default(true),
+        channels: z.array(z.string()).default(['email']),
+      })
+      .default({}),
   }),
-  
+
   // Performance settings
   performance: z.object({
-    cache: z.object({
-      enabled: z.boolean().default(true),
-      ttl: z.number().default(3600000), // 1 hour
-      maxSize: z.number().default(1000),
-    }).default({}),
-    compression: z.object({
-      enabled: z.boolean().default(true),
-      level: z.number().min(1).max(9).default(6),
-    }).default({}),
+    cache: z
+      .object({
+        enabled: z.boolean().default(true),
+        ttl: z.number().default(3600000), // 1 hour
+        maxSize: z.number().default(1000),
+      })
+      .default({}),
+    compression: z
+      .object({
+        enabled: z.boolean().default(true),
+        level: z.number().min(1).max(9).default(6),
+      })
+      .default({}),
   }),
 });
 
@@ -216,8 +230,8 @@ const environmentOverrides = {
 };
 
 // Enterprise configuration manager
-export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>> 
-  extends EventEmitter 
+export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
+  extends EventEmitter
   implements EnterpriseConfig<T>
 {
   private data: T;
@@ -229,10 +243,7 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
   private sources: ConfigSource[] = [];
   private validationCache: Map<string, ConfigValidationResult> = new Map();
 
-  constructor(
-    schema: ZodSchema<T> = baseConfigSchema as any,
-    secretManager?: SecretManager
-  ) {
+  constructor(schema: ZodSchema<T> = baseConfigSchema as any, secretManager?: SecretManager) {
     super();
     this.schema = schema;
     this.secretManager = secretManager || new DefaultSecretManager();
@@ -327,7 +338,7 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
     // Apply environment-specific overrides
     const overrides = environmentOverrides[env];
     const mergedConfig = this.mergeDeep(baseDefaults, overrides);
-    
+
     return this.schema.parse(mergedConfig);
   }
 
@@ -336,10 +347,8 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
     if (this.isObject(target) && this.isObject(source)) {
       Object.keys(source).forEach(key => {
         if (this.isObject(source[key])) {
-          if (!(key in target))
-            Object.assign(output, { [key]: source[key] });
-          else
-            output[key] = this.mergeDeep(target[key], source[key]);
+          if (!(key in target)) Object.assign(output, { [key]: source[key] });
+          else output[key] = this.mergeDeep(target[key], source[key]);
         } else {
           Object.assign(output, { [key]: source[key] });
         }
@@ -378,12 +387,11 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
       this.status = ConfigStatus.VALID;
       this.metadata.lastUpdated = Date.now();
       this.metadata.checksum = this.generateChecksum();
-      
+
       this.emit('loaded', { config: this.data, metadata: this.metadata });
-      
+
       // Setup watchers for configuration changes
       this.setupWatchers();
-      
     } catch (error) {
       this.status = ConfigStatus.ERROR;
       this.emit('error', { error });
@@ -393,10 +401,7 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
 
   private generateChecksum(): string {
     const dataString = JSON.stringify(this.data);
-    return require('crypto')
-      .createHash('sha256')
-      .update(dataString)
-      .digest('hex');
+    return require('crypto').createHash('sha256').update(dataString).digest('hex');
   }
 
   private setupWatchers(): void {
@@ -409,14 +414,17 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
     });
   }
 
-  private async handleConfigChange(sourceName: string, newConfig: Record<string, any>): Promise<void> {
+  private async handleConfigChange(
+    sourceName: string,
+    newConfig: Record<string, any>
+  ): Promise<void> {
     try {
       this.status = ConfigStatus.RELOADING;
       this.emit('reloading', { source: sourceName });
 
       // Merge new configuration
       this.data = this.mergeDeep(this.data, newConfig);
-      
+
       // Validate new configuration
       const validationResult = this.validate();
       if (!validationResult.isValid) {
@@ -431,10 +439,9 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
       this.metadata.source = sourceName;
 
       this.emit('changed', { config: this.data, metadata: this.metadata });
-      
+
       // Notify watchers
       this.notifyWatchers();
-      
     } catch (error) {
       this.status = ConfigStatus.ERROR;
       this.emit('error', { error });
@@ -454,7 +461,7 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
         warnings: this.generateWarnings(),
         metadata: this.metadata,
       };
-      
+
       this.validationCache.set(cacheKey, result);
       return result;
     } catch (error) {
@@ -465,38 +472,38 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
           warnings: this.generateWarnings(),
           metadata: this.metadata,
         };
-        
+
         this.validationCache.set(cacheKey, result);
         return result;
       }
-      
+
       throw error;
     }
   }
 
   private generateWarnings(): string[] {
     const warnings: string[] = [];
-    
+
     // Check for default values
     if (this.data.security?.apiKey === 'default-api-key') {
       warnings.push('Using default API key - please configure a proper key');
     }
-    
+
     if (this.data.security?.encryptionKey === 'default-encryption-key-min-32-chars') {
       warnings.push('Using default encryption key - please configure a proper key');
     }
-    
+
     // Check for development settings in production
     if (this.metadata.environment === 'production') {
       if (this.data.app?.debug) {
         warnings.push('Debug mode enabled in production environment');
       }
-      
+
       if (this.data.monitoring?.level === 'debug') {
         warnings.push('Debug logging enabled in production environment');
       }
     }
-    
+
     return warnings;
   }
 
@@ -601,21 +608,21 @@ export class EnvironmentConfigSource implements ConfigSource {
 
   async load(): Promise<Record<string, any>> {
     const config: Record<string, any> = {};
-    
+
     // Map environment variables to configuration
     const envMappings = {
-      'NODE_ENV': 'app.environment',
-      'PORT': 'app.port',
-      'HOST': 'app.host',
-      'API_KEY': 'security.apiKey',
-      'API_SECRET': 'security.apiSecret',
-      'ENCRYPTION_KEY': 'security.encryptionKey',
-      'JWT_SECRET': 'security.jwtSecret',
-      'DATABASE_URL': 'database.url',
-      'DATABASE_SSL': 'database.ssl',
-      'AI_PROVIDER': 'ai.provider',
-      'AI_MODEL': 'ai.model',
-      'LOG_LEVEL': 'monitoring.level',
+      NODE_ENV: 'app.environment',
+      PORT: 'app.port',
+      HOST: 'app.host',
+      API_KEY: 'security.apiKey',
+      API_SECRET: 'security.apiSecret',
+      ENCRYPTION_KEY: 'security.encryptionKey',
+      JWT_SECRET: 'security.jwtSecret',
+      DATABASE_URL: 'database.url',
+      DATABASE_SSL: 'database.ssl',
+      AI_PROVIDER: 'ai.provider',
+      AI_MODEL: 'ai.model',
+      LOG_LEVEL: 'monitoring.level',
     };
 
     for (const [envVar, configPath] of Object.entries(envMappings)) {
@@ -631,14 +638,14 @@ export class EnvironmentConfigSource implements ConfigSource {
   private setNestedValue(obj: any, path: string, value: any): void {
     const keys = path.split('.');
     let current = obj;
-    
+
     for (let i = 0; i < keys.length - 1; i++) {
       if (!(keys[i] in current)) {
         current[keys[i]] = {};
       }
       current = current[keys[i]];
     }
-    
+
     current[keys[keys.length - 1]] = value;
   }
 
@@ -650,11 +657,11 @@ export class EnvironmentConfigSource implements ConfigSource {
       // Try to parse as boolean
       if (value.toLowerCase() === 'true') return true;
       if (value.toLowerCase() === 'false') return false;
-      
+
       // Try to parse as number
       const num = Number(value);
       if (!isNaN(num)) return num;
-      
+
       // Return as string
       return value;
     }
@@ -689,7 +696,7 @@ export class FileConfigSource implements ConfigSource {
   watch(callback: (config: Record<string, any>) => void): void {
     const fs = require('fs');
     const chokidar = require('chokidar');
-    
+
     const watcher = chokidar.watch(this.filePath);
     watcher.on('change', async () => {
       try {
@@ -708,14 +715,14 @@ export function createEnterpriseConfig<T = z.infer<typeof baseConfigSchema>>(
   secretManager?: SecretManager
 ): EnterpriseEnvironmentConfig<T> {
   const config = new EnterpriseEnvironmentConfig<T>(schema, secretManager);
-  
+
   // Add default configuration sources
   config.addConfigSource(new EnvironmentConfigSource());
-  
+
   // Add file-based configuration if it exists
   const configFile = process.env.CONFIG_FILE || './config/enterprise.json';
   config.addConfigSource(new FileConfigSource(configFile));
-  
+
   return config;
 }
 

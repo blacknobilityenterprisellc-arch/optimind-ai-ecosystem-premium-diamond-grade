@@ -10,8 +10,8 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 interface DiagnosisRequest {
   systemData: {
@@ -23,17 +23,17 @@ interface DiagnosisRequest {
   context: {
     environment: string;
     timeRange: string;
-    severity: "low" | "medium" | "high" | "critical";
+    severity: 'low' | 'medium' | 'high' | 'critical';
   };
-  analysisType: "real-time" | "historical" | "predictive";
+  analysisType: 'real-time' | 'historical' | 'predictive';
 }
 
 interface DiagnosisResponse {
-  status: "success" | "error" | "partial";
+  status: 'success' | 'error' | 'partial';
   diagnosis: {
     faultDetected: boolean;
     faultType: string;
-    severity: "low" | "medium" | "high" | "critical";
+    severity: 'low' | 'medium' | 'high' | 'critical';
     confidence: number;
     rootCauses: string[];
     affectedComponents: string[];
@@ -69,8 +69,8 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!body.systemData || !body.context || !body.analysisType) {
       return NextResponse.json(
-        { error: "Missing required fields: systemData, context, analysisType" },
-        { status: 400 },
+        { error: 'Missing required fields: systemData, context, analysisType' },
+        { status: 400 }
       );
     }
 
@@ -119,12 +119,12 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are the OptiTest AI Controller, an expert in intelligent fault detection, root cause analysis, and system diagnosis with deep knowledge of testing frameworks and system architecture.",
+            'You are the OptiTest AI Controller, an expert in intelligent fault detection, root cause analysis, and system diagnosis with deep knowledge of testing frameworks and system architecture.',
         },
         {
-          role: "user",
+          role: 'user',
           content: diagnosisPrompt,
         },
       ],
@@ -137,16 +137,16 @@ Respond with a JSON structure containing:
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       aiResponse = {
         diagnosis: {
           faultDetected: false,
-          faultType: "Unknown",
-          severity: "low",
+          faultType: 'Unknown',
+          severity: 'low',
           confidence: 0,
-          rootCauses: ["AI response parsing failed"],
+          rootCauses: ['AI response parsing failed'],
           affectedComponents: [],
         },
         analysis: {
@@ -156,13 +156,13 @@ Respond with a JSON structure containing:
           trends: [],
         },
         recommendations: {
-          immediate: ["Manual system review required"],
-          shortTerm: ["Investigate AI diagnosis system"],
-          longTerm: ["Improve AI response parsing"],
+          immediate: ['Manual system review required'],
+          shortTerm: ['Investigate AI diagnosis system'],
+          longTerm: ['Improve AI response parsing'],
         },
         predictions: {
           likelihoodOfRecurrence: 0,
-          estimatedImpact: "Minimal",
+          estimatedImpact: 'Minimal',
           preventionStrategies: [],
           monitoringSuggestions: [],
         },
@@ -170,7 +170,7 @@ Respond with a JSON structure containing:
     }
 
     const response: DiagnosisResponse = {
-      status: "success",
+      status: 'success',
       diagnosis: aiResponse.diagnosis,
       analysis: aiResponse.analysis,
       recommendations: aiResponse.recommendations,
@@ -183,33 +183,33 @@ Respond with a JSON structure containing:
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Diagnosis error:", error);
+    console.error('Diagnosis error:', error);
     return NextResponse.json(
       {
-        error: "Failed to perform diagnosis",
-        details: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
+        error: 'Failed to perform diagnosis',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        status: 'error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: "OptiTest AI Fault Detection & Diagnosis API",
-    version: "1.0.0",
+    message: 'OptiTest AI Fault Detection & Diagnosis API',
+    version: '1.0.0',
     endpoints: {
-      "POST /api/testing/diagnose": "Perform intelligent fault diagnosis",
-      "GET /api/testing/diagnose/status": "Get diagnosis system status",
+      'POST /api/testing/diagnose': 'Perform intelligent fault diagnosis',
+      'GET /api/testing/diagnose/status': 'Get diagnosis system status',
     },
     capabilities: [
-      "Real-time fault detection",
-      "Root cause analysis",
-      "Pattern recognition",
-      "Anomaly detection",
-      "Predictive diagnostics",
-      "Intelligent recommendations",
+      'Real-time fault detection',
+      'Root cause analysis',
+      'Pattern recognition',
+      'Anomaly detection',
+      'Predictive diagnostics',
+      'Intelligent recommendations',
     ],
   });
 }

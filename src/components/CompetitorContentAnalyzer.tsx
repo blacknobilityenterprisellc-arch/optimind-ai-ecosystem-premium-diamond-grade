@@ -1,27 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import {
-  Loader2,
-  Search,
-  BarChart3,
-  Globe,
-  Target,
-  TrendingUp,
-  AlertTriangle,
-} from "lucide-react";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Loader2, Search, BarChart3, Globe, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface CompetitorAnalysis {
   domain: string;
@@ -35,15 +21,14 @@ interface CompetitorAnalysis {
 }
 
 export function CompetitorContentAnalyzer() {
-  const [competitorUrl, setCompetitorUrl] = useState("");
+  const [competitorUrl, setCompetitorUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] =
-    useState<CompetitorAnalysis | null>(null);
+  const [analysisResults, setAnalysisResults] = useState<CompetitorAnalysis | null>(null);
   const [progress, setProgress] = useState(0);
 
   const handleAnalyze = async () => {
     if (!competitorUrl.trim()) {
-      toast.error("Please enter a competitor URL");
+      toast.error('Please enter a competitor URL');
       return;
     }
 
@@ -53,7 +38,7 @@ export function CompetitorContentAnalyzer() {
     try {
       // Simulate analysis progress
       const progressInterval = setInterval(() => {
-        setProgress((prev) => {
+        setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -63,7 +48,7 @@ export function CompetitorContentAnalyzer() {
       }, 300);
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 4000));
+      await new Promise(resolve => setTimeout(resolve, 4000));
 
       setProgress(100);
 
@@ -72,20 +57,16 @@ export function CompetitorContentAnalyzer() {
         domain: new URL(competitorUrl).hostname,
         score: Math.floor(Math.random() * 30) + 70, // 70-100
         strengths: [
-          "Strong backlink profile",
-          "Excellent content strategy",
-          "High domain authority",
-          "Good technical SEO",
+          'Strong backlink profile',
+          'Excellent content strategy',
+          'High domain authority',
+          'Good technical SEO',
         ],
-        weaknesses: [
-          "Poor mobile optimization",
-          "Slow page load times",
-          "Limited social presence",
-        ],
+        weaknesses: ['Poor mobile optimization', 'Slow page load times', 'Limited social presence'],
         opportunities: [
-          "Target their weak keywords",
-          "Improve on their UX",
-          "Better content depth",
+          'Target their weak keywords',
+          'Improve on their UX',
+          'Better content depth',
         ],
         traffic: `${Math.floor(Math.random() * 50) + 20}K/mo`,
         keywords: Math.floor(Math.random() * 1000) + 500,
@@ -93,9 +74,9 @@ export function CompetitorContentAnalyzer() {
       };
 
       setAnalysisResults(mockResults);
-      toast.success("Competitor analysis completed!");
+      toast.success('Competitor analysis completed!');
     } catch (error) {
-      toast.error("Failed to analyze competitor");
+      toast.error('Failed to analyze competitor');
     } finally {
       setIsAnalyzing(false);
     }
@@ -110,8 +91,8 @@ export function CompetitorContentAnalyzer() {
             <span>Competitor Content Analyzer</span>
           </CardTitle>
           <CardDescription>
-            Analyze your competitors' content strategies and identify
-            opportunities to outperform them.
+            Analyze your competitors' content strategies and identify opportunities to outperform
+            them.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -119,13 +100,10 @@ export function CompetitorContentAnalyzer() {
             <Input
               placeholder="Enter competitor URL (e.g., https://competitor.com)"
               value={competitorUrl}
-              onChange={(e) => setCompetitorUrl(e.target.value)}
+              onChange={e => setCompetitorUrl(e.target.value)}
               className="flex-1"
             />
-            <Button
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !competitorUrl.trim()}
-            >
+            <Button onClick={handleAnalyze} disabled={isAnalyzing || !competitorUrl.trim()}>
               {isAnalyzing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
@@ -155,25 +133,15 @@ export function CompetitorContentAnalyzer() {
             {/* Overall Score */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">
-                  {analysisResults.score}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Overall Score
-                </div>
+                <div className="text-3xl font-bold text-blue-600">{analysisResults.score}</div>
+                <div className="text-sm text-muted-foreground">Overall Score</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">
-                  {analysisResults.traffic}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Monthly Traffic
-                </div>
+                <div className="text-3xl font-bold text-green-600">{analysisResults.traffic}</div>
+                <div className="text-sm text-muted-foreground">Monthly Traffic</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600">
-                  {analysisResults.keywords}
-                </div>
+                <div className="text-3xl font-bold text-purple-600">{analysisResults.keywords}</div>
                 <div className="text-sm text-muted-foreground">Keywords</div>
               </div>
               <div className="text-center">
@@ -192,11 +160,7 @@ export function CompetitorContentAnalyzer() {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {analysisResults.strengths.map((strength, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="bg-green-100 text-green-800"
-                  >
+                  <Badge key={index} variant="secondary" className="bg-green-100 text-green-800">
                     {strength}
                   </Badge>
                 ))}
@@ -211,11 +175,7 @@ export function CompetitorContentAnalyzer() {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {analysisResults.weaknesses.map((weakness, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="bg-red-100 text-red-800"
-                  >
+                  <Badge key={index} variant="secondary" className="bg-red-100 text-red-800">
                     {weakness}
                   </Badge>
                 ))}
@@ -230,11 +190,7 @@ export function CompetitorContentAnalyzer() {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {analysisResults.opportunities.map((opportunity, index) => (
-                  <Badge
-                    key={index}
-                    variant="secondary"
-                    className="bg-blue-100 text-blue-800"
-                  >
+                  <Badge key={index} variant="secondary" className="bg-blue-100 text-blue-800">
                     {opportunity}
                   </Badge>
                 ))}
@@ -242,10 +198,7 @@ export function CompetitorContentAnalyzer() {
             </div>
 
             <div className="flex justify-center space-x-2">
-              <Button
-                variant="outline"
-                onClick={() => setAnalysisResults(null)}
-              >
+              <Button variant="outline" onClick={() => setAnalysisResults(null)}>
                 Analyze Another
               </Button>
               <Button>

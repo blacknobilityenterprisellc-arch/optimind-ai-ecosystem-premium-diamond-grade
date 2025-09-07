@@ -5,17 +5,14 @@
  * the Premium Diamond-Grade Scanner for comprehensive analysis and fixing
  */
 
-import {
-  premiumDiamondGradeScanner,
-  ScanIssue,
-} from "./premium-diamond-grade-scanner";
+import { premiumDiamondGradeScanner, ScanIssue } from './premium-diamond-grade-scanner';
 
 export interface ErrorContext {
   component: string;
   operation: string;
   error: Error;
   timestamp: Date;
-  severity: "critical" | "high" | "medium" | "low";
+  severity: 'critical' | 'high' | 'medium' | 'low';
   additionalInfo?: any;
 }
 
@@ -52,7 +49,7 @@ export class GlobalErrorHandler {
     // Start monitoring
     this.startMonitoring();
 
-    console.log("Global Error Handler initialized successfully");
+    console.log('Global Error Handler initialized successfully');
   }
 
   /**
@@ -66,11 +63,11 @@ export class GlobalErrorHandler {
       try {
         await this.monitorSystemHealth();
       } catch (error) {
-        console.error("System monitoring failed:", error);
+        console.error('System monitoring failed:', error);
       }
     }, 30000); // Monitor every 30 seconds
 
-    console.log("System monitoring started");
+    console.log('System monitoring started');
   }
 
   /**
@@ -81,7 +78,7 @@ export class GlobalErrorHandler {
       clearInterval(this.monitoringInterval);
     }
     this.isMonitoring = false;
-    console.log("System monitoring stopped");
+    console.log('System monitoring stopped');
   }
 
   /**
@@ -89,15 +86,15 @@ export class GlobalErrorHandler {
    */
   handleError(error: Error, context: Partial<ErrorContext> = {}): void {
     const errorContext: ErrorContext = {
-      component: context.component || "unknown",
-      operation: context.operation || "unknown",
+      component: context.component || 'unknown',
+      operation: context.operation || 'unknown',
       error,
       timestamp: new Date(),
       severity: context.severity || this.determineErrorSeverity(error),
       additionalInfo: context.additionalInfo,
     };
 
-    console.error("🚨 Global Error Detected:", {
+    console.error('🚨 Global Error Detected:', {
       component: errorContext.component,
       operation: errorContext.operation,
       error: error.message,
@@ -118,7 +115,7 @@ export class GlobalErrorHandler {
     };
 
     // Trigger scanner for critical and high severity errors
-    if (scanIssue.severity === "critical" || scanIssue.severity === "high") {
+    if (scanIssue.severity === 'critical' || scanIssue.severity === 'high') {
       this.triggerScannerForIssue(scanIssue);
     }
   }
@@ -148,7 +145,7 @@ export class GlobalErrorHandler {
         this.triggerScannerForIssue(scanIssue);
       }
     } catch (error) {
-      console.error("System health monitoring failed:", error);
+      console.error('System health monitoring failed:', error);
     }
   }
 
@@ -174,13 +171,13 @@ export class GlobalErrorHandler {
    */
   private detectAnomalies(metrics: SystemMetrics): Array<{
     type: string;
-    severity: "critical" | "high" | "medium" | "low";
+    severity: 'critical' | 'high' | 'medium' | 'low';
     component: string;
     description: string;
   }> {
     const anomalies: Array<{
       type: string;
-      severity: "critical" | "high" | "medium" | "low";
+      severity: 'critical' | 'high' | 'medium' | 'low';
       component: string;
       description: string;
     }> = [];
@@ -188,16 +185,16 @@ export class GlobalErrorHandler {
     // CPU Usage Anomaly
     if (metrics.cpuUsage > 90) {
       anomalies.push({
-        type: "high-cpu-usage",
-        severity: "critical",
-        component: "performance",
+        type: 'high-cpu-usage',
+        severity: 'critical',
+        component: 'performance',
         description: `Critical CPU usage detected: ${metrics.cpuUsage.toFixed(1)}%`,
       });
     } else if (metrics.cpuUsage > 75) {
       anomalies.push({
-        type: "high-cpu-usage",
-        severity: "high",
-        component: "performance",
+        type: 'high-cpu-usage',
+        severity: 'high',
+        component: 'performance',
         description: `High CPU usage detected: ${metrics.cpuUsage.toFixed(1)}%`,
       });
     }
@@ -205,16 +202,16 @@ export class GlobalErrorHandler {
     // Memory Usage Anomaly
     if (metrics.memoryUsage > 90) {
       anomalies.push({
-        type: "high-memory-usage",
-        severity: "critical",
-        component: "performance",
+        type: 'high-memory-usage',
+        severity: 'critical',
+        component: 'performance',
         description: `Critical memory usage detected: ${metrics.memoryUsage.toFixed(1)}%`,
       });
     } else if (metrics.memoryUsage > 75) {
       anomalies.push({
-        type: "high-memory-usage",
-        severity: "high",
-        component: "performance",
+        type: 'high-memory-usage',
+        severity: 'high',
+        component: 'performance',
         description: `High memory usage detected: ${metrics.memoryUsage.toFixed(1)}%`,
       });
     }
@@ -222,16 +219,16 @@ export class GlobalErrorHandler {
     // Response Time Anomaly
     if (metrics.responseTime > 5000) {
       anomalies.push({
-        type: "high-response-time",
-        severity: "critical",
-        component: "performance",
+        type: 'high-response-time',
+        severity: 'critical',
+        component: 'performance',
         description: `Critical response time detected: ${metrics.responseTime.toFixed(0)}ms`,
       });
     } else if (metrics.responseTime > 2000) {
       anomalies.push({
-        type: "high-response-time",
-        severity: "high",
-        component: "performance",
+        type: 'high-response-time',
+        severity: 'high',
+        component: 'performance',
         description: `High response time detected: ${metrics.responseTime.toFixed(0)}ms`,
       });
     }
@@ -239,16 +236,16 @@ export class GlobalErrorHandler {
     // Error Rate Anomaly
     if (metrics.errorRate > 10) {
       anomalies.push({
-        type: "high-error-rate",
-        severity: "critical",
-        component: "system",
+        type: 'high-error-rate',
+        severity: 'critical',
+        component: 'system',
         description: `Critical error rate detected: ${metrics.errorRate.toFixed(1)}%`,
       });
     } else if (metrics.errorRate > 5) {
       anomalies.push({
-        type: "high-error-rate",
-        severity: "high",
-        component: "system",
+        type: 'high-error-rate',
+        severity: 'high',
+        component: 'system',
         description: `High error rate detected: ${metrics.errorRate.toFixed(1)}%`,
       });
     }
@@ -259,44 +256,42 @@ export class GlobalErrorHandler {
   /**
    * Determine error severity
    */
-  private determineErrorSeverity(
-    error: Error,
-  ): "critical" | "high" | "medium" | "low" {
+  private determineErrorSeverity(error: Error): 'critical' | 'high' | 'medium' | 'low' {
     const errorMessage = error.message.toLowerCase();
 
     // Critical errors
     if (
-      errorMessage.includes("critical") ||
-      errorMessage.includes("fatal") ||
-      errorMessage.includes("security") ||
-      errorMessage.includes("unauthorized") ||
-      errorMessage.includes("authentication failed")
+      errorMessage.includes('critical') ||
+      errorMessage.includes('fatal') ||
+      errorMessage.includes('security') ||
+      errorMessage.includes('unauthorized') ||
+      errorMessage.includes('authentication failed')
     ) {
-      return "critical";
+      return 'critical';
     }
 
     // High severity errors
     if (
-      errorMessage.includes("timeout") ||
-      errorMessage.includes("connection") ||
-      errorMessage.includes("database") ||
-      errorMessage.includes("server") ||
-      errorMessage.includes("internal")
+      errorMessage.includes('timeout') ||
+      errorMessage.includes('connection') ||
+      errorMessage.includes('database') ||
+      errorMessage.includes('server') ||
+      errorMessage.includes('internal')
     ) {
-      return "high";
+      return 'high';
     }
 
     // Medium severity errors
     if (
-      errorMessage.includes("not found") ||
-      errorMessage.includes("invalid") ||
-      errorMessage.includes("validation")
+      errorMessage.includes('not found') ||
+      errorMessage.includes('invalid') ||
+      errorMessage.includes('validation')
     ) {
-      return "medium";
+      return 'medium';
     }
 
     // Low severity errors
-    return "low";
+    return 'low';
   }
 
   /**
@@ -305,15 +300,15 @@ export class GlobalErrorHandler {
   private getErrorType(error: Error): string {
     const errorMessage = error.message.toLowerCase();
 
-    if (errorMessage.includes("timeout")) return "timeout-error";
-    if (errorMessage.includes("connection")) return "connection-error";
-    if (errorMessage.includes("database")) return "database-error";
-    if (errorMessage.includes("security")) return "security-error";
-    if (errorMessage.includes("authentication")) return "authentication-error";
-    if (errorMessage.includes("validation")) return "validation-error";
-    if (errorMessage.includes("not found")) return "not-found-error";
+    if (errorMessage.includes('timeout')) return 'timeout-error';
+    if (errorMessage.includes('connection')) return 'connection-error';
+    if (errorMessage.includes('database')) return 'database-error';
+    if (errorMessage.includes('security')) return 'security-error';
+    if (errorMessage.includes('authentication')) return 'authentication-error';
+    if (errorMessage.includes('validation')) return 'validation-error';
+    if (errorMessage.includes('not found')) return 'not-found-error';
 
-    return "general-error";
+    return 'general-error';
   }
 
   /**
@@ -324,14 +319,14 @@ export class GlobalErrorHandler {
 
     // Some errors are not auto-fixable
     const nonAutoFixable = [
-      "authentication failed",
-      "unauthorized",
-      "security",
-      "fatal",
-      "critical security",
+      'authentication failed',
+      'unauthorized',
+      'security',
+      'fatal',
+      'critical security',
     ];
 
-    return !nonAutoFixable.some((term) => errorMessage.includes(term));
+    return !nonAutoFixable.some(term => errorMessage.includes(term));
   }
 
   /**
@@ -339,18 +334,13 @@ export class GlobalErrorHandler {
    */
   private async triggerScannerForIssue(issue: ScanIssue): Promise<void> {
     try {
-      console.log(
-        `🔧 Triggering Premium Diamond-Grade Scanner for issue: ${issue.type}`,
-      );
+      console.log(`🔧 Triggering Premium Diamond-Grade Scanner for issue: ${issue.type}`);
 
       await this.scanner.triggerScan(issue);
 
       console.log(`✅ Scanner triggered successfully for issue: ${issue.type}`);
     } catch (error) {
-      console.error(
-        `❌ Failed to trigger scanner for issue ${issue.type}:`,
-        error,
-      );
+      console.error(`❌ Failed to trigger scanner for issue ${issue.type}:`, error);
     }
   }
 
@@ -358,9 +348,7 @@ export class GlobalErrorHandler {
    * Handle issue detected by scanner
    */
   private handleIssueDetected(issue: ScanIssue): void {
-    console.log(
-      `📋 Issue detected by scanner: ${issue.type} (${issue.severity})`,
-    );
+    console.log(`📋 Issue detected by scanner: ${issue.type} (${issue.severity})`);
 
     // Here you could add additional handling like:
     // - Sending notifications
@@ -376,8 +364,7 @@ export class GlobalErrorHandler {
     return {
       isMonitoring: this.isMonitoring,
       errorThreshold: this.errorThreshold,
-      scannerStatus:
-        this.scanner.getActiveScans().length > 0 ? "active" : "idle",
+      scannerStatus: this.scanner.getActiveScans().length > 0 ? 'active' : 'idle',
     };
   }
 
@@ -386,7 +373,7 @@ export class GlobalErrorHandler {
    */
   destroy(): void {
     this.stopMonitoring();
-    console.log("Global Error Handler destroyed");
+    console.log('Global Error Handler destroyed');
   }
 }
 

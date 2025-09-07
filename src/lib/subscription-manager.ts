@@ -1,5 +1,5 @@
 export interface SubscriptionPlan {
-  id: "monthly" | "annual" | "lifetime";
+  id: 'monthly' | 'annual' | 'lifetime';
   name: string;
   price: string;
   period: string;
@@ -12,8 +12,8 @@ export interface SubscriptionPlan {
 
 export interface UserSubscription {
   id: string;
-  planId: SubscriptionPlan["id"];
-  status: "active" | "cancelled" | "expired" | "trial";
+  planId: SubscriptionPlan['id'];
+  status: 'active' | 'cancelled' | 'expired' | 'trial';
   currentPeriodStart: Date;
   currentPeriodEnd: Date;
   trialEnd?: Date;
@@ -51,12 +51,10 @@ class SubscriptionManager {
   }
 
   private loadSubscription(): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
-      const stored = localStorage.getItem(
-        "private_photo_guardian_subscription",
-      );
+      const stored = localStorage.getItem('private_photo_guardian_subscription');
       if (stored) {
         const data = JSON.parse(stored);
         this.subscription = {
@@ -68,24 +66,24 @@ class SubscriptionManager {
         this.updateSubscriptionStatus();
       }
     } catch (error) {
-      console.error("Error loading subscription:", error);
+      console.error('Error loading subscription:', error);
     }
   }
 
   private saveSubscription(): void {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
       if (this.subscription) {
         localStorage.setItem(
-          "private_photo_guardian_subscription",
-          JSON.stringify(this.subscription),
+          'private_photo_guardian_subscription',
+          JSON.stringify(this.subscription)
         );
       } else {
-        localStorage.removeItem("private_photo_guardian_subscription");
+        localStorage.removeItem('private_photo_guardian_subscription');
       }
     } catch (error) {
-      console.error("Error saving subscription:", error);
+      console.error('Error saving subscription:', error);
     }
   }
 
@@ -99,46 +97,44 @@ class SubscriptionManager {
 
     // Check if subscription is expired
     if (this.subscription.currentPeriodEnd < now) {
-      this.subscription.status = "expired";
+      this.subscription.status = 'expired';
       this.isPremium = false;
       return;
     }
 
     // Check if trial is active
-    if (this.subscription.status === "trial" && this.subscription.trialEnd) {
+    if (this.subscription.status === 'trial' && this.subscription.trialEnd) {
       if (this.subscription.trialEnd > now) {
         const trialEnd = new Date(this.subscription.trialEnd);
         const diffTime = trialEnd.getTime() - now.getTime();
         this.trialDaysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         this.isPremium = true;
       } else {
-        this.subscription.status = "expired";
+        this.subscription.status = 'expired';
         this.isPremium = false;
       }
     } else {
-      this.isPremium = this.subscription.status === "active";
+      this.isPremium = this.subscription.status === 'active';
     }
   }
 
   // Public Methods
-  async subscribe(planId: SubscriptionPlan["id"]): Promise<UserSubscription> {
+  async subscribe(planId: SubscriptionPlan['id']): Promise<UserSubscription> {
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const now = new Date();
     let currentPeriodEnd: Date;
 
     switch (planId) {
-      case "monthly":
+      case 'monthly':
         currentPeriodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
         break;
-      case "annual":
+      case 'annual':
         currentPeriodEnd = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
         break;
-      case "lifetime":
-        currentPeriodEnd = new Date(
-          now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000,
-        ); // 50 years
+      case 'lifetime':
+        currentPeriodEnd = new Date(now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000); // 50 years
         break;
     }
 
@@ -147,7 +143,7 @@ class SubscriptionManager {
     this.subscription = {
       id: `sub_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
       planId,
-      status: "active",
+      status: 'active',
       currentPeriodStart: now,
       currentPeriodEnd,
       cancelAtPeriodEnd: false,
@@ -163,20 +159,20 @@ class SubscriptionManager {
 
   async startFreeTrial(): Promise<UserSubscription> {
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     const now = new Date();
     const trialEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
     this.subscription = {
       id: `trial_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
-      planId: "monthly",
-      status: "trial",
+      planId: 'monthly',
+      status: 'trial',
       currentPeriodStart: now,
       currentPeriodEnd: trialEnd,
       trialEnd,
       cancelAtPeriodEnd: false,
-      features: this.getPlanFeatures("monthly"),
+      features: this.getPlanFeatures('monthly'),
     };
 
     this.isPremium = true;
@@ -191,10 +187,10 @@ class SubscriptionManager {
     if (!this.subscription) return;
 
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     this.subscription.cancelAtPeriodEnd = true;
-    this.subscription.status = "cancelled";
+    this.subscription.status = 'cancelled';
     this.saveSubscription();
   }
 
@@ -202,10 +198,10 @@ class SubscriptionManager {
     if (!this.subscription) return;
 
     // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     this.subscription.cancelAtPeriodEnd = false;
-    this.subscription.status = "active";
+    this.subscription.status = 'active';
     this.saveSubscription();
   }
 
@@ -220,7 +216,7 @@ class SubscriptionManager {
 
   hasActiveTrial(): boolean {
     this.updateSubscriptionStatus();
-    return this.subscription?.status === "trial";
+    return this.subscription?.status === 'trial';
   }
 
   getTrialDaysRemaining(): number {
@@ -236,9 +232,7 @@ class SubscriptionManager {
     // Simulate usage data - in real implementation, this would come from your backend
     const baseUsage = {
       storageUsed: 150 * 1024 * 1024, // 150MB
-      storageLimit: this.isPremium
-        ? 1024 * 1024 * 1024 * 1024
-        : 500 * 1024 * 1024, // 1TB vs 500MB
+      storageLimit: this.isPremium ? 1024 * 1024 * 1024 * 1024 : 500 * 1024 * 1024, // 1TB vs 500MB
       photosScanned: 45,
       scanLimit: this.isPremium ? 10000 : 100,
       aiTagsGenerated: 120,
@@ -253,58 +247,58 @@ class SubscriptionManager {
   getAvailablePlans(): SubscriptionPlan[] {
     return [
       {
-        id: "monthly",
-        name: "Monthly",
-        price: "$9.99",
-        period: "/month",
+        id: 'monthly',
+        name: 'Monthly',
+        price: '$9.99',
+        period: '/month',
         features: [
-          "Unlimited encrypted cloud storage",
-          "AI-powered smart organization",
-          "Advanced editing suite",
-          "Secure vault with biometric auth",
-          "Premium themes & customization",
-          "Priority customer support",
+          'Unlimited encrypted cloud storage',
+          'AI-powered smart organization',
+          'Advanced editing suite',
+          'Secure vault with biometric auth',
+          'Premium themes & customization',
+          'Priority customer support',
         ],
       },
       {
-        id: "annual",
-        name: "Annual",
-        price: "$4.99",
-        period: "/month",
-        originalPrice: "$9.99",
-        savings: "Save 50%",
+        id: 'annual',
+        name: 'Annual',
+        price: '$4.99',
+        period: '/month',
+        originalPrice: '$9.99',
+        savings: 'Save 50%',
         features: [
-          "Everything in Monthly",
-          "2 months FREE",
-          "Advanced AI emotion recognition",
-          "Private sharing links",
-          "Custom AI model training",
-          "Early access to new features",
+          'Everything in Monthly',
+          '2 months FREE',
+          'Advanced AI emotion recognition',
+          'Private sharing links',
+          'Custom AI model training',
+          'Early access to new features',
         ],
         popular: true,
         highlighted: true,
       },
       {
-        id: "lifetime",
-        name: "Lifetime",
-        price: "$199",
-        period: "one-time",
-        savings: "Best value",
+        id: 'lifetime',
+        name: 'Lifetime',
+        price: '$199',
+        period: 'one-time',
+        savings: 'Best value',
         features: [
-          "Everything in Annual",
-          "Lifetime access to all features",
-          "All future updates included",
-          "Exclusive premium themes",
-          "VIP customer support",
-          "Special lifetime-only features",
+          'Everything in Annual',
+          'Lifetime access to all features',
+          'All future updates included',
+          'Exclusive premium themes',
+          'VIP customer support',
+          'Special lifetime-only features',
         ],
       },
     ];
   }
 
-  private getPlanFeatures(planId: SubscriptionPlan["id"]): string[] {
+  private getPlanFeatures(planId: SubscriptionPlan['id']): string[] {
     const plans = this.getAvailablePlans();
-    const plan = plans.find((p) => p.id === planId);
+    const plan = plans.find(p => p.id === planId);
     return plan?.features || [];
   }
 
@@ -339,17 +333,17 @@ class SubscriptionManager {
 
   // Utility methods
   formatStorage(bytes: number): string {
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    if (bytes === 0) return "0 Bytes";
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Bytes';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   formatDate(date: Date): string {
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
@@ -366,12 +360,10 @@ class SubscriptionManager {
 export const subscriptionManager = SubscriptionManager.getInstance();
 
 // React hook for subscription management
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useSubscription() {
-  const [subscription, setSubscription] = useState<UserSubscription | null>(
-    null,
-  );
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -392,14 +384,14 @@ export function useSubscription() {
       updateSubscription();
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
-  const subscribe = async (planId: SubscriptionPlan["id"]) => {
+  const subscribe = async (planId: SubscriptionPlan['id']) => {
     const sub = await subscriptionManager.subscribe(planId);
     setSubscription(sub);
     setIsPremium(true);
@@ -416,15 +408,15 @@ export function useSubscription() {
 
   const cancelSubscription = async () => {
     await subscriptionManager.cancelSubscription();
-    setSubscription((prev) =>
-      prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null,
+    setSubscription(prev =>
+      prev ? { ...prev, status: 'cancelled', cancelAtPeriodEnd: true } : null
     );
   };
 
   const reactivateSubscription = async () => {
     await subscriptionManager.reactivateSubscription();
-    setSubscription((prev) =>
-      prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null,
+    setSubscription(prev =>
+      prev ? { ...prev, status: 'active', cancelAtPeriodEnd: false } : null
     );
   };
 

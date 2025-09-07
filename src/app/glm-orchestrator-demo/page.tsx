@@ -1,17 +1,11 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface OrchestratorStatus {
   isInitialized: boolean;
@@ -50,7 +44,7 @@ export default function GLMOrchestratorDemo() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch("/api/glm-orchestrator?action=status");
+      const response = await fetch('/api/glm-orchestrator?action=status');
       const data = await response.json();
       if (data.success) {
         setStatus(data.data);
@@ -58,13 +52,13 @@ export default function GLMOrchestratorDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to fetch orchestrator status");
+      setError('Failed to fetch orchestrator status');
     }
   };
 
   const fetchHealth = async () => {
     try {
-      const response = await fetch("/api/glm-orchestrator?action=health");
+      const response = await fetch('/api/glm-orchestrator?action=health');
       const data = await response.json();
       if (data.success) {
         setHealth(data.data);
@@ -72,7 +66,7 @@ export default function GLMOrchestratorDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to fetch health status");
+      setError('Failed to fetch health status');
     }
   };
 
@@ -80,18 +74,16 @@ export default function GLMOrchestratorDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        "/api/glm-orchestrator?action=test-analysis",
-      );
+      const response = await fetch('/api/glm-orchestrator?action=test-analysis');
       const data = await response.json();
       if (data.success) {
-        setResults((prev) => [...prev, data.data]);
+        setResults(prev => [...prev, data.data]);
         await fetchStatus();
       } else {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to run analysis");
+      setError('Failed to run analysis');
     } finally {
       setLoading(false);
     }
@@ -101,18 +93,16 @@ export default function GLMOrchestratorDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        "/api/glm-orchestrator?action=test-optimization",
-      );
+      const response = await fetch('/api/glm-orchestrator?action=test-optimization');
       const data = await response.json();
       if (data.success) {
-        setResults((prev) => [...prev, data.data]);
+        setResults(prev => [...prev, data.data]);
         await fetchStatus();
       } else {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to run optimization");
+      setError('Failed to run optimization');
     } finally {
       setLoading(false);
     }
@@ -122,18 +112,16 @@ export default function GLMOrchestratorDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        "/api/glm-orchestrator?action=test-prediction",
-      );
+      const response = await fetch('/api/glm-orchestrator?action=test-prediction');
       const data = await response.json();
       if (data.success) {
-        setResults((prev) => [...prev, data.data]);
+        setResults(prev => [...prev, data.data]);
         await fetchStatus();
       } else {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to run prediction");
+      setError('Failed to run prediction');
     } finally {
       setLoading(false);
     }
@@ -143,25 +131,25 @@ export default function GLMOrchestratorDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/glm-orchestrator", {
-        method: "POST",
+      const response = await fetch('/api/glm-orchestrator', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: "comprehensive-test",
+          action: 'comprehensive-test',
         }),
       });
       const data = await response.json();
       if (data.success) {
-        setResults((prev) => [...prev, ...data.data.orchestratedOperations]);
+        setResults(prev => [...prev, ...data.data.orchestratedOperations]);
         await fetchStatus();
         await fetchHealth();
       } else {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to run comprehensive test");
+      setError('Failed to run comprehensive test');
     } finally {
       setLoading(false);
     }
@@ -174,21 +162,21 @@ export default function GLMOrchestratorDemo() {
 
   const getHealthColor = (status: string) => {
     switch (status) {
-      case "excellent":
-      case "healthy":
-        return "bg-green-500";
-      case "good":
-      case "degraded":
-        return "bg-yellow-500";
-      case "fair":
-        return "bg-orange-500";
-      case "poor":
-      case "unhealthy":
-        return "bg-red-500";
-      case "critical":
-        return "bg-red-700";
+      case 'excellent':
+      case 'healthy':
+        return 'bg-green-500';
+      case 'good':
+      case 'degraded':
+        return 'bg-yellow-500';
+      case 'fair':
+        return 'bg-orange-500';
+      case 'poor':
+      case 'unhealthy':
+        return 'bg-red-500';
+      case 'critical':
+        return 'bg-red-700';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
@@ -197,8 +185,7 @@ export default function GLMOrchestratorDemo() {
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold">GLM-4.5 Orchestrator Demo</h1>
         <p className="text-xl text-muted-foreground">
-          Demonstrating GLM SDK as the Primary Orchestrator for OptiMind AI
-          Ecosystem
+          Demonstrating GLM SDK as the Primary Orchestrator for OptiMind AI Ecosystem
         </p>
       </div>
 
@@ -222,69 +209,49 @@ export default function GLMOrchestratorDemo() {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Status</CardTitle>
                 <div
-                  className={`h-3 w-3 rounded-full ${status?.isInitialized ? "bg-green-500" : "bg-red-500"}`}
+                  className={`h-3 w-3 rounded-full ${status?.isInitialized ? 'bg-green-500' : 'bg-red-500'}`}
                 />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {status?.isInitialized ? "Initialized" : "Not Initialized"}
+                  {status?.isInitialized ? 'Initialized' : 'Not Initialized'}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  GLM-4.5 Orchestrator
-                </p>
+                <p className="text-xs text-muted-foreground">GLM-4.5 Orchestrator</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Active Operations
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Active Operations</CardTitle>
                 <div className="h-3 w-3 rounded-full bg-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {status?.activeOperations || 0}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Currently running
-                </p>
+                <div className="text-2xl font-bold">{status?.activeOperations || 0}</div>
+                <p className="text-xs text-muted-foreground">Currently running</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Completed Operations
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Completed Operations</CardTitle>
                 <div className="h-3 w-3 rounded-full bg-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {status?.completedOperations || 0}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Successfully completed
-                </p>
+                <div className="text-2xl font-bold">{status?.completedOperations || 0}</div>
+                <p className="text-xs text-muted-foreground">Successfully completed</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  System Health
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">System Health</CardTitle>
                 <div
-                  className={`h-3 w-3 rounded-full ${health ? getHealthColor(health.overall) : "bg-gray-500"}`}
+                  className={`h-3 w-3 rounded-full ${health ? getHealthColor(health.overall) : 'bg-gray-500'}`}
                 />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold capitalize">
-                  {health?.overall || "Unknown"}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Overall system status
-                </p>
+                <div className="text-2xl font-bold capitalize">{health?.overall || 'Unknown'}</div>
+                <p className="text-xs text-muted-foreground">Overall system status</p>
               </CardContent>
             </Card>
           </div>
@@ -293,41 +260,24 @@ export default function GLMOrchestratorDemo() {
             <CardHeader>
               <CardTitle>GLM-4.5 Orchestrator Controls</CardTitle>
               <CardDescription>
-                Execute orchestrated operations using GLM-4.5 as the primary
-                orchestrator
+                Execute orchestrated operations using GLM-4.5 as the primary orchestrator
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 <Button onClick={runAnalysis} disabled={loading}>
-                  {loading ? "Running..." : "Run Analysis"}
+                  {loading ? 'Running...' : 'Run Analysis'}
                 </Button>
-                <Button
-                  onClick={runOptimization}
-                  disabled={loading}
-                  variant="outline"
-                >
-                  {loading ? "Running..." : "Run Optimization"}
+                <Button onClick={runOptimization} disabled={loading} variant="outline">
+                  {loading ? 'Running...' : 'Run Optimization'}
                 </Button>
-                <Button
-                  onClick={runPrediction}
-                  disabled={loading}
-                  variant="outline"
-                >
-                  {loading ? "Running..." : "Run Prediction"}
+                <Button onClick={runPrediction} disabled={loading} variant="outline">
+                  {loading ? 'Running...' : 'Run Prediction'}
                 </Button>
-                <Button
-                  onClick={runComprehensiveTest}
-                  disabled={loading}
-                  variant="default"
-                >
-                  {loading ? "Running..." : "Comprehensive Test"}
+                <Button onClick={runComprehensiveTest} disabled={loading} variant="default">
+                  {loading ? 'Running...' : 'Comprehensive Test'}
                 </Button>
-                <Button
-                  onClick={fetchHealth}
-                  disabled={loading}
-                  variant="outline"
-                >
+                <Button onClick={fetchHealth} disabled={loading} variant="outline">
                   Refresh Health
                 </Button>
               </div>
@@ -351,21 +301,16 @@ export default function GLMOrchestratorDemo() {
                   </div>
                   <div className="space-y-2">
                     <h4 className="font-medium">Component Status</h4>
-                    {Object.entries(health.components).map(
-                      ([component, status]) => (
-                        <div
-                          key={component}
-                          className="flex items-center justify-between"
-                        >
-                          <span className="capitalize">
-                            {component.replace(/([A-Z])/g, " $1").trim()}
-                          </span>
-                          <Badge className={getHealthColor(status as string)}>
-                            {(status as string).toUpperCase()}
-                          </Badge>
-                        </div>
-                      ),
-                    )}
+                    {Object.entries(health.components).map(([component, status]) => (
+                      <div key={component} className="flex items-center justify-between">
+                        <span className="capitalize">
+                          {component.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
+                        <Badge className={getHealthColor(status as string)}>
+                          {(status as string).toUpperCase()}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
@@ -381,9 +326,7 @@ export default function GLMOrchestratorDemo() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Success Rate</span>
-                    <span>
-                      {(health.metrics.successRate * 100).toFixed(1)}%
-                    </span>
+                    <span>{(health.metrics.successRate * 100).toFixed(1)}%</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Throughput</span>
@@ -427,9 +370,7 @@ export default function GLMOrchestratorDemo() {
           ) : (
             <Card>
               <CardContent className="flex items-center justify-center h-32">
-                <p className="text-muted-foreground">
-                  No health data available
-                </p>
+                <p className="text-muted-foreground">No health data available</p>
               </CardContent>
             </Card>
           )}
@@ -439,9 +380,7 @@ export default function GLMOrchestratorDemo() {
           <Card>
             <CardHeader>
               <CardTitle>Orchestrated Operations</CardTitle>
-              <CardDescription>
-                Operations executed by the GLM-4.5 Orchestrator
-              </CardDescription>
+              <CardDescription>Operations executed by the GLM-4.5 Orchestrator</CardDescription>
             </CardHeader>
             <CardContent>
               {results.length > 0 ? (
@@ -450,20 +389,12 @@ export default function GLMOrchestratorDemo() {
                     <Card key={result.operationId}>
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
-                          <CardTitle className="text-lg">
-                            Operation #{index + 1}
-                          </CardTitle>
+                          <CardTitle className="text-lg">Operation #{index + 1}</CardTitle>
                           <div className="flex items-center gap-2">
-                            <Badge
-                              variant={
-                                result.success ? "default" : "destructive"
-                              }
-                            >
-                              {result.success ? "Success" : "Failed"}
+                            <Badge variant={result.success ? 'default' : 'destructive'}>
+                              {result.success ? 'Success' : 'Failed'}
                             </Badge>
-                            <Badge variant="outline">
-                              {result.orchestratedBy}
-                            </Badge>
+                            <Badge variant="outline">{result.orchestratedBy}</Badge>
                           </div>
                         </div>
                       </CardHeader>
@@ -471,38 +402,24 @@ export default function GLMOrchestratorDemo() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
                             <span className="font-medium">Confidence:</span>
-                            <span className="ml-2">
-                              {(result.confidence * 100).toFixed(1)}%
-                            </span>
+                            <span className="ml-2">{(result.confidence * 100).toFixed(1)}%</span>
                           </div>
                           <div>
-                            <span className="font-medium">
-                              Processing Time:
-                            </span>
-                            <span className="ml-2">
-                              {result.processingTime}ms
-                            </span>
+                            <span className="font-medium">Processing Time:</span>
+                            <span className="ml-2">{result.processingTime}ms</span>
                           </div>
                           <div>
                             <span className="font-medium">Insights:</span>
-                            <span className="ml-2">
-                              {result.insights?.length || 0}
-                            </span>
+                            <span className="ml-2">{result.insights?.length || 0}</span>
                           </div>
                           <div>
-                            <span className="font-medium">
-                              Recommendations:
-                            </span>
-                            <span className="ml-2">
-                              {result.recommendations?.length || 0}
-                            </span>
+                            <span className="font-medium">Recommendations:</span>
+                            <span className="ml-2">{result.recommendations?.length || 0}</span>
                           </div>
                         </div>
                         {result.insights && result.insights.length > 0 && (
                           <div>
-                            <h4 className="font-medium text-sm mb-1">
-                              Insights:
-                            </h4>
+                            <h4 className="font-medium text-sm mb-1">Insights:</h4>
                             <ul className="list-disc list-inside text-sm space-y-1">
                               {result.insights.map((insight, idx) => (
                                 <li key={idx}>{insight}</li>
@@ -510,33 +427,25 @@ export default function GLMOrchestratorDemo() {
                             </ul>
                           </div>
                         )}
-                        {result.recommendations &&
-                          result.recommendations.length > 0 && (
-                            <div>
-                              <h4 className="font-medium text-sm mb-1">
-                                Recommendations:
-                              </h4>
-                              <ul className="list-disc list-inside text-sm space-y-1">
-                                {result.recommendations.map(
-                                  (recommendation, idx) => (
-                                    <li key={idx}>{recommendation}</li>
-                                  ),
-                                )}
-                              </ul>
-                            </div>
-                          )}
+                        {result.recommendations && result.recommendations.length > 0 && (
+                          <div>
+                            <h4 className="font-medium text-sm mb-1">Recommendations:</h4>
+                            <ul className="list-disc list-inside text-sm space-y-1">
+                              {result.recommendations.map((recommendation, idx) => (
+                                <li key={idx}>{recommendation}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               ) : (
                 <div className="text-center py-8">
-                  <p className="text-muted-foreground">
-                    No operations executed yet
-                  </p>
+                  <p className="text-muted-foreground">No operations executed yet</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    Use the controls in the Overview tab to run orchestrated
-                    operations
+                    Use the controls in the Overview tab to run orchestrated operations
                   </p>
                 </div>
               )}
@@ -548,9 +457,7 @@ export default function GLMOrchestratorDemo() {
           <Card>
             <CardHeader>
               <CardTitle>Technical Results</CardTitle>
-              <CardDescription>
-                Raw JSON results from orchestrated operations
-              </CardDescription>
+              <CardDescription>Raw JSON results from orchestrated operations</CardDescription>
             </CardHeader>
             <CardContent>
               {results.length > 0 ? (

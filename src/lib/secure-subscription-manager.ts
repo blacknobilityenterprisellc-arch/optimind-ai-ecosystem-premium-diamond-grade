@@ -1,8 +1,4 @@
-import {
-  SubscriptionPlan,
-  UserSubscription,
-  SubscriptionUsage,
-} from "./subscription-manager";
+import { SubscriptionPlan, UserSubscription, SubscriptionUsage } from './subscription-manager';
 
 class SecureSubscriptionManager {
   private static instance: SecureSubscriptionManager;
@@ -25,16 +21,16 @@ class SecureSubscriptionManager {
   }
 
   private async loadSubscription(): Promise<void> {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     try {
-      const sessionToken = sessionStorage.getItem("auth_session");
+      const sessionToken = sessionStorage.getItem('auth_session');
       if (!sessionToken) {
         this.resetSubscription();
         return;
       }
 
-      const response = await fetch("/api/subscription", {
+      const response = await fetch('/api/subscription', {
         headers: {
           Authorization: `Bearer ${sessionToken}`,
         },
@@ -51,7 +47,7 @@ class SecureSubscriptionManager {
         this.resetSubscription();
       }
     } catch (error) {
-      console.error("Error loading subscription:", error);
+      console.error('Error loading subscription:', error);
       this.resetSubscription();
     }
   }
@@ -74,28 +70,28 @@ class SecureSubscriptionManager {
   }
 
   // Public Methods
-  async subscribe(planId: SubscriptionPlan["id"]): Promise<UserSubscription> {
-    if (typeof window === "undefined") {
-      throw new TypeError("Subscription management requires browser context");
+  async subscribe(planId: SubscriptionPlan['id']): Promise<UserSubscription> {
+    if (typeof window === 'undefined') {
+      throw new TypeError('Subscription management requires browser context');
     }
 
-    const sessionToken = sessionStorage.getItem("auth_session");
+    const sessionToken = sessionStorage.getItem('auth_session');
     if (!sessionToken) {
-      throw new Error("Authentication required");
+      throw new Error('Authentication required');
     }
 
-    const response = await fetch("/api/subscription", {
-      method: "POST",
+    const response = await fetch('/api/subscription', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${sessionToken}`,
       },
-      body: JSON.stringify({ planId, action: "subscribe" }),
+      body: JSON.stringify({ planId, action: 'subscribe' }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || "Subscription failed");
+      throw new Error(error.error || 'Subscription failed');
     }
 
     const data = await response.json();
@@ -110,27 +106,27 @@ class SecureSubscriptionManager {
   }
 
   async startFreeTrial(): Promise<UserSubscription> {
-    if (typeof window === "undefined") {
-      throw new TypeError("Subscription management requires browser context");
+    if (typeof window === 'undefined') {
+      throw new TypeError('Subscription management requires browser context');
     }
 
-    const sessionToken = sessionStorage.getItem("auth_session");
+    const sessionToken = sessionStorage.getItem('auth_session');
     if (!sessionToken) {
-      throw new Error("Authentication required");
+      throw new Error('Authentication required');
     }
 
-    const response = await fetch("/api/subscription", {
-      method: "POST",
+    const response = await fetch('/api/subscription', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${sessionToken}`,
       },
-      body: JSON.stringify({ planId: "monthly", action: "trial" }),
+      body: JSON.stringify({ planId: 'monthly', action: 'trial' }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || "Trial activation failed");
+      throw new Error(error.error || 'Trial activation failed');
     }
 
     const data = await response.json();
@@ -150,7 +146,7 @@ class SecureSubscriptionManager {
     // For demo purposes, we'll just update the local state
     // In production, this would call an API endpoint
     this.subscription.cancelAtPeriodEnd = true;
-    this.subscription.status = "cancelled";
+    this.subscription.status = 'cancelled';
   }
 
   async reactivateSubscription(): Promise<void> {
@@ -159,7 +155,7 @@ class SecureSubscriptionManager {
     // For demo purposes, we'll just update the local state
     // In production, this would call an API endpoint
     this.subscription.cancelAtPeriodEnd = false;
-    this.subscription.status = "active";
+    this.subscription.status = 'active';
   }
 
   getSubscription(): UserSubscription | null {
@@ -200,50 +196,50 @@ class SecureSubscriptionManager {
   getAvailablePlans(): SubscriptionPlan[] {
     return [
       {
-        id: "monthly",
-        name: "Monthly",
-        price: "$9.99",
-        period: "/month",
+        id: 'monthly',
+        name: 'Monthly',
+        price: '$9.99',
+        period: '/month',
         features: [
-          "Unlimited encrypted cloud storage",
-          "AI-powered smart organization",
-          "Advanced editing suite",
-          "Secure vault with biometric auth",
-          "Premium themes & customization",
-          "Priority customer support",
+          'Unlimited encrypted cloud storage',
+          'AI-powered smart organization',
+          'Advanced editing suite',
+          'Secure vault with biometric auth',
+          'Premium themes & customization',
+          'Priority customer support',
         ],
       },
       {
-        id: "annual",
-        name: "Annual",
-        price: "$4.99",
-        period: "/month",
-        originalPrice: "$9.99",
-        savings: "Save 50%",
+        id: 'annual',
+        name: 'Annual',
+        price: '$4.99',
+        period: '/month',
+        originalPrice: '$9.99',
+        savings: 'Save 50%',
         features: [
-          "Everything in Monthly",
-          "2 months FREE",
-          "Advanced AI emotion recognition",
-          "Private sharing links",
-          "Custom AI model training",
-          "Early access to new features",
+          'Everything in Monthly',
+          '2 months FREE',
+          'Advanced AI emotion recognition',
+          'Private sharing links',
+          'Custom AI model training',
+          'Early access to new features',
         ],
         popular: true,
         highlighted: true,
       },
       {
-        id: "lifetime",
-        name: "Lifetime",
-        price: "$199",
-        period: "one-time",
-        savings: "Best value",
+        id: 'lifetime',
+        name: 'Lifetime',
+        price: '$199',
+        period: 'one-time',
+        savings: 'Best value',
         features: [
-          "Everything in Annual",
-          "Lifetime access to all features",
-          "All future updates included",
-          "Exclusive premium themes",
-          "VIP customer support",
-          "Special lifetime-only features",
+          'Everything in Annual',
+          'Lifetime access to all features',
+          'All future updates included',
+          'Exclusive premium themes',
+          'VIP customer support',
+          'Special lifetime-only features',
         ],
       },
     ];
@@ -280,17 +276,17 @@ class SecureSubscriptionManager {
 
   // Utility methods
   formatStorage(bytes: number): string {
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    if (bytes === 0) return "0 Bytes";
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes === 0) return '0 Bytes';
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   formatDate(date: Date): string {
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
@@ -304,16 +300,13 @@ class SecureSubscriptionManager {
 }
 
 // Export singleton instance
-export const secureSubscriptionManager =
-  SecureSubscriptionManager.getInstance();
+export const secureSubscriptionManager = SecureSubscriptionManager.getInstance();
 
 // React hook for secure subscription management
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useSecureSubscription() {
-  const [subscription, setSubscription] = useState<UserSubscription | null>(
-    null,
-  );
+  const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [trialDaysRemaining, setTrialDaysRemaining] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -335,14 +328,14 @@ export function useSecureSubscription() {
       updateSubscription();
     };
 
-    window.addEventListener("storage", handleStorageChange);
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
-  const subscribe = async (planId: SubscriptionPlan["id"]) => {
+  const subscribe = async (planId: SubscriptionPlan['id']) => {
     const sub = await secureSubscriptionManager.subscribe(planId);
     setSubscription(sub);
     setIsPremium(true);
@@ -359,15 +352,15 @@ export function useSecureSubscription() {
 
   const cancelSubscription = async () => {
     await secureSubscriptionManager.cancelSubscription();
-    setSubscription((prev) =>
-      prev ? { ...prev, status: "cancelled", cancelAtPeriodEnd: true } : null,
+    setSubscription(prev =>
+      prev ? { ...prev, status: 'cancelled', cancelAtPeriodEnd: true } : null
     );
   };
 
   const reactivateSubscription = async () => {
     await secureSubscriptionManager.reactivateSubscription();
-    setSubscription((prev) =>
-      prev ? { ...prev, status: "active", cancelAtPeriodEnd: false } : null,
+    setSubscription(prev =>
+      prev ? { ...prev, status: 'active', cancelAtPeriodEnd: false } : null
     );
   };
 
@@ -387,14 +380,9 @@ export function useSecureSubscription() {
     reactivateSubscription,
     canStartTrial: secureSubscriptionManager.canStartTrial(),
     hasActiveTrial: secureSubscriptionManager.hasActiveTrial(),
-    formatStorage: secureSubscriptionManager.formatStorage.bind(
-      secureSubscriptionManager,
-    ),
-    formatDate: secureSubscriptionManager.formatDate.bind(
-      secureSubscriptionManager,
-    ),
-    refreshSubscription: secureSubscriptionManager.refreshSubscription.bind(
-      secureSubscriptionManager,
-    ),
+    formatStorage: secureSubscriptionManager.formatStorage.bind(secureSubscriptionManager),
+    formatDate: secureSubscriptionManager.formatDate.bind(secureSubscriptionManager),
+    refreshSubscription:
+      secureSubscriptionManager.refreshSubscription.bind(secureSubscriptionManager),
   };
 }

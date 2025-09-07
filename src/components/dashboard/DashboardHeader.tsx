@@ -9,11 +9,11 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Crown, Gem, Wifi, WifiOff } from "lucide-react";
+import React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Crown, Gem, Wifi, WifiOff } from 'lucide-react';
 
 interface DashboardHeaderProps {
   isConnected: boolean;
@@ -27,22 +27,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ isConnected }) => {
           <Gem className="h-8 w-8 text-purple-600" />
           OptiMind AI Ecosystem
         </h1>
-        <p className="text-muted-foreground mt-1">
-          Premium Diamond Grade AI Services Platform
-        </p>
+        <p className="text-muted-foreground mt-1">Premium Diamond Grade AI Services Platform</p>
       </div>
       <div className="flex items-center gap-2">
         <Badge variant="outline" className="text-purple-600 border-purple-600">
           <Crown className="h-3 w-3 mr-1" />
           Premium Diamond
         </Badge>
-        <Badge variant={isConnected ? "default" : "secondary"}>
-          {isConnected ? (
-            <Wifi className="h-3 w-3 mr-1" />
-          ) : (
-            <WifiOff className="h-3 w-3 mr-1" />
-          )}
-          {isConnected ? "Real-time" : "Offline"}
+        <Badge variant={isConnected ? 'default' : 'secondary'}>
+          {isConnected ? <Wifi className="h-3 w-3 mr-1" /> : <WifiOff className="h-3 w-3 mr-1" />}
+          {isConnected ? 'Real-time' : 'Offline'}
         </Badge>
       </div>
     </div>

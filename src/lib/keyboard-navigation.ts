@@ -1,11 +1,11 @@
 // Keyboard navigation utilities and hooks
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback } from 'react';
 
 export interface KeyboardNavigationOptions {
   enabled?: boolean;
   loop?: boolean;
-  orientation?: "horizontal" | "vertical" | "grid";
-  activateOn?: "enter" | "space" | "both";
+  orientation?: 'horizontal' | 'vertical' | 'grid';
+  activateOn?: 'enter' | 'space' | 'both';
   preventScroll?: boolean;
 }
 
@@ -20,8 +20,8 @@ export class KeyboardNavigator {
     this.options = {
       enabled: true,
       loop: true,
-      orientation: "horizontal",
-      activateOn: "both",
+      orientation: 'horizontal',
+      activateOn: 'both',
       preventScroll: true,
       ...options,
     };
@@ -30,10 +30,10 @@ export class KeyboardNavigator {
   }
 
   private init() {
-    if (!this.options.enabled || typeof window === "undefined") return;
+    if (!this.options.enabled || typeof window === 'undefined') return;
 
     this.updateItems();
-    this.container.addEventListener("keydown", this.handleKeyDown.bind(this));
+    this.container.addEventListener('keydown', this.handleKeyDown.bind(this));
 
     // Observe DOM changes
     const observer = new MutationObserver(() => this.updateItems());
@@ -43,9 +43,9 @@ export class KeyboardNavigator {
   private updateItems() {
     this.items = Array.from(
       this.container.querySelectorAll(
-        '[data-nav-item], [role="menuitem"], [role="option"], button, a, [tabindex]:not([tabindex="-1"])',
-      ) as NodeListOf<HTMLElement>,
-    ).filter((item) => {
+        '[data-nav-item], [role="menuitem"], [role="option"], button, a, [tabindex]:not([tabindex="-1"])'
+      ) as NodeListOf<HTMLElement>
+    ).filter(item => {
       const element = item as HTMLElement;
       return element.offsetParent !== null && !(element as any).disabled;
     });
@@ -61,51 +61,45 @@ export class KeyboardNavigator {
     if (!this.container.contains(activeElement)) return;
 
     switch (key) {
-      case "arrowdown":
-      case "arrowright":
-        if (
-          this.options.orientation === "horizontal" ||
-          this.options.orientation === "grid"
-        ) {
+      case 'arrowdown':
+      case 'arrowright':
+        if (this.options.orientation === 'horizontal' || this.options.orientation === 'grid') {
           event.preventDefault();
           this.moveNext();
         }
         break;
 
-      case "arrowup":
-      case "arrowleft":
-        if (
-          this.options.orientation === "horizontal" ||
-          this.options.orientation === "grid"
-        ) {
+      case 'arrowup':
+      case 'arrowleft':
+        if (this.options.orientation === 'horizontal' || this.options.orientation === 'grid') {
           event.preventDefault();
           this.movePrevious();
         }
         break;
 
-      case "home":
+      case 'home':
         event.preventDefault();
         this.moveToFirst();
         break;
 
-      case "end":
+      case 'end':
         event.preventDefault();
         this.moveToLast();
         break;
 
-      case "enter":
-      case " ":
+      case 'enter':
+      case ' ':
         if (
-          this.options.activateOn === "both" ||
-          (this.options.activateOn === "enter" && key === "enter") ||
-          (this.options.activateOn === "space" && key === " ")
+          this.options.activateOn === 'both' ||
+          (this.options.activateOn === 'enter' && key === 'enter') ||
+          (this.options.activateOn === 'space' && key === ' ')
         ) {
           event.preventDefault();
           this.activateItem(activeElement);
         }
         break;
 
-      case "escape":
+      case 'escape':
         event.preventDefault();
         this.escape();
         break;
@@ -176,11 +170,11 @@ export class KeyboardNavigator {
   }
 
   private activateItem(element: HTMLElement) {
-    if (element.tagName === "BUTTON" || element.tagName === "A") {
+    if (element.tagName === 'BUTTON' || element.tagName === 'A') {
       element.click();
     } else {
       // Trigger click event for custom elements
-      const clickEvent = new MouseEvent("click", {
+      const clickEvent = new MouseEvent('click', {
         view: window,
         bubbles: true,
         cancelable: true,
@@ -191,7 +185,7 @@ export class KeyboardNavigator {
 
   private escape() {
     // Emit escape event or return focus to parent
-    const escapeEvent = new CustomEvent("keyboardNavigationEscape", {
+    const escapeEvent = new CustomEvent('keyboardNavigationEscape', {
       bubbles: true,
       cancelable: true,
     });
@@ -206,10 +200,7 @@ export class KeyboardNavigator {
   }
 
   public destroy() {
-    this.container.removeEventListener(
-      "keydown",
-      this.handleKeyDown.bind(this),
-    );
+    this.container.removeEventListener('keydown', this.handleKeyDown.bind(this));
   }
 }
 
@@ -220,10 +211,7 @@ export function useKeyboardNavigation(options: KeyboardNavigationOptions = {}) {
 
   useEffect(() => {
     if (containerRef.current) {
-      navigatorRef.current = new KeyboardNavigator(
-        containerRef.current,
-        options,
-      );
+      navigatorRef.current = new KeyboardNavigator(containerRef.current, options);
     }
 
     return () => {
@@ -253,7 +241,7 @@ export class FocusTrap {
   }
 
   private activate() {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     this.previousActiveElement = document.activeElement as HTMLElement;
 
@@ -264,25 +252,25 @@ export class FocusTrap {
     }
 
     // Add event listener
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   private getFocusableElements(): HTMLElement[] {
     const selector = [
-      "a[href]",
-      "button:not([disabled])",
-      "textarea:not([disabled])",
-      "input:not([disabled])",
-      "select:not([disabled])",
+      'a[href]',
+      'button:not([disabled])',
+      'textarea:not([disabled])',
+      'input:not([disabled])',
+      'select:not([disabled])',
       '[tabindex]:not([tabindex="-1"])',
       '[contenteditable="true"]',
-    ].join(", ");
+    ].join(', ');
 
     return Array.from(this.container.querySelectorAll(selector));
   }
 
   private handleKeyDown(event: KeyboardEvent) {
-    if (event.key !== "Tab") return;
+    if (event.key !== 'Tab') return;
 
     const focusableElements = this.getFocusableElements();
     if (focusableElements.length === 0) return;
@@ -307,7 +295,7 @@ export class FocusTrap {
   }
 
   public deactivate() {
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
+    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
 
     if (this.previousActiveElement) {
       this.previousActiveElement.focus();
@@ -340,16 +328,16 @@ export function useModalFocus(isActive: boolean = true) {
   const modalRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!isActive || !modalRef.current || typeof window === "undefined") return;
+    if (!isActive || !modalRef.current || typeof window === 'undefined') return;
 
     const modal = modalRef.current;
 
     // Announce modal opening to screen readers
-    const announcement = document.createElement("div");
-    announcement.setAttribute("role", "status");
-    announcement.setAttribute("aria-live", "polite");
-    announcement.className = "sr-only";
-    announcement.textContent = "Modal opened";
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.className = 'sr-only';
+    announcement.textContent = 'Modal opened';
     document.body.appendChild(announcement);
 
     // Remove announcement after it's read
@@ -359,7 +347,7 @@ export function useModalFocus(isActive: boolean = true) {
 
     // Focus first focusable element
     const firstFocusable = modal.querySelector(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as HTMLElement;
 
     if (firstFocusable) {
@@ -368,9 +356,9 @@ export function useModalFocus(isActive: boolean = true) {
 
     // Handle escape key
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         const closeButton = modal.querySelector(
-          '[aria-label*="close"], [aria-label*="Close"]',
+          '[aria-label*="close"], [aria-label*="Close"]'
         ) as HTMLElement;
         if (closeButton) {
           closeButton.click();
@@ -378,10 +366,10 @@ export function useModalFocus(isActive: boolean = true) {
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
 
     return () => {
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, [isActive]);
 
@@ -403,8 +391,8 @@ export class KeyboardShortcutManager {
   private shortcuts: Map<string, KeyboardShortcut> = new Map();
 
   constructor() {
-    if (typeof window !== "undefined") {
-      document.addEventListener("keydown", this.handleKeyDown.bind(this));
+    if (typeof window !== 'undefined') {
+      document.addEventListener('keydown', this.handleKeyDown.bind(this));
     }
   }
 
@@ -432,18 +420,18 @@ export class KeyboardShortcutManager {
     ctrl: boolean,
     alt: boolean,
     shift: boolean,
-    meta: boolean,
+    meta: boolean
   ): string {
     const parts: string[] = [];
 
-    if (ctrl) parts.push("ctrl");
-    if (alt) parts.push("alt");
-    if (shift) parts.push("shift");
-    if (meta) parts.push("meta");
+    if (ctrl) parts.push('ctrl');
+    if (alt) parts.push('alt');
+    if (shift) parts.push('shift');
+    if (meta) parts.push('meta');
 
     parts.push(key);
 
-    return parts.join("+");
+    return parts.join('+');
   }
 
   public add(shortcut: KeyboardShortcut): void {
@@ -452,7 +440,7 @@ export class KeyboardShortcutManager {
       shortcut.ctrl || false,
       shortcut.alt || false,
       shortcut.shift || false,
-      shortcut.meta || false,
+      shortcut.meta || false
     );
 
     this.shortcuts.set(key, shortcut);
@@ -464,7 +452,7 @@ export class KeyboardShortcutManager {
       shortcut.ctrl || false,
       shortcut.alt || false,
       shortcut.shift || false,
-      shortcut.meta || false,
+      shortcut.meta || false
     );
 
     this.shortcuts.delete(key);
@@ -478,15 +466,12 @@ export class KeyboardShortcutManager {
 // Global shortcut manager instance - only initialize in browser context
 export let shortcutManager: KeyboardShortcutManager | null = null;
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   shortcutManager = new KeyboardShortcutManager();
 }
 
 // React hook for keyboard shortcuts
-export function useKeyboardShortcut(
-  shortcut: KeyboardShortcut,
-  dependencies: any[] = [],
-) {
+export function useKeyboardShortcut(shortcut: KeyboardShortcut, dependencies: any[] = []) {
   useEffect(() => {
     if (shortcutManager) {
       shortcutManager.add(shortcut);

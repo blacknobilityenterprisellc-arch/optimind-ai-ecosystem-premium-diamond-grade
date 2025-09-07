@@ -9,8 +9,8 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-import { useState, useEffect } from "react";
-import { useRealTimeDashboard } from "@/hooks/useRealTimeDashboard";
+import { useState, useEffect } from 'react';
+import { useRealTimeDashboard } from '@/hooks/useRealTimeDashboard';
 
 // Constants for magic numbers
 export const DEFAULT_CONTENT_COUNT = 1247;
@@ -36,7 +36,7 @@ export interface DashboardMetrics {
 
 export interface SystemAlert {
   id: string;
-  type: "info" | "warning" | "error" | "success";
+  type: 'info' | 'warning' | 'error' | 'success';
   title: string;
   description: string;
   timestamp: string;
@@ -50,7 +50,7 @@ export interface AICapability {
   color: string;
   badge?: string;
   stats: string;
-  status: "active" | "beta" | "coming-soon";
+  status: 'active' | 'beta' | 'coming-soon';
 }
 
 export const useDashboardData = () => {
@@ -65,8 +65,7 @@ export const useDashboardData = () => {
     sendSystemAlert,
   } = useRealTimeDashboard();
 
-  const [fallbackMetrics, setFallbackMetrics] =
-    useState<DashboardMetrics | null>(null);
+  const [fallbackMetrics, setFallbackMetrics] = useState<DashboardMetrics | null>(null);
   const [fallbackAlerts, setFallbackAlerts] = useState<SystemAlert[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -77,18 +76,16 @@ export const useDashboardData = () => {
         setIsLoading(true);
         try {
           const [metricsResponse, alertsResponse] = await Promise.all([
-            fetch("/api/analytics"),
-            fetch("/api/health"),
+            fetch('/api/analytics'),
+            fetch('/api/health'),
           ]);
 
           if (metricsResponse.ok) {
             const metricsData = await metricsResponse.json();
             setFallbackMetrics({
               totalContent: metricsData.totalContent || DEFAULT_CONTENT_COUNT,
-              avgOptimizationScore:
-                metricsData.avgOptimizationScore || DEFAULT_OPTIMIZATION_SCORE,
-              activeProjects:
-                metricsData.activeProjects || DEFAULT_ACTIVE_PROJECTS,
+              avgOptimizationScore: metricsData.avgOptimizationScore || DEFAULT_OPTIMIZATION_SCORE,
+              activeProjects: metricsData.activeProjects || DEFAULT_ACTIVE_PROJECTS,
               systemHealth: metricsData.systemHealth || DEFAULT_SYSTEM_HEALTH,
               recentActivity: metricsData.recentActivity || [],
             });
@@ -99,7 +96,7 @@ export const useDashboardData = () => {
             setFallbackAlerts(healthData.alerts || []);
           }
         } catch (error) {
-          console.error("Failed to load fallback data:", error);
+          console.error('Failed to load fallback data:', error);
         } finally {
           setIsLoading(false);
         }
@@ -113,9 +110,7 @@ export const useDashboardData = () => {
   const metrics = realTimeMetrics || fallbackMetrics;
   const alerts = realTimeAlerts.length > 0 ? realTimeAlerts : fallbackAlerts;
   const activities =
-    realTimeActivities.length > 0
-      ? realTimeActivities
-      : metrics?.recentActivity || [];
+    realTimeActivities.length > 0 ? realTimeActivities : metrics?.recentActivity || [];
 
   return {
     metrics,

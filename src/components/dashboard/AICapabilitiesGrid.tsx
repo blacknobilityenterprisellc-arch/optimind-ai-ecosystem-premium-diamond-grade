@@ -9,19 +9,13 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Rocket } from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Rocket } from 'lucide-react';
 
 interface AICapability {
   id: string;
@@ -31,7 +25,7 @@ interface AICapability {
   color: string;
   badge?: string;
   stats: string;
-  status: "active" | "beta" | "coming-soon";
+  status: 'active' | 'beta' | 'coming-soon';
 }
 
 interface AICapabilitiesGridProps {
@@ -41,14 +35,14 @@ interface AICapabilitiesGridProps {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "active":
-      return "bg-green-500";
-    case "beta":
-      return "bg-yellow-500";
-    case "coming-soon":
-      return "bg-gray-500";
+    case 'active':
+      return 'bg-green-500';
+    case 'beta':
+      return 'bg-yellow-500';
+    case 'coming-soon':
+      return 'bg-gray-500';
     default:
-      return "bg-gray-500";
+      return 'bg-gray-500';
   }
 };
 
@@ -57,12 +51,12 @@ const AICapabilitiesGrid: React.FC<AICapabilitiesGridProps> = ({
   compact = false,
 }) => {
   const gridClass = compact
-    ? "grid grid-cols-1 md:grid-cols-2 gap-6"
-    : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+    ? 'grid grid-cols-1 md:grid-cols-2 gap-6'
+    : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
 
   return (
     <div className={gridClass}>
-      {capabilities.map((capability) => (
+      {capabilities.map(capability => (
         <Card key={capability.id} className="hover:shadow-lg transition-shadow">
           <CardHeader>
             <div className="flex items-center justify-between">
@@ -77,20 +71,16 @@ const AICapabilitiesGrid: React.FC<AICapabilitiesGridProps> = ({
                   variant="outline"
                   className={`text-xs ${getStatusColor(capability.status)} text-white border-none`}
                 >
-                  {capability.status.replace("-", " ")}
+                  {capability.status.replace('-', ' ')}
                 </Badge>
               </div>
             </div>
-            <CardTitle className={compact ? "text-lg" : "text-lg"}>
-              {capability.title}
-            </CardTitle>
+            <CardTitle className={compact ? 'text-lg' : 'text-lg'}>{capability.title}</CardTitle>
             <CardDescription>{capability.description}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">
-                {capability.stats}
-              </span>
+              <span className="text-sm text-muted-foreground">{capability.stats}</span>
               <Button variant="outline" size="sm">
                 {compact ? (
                   <>

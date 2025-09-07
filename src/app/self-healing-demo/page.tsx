@@ -1,18 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 
 interface HealingReport {
   healingId: string;
@@ -50,7 +44,7 @@ export default function SelfHealingDemo() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch("/api/self-healing?action=status");
+      const response = await fetch('/api/self-healing?action=status');
       const data = await response.json();
       if (data.success) {
         setSystemStatus(data.data);
@@ -58,13 +52,13 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to fetch system status");
+      setError('Failed to fetch system status');
     }
   };
 
   const fetchHistory = async () => {
     try {
-      const response = await fetch("/api/self-healing?action=history");
+      const response = await fetch('/api/self-healing?action=history');
       const data = await response.json();
       if (data.success) {
         setHealingHistory(data.data.healingReports);
@@ -72,7 +66,7 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to fetch healing history");
+      setError('Failed to fetch healing history');
     }
   };
 
@@ -80,13 +74,13 @@ export default function SelfHealingDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/self-healing", {
-        method: "POST",
+      const response = await fetch('/api/self-healing', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: "trigger-healing",
+          action: 'trigger-healing',
         }),
       });
       const data = await response.json();
@@ -97,7 +91,7 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to trigger healing");
+      setError('Failed to trigger healing');
     } finally {
       setLoading(false);
     }
@@ -107,19 +101,19 @@ export default function SelfHealingDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/self-healing", {
-        method: "POST",
+      const response = await fetch('/api/self-healing', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: "handle-error",
+          action: 'handle-error',
           error: {
-            message: "Simulated critical system error",
+            message: 'Simulated critical system error',
             context: {
-              component: "system-core",
-              operation: "critical-process",
-              severity: "critical",
+              component: 'system-core',
+              operation: 'critical-process',
+              severity: 'critical',
             },
           },
         }),
@@ -132,7 +126,7 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to handle system error");
+      setError('Failed to handle system error');
     } finally {
       setLoading(false);
     }
@@ -142,7 +136,7 @@ export default function SelfHealingDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/self-healing?action=monitor-health");
+      const response = await fetch('/api/self-healing?action=monitor-health');
       const data = await response.json();
       if (data.success) {
         await fetchStatus();
@@ -151,7 +145,7 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to monitor health");
+      setError('Failed to monitor health');
     } finally {
       setLoading(false);
     }
@@ -161,13 +155,13 @@ export default function SelfHealingDemo() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("/api/self-healing", {
-        method: "POST",
+      const response = await fetch('/api/self-healing', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: "comprehensive-healing",
+          action: 'comprehensive-healing',
         }),
       });
       const data = await response.json();
@@ -178,7 +172,7 @@ export default function SelfHealingDemo() {
         setError(data.error);
       }
     } catch (err) {
-      setError("Failed to run comprehensive healing");
+      setError('Failed to run comprehensive healing');
     } finally {
       setLoading(false);
     }
@@ -198,25 +192,25 @@ export default function SelfHealingDemo() {
 
   const getGradeColor = (grade: string) => {
     switch (grade) {
-      case "A+":
-        return "bg-green-500 text-white";
-      case "A":
-        return "bg-green-400 text-white";
-      case "B":
-        return "bg-blue-400 text-white";
-      case "C":
-        return "bg-yellow-400 text-white";
-      case "D":
-        return "bg-orange-400 text-white";
-      case "F":
-        return "bg-red-500 text-white";
+      case 'A+':
+        return 'bg-green-500 text-white';
+      case 'A':
+        return 'bg-green-400 text-white';
+      case 'B':
+        return 'bg-blue-400 text-white';
+      case 'C':
+        return 'bg-yellow-400 text-white';
+      case 'D':
+        return 'bg-orange-400 text-white';
+      case 'F':
+        return 'bg-red-500 text-white';
       default:
-        return "bg-gray-400 text-white";
+        return 'bg-gray-400 text-white';
     }
   };
 
   const getStatusColor = (success: boolean) => {
-    return success ? "bg-green-500" : "bg-red-500";
+    return success ? 'bg-green-500' : 'bg-red-500';
   };
 
   return (
@@ -246,47 +240,33 @@ export default function SelfHealingDemo() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  System Status
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">System Status</CardTitle>
                 <div
-                  className={`h-3 w-3 rounded-full ${systemStatus?.selfHealing.isInitialized ? "bg-green-500" : "bg-red-500"}`}
+                  className={`h-3 w-3 rounded-full ${systemStatus?.selfHealing.isInitialized ? 'bg-green-500' : 'bg-red-500'}`}
                 />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {systemStatus?.selfHealing.isInitialized
-                    ? "Active"
-                    : "Inactive"}
+                  {systemStatus?.selfHealing.isInitialized ? 'Active' : 'Inactive'}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Self-Healing System
-                </p>
+                <p className="text-xs text-muted-foreground">Self-Healing System</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Healings
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Total Healings</CardTitle>
                 <div className="h-3 w-3 rounded-full bg-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {systemStatus?.healingHistory.total || 0}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Healing cycles completed
-                </p>
+                <div className="text-2xl font-bold">{systemStatus?.healingHistory.total || 0}</div>
+                <p className="text-xs text-muted-foreground">Healing cycles completed</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Success Rate
-                </CardTitle>
+                <CardTitle className="text-sm font-medium">Success Rate</CardTitle>
                 <div className="h-3 w-3 rounded-full bg-green-500" />
               </CardHeader>
               <CardContent>
@@ -295,14 +275,12 @@ export default function SelfHealingDemo() {
                     ? Math.round(
                         (systemStatus.healingHistory.successful /
                           systemStatus.healingHistory.total) *
-                          100,
+                          100
                       )
                     : 0}
                   %
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Healing success rate
-                </p>
+                <p className="text-xs text-muted-foreground">Healing success rate</p>
               </CardContent>
             </Card>
 
@@ -310,7 +288,7 @@ export default function SelfHealingDemo() {
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Avg Score</CardTitle>
                 <div
-                  className={`h-3 w-3 rounded-full ${systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 80 ? "bg-green-500" : systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 60 ? "bg-yellow-500" : "bg-red-500"}`}
+                  className={`h-3 w-3 rounded-full ${systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 80 ? 'bg-green-500' : systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 60 ? 'bg-yellow-500' : 'bg-red-500'}`}
                 />
               </CardHeader>
               <CardContent>
@@ -320,9 +298,7 @@ export default function SelfHealingDemo() {
                     : 0}
                   /100
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Average healing score
-                </p>
+                <p className="text-xs text-muted-foreground">Average healing score</p>
               </CardContent>
             </Card>
           </div>
@@ -337,34 +313,18 @@ export default function SelfHealingDemo() {
             <CardContent className="space-y-4">
               <div className="flex flex-wrap gap-2">
                 <Button onClick={triggerHealing} disabled={loading}>
-                  {loading ? "Running..." : "Trigger Healing"}
+                  {loading ? 'Running...' : 'Trigger Healing'}
                 </Button>
-                <Button
-                  onClick={handleSystemError}
-                  disabled={loading}
-                  variant="destructive"
-                >
-                  {loading ? "Running..." : "Simulate Error"}
+                <Button onClick={handleSystemError} disabled={loading} variant="destructive">
+                  {loading ? 'Running...' : 'Simulate Error'}
                 </Button>
-                <Button
-                  onClick={monitorHealth}
-                  disabled={loading}
-                  variant="outline"
-                >
-                  {loading ? "Running..." : "Monitor Health"}
+                <Button onClick={monitorHealth} disabled={loading} variant="outline">
+                  {loading ? 'Running...' : 'Monitor Health'}
                 </Button>
-                <Button
-                  onClick={runComprehensiveHealing}
-                  disabled={loading}
-                  variant="default"
-                >
-                  {loading ? "Running..." : "Comprehensive Healing"}
+                <Button onClick={runComprehensiveHealing} disabled={loading} variant="default">
+                  {loading ? 'Running...' : 'Comprehensive Healing'}
                 </Button>
-                <Button
-                  onClick={fetchStatus}
-                  disabled={loading}
-                  variant="outline"
-                >
+                <Button onClick={fetchStatus} disabled={loading} variant="outline">
                   Refresh Status
                 </Button>
               </div>
@@ -422,27 +382,21 @@ export default function SelfHealingDemo() {
                     <Badge
                       variant={
                         systemStatus.selfHealing.config.enableAutoDetection
-                          ? "default"
-                          : "secondary"
+                          ? 'default'
+                          : 'secondary'
                       }
                     >
-                      {systemStatus.selfHealing.config.enableAutoDetection
-                        ? "Enabled"
-                        : "Disabled"}
+                      {systemStatus.selfHealing.config.enableAutoDetection ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Auto Fix</span>
                     <Badge
                       variant={
-                        systemStatus.selfHealing.config.enableAutoFix
-                          ? "default"
-                          : "secondary"
+                        systemStatus.selfHealing.config.enableAutoFix ? 'default' : 'secondary'
                       }
                     >
-                      {systemStatus.selfHealing.config.enableAutoFix
-                        ? "Enabled"
-                        : "Disabled"}
+                      {systemStatus.selfHealing.config.enableAutoFix ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
@@ -450,13 +404,13 @@ export default function SelfHealingDemo() {
                     <Badge
                       variant={
                         systemStatus.selfHealing.config.enableRealTimeMonitoring
-                          ? "default"
-                          : "secondary"
+                          ? 'default'
+                          : 'secondary'
                       }
                     >
                       {systemStatus.selfHealing.config.enableRealTimeMonitoring
-                        ? "Enabled"
-                        : "Disabled"}
+                        ? 'Enabled'
+                        : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
@@ -464,26 +418,20 @@ export default function SelfHealingDemo() {
                     <Badge
                       variant={
                         systemStatus.selfHealing.config.notificationEnabled
-                          ? "default"
-                          : "secondary"
+                          ? 'default'
+                          : 'secondary'
                       }
                     >
-                      {systemStatus.selfHealing.config.notificationEnabled
-                        ? "Enabled"
-                        : "Disabled"}
+                      {systemStatus.selfHealing.config.notificationEnabled ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Scan Interval</span>
-                    <span>
-                      {systemStatus.selfHealing.config.scanInterval / 1000}s
-                    </span>
+                    <span>{systemStatus.selfHealing.config.scanInterval / 1000}s</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Error Threshold</span>
-                    <span>
-                      {systemStatus.selfHealing.config.errorThreshold}%
-                    </span>
+                    <span>{systemStatus.selfHealing.config.errorThreshold}%</span>
                   </div>
                 </CardContent>
               </Card>
@@ -503,9 +451,7 @@ export default function SelfHealingDemo() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Scanner Status</span>
-                    <Badge variant="outline">
-                      {systemStatus.scanner.scannerStatus || "idle"}
-                    </Badge>
+                    <Badge variant="outline">{systemStatus.scanner.scannerStatus || 'idle'}</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -518,15 +464,9 @@ export default function SelfHealingDemo() {
                   <div className="flex items-center justify-between">
                     <span>Monitoring Status</span>
                     <Badge
-                      variant={
-                        systemStatus.errorHandler.isMonitoring
-                          ? "default"
-                          : "secondary"
-                      }
+                      variant={systemStatus.errorHandler.isMonitoring ? 'default' : 'secondary'}
                     >
-                      {systemStatus.errorHandler.isMonitoring
-                        ? "Active"
-                        : "Inactive"}
+                      {systemStatus.errorHandler.isMonitoring ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
@@ -536,7 +476,7 @@ export default function SelfHealingDemo() {
                   <div className="flex items-center justify-between">
                     <span>Scanner Status</span>
                     <Badge variant="outline">
-                      {systemStatus.errorHandler.scannerStatus || "idle"}
+                      {systemStatus.errorHandler.scannerStatus || 'idle'}
                     </Badge>
                   </div>
                 </CardContent>
@@ -545,9 +485,7 @@ export default function SelfHealingDemo() {
           ) : (
             <Card>
               <CardContent className="flex items-center justify-center h-32">
-                <p className="text-muted-foreground">
-                  No system status available
-                </p>
+                <p className="text-muted-foreground">No system status available</p>
               </CardContent>
             </Card>
           )}
@@ -556,16 +494,14 @@ export default function SelfHealingDemo() {
         <TabsContent value="healing" className="space-y-4">
           {healingHistory.length > 0 ? (
             <div className="space-y-4">
-              {healingHistory.map((healing) => (
+              {healingHistory.map(healing => (
                 <Card key={healing.healingId}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">
-                        Healing Cycle: {healing.healingId}
-                      </CardTitle>
+                      <CardTitle className="text-lg">Healing Cycle: {healing.healingId}</CardTitle>
                       <div className="flex items-center gap-2">
                         <Badge className={getStatusColor(healing.success)}>
-                          {healing.success ? "SUCCESS" : "FAILED"}
+                          {healing.success ? 'SUCCESS' : 'FAILED'}
                         </Badge>
                         <Badge className={getGradeColor(healing.scanGrade)}>
                           {healing.scanGrade}
@@ -581,9 +517,7 @@ export default function SelfHealingDemo() {
                       </div>
                       <div>
                         <span className="font-medium">Duration:</span>
-                        <span className="ml-2">
-                          {(healing.healingTime / 1000).toFixed(1)}s
-                        </span>
+                        <span className="ml-2">{(healing.healingTime / 1000).toFixed(1)}s</span>
                       </div>
                       <div>
                         <span className="font-medium">Issues Fixed:</span>
@@ -613,11 +547,7 @@ export default function SelfHealingDemo() {
                             <span>
                               {healing.issuesFixed} (
                               {healing.issuesDetected > 0
-                                ? Math.round(
-                                    (healing.issuesFixed /
-                                      healing.issuesDetected) *
-                                      100,
-                                  )
+                                ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100)
                                 : 0}
                               %)
                             </span>
@@ -625,9 +555,7 @@ export default function SelfHealingDemo() {
                           <Progress
                             value={
                               healing.issuesDetected > 0
-                                ? (healing.issuesFixed /
-                                    healing.issuesDetected) *
-                                  100
+                                ? (healing.issuesFixed / healing.issuesDetected) * 100
                                 : 0
                             }
                             className="h-2"
@@ -661,9 +589,7 @@ export default function SelfHealingDemo() {
           ) : (
             <Card>
               <CardContent className="flex items-center justify-center h-32">
-                <p className="text-muted-foreground">
-                  No healing history available
-                </p>
+                <p className="text-muted-foreground">No healing history available</p>
               </CardContent>
             </Card>
           )}
@@ -672,12 +598,10 @@ export default function SelfHealingDemo() {
         <TabsContent value="details" className="space-y-4">
           {healingHistory.length > 0 ? (
             <div className="space-y-4">
-              {healingHistory.map((healing) => (
+              {healingHistory.map(healing => (
                 <Card key={healing.healingId}>
                   <CardHeader>
-                    <CardTitle className="text-lg">
-                      Detailed Report - {healing.healingId}
-                    </CardTitle>
+                    <CardTitle className="text-lg">Detailed Report - {healing.healingId}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
@@ -695,17 +619,13 @@ export default function SelfHealingDemo() {
                             </div>
                             <div className="flex justify-between">
                               <span>Issues Fixed:</span>
-                              <span className="text-green-600">
-                                {healing.issuesFixed}
-                              </span>
+                              <span className="text-green-600">{healing.issuesFixed}</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Issues Remaining:</span>
                               <span
                                 className={
-                                  healing.issuesRemaining > 0
-                                    ? "text-red-600"
-                                    : "text-green-600"
+                                  healing.issuesRemaining > 0 ? 'text-red-600' : 'text-green-600'
                                 }
                               >
                                 {healing.issuesRemaining}
@@ -715,11 +635,7 @@ export default function SelfHealingDemo() {
                               <span>Success Rate:</span>
                               <span>
                                 {healing.issuesDetected > 0
-                                  ? Math.round(
-                                      (healing.issuesFixed /
-                                        healing.issuesDetected) *
-                                        100,
-                                    )
+                                  ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100)
                                   : 100}
                                 %
                               </span>
@@ -727,19 +643,17 @@ export default function SelfHealingDemo() {
                           </div>
                         </div>
                         <div>
-                          <h4 className="font-medium mb-2">
-                            Performance Metrics
-                          </h4>
+                          <h4 className="font-medium mb-2">Performance Metrics</h4>
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                               <span>Scan Score:</span>
                               <span
                                 className={
                                   healing.scanScore > 80
-                                    ? "text-green-600"
+                                    ? 'text-green-600'
                                     : healing.scanScore > 60
-                                      ? "text-yellow-600"
-                                      : "text-red-600"
+                                      ? 'text-yellow-600'
+                                      : 'text-red-600'
                                 }
                               >
                                 {healing.scanScore}/100
@@ -755,21 +669,12 @@ export default function SelfHealingDemo() {
                             </div>
                             <div className="flex justify-between">
                               <span>Healing Time:</span>
-                              <span>
-                                {(healing.healingTime / 1000).toFixed(1)}{" "}
-                                seconds
-                              </span>
+                              <span>{(healing.healingTime / 1000).toFixed(1)} seconds</span>
                             </div>
                             <div className="flex justify-between">
                               <span>Overall Success:</span>
-                              <span
-                                className={
-                                  healing.success
-                                    ? "text-green-600"
-                                    : "text-red-600"
-                                }
-                              >
-                                {healing.success ? "Successful" : "Failed"}
+                              <span className={healing.success ? 'text-green-600' : 'text-red-600'}>
+                                {healing.success ? 'Successful' : 'Failed'}
                               </span>
                             </div>
                           </div>
@@ -800,9 +705,7 @@ export default function SelfHealingDemo() {
           ) : (
             <Card>
               <CardContent className="flex items-center justify-center h-32">
-                <p className="text-muted-foreground">
-                  No detailed reports available
-                </p>
+                <p className="text-muted-foreground">No detailed reports available</p>
               </CardContent>
             </Card>
           )}

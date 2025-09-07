@@ -88,7 +88,7 @@ class PremiumDatabaseHealthWrapper implements IService {
       // Initialize enterprise system integration
       const enterprise = getEnterpriseInitializer();
       const state = enterprise.getState();
-      
+
       if (state.status === 'RUNNING') {
         this.enterpriseInitialized = true;
         console.log('🔗 Enterprise system integration initialized');
@@ -120,7 +120,7 @@ class PremiumDatabaseHealthWrapper implements IService {
 
       // Test database connection
       const connectionResult = await this.testConnection();
-      
+
       if (connectionResult.success) {
         this.healthStatus = {
           connected: true,
@@ -130,10 +130,10 @@ class PremiumDatabaseHealthWrapper implements IService {
 
         // Get additional database information
         await this.gatherDatabaseInfo();
-        
+
         this.isInitialized = true;
         console.log('✅ Premium Enterprise Database Health Wrapper initialized successfully');
-        
+
         // Emit enterprise event if available
         if (this.enterpriseInitialized) {
           try {
@@ -149,7 +149,6 @@ class PremiumDatabaseHealthWrapper implements IService {
       } else {
         throw new Error(connectionResult.error || 'Database connection failed');
       }
-
     } catch (error) {
       console.error('❌ Database initialization failed:', error);
       this.healthStatus = {
@@ -158,29 +157,32 @@ class PremiumDatabaseHealthWrapper implements IService {
         lastCheck: new Date(),
         error: error instanceof Error ? error.message : 'Unknown error',
       };
-      
+
       // Set up fallback mode for development
       this.setupFallbackMode();
     }
   }
 
-  private async testConnection(): Promise<{ success: boolean; error?: string; responseTime?: number }> {
+  private async testConnection(): Promise<{
+    success: boolean;
+    error?: string;
+    responseTime?: number;
+  }> {
     const startTime = Date.now();
-    
+
     try {
       // Use the existing database client from db.ts
       const { db } = await import('./db');
       await db.$queryRaw`SELECT 1 as test`;
-      
+
       const responseTime = Date.now() - startTime;
       return { success: true, responseTime };
-      
     } catch (error: any) {
       console.warn('Database connection test failed:', error.message);
-      return { 
-        success: false, 
+      return {
+        success: false,
         responseTime: Date.now() - startTime,
-        error: error.message 
+        error: error.message,
       };
     }
   }
@@ -189,21 +191,23 @@ class PremiumDatabaseHealthWrapper implements IService {
     try {
       // Use the existing database client from db.ts
       const { db } = await import('./db');
-      
+
       // Get table information (SQLite specific)
-      const tables = await db.$queryRaw`
+      const tables = (await db.$queryRaw`
         SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'
-      ` as any[];
+      `) as any[];
 
       this.healthStatus.tables = tables.map(table => table.name);
 
       // Get record counts for main tables
       const recordCounts: Record<string, number> = {};
-      
+
       for (const table of ['users', 'projects', 'analyses', 'conversations']) {
         if (this.healthStatus.tables?.includes(table)) {
           try {
-            const result = await db.$queryRawUnsafe(`SELECT COUNT(*) as count FROM ${table}`) as any[];
+            const result = (await db.$queryRawUnsafe(
+              `SELECT COUNT(*) as count FROM ${table}`
+            )) as any[];
             recordCounts[table] = result[0]?.count || 0;
           } catch (error) {
             console.warn(`Could not get count for table ${table}:`, error);
@@ -222,7 +226,6 @@ class PremiumDatabaseHealthWrapper implements IService {
         queryTime,
         connectionTime: this.healthStatus.responseTime,
       };
-
     } catch (error) {
       console.warn('Could not gather complete database info:', error);
     }
@@ -230,7 +233,7 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   private setupFallbackMode(): void {
     console.log('⚠️ Setting up fallback database mode for development');
-    
+
     // Create realistic fallback data for development
     this.healthStatus = {
       connected: false, // Set to false to indicate actual connection issues
@@ -252,25 +255,26 @@ class PremiumDatabaseHealthWrapper implements IService {
     // Refresh health status if needed
     const now = new Date();
     const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
-    
-    if (timeSinceLastCheck > 30000) { // Check every 30 seconds
+
+    if (timeSinceLastCheck > 30000) {
+      // Check every 30 seconds
       await this.refreshHealthStatus();
     }
-    
+
     return { ...this.healthStatus };
   }
 
   private async refreshHealthStatus(): Promise<void> {
     try {
       const connectionResult = await this.testConnection();
-      
+
       if (connectionResult.success) {
         this.healthStatus = {
           connected: true,
           responseTime: connectionResult.responseTime || 0,
           lastCheck: new Date(),
         };
-        
+
         await this.gatherDatabaseInfo();
       } else {
         this.healthStatus = {
@@ -294,15 +298,15 @@ class PremiumDatabaseHealthWrapper implements IService {
     try {
       // Use the existing database client from db.ts
       const { db } = await import('./db');
-      
+
       // Get connection info (SQLite specific)
-      const connectionInfo = await db.$queryRaw`
+      const connectionInfo = (await db.$queryRaw`
         PRAGMA database_list
-      ` as any[];
+      `) as any[];
 
       // Get query performance metrics
       const queryMetrics = await this.getQueryPerformanceMetrics();
-      
+
       // Get storage usage
       const storageUsage = await this.getStorageUsage();
 
@@ -315,7 +319,7 @@ class PremiumDatabaseHealthWrapper implements IService {
       };
     } catch (error) {
       console.error('Failed to get database metrics:', error);
-      
+
       // Return fallback metrics
       return {
         totalConnections: 1,
@@ -363,17 +367,17 @@ class PremiumDatabaseHealthWrapper implements IService {
     try {
       // Use the existing database client from db.ts
       const { db } = await import('./db');
-      
+
       const tableSizes: Record<string, number> = {};
       let totalSize = 0;
 
       if (this.healthStatus.tables) {
         for (const table of this.healthStatus.tables) {
           try {
-            const result = await db.$queryRawUnsafe(`
+            const result = (await db.$queryRawUnsafe(`
               SELECT SUM(pgsize) as size FROM dbstat WHERE name = '${table}'
-            `) as any[];
-            
+            `)) as any[];
+
             const size = result[0]?.size || 0;
             tableSizes[table] = size;
             totalSize += size;
@@ -429,7 +433,8 @@ class PremiumDatabaseHealthWrapper implements IService {
     }
 
     // Check storage usage
-    if (metrics.storageUsage.totalSize > 1024 * 1024 * 100) { // 100MB
+    if (metrics.storageUsage.totalSize > 1024 * 1024 * 100) {
+      // 100MB
       score -= 10;
       recommendations.push('Database size is large - consider cleanup or archiving');
     }
@@ -456,11 +461,11 @@ class PremiumDatabaseHealthWrapper implements IService {
     if (!this.isInitialized) {
       await this.initialize();
     }
-    
+
     if (!this.healthStatus.connected) {
       throw new Error('Database is not connected');
     }
-    
+
     // Return the existing database client from db.ts
     const { db } = await import('./db');
     return db as any;
@@ -474,12 +479,12 @@ class PremiumDatabaseHealthWrapper implements IService {
 
       // Use the existing database client from db.ts
       const { db } = await import('./db');
-      
+
       // For raw queries, use unsafe method with parameters
       if (params && params.length > 0) {
-        return await db.$queryRawUnsafe(query, ...params) as T;
+        return (await db.$queryRawUnsafe(query, ...params)) as T;
       } else {
-        return await db.$queryRawUnsafe(query) as T;
+        return (await db.$queryRawUnsafe(query)) as T;
       }
     } catch (error) {
       console.error('Query execution failed:', error);
@@ -503,16 +508,16 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async waitForHealthy(timeout: number = 30000): Promise<boolean> {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       if (this.isHealthy()) {
         return true;
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       await this.refreshHealthStatus();
     }
-    
+
     return false;
   }
 
@@ -557,27 +562,37 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async healthCheck(): Promise<ServiceHealth> {
     const healthCheck = await this.performHealthCheck();
-    
+
     return {
-      status: healthCheck.status === 'HEALTHY' ? 'HEALTHY' : 
-               healthCheck.status === 'WARNING' ? 'DEGRADED' : 'UNHEALTHY',
+      status:
+        healthCheck.status === 'HEALTHY'
+          ? 'HEALTHY'
+          : healthCheck.status === 'WARNING'
+            ? 'DEGRADED'
+            : 'UNHEALTHY',
       timestamp: Date.now(),
       uptime: Date.now() - (this.healthStatus.lastCheck.getTime() - 86400000), // Approximate uptime
       memoryUsage: process.memoryUsage().heapUsed,
       metrics: this.metrics,
-      checks: [{
-        name: 'database_connection',
-        status: healthCheck.status === 'HEALTHY' ? 'PASS' : 
-                healthCheck.status === 'WARNING' ? 'WARN' : 'FAIL',
-        message: healthCheck.recommendations.join(', '),
-        timestamp: Date.now(),
-      }],
+      checks: [
+        {
+          name: 'database_connection',
+          status:
+            healthCheck.status === 'HEALTHY'
+              ? 'PASS'
+              : healthCheck.status === 'WARNING'
+                ? 'WARN'
+                : 'FAIL',
+          message: healthCheck.recommendations.join(', '),
+          timestamp: Date.now(),
+        },
+      ],
     };
   }
 
   async getMetrics(): Promise<Record<string, number>> {
     const dbMetrics = await this.getMetrics();
-    
+
     // Update internal metrics
     this.metrics = {
       ...this.metrics,

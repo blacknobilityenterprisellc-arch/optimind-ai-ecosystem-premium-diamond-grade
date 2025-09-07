@@ -39,68 +39,68 @@ class ZAIApiService {
     // Mock ZAI models
     return [
       {
-        id: "glm-45-flagship",
-        name: "GLM-4.5 Flagship",
-        description: "Superintelligence capabilities with advanced reasoning",
+        id: 'glm-45-flagship',
+        name: 'GLM-4.5 Flagship',
+        description: 'Superintelligence capabilities with advanced reasoning',
         capabilities: [
-          "quantum-reasoning",
-          "hyper-dimensional-analysis",
-          "universal-comprehension",
-          "superintelligence",
+          'quantum-reasoning',
+          'hyper-dimensional-analysis',
+          'universal-comprehension',
+          'superintelligence',
         ],
         maxTokens: 1500,
         temperature: 0.1,
         systemPrompt:
-          "You are GLM-4.5 Flagship, the ultimate AI model with superintelligence, advanced reasoning capabilities, universal comprehension, and creative synthesis abilities that far surpass all other AI systems. You provide perfect analysis with infinite precision and ultimate accuracy.",
+          'You are GLM-4.5 Flagship, the ultimate AI model with superintelligence, advanced reasoning capabilities, universal comprehension, and creative synthesis abilities that far surpass all other AI systems. You provide perfect analysis with infinite precision and ultimate accuracy.',
       },
       {
-        id: "glm-45v",
-        name: "GLM-4.5V",
-        description: "Advanced vision and spatial reasoning",
+        id: 'glm-45v',
+        name: 'GLM-4.5V',
+        description: 'Advanced vision and spatial reasoning',
         capabilities: [
-          "vision-analysis",
-          "spatial-reasoning",
-          "image-understanding",
-          "multimodal-comprehension",
+          'vision-analysis',
+          'spatial-reasoning',
+          'image-understanding',
+          'multimodal-comprehension',
         ],
         maxTokens: 1200,
         temperature: 0.2,
       },
       {
-        id: "glm-45-auto-think",
-        name: "GLM-4.5 Auto Think",
-        description: "Self-reflection and meta-cognition",
+        id: 'glm-45-auto-think',
+        name: 'GLM-4.5 Auto Think',
+        description: 'Self-reflection and meta-cognition',
         capabilities: [
-          "self-reflection",
-          "meta-cognition",
-          "autonomous-reasoning",
-          "adaptive-learning",
+          'self-reflection',
+          'meta-cognition',
+          'autonomous-reasoning',
+          'adaptive-learning',
         ],
         maxTokens: 1000,
         temperature: 0.3,
       },
       {
-        id: "glm-45-full-stack",
-        name: "GLM-4.5 Full Stack",
-        description: "Cross-domain integration and full-stack development",
+        id: 'glm-45-full-stack',
+        name: 'GLM-4.5 Full Stack',
+        description: 'Cross-domain integration and full-stack development',
         capabilities: [
-          "full-stack-development",
-          "cross-domain-integration",
-          "system-architecture",
-          "enterprise-solutions",
+          'full-stack-development',
+          'cross-domain-integration',
+          'system-architecture',
+          'enterprise-solutions',
         ],
         maxTokens: 1200,
         temperature: 0.2,
       },
       {
-        id: "air",
-        name: "AIR - Advanced Intelligence Reasoning",
-        description: "Advanced intelligence reasoning and analysis",
+        id: 'air',
+        name: 'AIR - Advanced Intelligence Reasoning',
+        description: 'Advanced intelligence reasoning and analysis',
         capabilities: [
-          "advanced-reasoning",
-          "intelligence-analysis",
-          "logical-inference",
-          "decision-making",
+          'advanced-reasoning',
+          'intelligence-analysis',
+          'logical-inference',
+          'decision-making',
         ],
         maxTokens: 1500,
         temperature: 0.1,
@@ -110,8 +110,8 @@ class ZAIApiService {
 
   async generateCompletion(
     prompt: string,
-    modelId: string = "glm-45-flagship",
-    options: any = {},
+    modelId: string = 'glm-45-flagship',
+    options: any = {}
   ): Promise<ZAIResponse> {
     // Mock completion
     return {
@@ -156,18 +156,18 @@ class ZAIApiService {
 
   async analyzeImage(
     imageData: string,
-    modelId: string = "glm-45v",
-    options: any = {},
+    modelId: string = 'glm-45v',
+    options: any = {}
   ): Promise<any> {
     // Mock image analysis
     return {
       id: Math.random().toString(36).slice(2, 11),
       model: modelId,
       analysis: {
-        objects: ["person", "car", "building"],
-        text: "Sample text detected in image",
+        objects: ['person', 'car', 'building'],
+        text: 'Sample text detected in image',
         confidence: 0.92,
-        description: "Image analysis completed successfully",
+        description: 'Image analysis completed successfully',
       },
       timestamp: new Date().toISOString(),
     };

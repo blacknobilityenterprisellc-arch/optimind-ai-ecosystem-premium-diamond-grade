@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Search,
   Filter,
@@ -17,19 +17,19 @@ import {
   Code,
   MessageSquare,
   Palette,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface FilterOptions {
   status: string[];
   type: string[];
   dateRange: string;
   sortBy: string;
-  sortOrder: "asc" | "desc";
+  sortOrder: 'asc' | 'desc';
 }
 
 interface SearchAndFilterProps {
@@ -45,56 +45,56 @@ export default function SearchAndFilter({
   onClearFilters,
   totalResults,
 }: SearchAndFilterProps) {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     status: [],
     type: [],
-    dateRange: "all",
-    sortBy: "timestamp",
-    sortOrder: "desc",
+    dateRange: 'all',
+    sortBy: 'timestamp',
+    sortOrder: 'desc',
   });
 
   const statusOptions = [
     {
-      value: "success",
-      label: "Success",
-      color: "bg-green-100 text-green-800",
+      value: 'success',
+      label: 'Success',
+      color: 'bg-green-100 text-green-800',
     },
     {
-      value: "in_progress",
-      label: "In Progress",
-      color: "bg-blue-100 text-blue-800",
+      value: 'in_progress',
+      label: 'In Progress',
+      color: 'bg-blue-100 text-blue-800',
     },
-    { value: "error", label: "Error", color: "bg-red-100 text-red-800" },
-    { value: "info", label: "Info", color: "bg-gray-100 text-gray-800" },
+    { value: 'error', label: 'Error', color: 'bg-red-100 text-red-800' },
+    { value: 'info', label: 'Info', color: 'bg-gray-100 text-gray-800' },
   ];
 
   const typeOptions = [
-    { value: "content", label: "Content", icon: FileText },
-    { value: "optimization", label: "Optimization", icon: Target },
-    { value: "research", label: "Research", icon: Brain },
-    { value: "image", label: "Image", icon: ImageIcon },
-    { value: "voice", label: "Voice", icon: Mic },
-    { value: "video", label: "Video", icon: Video },
-    { value: "code", label: "Code", icon: Code },
-    { value: "chat", label: "Chat", icon: MessageSquare },
-    { value: "design", label: "Design", icon: Palette },
+    { value: 'content', label: 'Content', icon: FileText },
+    { value: 'optimization', label: 'Optimization', icon: Target },
+    { value: 'research', label: 'Research', icon: Brain },
+    { value: 'image', label: 'Image', icon: ImageIcon },
+    { value: 'voice', label: 'Voice', icon: Mic },
+    { value: 'video', label: 'Video', icon: Video },
+    { value: 'code', label: 'Code', icon: Code },
+    { value: 'chat', label: 'Chat', icon: MessageSquare },
+    { value: 'design', label: 'Design', icon: Palette },
   ];
 
   const dateRangeOptions = [
-    { value: "all", label: "All Time" },
-    { value: "today", label: "Today" },
-    { value: "week", label: "This Week" },
-    { value: "month", label: "This Month" },
-    { value: "year", label: "This Year" },
+    { value: 'all', label: 'All Time' },
+    { value: 'today', label: 'Today' },
+    { value: 'week', label: 'This Week' },
+    { value: 'month', label: 'This Month' },
+    { value: 'year', label: 'This Year' },
   ];
 
   const sortOptions = [
-    { value: "timestamp", label: "Date" },
-    { value: "title", label: "Title" },
-    { value: "type", label: "Type" },
-    { value: "status", label: "Status" },
+    { value: 'timestamp', label: 'Date' },
+    { value: 'title', label: 'Title' },
+    { value: 'type', label: 'Type' },
+    { value: 'status', label: 'Status' },
   ];
 
   const handleSearch = (value: string) => {
@@ -104,7 +104,7 @@ export default function SearchAndFilter({
 
   const handleStatusToggle = (status: string) => {
     const newStatuses = filters.status.includes(status)
-      ? filters.status.filter((s) => s !== status)
+      ? filters.status.filter(s => s !== status)
       : [...filters.status, status];
 
     const newFilters = { ...filters, status: newStatuses };
@@ -114,7 +114,7 @@ export default function SearchAndFilter({
 
   const handleTypeToggle = (type: string) => {
     const newTypes = filters.type.includes(type)
-      ? filters.type.filter((t) => t !== type)
+      ? filters.type.filter(t => t !== type)
       : [...filters.type, type];
 
     const newFilters = { ...filters, type: newTypes };
@@ -132,10 +132,7 @@ export default function SearchAndFilter({
     const newFilters = {
       ...filters,
       sortBy,
-      sortOrder:
-        filters.sortBy === sortBy && filters.sortOrder === "desc"
-          ? "asc"
-          : "desc",
+      sortOrder: filters.sortBy === sortBy && filters.sortOrder === 'desc' ? 'asc' : 'desc',
     };
     setFilters(newFilters);
     onFilter(newFilters);
@@ -145,19 +142,19 @@ export default function SearchAndFilter({
     const resetFilters: FilterOptions = {
       status: [],
       type: [],
-      dateRange: "all",
-      sortBy: "timestamp",
-      sortOrder: "desc",
+      dateRange: 'all',
+      sortBy: 'timestamp',
+      sortOrder: 'desc',
     };
     setFilters(resetFilters);
-    setSearchQuery("");
+    setSearchQuery('');
     onClearFilters();
   };
 
   const hasActiveFilters =
     filters.status.length > 0 ||
     filters.type.length > 0 ||
-    filters.dateRange !== "all" ||
+    filters.dateRange !== 'all' ||
     searchQuery;
 
   return (
@@ -174,16 +171,10 @@ export default function SearchAndFilter({
             )}
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-muted-foreground">
-              {totalResults} results
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowFilters(!showFilters)}
-            >
+            <span className="text-sm text-muted-foreground">{totalResults} results</span>
+            <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
               <Filter className="w-4 h-4 mr-2" />
-              {showFilters ? "Hide" : "Show"} Filters
+              {showFilters ? 'Hide' : 'Show'} Filters
             </Button>
             {hasActiveFilters && (
               <Button variant="outline" size="sm" onClick={handleClearFilters}>
@@ -201,7 +192,7 @@ export default function SearchAndFilter({
           <Input
             placeholder="Search activities, alerts, or metrics..."
             value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
+            onChange={e => handleSearch(e.target.value)}
             className="pl-10"
           />
         </div>
@@ -213,16 +204,12 @@ export default function SearchAndFilter({
             <div>
               <h4 className="text-sm font-medium mb-3">Status</h4>
               <div className="flex flex-wrap gap-2">
-                {statusOptions.map((option) => (
+                {statusOptions.map(option => (
                   <Badge
                     key={option.value}
-                    variant={
-                      filters.status.includes(option.value)
-                        ? "default"
-                        : "outline"
-                    }
+                    variant={filters.status.includes(option.value) ? 'default' : 'outline'}
                     className={`cursor-pointer ${
-                      filters.status.includes(option.value) ? option.color : ""
+                      filters.status.includes(option.value) ? option.color : ''
                     }`}
                     onClick={() => handleStatusToggle(option.value)}
                   >
@@ -236,16 +223,12 @@ export default function SearchAndFilter({
             <div>
               <h4 className="text-sm font-medium mb-3">Type</h4>
               <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
-                {typeOptions.map((option) => {
+                {typeOptions.map(option => {
                   const Icon = option.icon;
                   return (
                     <Badge
                       key={option.value}
-                      variant={
-                        filters.type.includes(option.value)
-                          ? "default"
-                          : "outline"
-                      }
+                      variant={filters.type.includes(option.value) ? 'default' : 'outline'}
                       className="cursor-pointer justify-center p-2"
                       onClick={() => handleTypeToggle(option.value)}
                     >
@@ -262,14 +245,10 @@ export default function SearchAndFilter({
               <div>
                 <h4 className="text-sm font-medium mb-3">Date Range</h4>
                 <div className="flex flex-wrap gap-2">
-                  {dateRangeOptions.map((option) => (
+                  {dateRangeOptions.map(option => (
                     <Badge
                       key={option.value}
-                      variant={
-                        filters.dateRange === option.value
-                          ? "default"
-                          : "outline"
-                      }
+                      variant={filters.dateRange === option.value ? 'default' : 'outline'}
                       className="cursor-pointer"
                       onClick={() => handleDateRangeChange(option.value)}
                     >
@@ -283,20 +262,16 @@ export default function SearchAndFilter({
               <div>
                 <h4 className="text-sm font-medium mb-3">Sort By</h4>
                 <div className="flex flex-wrap gap-2">
-                  {sortOptions.map((option) => (
+                  {sortOptions.map(option => (
                     <Badge
                       key={option.value}
-                      variant={
-                        filters.sortBy === option.value ? "default" : "outline"
-                      }
+                      variant={filters.sortBy === option.value ? 'default' : 'outline'}
                       className="cursor-pointer"
                       onClick={() => handleSortChange(option.value)}
                     >
                       {option.label}
                       {filters.sortBy === option.value && (
-                        <span className="ml-1">
-                          {filters.sortOrder === "asc" ? "↑" : "↓"}
-                        </span>
+                        <span className="ml-1">{filters.sortOrder === 'asc' ? '↑' : '↓'}</span>
                       )}
                     </Badge>
                   ))}
@@ -312,20 +287,13 @@ export default function SearchAndFilter({
             {searchQuery && (
               <Badge variant="secondary" className="flex items-center">
                 Search: "{searchQuery}"
-                <X
-                  className="w-3 h-3 ml-1 cursor-pointer"
-                  onClick={() => handleSearch("")}
-                />
+                <X className="w-3 h-3 ml-1 cursor-pointer" onClick={() => handleSearch('')} />
               </Badge>
             )}
-            {filters.status.map((status) => {
-              const option = statusOptions.find((opt) => opt.value === status);
+            {filters.status.map(status => {
+              const option = statusOptions.find(opt => opt.value === status);
               return (
-                <Badge
-                  key={status}
-                  variant="secondary"
-                  className="flex items-center"
-                >
+                <Badge key={status} variant="secondary" className="flex items-center">
                   Status: {option?.label}
                   <X
                     className="w-3 h-3 ml-1 cursor-pointer"
@@ -334,14 +302,10 @@ export default function SearchAndFilter({
                 </Badge>
               );
             })}
-            {filters.type.map((type) => {
-              const option = typeOptions.find((opt) => opt.value === type);
+            {filters.type.map(type => {
+              const option = typeOptions.find(opt => opt.value === type);
               return (
-                <Badge
-                  key={type}
-                  variant="secondary"
-                  className="flex items-center"
-                >
+                <Badge key={type} variant="secondary" className="flex items-center">
                   Type: {option?.label}
                   <X
                     className="w-3 h-3 ml-1 cursor-pointer"
@@ -350,17 +314,12 @@ export default function SearchAndFilter({
                 </Badge>
               );
             })}
-            {filters.dateRange !== "all" && (
+            {filters.dateRange !== 'all' && (
               <Badge variant="secondary" className="flex items-center">
-                Date:{" "}
-                {
-                  dateRangeOptions.find(
-                    (opt) => opt.value === filters.dateRange,
-                  )?.label
-                }
+                Date: {dateRangeOptions.find(opt => opt.value === filters.dateRange)?.label}
                 <X
                   className="w-3 h-3 ml-1 cursor-pointer"
-                  onClick={() => handleDateRangeChange("all")}
+                  onClick={() => handleDateRangeChange('all')}
                 />
               </Badge>
             )}
