@@ -53,7 +53,7 @@ interface Report {
   };
 }
 
-interface Alert {
+interface AlertItem {
   id: string;
   title: string;
   message: string;
@@ -76,7 +76,7 @@ interface ReportMetrics {
 const EnterpriseReportingDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [reports, setReports] = useState<Report[]>([]);
-  const [alerts, setAlerts] = useState<Alert[]>([]);
+  const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [metrics, setMetrics] = useState<ReportMetrics | null>(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState<'24h' | '7d' | '30d' | '90d'>('7d');
 
@@ -145,7 +145,7 @@ const EnterpriseReportingDashboard: React.FC = () => {
       ];
 
       // Mock alerts
-      const mockAlerts: Alert[] = [
+      const mockAlerts: AlertItem[] = [
         {
           id: '1',
           title: 'Critical Security Vulnerability',
