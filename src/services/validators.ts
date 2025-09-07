@@ -33,7 +33,7 @@ export function assertValidModeration(obj: any): ModerationResult {
   const valid = validateModeration(obj);
   if (!valid) {
     const err = validateModeration.errors;
-    throw new Error(`Moderation schema validation failed: ${  JSON.stringify(err)}`);
+    throw new Error(`Moderation schema validation failed: ${JSON.stringify(err)}`);
   }
   return obj as ModerationResult;
 }
