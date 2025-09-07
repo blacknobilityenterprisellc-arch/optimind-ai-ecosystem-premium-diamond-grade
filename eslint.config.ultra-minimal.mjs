@@ -1,10 +1,66 @@
 // Ultra-minimal ESLint configuration for CI/CD
+import typescriptParser from '@typescript-eslint/parser';
+
 export default [
   {
     files: ['**/*.{js,ts,tsx}'],
     languageOptions: {
-      ecmaVersion: 2022,
-      sourceType: 'module',
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+        Buffer: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        setImmediate: 'readonly',
+        clearImmediate: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        global: 'readonly',
+        module: 'readonly',
+        require: 'readonly',
+        exports: 'readonly',
+        // Web APIs
+        URL: 'readonly',
+        File: 'readonly',
+        fetch: 'readonly',
+        window: 'readonly',
+        document: 'readonly',
+        Blob: 'readonly',
+        Response: 'readonly',
+        Request: 'readonly',
+        Headers: 'readonly',
+        FormData: 'readonly',
+        URLSearchParams: 'readonly',
+        AbortController: 'readonly',
+        Event: 'readonly',
+        EventTarget: 'readonly',
+        CustomEvent: 'readonly',
+        ErrorEvent: 'readonly',
+        Promise: 'readonly',
+        Set: 'readonly',
+        Map: 'readonly',
+        WeakSet: 'readonly',
+        WeakMap: 'readonly',
+        DataView: 'readonly',
+        ArrayBuffer: 'readonly',
+        SharedArrayBuffer: 'readonly',
+        Atomics: 'readonly',
+        WebAssembly: 'readonly',
+        // Node.js globals
+        globalThis: 'readonly',
+        clearImmediate: 'readonly',
+        setImmediate: 'readonly',
+      },
     },
     rules: {
       'no-unused-vars': 'warn',

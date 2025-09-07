@@ -755,14 +755,24 @@ class MCPServiceOrchestrator {
     return {
       activeRequests: this.activeRequests.size,
       totalRequests: this.requestHistory.length,
-      successfulRequests: this.requestHistory.filter(r => r.success).length,
-      failedRequests: this.requestHistory.filter(r => !r.success).length,
-      averageProcessingTime: this.requestHistory.length > 0 
-        ? this.requestHistory.reduce((sum, r) => sum + r.processingTime, 0) / this.requestHistory.length 
-        : 0,
+      successfulRequests: this.requestHistory.filter((r) => r.success).length,
+      failedRequests: this.requestHistory.filter((r) => !r.success).length,
+      averageProcessingTime:
+        this.requestHistory.length > 0
+          ? this.requestHistory.reduce((sum, r) => sum + r.processingTime, 0) /
+            this.requestHistory.length
+          : 0,
       totalCost: this.requestHistory.reduce((sum, r) => sum + r.cost, 0),
-      businessTypes: [...new Set(this.requestHistory.map(r => r.businessType))],
-      modelsUsed: [...new Set(this.requestHistory.flatMap(r => r.modelResults.map(mr => mr.modelId)))],
+      businessTypes: [
+        ...new Set(this.requestHistory.map((r) => r.businessType)),
+      ],
+      modelsUsed: [
+        ...new Set(
+          this.requestHistory.flatMap((r) =>
+            r.modelResults.map((mr) => mr.modelId),
+          ),
+        ),
+      ],
     };
   }
 

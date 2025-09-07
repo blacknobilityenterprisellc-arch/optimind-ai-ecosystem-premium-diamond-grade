@@ -11,7 +11,7 @@ import { NextResponse } from "next/server";
 import { quantumSecurityV2 } from "@/lib/v2/quantum-security";
 import { predictiveAnalyticsV2 } from "@/lib/v2/predictive-analytics";
 import { mcpIntegrationV2 } from "@/lib/v2/mcp-integration";
-import DatabaseManagerV2 from "@/lib/v2/database-manager";
+import { DatabaseManagerV2 } from "@/lib/v2/database-manager";
 
 // Health status constants with enterprise-grade precision
 const HEALTH_STATUS = {
@@ -97,7 +97,7 @@ interface HealthError {
 }
 
 // Create singleton instance for database manager
-const dbManager = new DatabaseManagerV2();
+const dbManager = databaseManagerV2;
 
 /**
  * Performs comprehensive health checks on all v2.0 components

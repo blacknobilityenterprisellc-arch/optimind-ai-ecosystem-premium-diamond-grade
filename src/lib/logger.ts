@@ -1,11 +1,11 @@
 /**
  * OptiMind AI Ecosystem - Logger Utility
  * Premium Diamond Grade Logging System
- * 
+ *
  * A comprehensive logging utility for the OptiMind AI Ecosystem
  * with support for different log levels, structured logging,
  * and enterprise-grade features.
- * 
+ *
  * @version 2.0.0
  * @author OptiMind AI Ecosystem Team
  * @license MIT
@@ -16,7 +16,7 @@ export enum LogLevel {
   INFO = 1,
   WARN = 2,
   ERROR = 3,
-  FATAL = 4
+  FATAL = 4,
 }
 
 export interface LogEntry {
@@ -37,17 +37,27 @@ export class Logger {
     this.level = level;
   }
 
-  private createLogEntry(level: LogLevel, message: string, context?: Record<string, any>, error?: Error): LogEntry {
+  private createLogEntry(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>,
+    error?: Error,
+  ): LogEntry {
     return {
       timestamp: new Date(),
       level,
       message,
       context,
-      stack: error?.stack
+      stack: error?.stack,
     };
   }
 
-  private log(level: LogLevel, message: string, context?: Record<string, any>, error?: Error): void {
+  private log(
+    level: LogLevel,
+    message: string,
+    context?: Record<string, any>,
+    error?: Error,
+  ): void {
     if (level < this.level) return;
 
     const entry = this.createLogEntry(level, message, context, error);
@@ -57,8 +67,8 @@ export class Logger {
     const timestamp = entry.timestamp.toISOString();
     const levelName = LogLevel[level];
     const prefix = `[${timestamp}] [${levelName}] [${this.name}]`;
-    
-    const logMessage = error 
+
+    const logMessage = error
       ? `${prefix} ${message}\n${error.stack || error.message}`
       : `${prefix} ${message}`;
 
@@ -107,7 +117,7 @@ export class Logger {
     if (level === undefined) {
       return [...this.entries];
     }
-    return this.entries.filter(entry => entry.level >= level);
+    return this.entries.filter((entry) => entry.level >= level);
   }
 
   clearLogs(): void {
@@ -120,4 +130,4 @@ export class Logger {
 }
 
 // Default logger instance
-export const logger = Logger.create('OptiMindAI');
+export const logger = Logger.create("OptiMindAI");

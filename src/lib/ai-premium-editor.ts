@@ -4,5 +4,5 @@ export const useSecureSubscription = () => {
 };
 
 export const useAIPremiumEditor = () => {
-  return { edit: async () => ({ content: '' }), isLoading: false };
+  return { edit: async () => ({ content: "" }), isLoading: false };
 };

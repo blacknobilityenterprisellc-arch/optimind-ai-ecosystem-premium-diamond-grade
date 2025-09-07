@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise API Management System
- * 
+ *
  * This module implements a comprehensive API management system with key rotation,
  * rate limiting, analytics, and enterprise-grade security features.
- * 
+ *
  * Features:
  * - API key management with automatic rotation
  * - Advanced rate limiting with multiple strategies
@@ -15,51 +15,51 @@
  * - Caching and performance optimization
  * - Integration with external API gateways
  * - Compliance and audit logging
- * 
+ *
  * @author: Enterprise API Team
  * @version: 2.0.0
  * @compliance: Enterprise API Standards
  */
 
-import { EventEmitter } from 'events';
-import { EnterpriseEnvironmentConfig } from '../environment/EnterpriseEnvironmentConfig';
-import { EnterpriseHealthMonitor } from '../monitoring/EnterpriseHealthMonitor';
+import { EventEmitter } from "events";
+import { EnterpriseEnvironmentConfig } from "../environment/EnterpriseEnvironmentConfig";
+import { EnterpriseHealthMonitor } from "../monitoring/EnterpriseHealthMonitor";
 
 // API key types
 export enum APIKeyType {
-  PRODUCTION = 'PRODUCTION',
-  DEVELOPMENT = 'DEVELOPMENT',
-  TESTING = 'TESTING',
-  PARTNER = 'PARTNER',
-  INTERNAL = 'INTERNAL'
+  PRODUCTION = "PRODUCTION",
+  DEVELOPMENT = "DEVELOPMENT",
+  TESTING = "TESTING",
+  PARTNER = "PARTNER",
+  INTERNAL = "INTERNAL",
 }
 
 // API key status
 export enum APIKeyStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  EXPIRED = 'EXPIRED',
-  REVOKED = 'REVOKED',
-  PENDING_ROTATION = 'PENDING_ROTATION'
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  EXPIRED = "EXPIRED",
+  REVOKED = "REVOKED",
+  PENDING_ROTATION = "PENDING_ROTATION",
 }
 
 // Rate limiting strategies
 export enum RateLimitStrategy {
-  FIXED_WINDOW = 'FIXED_WINDOW',
-  SLIDING_WINDOW = 'SLIDING_WINDOW',
-  TOKEN_BUCKET = 'TOKEN_BUCKET',
-  LEAKY_BUCKET = 'LEAKY_BUCKET'
+  FIXED_WINDOW = "FIXED_WINDOW",
+  SLIDING_WINDOW = "SLIDING_WINDOW",
+  TOKEN_BUCKET = "TOKEN_BUCKET",
+  LEAKY_BUCKET = "LEAKY_BUCKET",
 }
 
 // API request methods
 export enum APIMethod {
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
-  PATCH = 'PATCH',
-  HEAD = 'HEAD',
-  OPTIONS = 'OPTIONS'
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+  PATCH = "PATCH",
+  HEAD = "HEAD",
+  OPTIONS = "OPTIONS",
 }
 
 // API key interface
@@ -135,14 +135,18 @@ export interface APIAnalyticsEvent {
   id: string;
   requestId: string;
   timestamp: number;
-  eventType: 'request' | 'response' | 'error' | 'security';
+  eventType: "request" | "response" | "error" | "security";
   method: APIMethod;
   path: string;
   status?: number;
   duration?: number;
   error?: string;
   securityEvent?: {
-    type: 'suspicious_activity' | 'rate_limit_exceeded' | 'invalid_key' | 'unauthorized';
+    type:
+      | "suspicious_activity"
+      | "rate_limit_exceeded"
+      | "invalid_key"
+      | "unauthorized";
     details: Record<string, any>;
   };
   metadata: Record<string, any>;
@@ -194,7 +198,7 @@ export interface APIGatewayConfig {
   };
   cache: {
     enabled: boolean;
-    driver: 'memory' | 'redis';
+    driver: "memory" | "redis";
     config: Record<string, any>;
   };
 }
@@ -220,7 +224,7 @@ export interface AnalyticsConfig {
   };
   export: {
     enabled: boolean;
-    format: 'json' | 'csv' | 'parquet';
+    format: "json" | "csv" | "parquet";
     destination: string;
     interval: number;
   };
@@ -269,7 +273,7 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   constructor(
     environment: EnterpriseEnvironmentConfig,
-    config: Partial<APIManagerConfig> = {}
+    config: Partial<APIManagerConfig> = {},
   ) {
     super();
     this.environment = environment;
@@ -290,16 +294,20 @@ export class EnterpriseAPIManager extends EventEmitter {
       gateway: {
         enabled: true,
         port: 8080,
-        host: '0.0.0.0',
+        host: "0.0.0.0",
         ssl: {
           enabled: false,
         },
         cors: {
           enabled: true,
-          allowedOrigins: ['*'],
-          allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-          allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
-          exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
+          allowedOrigins: ["*"],
+          allowedMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+          allowedHeaders: ["Content-Type", "Authorization", "X-API-Key"],
+          exposedHeaders: [
+            "X-RateLimit-Limit",
+            "X-RateLimit-Remaining",
+            "X-RateLimit-Reset",
+          ],
           credentials: true,
           maxAge: 86400,
         },
@@ -309,7 +317,7 @@ export class EnterpriseAPIManager extends EventEmitter {
         },
         cache: {
           enabled: true,
-          driver: 'memory',
+          driver: "memory",
           config: {},
         },
       },
@@ -331,8 +339,8 @@ export class EnterpriseAPIManager extends EventEmitter {
         },
         export: {
           enabled: false,
-          format: 'json',
-          destination: '',
+          format: "json",
+          destination: "",
           interval: 3600000, // 1 hour
         },
         dashboard: {
@@ -352,12 +360,12 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   private setupEventHandlers(): void {
-    this.on('api:request', (request: APIRequestContext) => {
+    this.on("api:request", (request: APIRequestContext) => {
       this.recordAnalyticsEvent({
         id: this.generateId(),
         requestId: request.id,
         timestamp: request.timestamp,
-        eventType: 'request',
+        eventType: "request",
         method: request.method,
         path: request.path,
         metadata: {
@@ -368,29 +376,32 @@ export class EnterpriseAPIManager extends EventEmitter {
       });
     });
 
-    this.on('api:response', (response: APIResponseContext, request: APIRequestContext) => {
-      this.recordAnalyticsEvent({
-        id: this.generateId(),
-        requestId: request.id,
-        timestamp: response.timestamp,
-        eventType: 'response',
-        method: request.method,
-        path: request.path,
-        status: response.status,
-        duration: response.duration,
-        metadata: {
-          cached: response.cached,
-          responseSize: response.size,
-        },
-      });
-    });
+    this.on(
+      "api:response",
+      (response: APIResponseContext, request: APIRequestContext) => {
+        this.recordAnalyticsEvent({
+          id: this.generateId(),
+          requestId: request.id,
+          timestamp: response.timestamp,
+          eventType: "response",
+          method: request.method,
+          path: request.path,
+          status: response.status,
+          duration: response.duration,
+          metadata: {
+            cached: response.cached,
+            responseSize: response.size,
+          },
+        });
+      },
+    );
 
-    this.on('api:error', (error: Error, request: APIRequestContext) => {
+    this.on("api:error", (error: Error, request: APIRequestContext) => {
       this.recordAnalyticsEvent({
         id: this.generateId(),
         requestId: request.id,
         timestamp: Date.now(),
-        eventType: 'error',
+        eventType: "error",
         method: request.method,
         path: request.path,
         error: error.message,
@@ -401,15 +412,15 @@ export class EnterpriseAPIManager extends EventEmitter {
       });
     });
 
-    this.on('security:event', (event: any) => {
+    this.on("security:event", (event: any) => {
       if (this.config.security.logSecurityEvents) {
         this.recordAnalyticsEvent({
           id: this.generateId(),
-          requestId: event.requestId || '',
+          requestId: event.requestId || "",
           timestamp: Date.now(),
-          eventType: 'security',
+          eventType: "security",
           method: event.method || APIMethod.GET,
-          path: event.path || '/',
+          path: event.path || "/",
           securityEvent: event,
           metadata: event.details || {},
         });
@@ -420,8 +431,8 @@ export class EnterpriseAPIManager extends EventEmitter {
   private setupDefaultRoutes(): void {
     // Health check route
     this.registerRoute({
-      id: 'health',
-      path: '/health',
+      id: "health",
+      path: "/health",
       method: APIMethod.GET,
       authRequired: false,
       permissions: [],
@@ -429,11 +440,11 @@ export class EnterpriseAPIManager extends EventEmitter {
         return {
           id: this.generateId(),
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
           body: {
-            status: 'healthy',
+            status: "healthy",
             timestamp: Date.now(),
-            version: '2.0.0',
+            version: "2.0.0",
           },
           timestamp: Date.now(),
           duration: 0,
@@ -442,20 +453,20 @@ export class EnterpriseAPIManager extends EventEmitter {
         };
       },
       metadata: {
-        description: 'Health check endpoint',
-        category: 'system',
+        description: "Health check endpoint",
+        category: "system",
       },
     });
 
     // API keys management route (protected)
     this.registerRoute({
-      id: 'api-keys',
-      path: '/api/keys',
+      id: "api-keys",
+      path: "/api/keys",
       method: APIMethod.GET,
       authRequired: true,
-      permissions: ['api_keys:read'],
+      permissions: ["api_keys:read"],
       handler: async (request) => {
-        const keys = Array.from(this.apiKeys.values()).map(key => ({
+        const keys = Array.from(this.apiKeys.values()).map((key) => ({
           id: key.id,
           name: key.name,
           type: key.type,
@@ -469,7 +480,7 @@ export class EnterpriseAPIManager extends EventEmitter {
         return {
           id: this.generateId(),
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
           body: { keys },
           timestamp: Date.now(),
           duration: 0,
@@ -478,25 +489,25 @@ export class EnterpriseAPIManager extends EventEmitter {
         };
       },
       metadata: {
-        description: 'List API keys',
-        category: 'management',
+        description: "List API keys",
+        category: "management",
       },
     });
 
     // Analytics route (protected)
     this.registerRoute({
-      id: 'analytics',
-      path: '/api/analytics',
+      id: "analytics",
+      path: "/api/analytics",
       method: APIMethod.GET,
       authRequired: true,
-      permissions: ['analytics:read'],
+      permissions: ["analytics:read"],
       handler: async (request) => {
         const analytics = this.getAnalyticsSummary();
-        
+
         return {
           id: this.generateId(),
           status: 200,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
           body: analytics,
           timestamp: Date.now(),
           duration: 0,
@@ -505,8 +516,8 @@ export class EnterpriseAPIManager extends EventEmitter {
         };
       },
       metadata: {
-        description: 'Get API analytics summary',
-        category: 'analytics',
+        description: "Get API analytics summary",
+        category: "analytics",
       },
     });
   }
@@ -515,7 +526,7 @@ export class EnterpriseAPIManager extends EventEmitter {
     if (this.isRunning) return;
 
     this.isRunning = true;
-    this.emit('starting');
+    this.emit("starting");
 
     // Start key rotation
     if (this.config.keyRotation.enabled) {
@@ -535,14 +546,14 @@ export class EnterpriseAPIManager extends EventEmitter {
       await this.startAPIGateway();
     }
 
-    this.emit('started');
+    this.emit("started");
   }
 
   async stop(): Promise<void> {
     if (!this.isRunning) return;
 
     this.isRunning = false;
-    this.emit('stopping');
+    this.emit("stopping");
 
     // Stop timers
     if (this.rotationTimer) {
@@ -555,7 +566,7 @@ export class EnterpriseAPIManager extends EventEmitter {
       clearInterval(this.analyticsTimer);
     }
 
-    this.emit('stopped');
+    this.emit("stopped");
   }
 
   private startKeyRotation(): void {
@@ -566,10 +577,11 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   private async rotateKeys(): Promise<void> {
     const now = Date.now();
-    const keysToRotate = Array.from(this.apiKeys.values()).filter(key => 
-      key.rotationConfig?.enabled && 
-      key.rotationConfig.nextRotation && 
-      key.rotationConfig.nextRotation <= now
+    const keysToRotate = Array.from(this.apiKeys.values()).filter(
+      (key) =>
+        key.rotationConfig?.enabled &&
+        key.rotationConfig.nextRotation &&
+        key.rotationConfig.nextRotation <= now,
     );
 
     for (const key of keysToRotate) {
@@ -601,7 +613,7 @@ export class EnterpriseAPIManager extends EventEmitter {
     };
 
     this.apiKeys.set(keyId, key);
-    this.emit('key:rotated', key);
+    this.emit("key:rotated", key);
   }
 
   private startCleanupTasks(): void {
@@ -619,20 +631,25 @@ export class EnterpriseAPIManager extends EventEmitter {
       if (key.expiresAt && key.expiresAt <= now) {
         key.status = APIKeyStatus.EXPIRED;
         this.apiKeys.set(keyId, key);
-        this.emit('key:expired', key);
+        this.emit("key:expired", key);
       }
     }
   }
 
   private cleanupAnalyticsEvents(): void {
     const cutoff = Date.now() - this.config.analytics.retention;
-    this.analyticsEvents = this.analyticsEvents.filter(event => event.timestamp > cutoff);
+    this.analyticsEvents = this.analyticsEvents.filter(
+      (event) => event.timestamp > cutoff,
+    );
   }
 
   private cleanupRateLimitStates(): void {
     const now = Date.now();
     for (const [key, state] of this.rateLimitStates.entries()) {
-      if (now - state.windowStart > this.config.rateLimiting.defaultWindow * 2) {
+      if (
+        now - state.windowStart >
+        this.config.rateLimiting.defaultWindow * 2
+      ) {
         this.rateLimitStates.delete(key);
       }
     }
@@ -658,36 +675,47 @@ export class EnterpriseAPIManager extends EventEmitter {
     const windowStart = now - this.config.analytics.aggregation.interval;
 
     const windowEvents = this.analyticsEvents.filter(
-      event => event.timestamp >= windowStart && event.timestamp <= now
+      (event) => event.timestamp >= windowStart && event.timestamp <= now,
     );
 
     const summary = {
       window: { start: windowStart, end: now },
-      totalRequests: windowEvents.filter(e => e.eventType === 'request').length,
-      totalResponses: windowEvents.filter(e => e.eventType === 'response').length,
-      totalErrors: windowEvents.filter(e => e.eventType === 'error').length,
-      totalSecurityEvents: windowEvents.filter(e => e.eventType === 'security').length,
+      totalRequests: windowEvents.filter((e) => e.eventType === "request")
+        .length,
+      totalResponses: windowEvents.filter((e) => e.eventType === "response")
+        .length,
+      totalErrors: windowEvents.filter((e) => e.eventType === "error").length,
+      totalSecurityEvents: windowEvents.filter(
+        (e) => e.eventType === "security",
+      ).length,
       averageResponseTime: this.calculateAverageResponseTime(windowEvents),
       topEndpoints: this.getTopEndpoints(windowEvents),
       errorRate: this.calculateErrorRate(windowEvents),
       statusCodes: this.getStatusCodeDistribution(windowEvents),
     };
 
-    this.emit('analytics:aggregated', summary);
+    this.emit("analytics:aggregated", summary);
   }
 
   private calculateAverageResponseTime(events: APIAnalyticsEvent[]): number {
-    const responseEvents = events.filter(e => e.eventType === 'response' && e.duration);
+    const responseEvents = events.filter(
+      (e) => e.eventType === "response" && e.duration,
+    );
     if (responseEvents.length === 0) return 0;
-    
-    const totalDuration = responseEvents.reduce((sum, e) => sum + (e.duration || 0), 0);
+
+    const totalDuration = responseEvents.reduce(
+      (sum, e) => sum + (e.duration || 0),
+      0,
+    );
     return totalDuration / responseEvents.length;
   }
 
-  private getTopEndpoints(events: APIAnalyticsEvent[]): Array<{ path: string; count: number }> {
+  private getTopEndpoints(
+    events: APIAnalyticsEvent[],
+  ): Array<{ path: string; count: number }> {
     const endpointCounts = new Map<string, number>();
-    
-    events.forEach(event => {
+
+    events.forEach((event) => {
       const count = endpointCounts.get(event.path) || 0;
       endpointCounts.set(event.path, count + 1);
     });
@@ -699,20 +727,26 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   private calculateErrorRate(events: APIAnalyticsEvent[]): number {
-    const totalRequests = events.filter(e => e.eventType === 'request').length;
-    const totalErrors = events.filter(e => e.eventType === 'error').length;
-    
+    const totalRequests = events.filter(
+      (e) => e.eventType === "request",
+    ).length;
+    const totalErrors = events.filter((e) => e.eventType === "error").length;
+
     if (totalRequests === 0) return 0;
     return (totalErrors / totalRequests) * 100;
   }
 
-  private getStatusCodeDistribution(events: APIAnalyticsEvent[]): Record<number, number> {
+  private getStatusCodeDistribution(
+    events: APIAnalyticsEvent[],
+  ): Record<number, number> {
     const distribution: Record<number, number> = {};
-    
-    events.filter(e => e.eventType === 'response' && e.status).forEach(event => {
-      const status = event.status!;
-      distribution[status] = (distribution[status] || 0) + 1;
-    });
+
+    events
+      .filter((e) => e.eventType === "response" && e.status)
+      .forEach((event) => {
+        const status = event.status!;
+        distribution[status] = (distribution[status] || 0) + 1;
+      });
 
     return distribution;
   }
@@ -720,7 +754,9 @@ export class EnterpriseAPIManager extends EventEmitter {
   private async startAPIGateway(): Promise<void> {
     // Implementation would start HTTP server
     // This is a simplified version
-    console.log(`API Gateway starting on ${this.config.gateway.host}:${this.config.gateway.port}`);
+    console.log(
+      `API Gateway starting on ${this.config.gateway.host}:${this.config.gateway.port}`,
+    );
   }
 
   // API Key Management
@@ -762,7 +798,7 @@ export class EnterpriseAPIManager extends EventEmitter {
     };
 
     this.apiKeys.set(key.id, key);
-    this.emit('key:created', key);
+    this.emit("key:created", key);
     return key;
   }
 
@@ -774,7 +810,7 @@ export class EnterpriseAPIManager extends EventEmitter {
 
     key.status = APIKeyStatus.REVOKED;
     this.apiKeys.set(keyId, key);
-    this.emit('key:revoked', key);
+    this.emit("key:revoked", key);
   }
 
   getAPIKey(keyId: string): APIKey | undefined {
@@ -789,7 +825,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   registerRoute(route: APIRoute): void {
     const routeKey = `${route.method}:${route.path}`;
     this.routes.set(routeKey, route);
-    this.emit('route:registered', route);
+    this.emit("route:registered", route);
   }
 
   getRoute(method: APIMethod, path: string): APIRoute | undefined {
@@ -802,36 +838,38 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   // Request Processing
-  async processRequest(request: APIRequestContext): Promise<APIResponseContext> {
+  async processRequest(
+    request: APIRequestContext,
+  ): Promise<APIResponseContext> {
     const startTime = Date.now();
-    
+
     try {
-      this.emit('api:request', request);
+      this.emit("api:request", request);
 
       // Authenticate request
-      if (!await this.authenticateRequest(request)) {
-        return this.createErrorResponse(401, 'Unauthorized', request);
+      if (!(await this.authenticateRequest(request))) {
+        return this.createErrorResponse(401, "Unauthorized", request);
       }
 
       // Authorize request
-      if (!await this.authorizeRequest(request)) {
-        return this.createErrorResponse(403, 'Forbidden', request);
+      if (!(await this.authorizeRequest(request))) {
+        return this.createErrorResponse(403, "Forbidden", request);
       }
 
       // Check rate limits
-      if (!await this.checkRateLimits(request)) {
-        return this.createErrorResponse(429, 'Too Many Requests', request);
+      if (!(await this.checkRateLimits(request))) {
+        return this.createErrorResponse(429, "Too Many Requests", request);
       }
 
       // Check security
-      if (!await this.checkSecurity(request)) {
-        return this.createErrorResponse(403, 'Security Check Failed', request);
+      if (!(await this.checkSecurity(request))) {
+        return this.createErrorResponse(403, "Security Check Failed", request);
       }
 
       // Get route
       const route = this.getRoute(request.method, request.path);
       if (!route) {
-        return this.createErrorResponse(404, 'Not Found', request);
+        return this.createErrorResponse(404, "Not Found", request);
       }
 
       // Apply request transformation
@@ -848,7 +886,7 @@ export class EnterpriseAPIManager extends EventEmitter {
             ...cachedResponse,
             cached: true,
           };
-          this.emit('api:response', response, transformedRequest);
+          this.emit("api:response", response, transformedRequest);
           return response;
         }
       }
@@ -877,30 +915,37 @@ export class EnterpriseAPIManager extends EventEmitter {
         this.apiKeys.set(request.apiKey.id, request.apiKey);
       }
 
-      this.emit('api:response', response, transformedRequest);
+      this.emit("api:response", response, transformedRequest);
       return response;
-
     } catch (error) {
-      const errorResponse = this.createErrorResponse(500, 'Internal Server Error', request);
-      this.emit('api:error', error as Error, request);
+      const errorResponse = this.createErrorResponse(
+        500,
+        "Internal Server Error",
+        request,
+      );
+      this.emit("api:error", error as Error, request);
       return errorResponse;
     }
   }
 
-  private async authenticateRequest(request: APIRequestContext): Promise<boolean> {
-    if (!request.headers['authorization'] && !request.headers['x-api-key']) {
+  private async authenticateRequest(
+    request: APIRequestContext,
+  ): Promise<boolean> {
+    if (!request.headers["authorization"] && !request.headers["x-api-key"]) {
       return false;
     }
 
-    const apiKey = request.headers['x-api-key'] || request.headers['authorization']?.replace('Bearer ', '');
+    const apiKey =
+      request.headers["x-api-key"] ||
+      request.headers["authorization"]?.replace("Bearer ", "");
     if (!apiKey) {
       return false;
     }
 
-    const key = Array.from(this.apiKeys.values()).find(k => k.key === apiKey);
+    const key = Array.from(this.apiKeys.values()).find((k) => k.key === apiKey);
     if (!key || key.status !== APIKeyStatus.ACTIVE) {
-      this.emit('security:event', {
-        type: 'invalid_key',
+      this.emit("security:event", {
+        type: "invalid_key",
         requestId: request.id,
         method: request.method,
         path: request.path,
@@ -917,9 +962,12 @@ export class EnterpriseAPIManager extends EventEmitter {
     }
 
     // Check allowed IPs
-    if (key.allowedIPs.length > 0 && !key.allowedIPs.includes(request.clientIP)) {
-      this.emit('security:event', {
-        type: 'unauthorized',
+    if (
+      key.allowedIPs.length > 0 &&
+      !key.allowedIPs.includes(request.clientIP)
+    ) {
+      this.emit("security:event", {
+        type: "unauthorized",
         requestId: request.id,
         method: request.method,
         path: request.path,
@@ -973,13 +1021,13 @@ export class EnterpriseAPIManager extends EventEmitter {
 
     // Check limit
     if (state.requests >= this.config.rateLimiting.defaultLimit) {
-      this.emit('security:event', {
-        type: 'rate_limit_exceeded',
+      this.emit("security:event", {
+        type: "rate_limit_exceeded",
         requestId: request.id,
         method: request.method,
         path: request.path,
-        details: { 
-          clientIP: request.clientIP, 
+        details: {
+          clientIP: request.clientIP,
           apiKeyId: request.apiKey.id,
           requests: state.requests,
           limit: this.config.rateLimiting.defaultLimit,
@@ -1003,8 +1051,9 @@ export class EnterpriseAPIManager extends EventEmitter {
     // Check suspicious activity
     if (this.suspiciousIPs.has(request.clientIP)) {
       const recentEvents = this.analyticsEvents.filter(
-        event => event.metadata?.clientIP === request.clientIP &&
-        event.timestamp > Date.now() - 3600000 // Last hour
+        (event) =>
+          event.metadata?.clientIP === request.clientIP &&
+          event.timestamp > Date.now() - 3600000, // Last hour
       ).length;
 
       if (recentEvents > this.config.security.suspiciousIPThreshold) {
@@ -1018,10 +1067,13 @@ export class EnterpriseAPIManager extends EventEmitter {
     return true;
   }
 
-  private getFromCache(request: APIRequestContext, route: APIRoute): APIResponseContext | null {
+  private getFromCache(
+    request: APIRequestContext,
+    route: APIRoute,
+  ): APIResponseContext | null {
     if (!route.cacheConfig?.enabled) return null;
 
-    const cacheKey = route.cacheConfig.keyGenerator 
+    const cacheKey = route.cacheConfig.keyGenerator
       ? route.cacheConfig.keyGenerator(request)
       : `${request.method}:${request.path}:${JSON.stringify(request.query)}`;
 
@@ -1034,10 +1086,14 @@ export class EnterpriseAPIManager extends EventEmitter {
     return null;
   }
 
-  private setToCache(request: APIRequestContext, response: APIResponseContext, route: APIRoute): void {
+  private setToCache(
+    request: APIRequestContext,
+    response: APIResponseContext,
+    route: APIRoute,
+  ): void {
     if (!route.cacheConfig?.enabled) return;
 
-    const cacheKey = route.cacheConfig.keyGenerator 
+    const cacheKey = route.cacheConfig.keyGenerator
       ? route.cacheConfig.keyGenerator(request)
       : `${request.method}:${request.path}:${JSON.stringify(request.query)}`;
 
@@ -1045,11 +1101,15 @@ export class EnterpriseAPIManager extends EventEmitter {
     this.cache.set(cacheKey, { data: response, expires });
   }
 
-  private createErrorResponse(status: number, message: string, request: APIRequestContext): APIResponseContext {
+  private createErrorResponse(
+    status: number,
+    message: string,
+    request: APIRequestContext,
+  ): APIResponseContext {
     return {
       id: this.generateId(),
       status,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { "Content-Type": "application/json" },
       body: { error: message, timestamp: Date.now() },
       timestamp: Date.now(),
       duration: 0,
@@ -1060,10 +1120,12 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   private recordAnalyticsEvent(event: APIAnalyticsEvent): void {
     this.analyticsEvents.push(event);
-    
+
     // Keep only recent events
     const cutoff = Date.now() - this.config.analytics.retention;
-    this.analyticsEvents = this.analyticsEvents.filter(e => e.timestamp > cutoff);
+    this.analyticsEvents = this.analyticsEvents.filter(
+      (e) => e.timestamp > cutoff,
+    );
   }
 
   private generateId(): string {
@@ -1071,25 +1133,31 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   private generateAPIKey(): string {
-    return 'ak_' + Math.random().toString(36).substr(2, 32);
+    return "ak_" + Math.random().toString(36).substr(2, 32);
   }
 
   private generateAPISecret(): string {
-    return 'as_' + Math.random().toString(36).substr(2, 64);
+    return "as_" + Math.random().toString(36).substr(2, 64);
   }
 
   // Public API methods
   getAnalyticsSummary(): any {
     const now = Date.now();
-    const last24Hours = this.analyticsEvents.filter(e => e.timestamp > now - 86400000);
-    
+    const last24Hours = this.analyticsEvents.filter(
+      (e) => e.timestamp > now - 86400000,
+    );
+
     return {
-      totalRequests: last24Hours.filter(e => e.eventType === 'request').length,
-      totalResponses: last24Hours.filter(e => e.eventType === 'response').length,
-      totalErrors: last24Hours.filter(e => e.eventType === 'error').length,
+      totalRequests: last24Hours.filter((e) => e.eventType === "request")
+        .length,
+      totalResponses: last24Hours.filter((e) => e.eventType === "response")
+        .length,
+      totalErrors: last24Hours.filter((e) => e.eventType === "error").length,
       averageResponseTime: this.calculateAverageResponseTime(last24Hours),
       errorRate: this.calculateErrorRate(last24Hours),
-      activeKeys: Array.from(this.apiKeys.values()).filter(k => k.status === APIKeyStatus.ACTIVE).length,
+      activeKeys: Array.from(this.apiKeys.values()).filter(
+        (k) => k.status === APIKeyStatus.ACTIVE,
+      ).length,
       totalKeys: this.apiKeys.size,
       blockedIPs: this.blockedIPs.size,
       suspiciousIPs: this.suspiciousIPs.size,
@@ -1098,17 +1166,17 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   getAnalyticsEvents(eventType?: string, limit?: number): APIAnalyticsEvent[] {
     let events = this.analyticsEvents;
-    
+
     if (eventType) {
-      events = events.filter(e => e.eventType === eventType);
+      events = events.filter((e) => e.eventType === eventType);
     }
-    
+
     events = events.sort((a, b) => b.timestamp - a.timestamp);
-    
+
     if (limit) {
       events = events.slice(0, limit);
     }
-    
+
     return events;
   }
 
@@ -1117,9 +1185,13 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   getCacheStats(): { size: number; hitRate: number } {
-    const totalRequests = this.analyticsEvents.filter(e => e.eventType === 'response').length;
-    const cachedRequests = this.analyticsEvents.filter(e => e.eventType === 'response' && e.metadata?.cached).length;
-    
+    const totalRequests = this.analyticsEvents.filter(
+      (e) => e.eventType === "response",
+    ).length;
+    const cachedRequests = this.analyticsEvents.filter(
+      (e) => e.eventType === "response" && e.metadata?.cached,
+    ).length;
+
     return {
       size: this.cache.size,
       hitRate: totalRequests > 0 ? (cachedRequests / totalRequests) * 100 : 0,
@@ -1130,7 +1202,7 @@ export class EnterpriseAPIManager extends EventEmitter {
 // Factory function to create enterprise API manager
 export function createEnterpriseAPIManager(
   environment: EnterpriseEnvironmentConfig,
-  config?: Partial<APIManagerConfig>
+  config?: Partial<APIManagerConfig>,
 ): EnterpriseAPIManager {
   return new EnterpriseAPIManager(environment, config);
 }

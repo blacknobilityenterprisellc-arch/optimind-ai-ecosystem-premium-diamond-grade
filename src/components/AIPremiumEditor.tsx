@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -39,7 +45,7 @@ export function AIPremiumEditor() {
     try {
       // Simulate enhancement progress
       const progressInterval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -49,18 +55,20 @@ export function AIPremiumEditor() {
       }, 300);
 
       // Simulate AI processing
-      await new Promise(resolve => setTimeout(resolve, 2500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+
       setProgress(100);
-      
+
       // Simple enhancement simulation
       const enhanced = content
-        .split('. ')
-        .map(sentence => sentence.trim() + (sentence.endsWith('.') ? '' : '.'))
-        .filter(s => s.length > 0)
-        .join('. ')
-        .replace(/\b(\w+)\s+\1\b/g, '$1') // Remove duplicate words
-        .replace(/([.!?])\s*([a-z])/g, '$1 $2') // Fix spacing
+        .split(". ")
+        .map(
+          (sentence) => sentence.trim() + (sentence.endsWith(".") ? "" : "."),
+        )
+        .filter((s) => s.length > 0)
+        .join(". ")
+        .replace(/\b(\w+)\s+\1\b/g, "$1") // Remove duplicate words
+        .replace(/([.!?])\s*([a-z])/g, "$1 $2") // Fix spacing
         .trim();
 
       setEnhancedContent(enhanced);
@@ -82,11 +90,11 @@ export function AIPremiumEditor() {
 
   const handleDownload = () => {
     if (enhancedContent) {
-      const blob = new Blob([enhancedContent], { type: 'text/plain' });
+      const blob = new Blob([enhancedContent], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.download = 'enhanced-content.txt';
+      link.download = "enhanced-content.txt";
       link.click();
       URL.revokeObjectURL(url);
       toast.success("Content downloaded!");
@@ -100,13 +108,17 @@ export function AIPremiumEditor() {
           <CardTitle className="flex items-center space-x-2">
             <Edit3 className="w-5 h-5" />
             <span>AI Premium Editor</span>
-            <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Badge
+              variant="secondary"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            >
               <Sparkles className="w-3 h-3 mr-1" />
               Premium
             </Badge>
           </CardTitle>
           <CardDescription>
-            Enhance your content with advanced AI editing capabilities. Improve grammar, style, clarity, and more.
+            Enhance your content with advanced AI editing capabilities. Improve
+            grammar, style, clarity, and more.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -140,7 +152,9 @@ export function AIPremiumEditor() {
                 key={option.value}
                 variant="outline"
                 className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                onClick={() => setPrompt(prev => prev + (prev ? ', ' : '') + option.label)}
+                onClick={() =>
+                  setPrompt((prev) => prev + (prev ? ", " : "") + option.label)
+                }
               >
                 {option.label}
               </Badge>

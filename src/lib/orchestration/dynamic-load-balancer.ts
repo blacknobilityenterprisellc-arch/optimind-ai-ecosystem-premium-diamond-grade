@@ -1,13 +1,13 @@
 /**
  * Dynamic Load Balancer for GLM-4.5 Orchestrated AI Ecosystem
- * 
+ *
  * This module provides intelligent load balancing across AI agents with
  * dynamic selection based on performance, capabilities, and resource availability.
  */
-import { ZAI } from 'z-ai-web-dev-sdk';
+import { ZAI } from "z-ai-web-dev-sdk";
 
 interface LoadBalancerConfig {
-  strategy: 'round-robin' | 'weighted' | 'least-connections' | 'response-time';
+  strategy: "round-robin" | "weighted" | "least-connections" | "response-time";
   healthCheckInterval: number;
   maxRetries: number;
   timeout: number;
@@ -16,7 +16,7 @@ interface LoadBalancerConfig {
 interface AgentMetrics {
   id: string;
   name: string;
-  type: 'primary' | 'supporting' | 'specialized' | 'external';
+  type: "primary" | "supporting" | "specialized" | "external";
   capabilities: string[];
   performance: {
     responseTime: number;
@@ -29,7 +29,7 @@ interface AgentMetrics {
     memory: number;
     network: number;
   };
-  health: 'healthy' | 'degraded' | 'unhealthy';
+  health: "healthy" | "degraded" | "unhealthy";
   lastUsed: Date;
   connections: number;
 }
@@ -51,7 +51,7 @@ export class DynamicLoadBalancer {
     successfulRequests: 0,
     failedRequests: 0,
     averageResponseTime: 0,
-    agentUtilization: {}
+    agentUtilization: {},
   };
   private healthCheckInterval?: NodeJS.Timeout;
 
@@ -63,11 +63,11 @@ export class DynamicLoadBalancer {
   /**
    * Register a new agent with the load balancer
    */
-  registerAgent(agent: Omit<AgentMetrics, 'lastUsed' | 'connections'>): void {
+  registerAgent(agent: Omit<AgentMetrics, "lastUsed" | "connections">): void {
     const agentMetrics: AgentMetrics = {
       ...agent,
       lastUsed: new Date(),
-      connections: 0
+      connections: 0,
     };
     this.agents.set(agent.id, agentMetrics);
     this.stats.agentUtilization[agent.id] = 0;
@@ -84,9 +84,14 @@ export class DynamicLoadBalancer {
   /**
    * Select the best agent for a given task based on load balancing strategy
    */
-  async selectAgent(capabilities: string[], priority: 'high' | 'medium' | 'low' = 'medium'): Promise<AgentMetrics | null> {
+  async selectAgent(
+    capabilities: string[],
+    priority: "high" | "medium" | "low" = "medium",
+  ): Promise<AgentMetrics | null> {
     const availableAgents = Array.from(this.agents.values()).filter(
-      agent => agent.health === 'healthy' && this.hasRequiredCapabilities(agent, capabilities)
+      (agent) =>
+        agent.health === "healthy" &&
+        this.hasRequiredCapabilities(agent, capabilities),
     );
 
     if (availableAgents.length === 0) {
@@ -96,16 +101,16 @@ export class DynamicLoadBalancer {
     let selectedAgent: AgentMetrics;
 
     switch (this.config.strategy) {
-      case 'round-robin':
+      case "round-robin":
         selectedAgent = this.roundRobinSelection(availableAgents);
         break;
-      case 'weighted':
+      case "weighted":
         selectedAgent = this.weightedSelection(availableAgents, priority);
         break;
-      case 'least-connections':
+      case "least-connections":
         selectedAgent = this.leastConnectionsSelection(availableAgents);
         break;
-      case 'response-time':
+      case "response-time":
         selectedAgent = this.responseTimeSelection(availableAgents);
         break;
       default:
@@ -125,27 +130,30 @@ export class DynamicLoadBalancer {
   async executeTask<T>(
     task: {
       capabilities: string[];
-      priority: 'high' | 'medium' | 'low';
+      priority: "high" | "medium" | "low";
       payload: any;
     },
-    executor: (agent: AgentMetrics) => Promise<T>
+    executor: (agent: AgentMetrics) => Promise<T>,
   ): Promise<T> {
     const startTime = Date.now();
     let attempts = 0;
 
     while (attempts < this.config.maxRetries) {
       const agent = await this.selectAgent(task.capabilities, task.priority);
-      
+
       if (!agent) {
-        throw new Error('No available agents with required capabilities');
+        throw new Error("No available agents with required capabilities");
       }
 
       try {
         const result = await Promise.race([
           executor(agent),
-          new Promise<never>((_, reject) => 
-            setTimeout(() => reject(new Error('Agent timeout')), this.config.timeout)
-          )
+          new Promise<never>((_, reject) =>
+            setTimeout(
+              () => reject(new Error("Agent timeout")),
+              this.config.timeout,
+            ),
+          ),
         ]);
 
         const responseTime = Date.now() - startTime;
@@ -157,7 +165,7 @@ export class DynamicLoadBalancer {
       } catch (error) {
         attempts++;
         this.updateAgentMetrics(agent, false, 0);
-        
+
         if (attempts === this.config.maxRetries) {
           this.stats.failedRequests++;
           throw error;
@@ -165,7 +173,7 @@ export class DynamicLoadBalancer {
       }
     }
 
-    throw new Error('Max retries exceeded');
+    throw new Error("Max retries exceeded");
   }
 
   /**
@@ -185,14 +193,22 @@ export class DynamicLoadBalancer {
   /**
    * Update agent performance metrics
    */
-  updateAgentMetrics(agent: AgentMetrics, success: boolean, responseTime: number): void {
-    agent.performance.responseTime = agent.performance.responseTime * 0.9 + responseTime * 0.1;
-    agent.performance.successRate = agent.performance.successRate * 0.9 + (success ? 1 : 0) * 0.1;
-    agent.performance.errorRate = agent.performance.errorRate * 0.9 + (success ? 0 : 1) * 0.1;
+  updateAgentMetrics(
+    agent: AgentMetrics,
+    success: boolean,
+    responseTime: number,
+  ): void {
+    agent.performance.responseTime =
+      agent.performance.responseTime * 0.9 + responseTime * 0.1;
+    agent.performance.successRate =
+      agent.performance.successRate * 0.9 + (success ? 1 : 0) * 0.1;
+    agent.performance.errorRate =
+      agent.performance.errorRate * 0.9 + (success ? 0 : 1) * 0.1;
     agent.connections = Math.max(0, agent.connections - 1);
-    
-    this.stats.agentUtilization[agent.id] = 
-      (this.stats.agentUtilization[agent.id] || 0) * 0.9 + (agent.connections > 0 ? 1 : 0) * 0.1;
+
+    this.stats.agentUtilization[agent.id] =
+      (this.stats.agentUtilization[agent.id] || 0) * 0.9 +
+      (agent.connections > 0 ? 1 : 0) * 0.1;
   }
 
   /**
@@ -203,16 +219,16 @@ export class DynamicLoadBalancer {
       try {
         // Simulate health check - in real implementation, this would ping the agent
         const isHealthy = await this.checkAgentHealth(agent);
-        
+
         if (isHealthy) {
-          agent.health = 'healthy';
-        } else if (agent.health === 'healthy') {
-          agent.health = 'degraded';
+          agent.health = "healthy";
+        } else if (agent.health === "healthy") {
+          agent.health = "degraded";
         } else {
-          agent.health = 'unhealthy';
+          agent.health = "unhealthy";
         }
       } catch (error) {
-        agent.health = 'unhealthy';
+        agent.health = "unhealthy";
       }
     }
   }
@@ -239,7 +255,7 @@ export class DynamicLoadBalancer {
   private startHealthChecks(): void {
     this.healthCheckInterval = setInterval(
       () => this.healthCheck(),
-      this.config.healthCheckInterval
+      this.config.healthCheckInterval,
     );
   }
 
@@ -264,39 +280,42 @@ export class DynamicLoadBalancer {
   /**
    * Weighted selection strategy based on priority and performance
    */
-  private weightedSelection(agents: AgentMetrics[], priority: 'high' | 'medium' | 'low'): AgentMetrics {
-    const weights = agents.map(agent => {
+  private weightedSelection(
+    agents: AgentMetrics[],
+    priority: "high" | "medium" | "low",
+  ): AgentMetrics {
+    const weights = agents.map((agent) => {
       let weight = 1;
-      
+
       // Priority-based weighting
-      if (priority === 'high') weight *= 2;
-      else if (priority === 'low') weight *= 0.5;
-      
+      if (priority === "high") weight *= 2;
+      else if (priority === "low") weight *= 0.5;
+
       // Performance-based weighting
-      weight *= (1 - agent.performance.errorRate);
+      weight *= 1 - agent.performance.errorRate;
       weight *= agent.performance.successRate;
-      weight *= (1 / (1 + agent.performance.responseTime / 1000));
-      
+      weight *= 1 / (1 + agent.performance.responseTime / 1000);
+
       // Resource-based weighting
-      weight *= (1 - agent.resources.cpu / 100);
-      weight *= (1 - agent.resources.memory / 100);
-      
+      weight *= 1 - agent.resources.cpu / 100;
+      weight *= 1 - agent.resources.memory / 100;
+
       // Connection-based weighting
-      weight *= (1 / (1 + agent.connections));
-      
+      weight *= 1 / (1 + agent.connections);
+
       return weight;
     });
 
     const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
     let random = Math.random() * totalWeight;
-    
+
     for (let i = 0; i < agents.length; i++) {
       random -= weights[i];
       if (random <= 0) {
         return agents[i];
       }
     }
-    
+
     return agents[agents.length - 1];
   }
 
@@ -304,8 +323,8 @@ export class DynamicLoadBalancer {
    * Least connections selection strategy
    */
   private leastConnectionsSelection(agents: AgentMetrics[]): AgentMetrics {
-    return agents.reduce((min, agent) => 
-      agent.connections < min.connections ? agent : min
+    return agents.reduce((min, agent) =>
+      agent.connections < min.connections ? agent : min,
     );
   }
 
@@ -313,17 +332,22 @@ export class DynamicLoadBalancer {
    * Response time selection strategy
    */
   private responseTimeSelection(agents: AgentMetrics[]): AgentMetrics {
-    return agents.reduce((min, agent) => 
-      agent.performance.responseTime < min.performance.responseTime ? agent : min
+    return agents.reduce((min, agent) =>
+      agent.performance.responseTime < min.performance.responseTime
+        ? agent
+        : min,
     );
   }
 
   /**
    * Check if agent has required capabilities
    */
-  private hasRequiredCapabilities(agent: AgentMetrics, requiredCapabilities: string[]): boolean {
-    return requiredCapabilities.every(capability => 
-      agent.capabilities.includes(capability)
+  private hasRequiredCapabilities(
+    agent: AgentMetrics,
+    requiredCapabilities: string[],
+  ): boolean {
+    return requiredCapabilities.every((capability) =>
+      agent.capabilities.includes(capability),
     );
   }
 
@@ -331,7 +355,7 @@ export class DynamicLoadBalancer {
    * Update average response time
    */
   private updateAverageResponseTime(responseTime: number): void {
-    this.stats.averageResponseTime = 
+    this.stats.averageResponseTime =
       this.stats.averageResponseTime * 0.9 + responseTime * 0.1;
   }
 

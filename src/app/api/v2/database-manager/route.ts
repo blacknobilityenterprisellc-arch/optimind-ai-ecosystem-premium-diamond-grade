@@ -11,9 +11,11 @@ import { DatabaseManagerV2 } from "@/lib/v2/database-manager";
 const dbManager = new DatabaseManagerV2();
 
 export async function POST(request: NextRequest) {
+  let operationType = null;
   try {
     const body = await request.json();
     const { operation, ...params } = body;
+    operationType = operation;
 
     let result;
 
@@ -82,7 +84,7 @@ export async function POST(request: NextRequest) {
       {
         error: "Internal server error",
         message: error.message,
-        operation: body.operation,
+        operation: operationType,
       },
       { status: 500 },
     );

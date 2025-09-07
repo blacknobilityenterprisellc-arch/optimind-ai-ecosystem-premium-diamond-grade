@@ -1,16 +1,22 @@
 /**
  * Agent Orchestrator Demo Page
- * 
+ *
  * This page provides a web interface to demonstrate the enhanced
  * agent coordination system with real-time monitoring.
  */
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface OrchestratorStatus {
   orchestrator: {
@@ -42,32 +48,32 @@ export default function OrchestratorDemoPage() {
 
   const fetchStatus = async () => {
     try {
-      const response = await fetch('/api/orchestrator/demo');
+      const response = await fetch("/api/orchestrator/demo");
       const data = await response.json();
       setStatus(data);
     } catch (err) {
-      setError('Failed to fetch orchestrator status');
+      setError("Failed to fetch orchestrator status");
     }
   };
 
   const startDemo = async () => {
     setLoading(true);
     setError(null);
-    addLog('Starting orchestrator demo...');
-    
+    addLog("Starting orchestrator demo...");
+
     try {
-      const response = await fetch('/api/orchestrator/demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start' })
+      const response = await fetch("/api/orchestrator/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "start" }),
       });
 
       const result: DemoResponse = await response.json();
-      
+
       if (response.ok) {
         setDemoRunning(true);
         addLog(`✅ ${result.message}`);
-        
+
         // Start polling for status updates
         const interval = setInterval(() => {
           fetchStatus();
@@ -78,12 +84,12 @@ export default function OrchestratorDemoPage() {
           clearInterval(interval);
         }, 30000);
       } else {
-        setError(result.error || 'Failed to start demo');
-        addLog(`❌ ${result.error || 'Failed to start demo'}`);
+        setError(result.error || "Failed to start demo");
+        addLog(`❌ ${result.error || "Failed to start demo"}`);
       }
     } catch (err) {
-      setError('Failed to start demo');
-      addLog('❌ Failed to start demo');
+      setError("Failed to start demo");
+      addLog("❌ Failed to start demo");
     } finally {
       setLoading(false);
     }
@@ -92,27 +98,27 @@ export default function OrchestratorDemoPage() {
   const stopDemo = async () => {
     setLoading(true);
     setError(null);
-    addLog('Stopping orchestrator demo...');
-    
+    addLog("Stopping orchestrator demo...");
+
     try {
-      const response = await fetch('/api/orchestrator/demo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'stop' })
+      const response = await fetch("/api/orchestrator/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "stop" }),
       });
 
       const result: DemoResponse = await response.json();
-      
+
       if (response.ok) {
         setDemoRunning(false);
         addLog(`✅ ${result.message}`);
       } else {
-        setError(result.error || 'Failed to stop demo');
-        addLog(`❌ ${result.error || 'Failed to stop demo'}`);
+        setError(result.error || "Failed to stop demo");
+        addLog(`❌ ${result.error || "Failed to stop demo"}`);
       }
     } catch (err) {
-      setError('Failed to stop demo');
-      addLog('❌ Failed to stop demo');
+      setError("Failed to stop demo");
+      addLog("❌ Failed to stop demo");
     } finally {
       setLoading(false);
     }
@@ -120,7 +126,7 @@ export default function OrchestratorDemoPage() {
 
   const addLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setLogs(prev => [...prev, `[${timestamp}] ${message}`]);
+    setLogs((prev) => [...prev, `[${timestamp}] ${message}`]);
   };
 
   const clearLogs = () => {
@@ -142,7 +148,13 @@ export default function OrchestratorDemoPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               System Status
-              <Badge variant={status.orchestrator.status === 'running' ? 'default' : 'secondary'}>
+              <Badge
+                variant={
+                  status.orchestrator.status === "running"
+                    ? "default"
+                    : "secondary"
+                }
+              >
                 {status.orchestrator.status}
               </Badge>
             </CardTitle>
@@ -202,7 +214,7 @@ export default function OrchestratorDemoPage() {
               disabled={loading || demoRunning}
               className="flex items-center gap-2"
             >
-              {loading ? 'Starting...' : 'Start Demo'}
+              {loading ? "Starting..." : "Start Demo"}
             </Button>
             <Button
               onClick={stopDemo}
@@ -210,7 +222,7 @@ export default function OrchestratorDemoPage() {
               variant="outline"
               className="flex items-center gap-2"
             >
-              {loading ? 'Stopping...' : 'Stop Demo'}
+              {loading ? "Stopping..." : "Stop Demo"}
             </Button>
             <Button
               onClick={clearLogs}
@@ -241,7 +253,9 @@ export default function OrchestratorDemoPage() {
         <CardContent>
           <div className="bg-muted p-4 rounded-md h-64 overflow-y-auto font-mono text-sm">
             {logs.length === 0 ? (
-              <p className="text-muted-foreground">No activity yet. Start the demo to see logs.</p>
+              <p className="text-muted-foreground">
+                No activity yet. Start the demo to see logs.
+              </p>
             ) : (
               logs.map((log, index) => (
                 <div key={index} className="mb-1">

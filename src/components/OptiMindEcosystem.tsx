@@ -1,28 +1,34 @@
 /**
  * OptiMind AI Ecosystem - Main UI Component
- * 
+ *
  * The primary React component that displays the OptiMind AI Ecosystem
  * interface with all its capabilities and features.
- * 
+ *
  * This component showcases the premium diamond grade AI solutions
  * for enterprise transformation.
  */
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  Brain, 
-  Shield, 
-  Zap, 
-  Users, 
-  BarChart3, 
-  Image as ImageIcon, 
-  MessageSquare, 
+import {
+  Brain,
+  Shield,
+  Zap,
+  Users,
+  BarChart3,
+  Image as ImageIcon,
+  MessageSquare,
   Search,
   Target,
   Lightbulb,
@@ -31,7 +37,7 @@ import {
   Network,
   Eye,
   Lock,
-  Sparkles
+  Sparkles,
 } from "lucide-react";
 
 interface EcosystemFeature {
@@ -47,17 +53,18 @@ interface EcosystemFeature {
 
 const OptiMindEcosystem: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  
+
   const ecosystemFeatures: EcosystemFeature[] = [
     {
       id: "glm-orchestrator",
       title: "GLM Orchestrator",
-      description: "Advanced AI model orchestration with intelligent routing and optimization",
+      description:
+        "Advanced AI model orchestration with intelligent routing and optimization",
       icon: Brain,
       color: "text-purple-500",
       category: "core-ai",
       status: "active",
-      stats: "45+ Models Integrated"
+      stats: "45+ Models Integrated",
     },
     {
       id: "intelligent-security",
@@ -67,7 +74,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-green-500",
       category: "security",
       status: "active",
-      stats: "99.9% Uptime"
+      stats: "99.9% Uptime",
     },
     {
       id: "content-creation",
@@ -77,7 +84,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-blue-500",
       category: "content",
       status: "active",
-      stats: "1M+ Words Generated"
+      stats: "1M+ Words Generated",
     },
     {
       id: "image-analysis",
@@ -87,7 +94,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-orange-500",
       category: "vision",
       status: "active",
-      stats: "50K+ Images Processed"
+      stats: "50K+ Images Processed",
     },
     {
       id: "research-analysis",
@@ -97,7 +104,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-indigo-500",
       category: "analytics",
       status: "active",
-      stats: "10K+ Research Papers"
+      stats: "10K+ Research Papers",
     },
     {
       id: "moderation",
@@ -107,7 +114,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-red-500",
       category: "security",
       status: "active",
-      stats: "99.5% Accuracy"
+      stats: "99.5% Accuracy",
     },
     {
       id: "optimization",
@@ -117,7 +124,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-yellow-500",
       category: "optimization",
       status: "active",
-      stats: "87% Avg. Improvement"
+      stats: "87% Avg. Improvement",
     },
     {
       id: "developer-access",
@@ -127,7 +134,7 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-cyan-500",
       category: "development",
       status: "beta",
-      stats: "100+ APIs Available"
+      stats: "100+ APIs Available",
     },
     {
       id: "analytics-dashboard",
@@ -137,24 +144,57 @@ const OptiMindEcosystem: React.FC = () => {
       color: "text-pink-500",
       category: "analytics",
       status: "active",
-      stats: "Real-time Insights"
-    }
+      stats: "Real-time Insights",
+    },
   ];
 
   const categories = [
     { id: "all", label: "All Features", count: ecosystemFeatures.length },
-    { id: "core-ai", label: "Core AI", count: ecosystemFeatures.filter(f => f.category === "core-ai").length },
-    { id: "security", label: "Security", count: ecosystemFeatures.filter(f => f.category === "security").length },
-    { id: "content", label: "Content", count: ecosystemFeatures.filter(f => f.category === "content").length },
-    { id: "vision", label: "Vision", count: ecosystemFeatures.filter(f => f.category === "vision").length },
-    { id: "analytics", label: "Analytics", count: ecosystemFeatures.filter(f => f.category === "analytics").length },
-    { id: "optimization", label: "Optimization", count: ecosystemFeatures.filter(f => f.category === "optimization").length },
-    { id: "development", label: "Development", count: ecosystemFeatures.filter(f => f.category === "development").length }
+    {
+      id: "core-ai",
+      label: "Core AI",
+      count: ecosystemFeatures.filter((f) => f.category === "core-ai").length,
+    },
+    {
+      id: "security",
+      label: "Security",
+      count: ecosystemFeatures.filter((f) => f.category === "security").length,
+    },
+    {
+      id: "content",
+      label: "Content",
+      count: ecosystemFeatures.filter((f) => f.category === "content").length,
+    },
+    {
+      id: "vision",
+      label: "Vision",
+      count: ecosystemFeatures.filter((f) => f.category === "vision").length,
+    },
+    {
+      id: "analytics",
+      label: "Analytics",
+      count: ecosystemFeatures.filter((f) => f.category === "analytics").length,
+    },
+    {
+      id: "optimization",
+      label: "Optimization",
+      count: ecosystemFeatures.filter((f) => f.category === "optimization")
+        .length,
+    },
+    {
+      id: "development",
+      label: "Development",
+      count: ecosystemFeatures.filter((f) => f.category === "development")
+        .length,
+    },
   ];
 
-  const filteredFeatures = selectedCategory === "all" 
-    ? ecosystemFeatures 
-    : ecosystemFeatures.filter(feature => feature.category === selectedCategory);
+  const filteredFeatures =
+    selectedCategory === "all"
+      ? ecosystemFeatures
+      : ecosystemFeatures.filter(
+          (feature) => feature.category === selectedCategory,
+        );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -178,7 +218,8 @@ const OptiMindEcosystem: React.FC = () => {
           <h2 className="text-2xl font-bold">Ecosystem Capabilities</h2>
         </div>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Explore our comprehensive suite of AI-powered tools and services designed for enterprise transformation
+          Explore our comprehensive suite of AI-powered tools and services
+          designed for enterprise transformation
         </p>
       </div>
 
@@ -203,7 +244,10 @@ const OptiMindEcosystem: React.FC = () => {
       {/* Features Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredFeatures.map((feature) => (
-          <Card key={feature.id} className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50">
+          <Card
+            key={feature.id}
+            className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50"
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <feature.icon className={`h-6 w-6 ${feature.color}`} />
@@ -216,16 +260,16 @@ const OptiMindEcosystem: React.FC = () => {
                   </Badge>
                 </div>
               </div>
-              <CardTitle className="text-lg text-white">{feature.title}</CardTitle>
+              <CardTitle className="text-lg text-white">
+                {feature.title}
+              </CardTitle>
               <CardDescription className="text-gray-400">
                 {feature.description}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">
-                  {feature.stats}
-                </span>
+                <span className="text-sm text-gray-500">{feature.stats}</span>
                 <Button variant="outline" size="sm" className="text-xs">
                   Explore
                   <Rocket className="h-3 w-3 ml-1" />

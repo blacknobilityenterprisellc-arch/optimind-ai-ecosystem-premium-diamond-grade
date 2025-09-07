@@ -1,17 +1,17 @@
 /**
  * Agent Orchestrator for GLM-4.5 Orchestrated AI Ecosystem
- * 
+ *
  * This module provides the main orchestration system that coordinates
  * multiple AI agents with GLM-4.5 as the primary orchestrator.
  * All operations are now orchestrated through the GLM-4.5 system.
  */
-import { DynamicLoadBalancer } from './dynamic-load-balancer';
-import { glmOrchestrator, GLMOrchestratorConfig } from '../glm-orchestrator';
+import { DynamicLoadBalancer } from "./dynamic-load-balancer";
+import { glmOrchestrator, GLMOrchestratorConfig } from "../glm-orchestrator";
 
 interface AgentTask {
   id: string;
   type: string;
-  priority: 'high' | 'medium' | 'low';
+  priority: "high" | "medium" | "low";
   capabilities: string[];
   payload: any;
   timeout?: number;
@@ -33,7 +33,11 @@ interface OrchestratorConfig {
   taskTimeout: number;
   maxRetries: number;
   loadBalancer: {
-    strategy: 'round-robin' | 'weighted' | 'least-connections' | 'response-time';
+    strategy:
+      | "round-robin"
+      | "weighted"
+      | "least-connections"
+      | "response-time";
     healthCheckInterval: number;
   };
   enableFaultTolerance: boolean;
@@ -56,7 +60,7 @@ export class AgentOrchestrator {
       strategy: config.loadBalancer.strategy,
       healthCheckInterval: config.loadBalancer.healthCheckInterval,
       maxRetries: config.maxRetries,
-      timeout: config.taskTimeout
+      timeout: config.taskTimeout,
     });
   }
 
@@ -66,9 +70,9 @@ export class AgentOrchestrator {
   async initialize(agents: any[]): Promise<void> {
     // First, initialize the GLM orchestrator
     await glmOrchestrator.initialize();
-    
+
     // Register agents with the load balancer
-    agents.forEach(agent => {
+    agents.forEach((agent) => {
       this.loadBalancer.registerAgent({
         id: agent.id,
         name: agent.name,
@@ -78,14 +82,14 @@ export class AgentOrchestrator {
           responseTime: 0,
           successRate: 1,
           throughput: 0,
-          errorRate: 0
+          errorRate: 0,
         },
         resources: {
           cpu: 0,
           memory: 0,
-          network: 0
+          network: 0,
         },
-        health: 'healthy'
+        health: "healthy",
       });
     });
 
@@ -116,23 +120,26 @@ export class AgentOrchestrator {
   /**
    * Submit a task for execution
    */
-  async submitTask(task: Omit<AgentTask, 'id'>): Promise<string> {
+  async submitTask(task: Omit<AgentTask, "id">): Promise<string> {
     const taskId = this.generateTaskId();
     const fullTask: AgentTask = {
       ...task,
       id: taskId,
       timeout: task.timeout || this.config.taskTimeout,
-      retries: task.retries || this.config.maxRetries
+      retries: task.retries || this.config.maxRetries,
     };
 
     this.taskQueue.push(fullTask);
-    
+
     if (task.dependencies) {
       this.taskDependencies.set(taskId, task.dependencies);
     }
 
     // Process queue immediately if not already running
-    if (this.isRunning && this.runningTasks.size < this.config.maxConcurrentTasks) {
+    if (
+      this.isRunning &&
+      this.runningTasks.size < this.config.maxConcurrentTasks
+    ) {
       this.processTaskQueue();
     }
 
@@ -163,7 +170,7 @@ export class AgentOrchestrator {
       queueLength: this.taskQueue.length,
       runningTasks: this.runningTasks.size,
       completedTasks: this.completedTasks.size,
-      loadBalancerStats: this.loadBalancer.getStats()
+      loadBalancerStats: this.loadBalancer.getStats(),
     };
   }
 
@@ -173,13 +180,16 @@ export class AgentOrchestrator {
   private async processTaskQueue(): Promise<void> {
     if (!this.isRunning) return;
 
-    while (this.taskQueue.length > 0 && this.runningTasks.size < this.config.maxConcurrentTasks) {
+    while (
+      this.taskQueue.length > 0 &&
+      this.runningTasks.size < this.config.maxConcurrentTasks
+    ) {
       const task = this.findNextExecutableTask();
-      
+
       if (!task) break;
 
       // Remove task from queue
-      const taskIndex = this.taskQueue.findIndex(t => t.id === task.id);
+      const taskIndex = this.taskQueue.findIndex((t) => t.id === task.id);
       if (taskIndex !== -1) {
         this.taskQueue.splice(taskIndex, 1);
       }
@@ -190,17 +200,17 @@ export class AgentOrchestrator {
 
       // Handle task completion
       taskPromise
-        .then(result => {
+        .then((result) => {
           this.completedTasks.set(task.id, result);
           this.runningTasks.delete(task.id);
         })
-        .catch(error => {
+        .catch((error) => {
           this.completedTasks.set(task.id, {
             taskId: task.id,
             success: false,
             error: error.message,
             executionTime: 0,
-            agentId: 'unknown'
+            agentId: "unknown",
           });
           this.runningTasks.delete(task.id);
         })
@@ -219,11 +229,12 @@ export class AgentOrchestrator {
   private findNextExecutableTask(): AgentTask | null {
     for (const task of this.taskQueue) {
       const dependencies = this.taskDependencies.get(task.id) || [];
-      
+
       // Check if all dependencies are completed
-      const allDependenciesCompleted = dependencies.every(depId => 
-        this.completedTasks.has(depId) && 
-        this.completedTasks.get(depId)?.success
+      const allDependenciesCompleted = dependencies.every(
+        (depId) =>
+          this.completedTasks.has(depId) &&
+          this.completedTasks.get(depId)?.success,
       );
 
       if (allDependenciesCompleted) {
@@ -244,12 +255,12 @@ export class AgentOrchestrator {
         {
           capabilities: task.capabilities,
           priority: task.priority,
-          payload: task.payload
+          payload: task.payload,
         },
         async (agent) => {
           // Execute the task using the selected agent
           return await this.executeWithAgent(task, agent);
-        }
+        },
       );
 
       const executionTime = Date.now() - startTime;
@@ -258,16 +269,16 @@ export class AgentOrchestrator {
         success: true,
         data: result,
         executionTime,
-        agentId: 'selected-agent' // This would be the actual agent ID
+        agentId: "selected-agent", // This would be the actual agent ID
       };
     } catch (error) {
       const executionTime = Date.now() - startTime;
       return {
         taskId: task.id,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
         executionTime,
-        agentId: 'unknown'
+        agentId: "unknown",
       };
     }
   }
@@ -278,25 +289,29 @@ export class AgentOrchestrator {
   private async executeWithAgent(task: AgentTask, agent: any): Promise<any> {
     // Submit the task to the GLM orchestrator for execution
     const operationType = this.mapTaskTypeToOperationType(task.type);
-    
+
     const operationId = await glmOrchestrator.submitOperation({
       type: operationType,
       priority: task.priority,
       payload: {
         task,
         agent,
-        originalPayload: task.payload
+        originalPayload: task.payload,
       },
       agentRequirements: task.capabilities,
       expectedOutcome: `Execute ${task.type} task using agent ${agent.name}`,
-      timeout: task.timeout || this.config.taskTimeout
+      timeout: task.timeout || this.config.taskTimeout,
     });
 
     // Wait for the GLM orchestrator to complete the operation
     const result = await glmOrchestrator.getOperationResult(operationId);
-    
+
     if (!result || !result.success) {
-      throw new Error(result ? `Operation failed: ${JSON.stringify(result)}` : 'Operation failed');
+      throw new Error(
+        result
+          ? `Operation failed: ${JSON.stringify(result)}`
+          : "Operation failed",
+      );
     }
 
     return result.result;
@@ -305,21 +320,23 @@ export class AgentOrchestrator {
   /**
    * Map task type to GLM orchestrator operation type
    */
-  private mapTaskTypeToOperationType(taskType: string): 'analysis' | 'optimization' | 'monitoring' | 'security' | 'prediction' {
+  private mapTaskTypeToOperationType(
+    taskType: string,
+  ): "analysis" | "optimization" | "monitoring" | "security" | "prediction" {
     switch (taskType) {
-      case 'text-generation':
-      case 'data-analysis':
-        return 'analysis';
-      case 'image-generation':
-        return 'optimization';
-      case 'web-search':
-        return 'monitoring';
-      case 'security-scan':
-        return 'security';
-      case 'prediction':
-        return 'prediction';
+      case "text-generation":
+      case "data-analysis":
+        return "analysis";
+      case "image-generation":
+        return "optimization";
+      case "web-search":
+        return "monitoring";
+      case "security-scan":
+        return "security";
+      case "prediction":
+        return "prediction";
       default:
-        return 'analysis';
+        return "analysis";
     }
   }
 
@@ -337,9 +354,9 @@ export class AgentOrchestrator {
    */
   private logSystemStatus(): void {
     const status = this.getStatus();
-    console.log('Agent Orchestrator Status:', {
+    console.log("Agent Orchestrator Status:", {
       ...status,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 

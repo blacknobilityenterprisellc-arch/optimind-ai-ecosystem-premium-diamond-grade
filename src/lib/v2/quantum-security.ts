@@ -133,7 +133,11 @@ class QuantumSecurityV2 {
     const [privateKey] = keyPair.privateKey.split(":");
 
     // Create cipher using modern crypto API
-    const cipher = crypto.createCipheriv(this.config.algorithm, privateKey.slice(0, 32), iv);
+    const cipher = crypto.createCipheriv(
+      this.config.algorithm,
+      privateKey.slice(0, 32),
+      iv,
+    );
 
     // Encrypt data
     let encrypted = cipher.update(data, "utf8", "hex");
@@ -177,7 +181,11 @@ class QuantumSecurityV2 {
     const [privateKey] = keyPair.privateKey.split(":");
 
     // Create decipher using modern crypto API
-    const decipher = crypto.createDecipheriv(secureMessage.algorithm, privateKey.slice(0, 32), Buffer.from(secureMessage.iv, "hex"));
+    const decipher = crypto.createDecipheriv(
+      secureMessage.algorithm,
+      privateKey.slice(0, 32),
+      Buffer.from(secureMessage.iv, "hex"),
+    );
 
     // Set authentication tag
     const tag = Buffer.from(secureMessage.tag, "hex");
@@ -459,8 +467,8 @@ class QuantumSecurityV2 {
    * Get quantum security status
    */
   async getSecurityStatus(): Promise<{
-    level: 'HIGH' | 'MEDIUM' | 'LOW';
-    status: 'ACTIVE' | 'DEGRADED' | 'INACTIVE';
+    level: "HIGH" | "MEDIUM" | "LOW";
+    status: "ACTIVE" | "DEGRADED" | "INACTIVE";
     quantumResistance: boolean;
     keyCount: number;
     auditCount: number;
@@ -468,25 +476,25 @@ class QuantumSecurityV2 {
   }> {
     const healthCheck = await this.healthCheck();
     const metrics = this.getSecurityMetrics();
-    
-    let level: 'HIGH' | 'MEDIUM' | 'LOW';
-    if (healthCheck.status === 'healthy' && metrics.successRate > 95) {
-      level = 'HIGH';
-    } else if (healthCheck.status === 'degraded' || metrics.successRate > 80) {
-      level = 'MEDIUM';
+
+    let level: "HIGH" | "MEDIUM" | "LOW";
+    if (healthCheck.status === "healthy" && metrics.successRate > 95) {
+      level = "HIGH";
+    } else if (healthCheck.status === "degraded" || metrics.successRate > 80) {
+      level = "MEDIUM";
     } else {
-      level = 'LOW';
+      level = "LOW";
     }
-    
-    let status: 'ACTIVE' | 'DEGRADED' | 'INACTIVE';
-    if (healthCheck.status === 'healthy') {
-      status = 'ACTIVE';
-    } else if (healthCheck.status === 'degraded') {
-      status = 'DEGRADED';
+
+    let status: "ACTIVE" | "DEGRADED" | "INACTIVE";
+    if (healthCheck.status === "healthy") {
+      status = "ACTIVE";
+    } else if (healthCheck.status === "degraded") {
+      status = "DEGRADED";
     } else {
-      status = 'INACTIVE';
+      status = "INACTIVE";
     }
-    
+
     return {
       level,
       status,

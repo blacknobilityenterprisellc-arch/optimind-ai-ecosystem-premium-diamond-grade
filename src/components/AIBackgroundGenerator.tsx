@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -40,7 +46,7 @@ export function AIBackgroundGenerator() {
     try {
       // Simulate generation progress
       const progressInterval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -50,11 +56,13 @@ export function AIBackgroundGenerator() {
       }, 200);
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       setProgress(100);
-      setGeneratedImage("https://via.placeholder.com/512x512/6366f1/ffffff?text=Generated+Background");
-      
+      setGeneratedImage(
+        "https://via.placeholder.com/512x512/6366f1/ffffff?text=Generated+Background",
+      );
+
       toast.success("Background generated successfully!");
     } catch (error) {
       toast.error("Failed to generate background");
@@ -66,9 +74,9 @@ export function AIBackgroundGenerator() {
 
   const handleDownload = () => {
     if (generatedImage) {
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = generatedImage;
-      link.download = 'ai-background.png';
+      link.download = "ai-background.png";
       link.click();
       toast.success("Background downloaded!");
     }
@@ -81,13 +89,17 @@ export function AIBackgroundGenerator() {
           <CardTitle className="flex items-center space-x-2">
             <Wand2 className="w-5 h-5" />
             <span>AI Background Generator</span>
-            <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Badge
+              variant="secondary"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            >
               <Sparkles className="w-3 h-3 mr-1" />
               AI Powered
             </Badge>
           </CardTitle>
           <CardDescription>
-            Generate stunning backgrounds using AI. Describe what you want and let AI create it for you.
+            Generate stunning backgrounds using AI. Describe what you want and
+            let AI create it for you.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -104,9 +116,7 @@ export function AIBackgroundGenerator() {
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Style
-            </label>
+            <label className="text-sm font-medium mb-2 block">Style</label>
             <div className="grid grid-cols-4 gap-2">
               {styles.map((styleOption) => (
                 <Button
@@ -163,7 +173,7 @@ export function AIBackgroundGenerator() {
                 src={generatedImage}
                 alt="Generated background"
                 className="max-w-full h-auto rounded-lg border"
-                style={{ maxHeight: '400px' }}
+                style={{ maxHeight: "400px" }}
               />
             </div>
             <div className="flex justify-center space-x-2">

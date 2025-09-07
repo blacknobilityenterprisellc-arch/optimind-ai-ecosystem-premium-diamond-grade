@@ -4,5 +4,5 @@ export const useSecureSubscription = () => {
 };
 
 export const useAIPhotoRestoration = () => {
-  return { restore: async () => ({ url: '' }), isLoading: false };
+  return { restore: async () => ({ url: "" }), isLoading: false };
 };

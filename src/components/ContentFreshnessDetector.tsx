@@ -3,11 +3,25 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, RefreshCw, Clock, Calendar, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react";
+import {
+  Loader2,
+  RefreshCw,
+  Clock,
+  Calendar,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+} from "lucide-react";
 
 interface ContentAnalysis {
   url: string;
@@ -23,7 +37,8 @@ interface ContentAnalysis {
 export function ContentFreshnessDetector() {
   const [contentUrl, setContentUrl] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<ContentAnalysis | null>(null);
+  const [analysisResults, setAnalysisResults] =
+    useState<ContentAnalysis | null>(null);
   const [progress, setProgress] = useState(0);
 
   const handleAnalyze = async () => {
@@ -38,7 +53,7 @@ export function ContentFreshnessDetector() {
     try {
       // Simulate analysis progress
       const progressInterval = setInterval(() => {
-        setProgress(prev => {
+        setProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -48,30 +63,34 @@ export function ContentFreshnessDetector() {
       }, 250);
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
       setProgress(100);
-      
+
       // Mock analysis results
       const mockResults: ContentAnalysis = {
         url: contentUrl,
         freshnessScore: Math.floor(Math.random() * 40) + 60, // 60-100
-        lastUpdated: new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        lastUpdated: new Date(
+          Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000,
+        )
+          .toISOString()
+          .split("T")[0],
         recommendations: [
           "Update statistics and data points",
           "Add recent industry developments",
           "Refresh examples and case studies",
-          "Update outbound links to current resources"
+          "Update outbound links to current resources",
         ],
         issues: [
           "Some statistics are outdated",
           "References to old industry standards",
-          "Missing recent trend analysis"
+          "Missing recent trend analysis",
         ],
         opportunities: [
           "Add new multimedia content",
           "Include expert quotes or insights",
-          "Expand on emerging topics"
+          "Expand on emerging topics",
         ],
         wordCount: Math.floor(Math.random() * 2000) + 1000,
         readingTime: `${Math.floor(Math.random() * 8) + 3} min read`,
@@ -107,7 +126,8 @@ export function ContentFreshnessDetector() {
             <span>Content Freshness Detector</span>
           </CardTitle>
           <CardDescription>
-            Analyze your content to determine if it's fresh, relevant, and up-to-date for your audience.
+            Analyze your content to determine if it's fresh, relevant, and
+            up-to-date for your audience.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -147,8 +167,8 @@ export function ContentFreshnessDetector() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>Freshness Analysis Results</span>
-              <Badge 
-                variant="secondary" 
+              <Badge
+                variant="secondary"
                 className={getFreshnessColor(analysisResults.freshnessScore)}
               >
                 {getFreshnessStatus(analysisResults.freshnessScore)}
@@ -158,11 +178,18 @@ export function ContentFreshnessDetector() {
           <CardContent className="space-y-6">
             {/* Freshness Score */}
             <div className="text-center">
-              <div className={`text-6xl font-bold ${getFreshnessColor(analysisResults.freshnessScore)}`}>
+              <div
+                className={`text-6xl font-bold ${getFreshnessColor(analysisResults.freshnessScore)}`}
+              >
                 {analysisResults.freshnessScore}%
               </div>
-              <div className="text-sm text-muted-foreground">Content Freshness Score</div>
-              <Progress value={analysisResults.freshnessScore} className="w-full max-w-md mx-auto mt-2" />
+              <div className="text-sm text-muted-foreground">
+                Content Freshness Score
+              </div>
+              <Progress
+                value={analysisResults.freshnessScore}
+                className="w-full max-w-md mx-auto mt-2"
+              />
             </div>
 
             {/* Content Metadata */}
@@ -170,20 +197,30 @@ export function ContentFreshnessDetector() {
               <div className="text-center">
                 <div className="flex items-center justify-center">
                   <Calendar className="w-4 h-4 mr-2" />
-                  <span className="font-semibold">{analysisResults.lastUpdated}</span>
+                  <span className="font-semibold">
+                    {analysisResults.lastUpdated}
+                  </span>
                 </div>
-                <div className="text-sm text-muted-foreground">Last Updated</div>
+                <div className="text-sm text-muted-foreground">
+                  Last Updated
+                </div>
               </div>
               <div className="text-center">
-                <div className="font-semibold">{analysisResults.wordCount.toLocaleString()}</div>
+                <div className="font-semibold">
+                  {analysisResults.wordCount.toLocaleString()}
+                </div>
                 <div className="text-sm text-muted-foreground">Word Count</div>
               </div>
               <div className="text-center">
                 <div className="flex items-center justify-center">
                   <Clock className="w-4 h-4 mr-2" />
-                  <span className="font-semibold">{analysisResults.readingTime}</span>
+                  <span className="font-semibold">
+                    {analysisResults.readingTime}
+                  </span>
                 </div>
-                <div className="text-sm text-muted-foreground">Reading Time</div>
+                <div className="text-sm text-muted-foreground">
+                  Reading Time
+                </div>
               </div>
             </div>
 
@@ -236,7 +273,10 @@ export function ContentFreshnessDetector() {
             </div>
 
             <div className="flex justify-center space-x-2">
-              <Button variant="outline" onClick={() => setAnalysisResults(null)}>
+              <Button
+                variant="outline"
+                onClick={() => setAnalysisResults(null)}
+              >
                 Analyze Another
               </Button>
               <Button>

@@ -1,34 +1,34 @@
 /**
  * Premium Diamond-Grade Professional Enterprise System Entry Point
- * 
+ *
  * This module provides the main entry point for the enterprise system,
  * coordinating all enterprise components and providing a unified interface.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Architecture Standards
  */
 
 // Export all enterprise components
-export * from './environment/EnterpriseEnvironmentConfig';
-export * from './container/EnterpriseServiceContainer';
-export * from './monitoring/EnterpriseHealthMonitor';
-export * from './api/EnterpriseAPIManager';
-export * from './EnterpriseInitializer';
+export * from "./environment/EnterpriseEnvironmentConfig";
+export * from "./container/EnterpriseServiceContainer";
+export * from "./monitoring/EnterpriseHealthMonitor";
+export * from "./api/EnterpriseAPIManager";
+export * from "./EnterpriseInitializer";
 
 // Re-export commonly used types and interfaces
 export type {
   Environment,
   ConfigStatus,
   EnterpriseConfig,
-} from './environment/EnterpriseEnvironmentConfig';
+} from "./environment/EnterpriseEnvironmentConfig";
 
 export type {
   ServiceLifecycle,
   ServiceScope,
   IService,
   ServiceHealth,
-} from './container/EnterpriseServiceContainer';
+} from "./container/EnterpriseServiceContainer";
 
 export type {
   HealthStatus,
@@ -36,7 +36,7 @@ export type {
   AlertType,
   MetricType,
   SLAStatus,
-} from './monitoring/EnterpriseHealthMonitor';
+} from "./monitoring/EnterpriseHealthMonitor";
 
 export type {
   APIKeyType,
@@ -47,20 +47,20 @@ export type {
   RateLimitConfig,
   APIRequestContext,
   APIResponseContext,
-} from './api/EnterpriseAPIManager';
+} from "./api/EnterpriseAPIManager";
 
 export type {
   EnterpriseSystemStatus,
   EnterpriseSystemMetrics,
   EnterpriseSystemState,
-} from './EnterpriseInitializer';
+} from "./EnterpriseInitializer";
 
 // Convenience functions for enterprise system management
 export {
   createEnterpriseConfig,
   initializeEnterpriseConfig,
   enterpriseConfig,
-} from './environment/EnterpriseEnvironmentConfig';
+} from "./environment/EnterpriseEnvironmentConfig";
 
 export {
   createEnterpriseServiceContainer,
@@ -68,15 +68,11 @@ export {
   setGlobalContainer,
   Service,
   Inject,
-} from './container/EnterpriseServiceContainer';
+} from "./container/EnterpriseServiceContainer";
 
-export {
-  createEnterpriseHealthMonitor,
-} from './monitoring/EnterpriseHealthMonitor';
+export { createEnterpriseHealthMonitor } from "./monitoring/EnterpriseHealthMonitor";
 
-export {
-  createEnterpriseAPIManager,
-} from './api/EnterpriseAPIManager';
+export { createEnterpriseAPIManager } from "./api/EnterpriseAPIManager";
 
 export {
   createEnterpriseInitializer,
@@ -84,7 +80,7 @@ export {
   getEnterpriseInitializer,
   getEnterpriseSystemState,
   isEnterpriseSystemHealthy,
-} from './EnterpriseInitializer';
+} from "./EnterpriseInitializer";
 
 // Default enterprise configuration
 export const defaultEnterpriseConfig = {
@@ -117,21 +113,21 @@ export const defaultEnterpriseConfig = {
       email: {
         enabled: false,
         smtp: {
-          host: '',
+          host: "",
           port: 587,
           secure: false,
           auth: {
-            user: '',
-            pass: '',
+            user: "",
+            pass: "",
           },
         },
-        from: '',
+        from: "",
         to: [],
       },
       slack: {
         enabled: false,
-        webhook: '',
-        channel: '',
+        webhook: "",
+        channel: "",
       },
       webhook: {
         enabled: false,
@@ -147,7 +143,7 @@ export const defaultEnterpriseConfig = {
       autoRotate: true,
     },
     rateLimiting: {
-      defaultStrategy: 'sliding-window' as const,
+      defaultStrategy: "sliding-window" as const,
       defaultWindow: 900000,
       defaultLimit: 1000,
       enableBurst: true,
@@ -156,16 +152,20 @@ export const defaultEnterpriseConfig = {
     gateway: {
       enabled: true,
       port: 8080,
-      host: '0.0.0.0',
+      host: "0.0.0.0",
       ssl: {
         enabled: false,
       },
       cors: {
         enabled: true,
-        allowedOrigins: ['*'],
-        allowedMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key'],
-        exposedHeaders: ['X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-RateLimit-Reset'],
+        allowedOrigins: ["*"],
+        allowedMethods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-API-Key"],
+        exposedHeaders: [
+          "X-RateLimit-Limit",
+          "X-RateLimit-Remaining",
+          "X-RateLimit-Reset",
+        ],
         credentials: true,
         maxAge: 86400,
       },
@@ -175,7 +175,7 @@ export const defaultEnterpriseConfig = {
       },
       cache: {
         enabled: true,
-        driver: 'memory',
+        driver: "memory",
         config: {},
       },
     },
@@ -197,8 +197,8 @@ export const defaultEnterpriseConfig = {
       },
       export: {
         enabled: false,
-        format: 'json',
-        destination: '',
+        format: "json",
+        destination: "",
         interval: 3600000,
       },
       dashboard: {
@@ -234,7 +234,7 @@ export function getEnterpriseHealthSummary(): {
   try {
     const state = getEnterpriseSystemState();
     const metrics = state.metrics;
-    
+
     return {
       status: state.status,
       uptime: metrics.uptime,
@@ -244,7 +244,7 @@ export function getEnterpriseHealthSummary(): {
     };
   } catch (error) {
     return {
-      status: 'NOT_INITIALIZED',
+      status: "NOT_INITIALIZED",
       uptime: 0,
       services: 0,
       metrics: {},
@@ -286,7 +286,7 @@ export const enterpriseUtils = {
       const state = getEnterpriseSystemState();
       return state.status;
     } catch {
-      return 'NOT_INITIALIZED';
+      return "NOT_INITIALIZED";
     }
   },
 
@@ -298,7 +298,7 @@ export const enterpriseUtils = {
       const initializer = getEnterpriseInitializer();
       await initializer.restart();
     } catch (error) {
-      console.error('Failed to restart enterprise system:', error);
+      console.error("Failed to restart enterprise system:", error);
       throw error;
     }
   },
@@ -311,7 +311,7 @@ export const enterpriseUtils = {
       const initializer = getEnterpriseInitializer();
       await initializer.stop();
     } catch (error) {
-      console.error('Failed to stop enterprise system:', error);
+      console.error("Failed to stop enterprise system:", error);
       throw error;
     }
   },
@@ -324,7 +324,7 @@ export const enterpriseUtils = {
       const initializer = getEnterpriseInitializer();
       await initializer.start();
     } catch (error) {
-      console.error('Failed to start enterprise system:', error);
+      console.error("Failed to start enterprise system:", error);
       throw error;
     }
   },
@@ -341,7 +341,7 @@ export const enterpriseEvents = {
       const container = initializer.getServiceContainer();
       container.on(event, handler);
     } catch (error) {
-      console.warn('Could not subscribe to enterprise event:', error);
+      console.warn("Could not subscribe to enterprise event:", error);
     }
   },
 
@@ -354,7 +354,7 @@ export const enterpriseEvents = {
       const container = initializer.getServiceContainer();
       container.off(event, handler);
     } catch (error) {
-      console.warn('Could not unsubscribe from enterprise event:', error);
+      console.warn("Could not unsubscribe from enterprise event:", error);
     }
   },
 
@@ -367,7 +367,7 @@ export const enterpriseEvents = {
       const container = initializer.getServiceContainer();
       container.emit(event, ...args);
     } catch (error) {
-      console.warn('Could not emit enterprise event:', error);
+      console.warn("Could not emit enterprise event:", error);
     }
   },
 };

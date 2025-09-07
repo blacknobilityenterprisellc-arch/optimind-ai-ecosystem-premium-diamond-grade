@@ -15,17 +15,19 @@ export async function GET(request: NextRequest) {
     const health = await DatabaseManagerV2.health();
 
     // Get database metrics
-    const metrics = DatabaseManagerV2.getMetrics ? await DatabaseManagerV2.getMetrics() : {
-      totalConnections: 0,
-      activeConnections: 0,
-      totalQueries: 0,
-      averageQueryTime: 0,
-      slowQueries: 0,
-      errors: 0,
-      uptime: 0,
-      lastBackup: null,
-      databaseSize: 0,
-    };
+    const metrics = DatabaseManagerV2.getMetrics
+      ? await DatabaseManagerV2.getMetrics()
+      : {
+          totalConnections: 0,
+          activeConnections: 0,
+          totalQueries: 0,
+          averageQueryTime: 0,
+          slowQueries: 0,
+          errors: 0,
+          uptime: 0,
+          lastBackup: null,
+          databaseSize: 0,
+        };
 
     // Fix BigInt serialization
     const responseData = {

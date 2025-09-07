@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise Initializer
- * 
+ *
  * This module provides centralized initialization and coordination of all enterprise-grade
  * components, ensuring proper startup sequence, dependency management, and graceful shutdown.
- * 
+ *
  * Features:
  * - Coordinated initialization of all enterprise components
  * - Dependency injection and service registration
@@ -13,26 +13,40 @@
  * - Error handling and recovery
  * - Performance monitoring
  * - Security initialization
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Architecture Standards
  */
 
-import { EnterpriseEnvironmentConfig, createEnterpriseConfig, initializeEnterpriseConfig } from './environment/EnterpriseEnvironmentConfig';
-import { EnterpriseServiceContainer, createEnterpriseServiceContainer, setGlobalContainer } from './container/EnterpriseServiceContainer';
-import { EnterpriseHealthMonitor, createEnterpriseHealthMonitor } from './monitoring/EnterpriseHealthMonitor';
-import { EnterpriseAPIManager, createEnterpriseAPIManager } from './api/EnterpriseAPIManager';
+import {
+  EnterpriseEnvironmentConfig,
+  createEnterpriseConfig,
+  initializeEnterpriseConfig,
+} from "./environment/EnterpriseEnvironmentConfig";
+import {
+  EnterpriseServiceContainer,
+  createEnterpriseServiceContainer,
+  setGlobalContainer,
+} from "./container/EnterpriseServiceContainer";
+import {
+  EnterpriseHealthMonitor,
+  createEnterpriseHealthMonitor,
+} from "./monitoring/EnterpriseHealthMonitor";
+import {
+  EnterpriseAPIManager,
+  createEnterpriseAPIManager,
+} from "./api/EnterpriseAPIManager";
 
 // Enterprise system status
 export enum EnterpriseSystemStatus {
-  INITIALIZING = 'INITIALIZING',
-  INITIALIZED = 'INITIALIZED',
-  STARTING = 'STARTING',
-  RUNNING = 'RUNNING',
-  STOPPING = 'STOPPING',
-  STOPPED = 'STOPPED',
-  ERROR = 'ERROR'
+  INITIALIZING = "INITIALIZING",
+  INITIALIZED = "INITIALIZED",
+  STARTING = "STARTING",
+  RUNNING = "RUNNING",
+  STOPPING = "STOPPING",
+  STOPPED = "STOPPED",
+  ERROR = "ERROR",
 }
 
 // Enterprise system metrics
@@ -92,7 +106,9 @@ export class EnterpriseInitializer {
     this.state = {
       status: EnterpriseSystemStatus.INITIALIZING,
       config: createEnterpriseConfig(),
-      serviceContainer: createEnterpriseServiceContainer(createEnterpriseConfig()),
+      serviceContainer: createEnterpriseServiceContainer(
+        createEnterpriseConfig(),
+      ),
       metrics: {
         startupTime: 0,
         memoryUsage: 0,
@@ -113,129 +129,133 @@ export class EnterpriseInitializer {
     }
 
     try {
-      console.log('🚀 Initializing Enterprise System...');
-      
+      console.log("🚀 Initializing Enterprise System...");
+
       // Initialize configuration
       await this.initializeConfiguration();
-      
+
       // Initialize service container
       await this.initializeServiceContainer();
-      
+
       // Initialize health monitoring
       if (this.config.enableHealthMonitoring) {
         await this.initializeHealthMonitoring();
       }
-      
+
       // Initialize API management
       if (this.config.enableAPIMangement) {
         await this.initializeAPIManagement();
       }
-      
+
       // Register core services
       await this.registerCoreServices();
-      
+
       // Start all components
       if (this.config.enableAutoStart) {
         await this.start();
       }
-      
+
       // Setup graceful shutdown
       if (this.config.enableGracefulShutdown) {
         this.setupGracefulShutdown();
       }
-      
+
       this.isInitialized = true;
       this.state.status = EnterpriseSystemStatus.INITIALIZED;
       this.state.metrics.startupTime = Date.now() - this.state.startTime;
-      
-      console.log('✅ Enterprise System Initialized Successfully');
+
+      console.log("✅ Enterprise System Initialized Successfully");
       console.log(`📊 Startup Time: ${this.state.metrics.startupTime}ms`);
-      console.log(`🔧 Services Registered: ${this.state.metrics.servicesCount}`);
-      
+      console.log(
+        `🔧 Services Registered: ${this.state.metrics.servicesCount}`,
+      );
+
       return this.state;
-      
     } catch (error) {
       this.state.status = EnterpriseSystemStatus.ERROR;
-      console.error('❌ Enterprise System Initialization Failed:', error);
+      console.error("❌ Enterprise System Initialization Failed:", error);
       throw error;
     }
   }
 
   private async initializeConfiguration(): Promise<void> {
-    console.log('📋 Initializing Configuration...');
-    
+    console.log("📋 Initializing Configuration...");
+
     try {
       await initializeEnterpriseConfig();
-      console.log('✅ Configuration Initialized');
+      console.log("✅ Configuration Initialized");
     } catch (error) {
-      console.error('❌ Configuration Initialization Failed:', error);
+      console.error("❌ Configuration Initialization Failed:", error);
       throw error;
     }
   }
 
   private async initializeServiceContainer(): Promise<void> {
-    console.log('🏗️  Initializing Service Container...');
-    
+    console.log("🏗️  Initializing Service Container...");
+
     try {
       await this.state.serviceContainer.initialize();
-      this.state.metrics.servicesCount = this.state.serviceContainer.getRegisteredServices().length;
+      this.state.metrics.servicesCount =
+        this.state.serviceContainer.getRegisteredServices().length;
       setGlobalContainer(this.state.serviceContainer);
-      console.log('✅ Service Container Initialized');
+      console.log("✅ Service Container Initialized");
     } catch (error) {
-      console.error('❌ Service Container Initialization Failed:', error);
+      console.error("❌ Service Container Initialization Failed:", error);
       throw error;
     }
   }
 
   private async initializeHealthMonitoring(): Promise<void> {
-    console.log('🏥 Initializing Health Monitoring...');
-    
+    console.log("🏥 Initializing Health Monitoring...");
+
     try {
-      this.state.healthMonitor = createEnterpriseHealthMonitor(this.state.config);
+      this.state.healthMonitor = createEnterpriseHealthMonitor(
+        this.state.config,
+      );
       this.state.serviceContainer.setHealthMonitor(this.state.healthMonitor);
       await this.state.healthMonitor.start();
-      console.log('✅ Health Monitoring Initialized');
+      console.log("✅ Health Monitoring Initialized");
     } catch (error) {
-      console.error('❌ Health Monitoring Initialization Failed:', error);
+      console.error("❌ Health Monitoring Initialization Failed:", error);
       throw error;
     }
   }
 
   private async initializeAPIManagement(): Promise<void> {
-    console.log('🌐 Initializing API Management...');
-    
+    console.log("🌐 Initializing API Management...");
+
     try {
       this.state.apiManager = createEnterpriseAPIManager(this.state.config);
       if (this.state.healthMonitor) {
         this.state.apiManager.setHealthMonitor(this.state.healthMonitor);
       }
       await this.state.apiManager.start();
-      console.log('✅ API Management Initialized');
+      console.log("✅ API Management Initialized");
     } catch (error) {
-      console.error('❌ API Management Initialization Failed:', error);
+      console.error("❌ API Management Initialization Failed:", error);
       throw error;
     }
   }
 
   private async registerCoreServices(): Promise<void> {
-    console.log('🔧 Registering Core Services...');
-    
+    console.log("🔧 Registering Core Services...");
+
     try {
       // Register database service
       await this.registerDatabaseService();
-      
+
       // Register AI services
       await this.registerAIServices();
-      
+
       // Register security services
       await this.registerSecurityServices();
-      
+
       // Register monitoring services
       await this.registerMonitoringServices();
-      
-      console.log('✅ Core Services Registered');
+
+      console.log("✅ Core Services Registered");
     } catch (error) {
-      console.error('❌ Core Services Registration Failed:', error);
+      console.error("❌ Core Services Registration Failed:", error);
       throw error;
     }
   }
@@ -243,41 +263,42 @@ export class EnterpriseInitializer {
   private async registerDatabaseService(): Promise<void> {
     // Create and register database service
     const databaseService = {
-      name: 'database',
+      name: "database",
       metadata: {
-        name: 'database',
-        version: '1.0.0',
-        description: 'Database service with connection pooling and health monitoring',
+        name: "database",
+        version: "1.0.0",
+        description:
+          "Database service with connection pooling and health monitoring",
         dependencies: [],
-        scope: 'singleton' as const,
+        scope: "singleton" as const,
         priority: 100,
         timeout: 30000,
         retryCount: 3,
         healthCheckEnabled: true,
         metricsEnabled: true,
       },
-      
+
       async initialize() {
-        console.log('🗄️  Initializing Database Service...');
+        console.log("🗄️  Initializing Database Service...");
         // Database initialization logic would go here
-        console.log('✅ Database Service Initialized');
+        console.log("✅ Database Service Initialized");
       },
-      
+
       async start() {
-        console.log('🗄️  Starting Database Service...');
+        console.log("🗄️  Starting Database Service...");
         // Database start logic would go here
-        console.log('✅ Database Service Started');
+        console.log("✅ Database Service Started");
       },
-      
+
       async stop() {
-        console.log('🗄️  Stopping Database Service...');
+        console.log("🗄️  Stopping Database Service...");
         // Database stop logic would go here
-        console.log('✅ Database Service Stopped');
+        console.log("✅ Database Service Stopped");
       },
-      
+
       async healthCheck() {
         return {
-          status: 'HEALTHY' as const,
+          status: "HEALTHY" as const,
           timestamp: Date.now(),
           uptime: Date.now() - this.state.startTime,
           memoryUsage: process.memoryUsage().heapUsed,
@@ -286,15 +307,17 @@ export class EnterpriseInitializer {
             max_connections: 10,
             query_count: 0,
           },
-          checks: [{
-            name: 'database_connection',
-            status: 'PASS' as const,
-            message: 'Database connection healthy',
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: "database_connection",
+              status: "PASS" as const,
+              message: "Database connection healthy",
+              timestamp: Date.now(),
+            },
+          ],
         };
       },
-      
+
       async getMetrics() {
         return {
           active_connections: 1,
@@ -306,7 +329,7 @@ export class EnterpriseInitializer {
     };
 
     this.state.serviceContainer.register({
-      name: 'database',
+      name: "database",
       factory: async () => databaseService,
       metadata: databaseService.metadata,
     });
@@ -315,41 +338,42 @@ export class EnterpriseInitializer {
   private async registerAIServices(): Promise<void> {
     // Create and register AI service
     const aiService = {
-      name: 'ai-service',
+      name: "ai-service",
       metadata: {
-        name: 'ai-service',
-        version: '1.0.0',
-        description: 'AI service with multiple model support and fallback mechanisms',
-        dependencies: ['database'],
-        scope: 'singleton' as const,
+        name: "ai-service",
+        version: "1.0.0",
+        description:
+          "AI service with multiple model support and fallback mechanisms",
+        dependencies: ["database"],
+        scope: "singleton" as const,
         priority: 90,
         timeout: 60000,
         retryCount: 3,
         healthCheckEnabled: true,
         metricsEnabled: true,
       },
-      
+
       async initialize() {
-        console.log('🤖 Initializing AI Service...');
+        console.log("🤖 Initializing AI Service...");
         // AI service initialization logic would go here
-        console.log('✅ AI Service Initialized');
+        console.log("✅ AI Service Initialized");
       },
-      
+
       async start() {
-        console.log('🤖 Starting AI Service...');
+        console.log("🤖 Starting AI Service...");
         // AI service start logic would go here
-        console.log('✅ AI Service Started');
+        console.log("✅ AI Service Started");
       },
-      
+
       async stop() {
-        console.log('🤖 Stopping AI Service...');
+        console.log("🤖 Stopping AI Service...");
         // AI service stop logic would go here
-        console.log('✅ AI Service Stopped');
+        console.log("✅ AI Service Stopped");
       },
-      
+
       async healthCheck() {
         return {
-          status: 'HEALTHY' as const,
+          status: "HEALTHY" as const,
           timestamp: Date.now(),
           uptime: Date.now() - this.state.startTime,
           memoryUsage: process.memoryUsage().heapUsed,
@@ -359,15 +383,17 @@ export class EnterpriseInitializer {
             error_rate: 0,
             average_response_time: 0,
           },
-          checks: [{
-            name: 'ai_model_availability',
-            status: 'PASS' as const,
-            message: 'AI models available and responsive',
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: "ai_model_availability",
+              status: "PASS" as const,
+              message: "AI models available and responsive",
+              timestamp: Date.now(),
+            },
+          ],
         };
       },
-      
+
       async getMetrics() {
         return {
           active_models: 3,
@@ -380,51 +406,52 @@ export class EnterpriseInitializer {
     };
 
     this.state.serviceContainer.register({
-      name: 'ai-service',
+      name: "ai-service",
       factory: async () => aiService,
       metadata: aiService.metadata,
-      dependencies: ['database'],
+      dependencies: ["database"],
     });
   }
 
   private async registerSecurityServices(): Promise<void> {
     // Create and register security service
     const securityService = {
-      name: 'security',
+      name: "security",
       metadata: {
-        name: 'security',
-        version: '1.0.0',
-        description: 'Security service with authentication, authorization, and threat detection',
+        name: "security",
+        version: "1.0.0",
+        description:
+          "Security service with authentication, authorization, and threat detection",
         dependencies: [],
-        scope: 'singleton' as const,
+        scope: "singleton" as const,
         priority: 95,
         timeout: 30000,
         retryCount: 3,
         healthCheckEnabled: true,
         metricsEnabled: true,
       },
-      
+
       async initialize() {
-        console.log('🔒 Initializing Security Service...');
+        console.log("🔒 Initializing Security Service...");
         // Security service initialization logic would go here
-        console.log('✅ Security Service Initialized');
+        console.log("✅ Security Service Initialized");
       },
-      
+
       async start() {
-        console.log('🔒 Starting Security Service...');
+        console.log("🔒 Starting Security Service...");
         // Security service start logic would go here
-        console.log('✅ Security Service Started');
+        console.log("✅ Security Service Started");
       },
-      
+
       async stop() {
-        console.log('🔒 Stopping Security Service...');
+        console.log("🔒 Stopping Security Service...");
         // Security service stop logic would go here
-        console.log('✅ Security Service Stopped');
+        console.log("✅ Security Service Stopped");
       },
-      
+
       async healthCheck() {
         return {
-          status: 'HEALTHY' as const,
+          status: "HEALTHY" as const,
           timestamp: Date.now(),
           uptime: Date.now() - this.state.startTime,
           memoryUsage: process.memoryUsage().heapUsed,
@@ -434,15 +461,17 @@ export class EnterpriseInitializer {
             security_events: 0,
             authentication_success_rate: 100,
           },
-          checks: [{
-            name: 'security_systems',
-            status: 'PASS' as const,
-            message: 'Security systems operational',
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: "security_systems",
+              status: "PASS" as const,
+              message: "Security systems operational",
+              timestamp: Date.now(),
+            },
+          ],
         };
       },
-      
+
       async getMetrics() {
         return {
           active_sessions: 0,
@@ -455,7 +484,7 @@ export class EnterpriseInitializer {
     };
 
     this.state.serviceContainer.register({
-      name: 'security',
+      name: "security",
       factory: async () => securityService,
       metadata: securityService.metadata,
     });
@@ -464,41 +493,42 @@ export class EnterpriseInitializer {
   private async registerMonitoringServices(): Promise<void> {
     // Create and register monitoring service
     const monitoringService = {
-      name: 'monitoring',
+      name: "monitoring",
       metadata: {
-        name: 'monitoring',
-        version: '1.0.0',
-        description: 'Monitoring service with metrics collection and alert management',
+        name: "monitoring",
+        version: "1.0.0",
+        description:
+          "Monitoring service with metrics collection and alert management",
         dependencies: [],
-        scope: 'singleton' as const,
+        scope: "singleton" as const,
         priority: 85,
         timeout: 30000,
         retryCount: 3,
         healthCheckEnabled: true,
         metricsEnabled: true,
       },
-      
+
       async initialize() {
-        console.log('📊 Initializing Monitoring Service...');
+        console.log("📊 Initializing Monitoring Service...");
         // Monitoring service initialization logic would go here
-        console.log('✅ Monitoring Service Initialized');
+        console.log("✅ Monitoring Service Initialized");
       },
-      
+
       async start() {
-        console.log('📊 Starting Monitoring Service...');
+        console.log("📊 Starting Monitoring Service...");
         // Monitoring service start logic would go here
-        console.log('✅ Monitoring Service Started');
+        console.log("✅ Monitoring Service Started");
       },
-      
+
       async stop() {
-        console.log('📊 Stopping Monitoring Service...');
+        console.log("📊 Stopping Monitoring Service...");
         // Monitoring service stop logic would go here
-        console.log('✅ Monitoring Service Stopped');
+        console.log("✅ Monitoring Service Stopped");
       },
-      
+
       async healthCheck() {
         return {
-          status: 'HEALTHY' as const,
+          status: "HEALTHY" as const,
           timestamp: Date.now(),
           uptime: Date.now() - this.state.startTime,
           memoryUsage: process.memoryUsage().heapUsed,
@@ -508,15 +538,17 @@ export class EnterpriseInitializer {
             active_alerts: 0,
             data_points_collected: 0,
           },
-          checks: [{
-            name: 'monitoring_systems',
-            status: 'PASS' as const,
-            message: 'Monitoring systems operational',
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: "monitoring_systems",
+              status: "PASS" as const,
+              message: "Monitoring systems operational",
+              timestamp: Date.now(),
+            },
+          ],
         };
       },
-      
+
       async getMetrics() {
         return {
           active_monitors: 5,
@@ -529,7 +561,7 @@ export class EnterpriseInitializer {
     };
 
     this.state.serviceContainer.register({
-      name: 'monitoring',
+      name: "monitoring",
       factory: async () => monitoringService,
       metadata: monitoringService.metadata,
     });
@@ -541,7 +573,7 @@ export class EnterpriseInitializer {
     }
 
     try {
-      console.log('🚀 Starting Enterprise System...');
+      console.log("🚀 Starting Enterprise System...");
       this.state.status = EnterpriseSystemStatus.STARTING;
 
       // Start health monitoring
@@ -558,11 +590,10 @@ export class EnterpriseInitializer {
       this.startSystemMonitoring();
 
       this.state.status = EnterpriseSystemStatus.RUNNING;
-      console.log('✅ Enterprise System Started Successfully');
-
+      console.log("✅ Enterprise System Started Successfully");
     } catch (error) {
       this.state.status = EnterpriseSystemStatus.ERROR;
-      console.error('❌ Enterprise System Start Failed:', error);
+      console.error("❌ Enterprise System Start Failed:", error);
       throw error;
     }
   }
@@ -573,7 +604,7 @@ export class EnterpriseInitializer {
     }
 
     try {
-      console.log('🛑 Stopping Enterprise System...');
+      console.log("🛑 Stopping Enterprise System...");
       this.state.status = EnterpriseSystemStatus.STOPPING;
 
       // Stop system monitoring
@@ -593,11 +624,10 @@ export class EnterpriseInitializer {
       await this.state.serviceContainer.shutdown();
 
       this.state.status = EnterpriseSystemStatus.STOPPED;
-      console.log('✅ Enterprise System Stopped Successfully');
-
+      console.log("✅ Enterprise System Stopped Successfully");
     } catch (error) {
       this.state.status = EnterpriseSystemStatus.ERROR;
-      console.error('❌ Enterprise System Stop Failed:', error);
+      console.error("❌ Enterprise System Stop Failed:", error);
       throw error;
     }
   }
@@ -630,18 +660,19 @@ export class EnterpriseInitializer {
   private async performHealthCheck(): Promise<void> {
     try {
       this.state.lastHealthCheck = Date.now();
-      
+
       // Perform system health check
       const systemHealth = await this.getSystemHealth();
-      
+
       // Update metrics based on health check
       this.state.metrics.errorRate = systemHealth.errorRate;
-      
+
       // Log health status
-      console.log(`🏥 System Health: ${systemHealth.status} (${systemHealth.uptime}ms uptime)`);
-      
+      console.log(
+        `🏥 System Health: ${systemHealth.status} (${systemHealth.uptime}ms uptime)`,
+      );
     } catch (error) {
-      console.error('❌ System Health Check Failed:', error);
+      console.error("❌ System Health Check Failed:", error);
     }
   }
 
@@ -649,7 +680,7 @@ export class EnterpriseInitializer {
     try {
       const memUsage = process.memoryUsage();
       const cpuUsage = process.cpuUsage();
-      
+
       this.state.metrics = {
         ...this.state.metrics,
         memoryUsage: memUsage.heapUsed,
@@ -657,13 +688,16 @@ export class EnterpriseInitializer {
         uptime: Date.now() - this.state.startTime,
         servicesCount: this.state.serviceContainer.getRunningServices().length,
       };
-      
     } catch (error) {
-      console.error('❌ Metrics Collection Failed:', error);
+      console.error("❌ Metrics Collection Failed:", error);
     }
   }
 
-  private async getSystemHealth(): Promise<{ status: string; uptime: number; errorRate: number }> {
+  private async getSystemHealth(): Promise<{
+    status: string;
+    uptime: number;
+    errorRate: number;
+  }> {
     try {
       // Get overall system health
       if (this.state.healthMonitor) {
@@ -674,16 +708,15 @@ export class EnterpriseInitializer {
           errorRate: this.state.metrics.errorRate,
         };
       }
-      
+
       return {
-        status: 'HEALTHY',
+        status: "HEALTHY",
         uptime: Date.now() - this.state.startTime,
         errorRate: 0,
       };
-      
     } catch (error) {
       return {
-        status: 'UNHEALTHY',
+        status: "UNHEALTHY",
         uptime: Date.now() - this.state.startTime,
         errorRate: 100,
       };
@@ -693,19 +726,19 @@ export class EnterpriseInitializer {
   private setupGracefulShutdown(): void {
     const shutdown = async (signal: string) => {
       console.log(`📡 Received ${signal}, initiating graceful shutdown...`);
-      
+
       try {
         await this.stop();
         process.exit(0);
       } catch (error) {
-        console.error('❌ Graceful shutdown failed:', error);
+        console.error("❌ Graceful shutdown failed:", error);
         process.exit(1);
       }
     };
 
-    process.on('SIGTERM', () => shutdown('SIGTERM'));
-    process.on('SIGINT', () => shutdown('SIGINT'));
-    process.on('SIGUSR2', () => shutdown('SIGUSR2')); // For nodemon
+    process.on("SIGTERM", () => shutdown("SIGTERM"));
+    process.on("SIGINT", () => shutdown("SIGINT"));
+    process.on("SIGUSR2", () => shutdown("SIGUSR2")); // For nodemon
   }
 
   // Public API methods
@@ -738,10 +771,10 @@ export class EnterpriseInitializer {
   }
 
   async restart(): Promise<void> {
-    console.log('🔄 Restarting Enterprise System...');
+    console.log("🔄 Restarting Enterprise System...");
     await this.stop();
     await this.start();
-    console.log('✅ Enterprise System Restarted Successfully');
+    console.log("✅ Enterprise System Restarted Successfully");
   }
 }
 
@@ -750,14 +783,14 @@ let globalInitializer: EnterpriseInitializer;
 
 // Factory function to create enterprise initializer
 export function createEnterpriseInitializer(
-  config?: Partial<EnterpriseInitializerConfig>
+  config?: Partial<EnterpriseInitializerConfig>,
 ): EnterpriseInitializer {
   return new EnterpriseInitializer(config);
 }
 
 // Initialize global enterprise system
 export async function initializeEnterpriseSystem(
-  config?: Partial<EnterpriseInitializerConfig>
+  config?: Partial<EnterpriseInitializerConfig>,
 ): Promise<EnterpriseSystemState> {
   globalInitializer = createEnterpriseInitializer(config);
   return await globalInitializer.initialize();
@@ -766,7 +799,7 @@ export async function initializeEnterpriseSystem(
 // Get global enterprise initializer
 export function getEnterpriseInitializer(): EnterpriseInitializer {
   if (!globalInitializer) {
-    throw new Error('Enterprise system not initialized');
+    throw new Error("Enterprise system not initialized");
   }
   return globalInitializer;
 }
