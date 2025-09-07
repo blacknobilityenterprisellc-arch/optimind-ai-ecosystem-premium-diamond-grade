@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+*.lcov
+
+# Environment files
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup files
+*.backup*
+*.bak
+
+# Prisma
+prisma/migrations/
+
+# Git
+.git/
+
+# Cache
+.cache/
+*.cache
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+**/test/
+**/tests/
+
+# Documentation
+docs/
+*.md
+
+# Scripts
+scripts/
+*.sh
+
+# Configuration files that shouldn't be formatted
+eslint.config.*
+prettier.config.*
+tailwind.config.*
+tsconfig.json
+next.config.*
+postcss.config.*
+
+# Public assets
+public/
+
+# Database backups
+database_backups/
