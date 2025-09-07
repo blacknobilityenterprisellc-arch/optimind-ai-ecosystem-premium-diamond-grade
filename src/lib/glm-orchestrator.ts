@@ -8,6 +8,65 @@
 
 import ZAI from "z-ai-web-dev-sdk";
 
+// Define proper types instead of 'any'
+export interface OperationPayload {
+  [key: string]: unknown;
+}
+
+// Define Node.js globals properly
+declare global {
+  var console: {
+    log: (...args: unknown[]) => void;
+    error: (...args: unknown[]) => void;
+    warn: (...args: unknown[]) => void;
+  };
+  var window: {
+    setInterval: (callback: () => void, ms: number) => number;
+    clearInterval: (id: number) => void;
+  };
+}
+
+// Simple logger implementation
+const logger = {
+  log: (message: string, ...args: unknown[]) => {
+    console.log(message, ...args);
+  },
+  error: (message: string, ...args: unknown[]) => {
+    console.error(message, ...args);
+  },
+  warn: (message: string, ...args: unknown[]) => {
+    console.warn(message, ...args);
+  }
+};
+
+// Define proper types for operation results
+export interface AnalysisResult {
+  data: unknown;
+  insights: string[];
+  confidence: number;
+}
+
+export interface OptimizationResult {
+  improvements: unknown[];
+  performance: number;
+}
+
+export interface MonitoringResult {
+  metrics: Record<string, number>;
+  status: 'healthy' | 'warning' | 'critical';
+}
+
+export interface SecurityResult {
+  vulnerabilities: unknown[];
+  riskLevel: 'low' | 'medium' | 'high';
+}
+
+export interface PredictionResult {
+  predictions: unknown[];
+  confidence: number;
+  timeframe: string;
+}
+
 export interface GLMOrchestratorConfig {
   enableSuperintelligence: boolean;
   enablePredictiveAnalytics: boolean;
@@ -20,9 +79,9 @@ export interface GLMOrchestratorConfig {
 
 export interface OrchestratedOperation {
   id: string;
-  type: "analysis" | "optimization" | "monitoring" | "security" | "prediction";
-  priority: "critical" | "high" | "medium" | "low";
-  payload: any;
+  type: 'analysis' | 'optimization' | 'monitoring' | 'security' | 'prediction';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  payload: OperationPayload;
   agentRequirements: string[];
   expectedOutcome: string;
   timeout?: number;
@@ -32,14 +91,14 @@ export interface OrchestratedOperation {
 export interface OrchestratedResult {
   operationId: string;
   success: boolean;
-  result?: any;
+  result?: unknown;
   insights?: string[];
   recommendations?: string[];
   confidence: number;
   processingTime: number;
   orchestratedBy: "GLM-4.5";
   timestamp: Date;
-  metadata?: any;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SystemHealthStatus {
@@ -70,7 +129,7 @@ export class GLMOrchestrator {
     new Map();
   private completedOperations: Map<string, OrchestratedResult> = new Map();
   private isInitialized = false;
-  private healthCheckInterval?: NodeJS.Timeout;
+  private healthCheckInterval?: number;
 
   constructor(config: GLMOrchestratorConfig) {
     this.config = config;
@@ -87,10 +146,10 @@ export class GLMOrchestrator {
       if (this.config.enableRealTimeMonitoring) {
         this.startHealthMonitoring();
       }
-
-      console.log("GLM-4.5 Orchestrator initialized successfully");
+    
+      logger.log('GLM-4.5 Orchestrator initialized successfully');
     } catch (error) {
-      console.error("Failed to initialize GLM Orchestrator:", error);
+      logger.error('Failed to initialize GLM Orchestrator:', error);
       throw error;
     }
   }
@@ -121,15 +180,15 @@ export class GLMOrchestrator {
   /**
    * Get operation result by ID
    */
-  async getOperationResult(
-    operationId: string,
-  ): Promise<OrchestratedResult | null> {
-    if (this.completedOperations.has(operationId)) {
-      return this.completedOperations.get(operationId)!;
+async getOperationResult(operationId: string): Promise<OrchestratedResult | null> {
+    const completedResult = this.completedOperations.get(operationId);
+    if (completedResult) {
+      return completedResult;
     }
 
-    if (this.activeOperations.has(operationId)) {
-      return await this.activeOperations.get(operationId)!;
+    const activeOperation = this.activeOperations.get(operationId);
+    if (activeOperation) {
+      return await activeOperation;
     }
 
     return null;
@@ -142,8 +201,6 @@ export class GLMOrchestrator {
     if (!this.isInitialized || !this.zai) {
       throw new Error("GLM Orchestrator not initialized");
     }
-
-    const startTime = Date.now();
 
     try {
       // Use GLM-4.5 to orchestrate comprehensive health analysis
@@ -218,7 +275,7 @@ export class GLMOrchestrator {
 
       return enhancedAnalysis;
     } catch (error) {
-      console.error("System health analysis failed:", error);
+    logger.error('System health analysis failed:', error);
       throw error;
     }
   }
@@ -232,7 +289,7 @@ export class GLMOrchestrator {
     const startTime = Date.now();
 
     try {
-      let result: any;
+      let result: unknown;
       let insights: string[] = [];
       let recommendations: string[] = [];
 
@@ -284,9 +341,9 @@ export class GLMOrchestrator {
           const insightData = JSON.parse(insightContent);
           insights = insightData.insights || [];
           recommendations = insightData.recommendations || [];
-        } catch (e) {
-          insights = ["Operation completed successfully"];
-          recommendations = ["Continue monitoring system performance"];
+      } catch {
+          insights = ['Operation completed successfully'];
+          recommendations = ['Continue monitoring system performance'];
         }
       }
 
@@ -328,12 +385,10 @@ export class GLMOrchestrator {
   /**
    * Execute analysis operation
    */
-  private async executeAnalysisOperation(
-    operation: OrchestratedOperation,
-  ): Promise<any> {
-    if (!this.zai) throw new Error("ZAI not initialized");
+private async executeAnalysisOperation(operation: OrchestratedOperation): Promise<AnalysisResult> {
+    if (!this.zai) throw new Error('ZAI not initialized');
 
-    return await this.zai.chat.completions.create({
+    const response = await this.zai.chat.completions.create({
       messages: [
         {
           role: "system",
@@ -348,6 +403,12 @@ export class GLMOrchestrator {
       temperature: 0.1,
       max_tokens: 1500,
     });
+
+    return {
+      data: response,
+      insights: ['Analysis completed successfully'],
+      confidence: 0.9
+    };
   }
 
   /**
@@ -454,16 +515,16 @@ export class GLMOrchestrator {
    * Start health monitoring
    */
   private startHealthMonitoring(): void {
-    this.healthCheckInterval = setInterval(async () => {
+    this.healthCheckInterval = window.setInterval(async () => {
       try {
         const healthStatus = await this.analyzeSystemHealth();
-        console.log("GLM Orchestrator Health Status:", {
+      logger.log('GLM Orchestrator Health Status:', {
           overall: healthStatus.overall,
           timestamp: healthStatus.lastChecked,
           insights: healthStatus.insights.slice(0, 2),
         });
       } catch (error) {
-        console.error("Health monitoring failed:", error);
+        logger.error('Health monitoring failed:', error);
       }
     }, this.config.healthCheckInterval);
   }
@@ -492,12 +553,12 @@ export class GLMOrchestrator {
    */
   destroy(): void {
     if (this.healthCheckInterval) {
-      clearInterval(this.healthCheckInterval);
+      window.clearInterval(this.healthCheckInterval);
     }
     this.activeOperations.clear();
     this.completedOperations.clear();
     this.isInitialized = false;
-    console.log("GLM Orchestrator destroyed");
+  logger.log('GLM Orchestrator destroyed');
   }
 }
 

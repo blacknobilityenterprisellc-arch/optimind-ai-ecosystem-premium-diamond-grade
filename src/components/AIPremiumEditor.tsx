@@ -41,11 +41,12 @@ export function AIPremiumEditor() {
 
     setIsProcessing(true);
     setProgress(0);
+    let progressInterval: NodeJS.Timeout;
 
     try {
       // Simulate enhancement progress
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => {
+  progressInterval = setInterval(() => {
+        setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -73,11 +74,13 @@ export function AIPremiumEditor() {
 
       setEnhancedContent(enhanced);
       toast.success("Content enhanced successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to enhance content");
     } finally {
       setIsProcessing(false);
-      clearInterval(progressInterval);
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
     }
   };
 
