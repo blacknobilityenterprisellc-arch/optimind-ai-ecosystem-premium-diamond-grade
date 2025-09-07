@@ -869,12 +869,32 @@ class MCPIntegrationV2 {
    */
   private async encryptData(data: any): Promise<string> {
     // Use quantum security for encryption
-    const encrypted = await quantumSecurityV2.encryptQuantumSecure(
-      JSON.stringify(data),
-      "default_key",
-      "system",
-    );
-    return JSON.stringify(encrypted);
+    // Generate a temporary key if none exists
+    let keyId = "mcp_default_key";
+    
+    try {
+      // Try to encrypt with existing key
+      const encrypted = await quantumSecurityV2.encryptQuantumSecure(
+        JSON.stringify(data),
+        keyId,
+        "system",
+      );
+      return JSON.stringify(encrypted);
+    } catch (error) {
+      // If key doesn't exist, generate a new one
+      if (error.message.includes("not found")) {
+        const keyPair = await quantumSecurityV2.generateQuantumKeyPair("mcp_system", 86400);
+        keyId = keyPair.keyId;
+        
+        const encrypted = await quantumSecurityV2.encryptQuantumSecure(
+          JSON.stringify(data),
+          keyId,
+          "system",
+        );
+        return JSON.stringify(encrypted);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -882,11 +902,24 @@ class MCPIntegrationV2 {
    */
   private async decryptData(encryptedData: string): Promise<any> {
     const encrypted = JSON.parse(encryptedData);
-    const decrypted = await quantumSecurityV2.decryptQuantumSecure(
-      encrypted,
-      "system",
-    );
-    return JSON.parse(decrypted);
+    
+    try {
+      const decrypted = await quantumSecurityV2.decryptQuantumSecure(
+        encrypted,
+        "system",
+      );
+      return JSON.parse(decrypted);
+    } catch (error) {
+      // If decryption fails, try to find the key from the encrypted data
+      if (error.message.includes("not found") && encrypted.keyId) {
+        const decrypted = await quantumSecurityV2.decryptQuantumSecure(
+          encrypted,
+          "system",
+        );
+        return JSON.parse(decrypted);
+      }
+      throw error;
+    }
   }
 }
 
