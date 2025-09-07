@@ -1,6 +1,6 @@
 /**
  * OptiMind AI Premium Diamond-Grade Scanner
- * 
+ *
  * Advanced self-healing system that automatically detects issues,
  * performs comprehensive scans, and implements fixes with scoring.
  */
@@ -119,7 +119,7 @@ export class PremiumDiamondGradeScanner {
     }
 
     console.log(`🔍 Triggering Premium Diamond-Grade Scan for issue: ${issue.type}`);
-    
+
     const scanId = this.generateScanId();
     const scanResult: ScanResult = {
       scanId,
@@ -136,9 +136,9 @@ export class PremiumDiamondGradeScanner {
         passedChecks: 0,
         failedChecks: 0,
         fixedIssues: 0,
-        remainingIssues: 0
+        remainingIssues: 0,
       },
-      recommendations: []
+      recommendations: [],
     };
 
     this.activeScans.set(scanId, scanResult);
@@ -148,8 +148,10 @@ export class PremiumDiamondGradeScanner {
       const completedScan = this.activeScans.get(scanId)!;
       this.scanHistory.push(completedScan);
       this.activeScans.delete(scanId);
-      
-      console.log(`✅ Premium Diamond-Grade Scan completed: ${completedScan.grade} (${completedScan.score}/100)`);
+
+      console.log(
+        `✅ Premium Diamond-Grade Scan completed: ${completedScan.grade} (${completedScan.score}/100)`
+      );
       return completedScan;
     } catch (error) {
       console.error('❌ Premium Diamond-Grade Scan failed:', error);
@@ -165,7 +167,7 @@ export class PremiumDiamondGradeScanner {
    */
   private async executeScan(scanId: string): Promise<void> {
     const scanResult = this.activeScans.get(scanId)!;
-    
+
     try {
       // Phase 1: System Health Analysis
       await this.executeCheckpoint(scanId, {
@@ -173,7 +175,7 @@ export class PremiumDiamondGradeScanner {
         name: 'System Health Analysis',
         category: 'performance',
         priority: 'critical',
-        description: 'Comprehensive analysis of overall system health'
+        description: 'Comprehensive analysis of overall system health',
       });
 
       // Phase 2: Performance Testing
@@ -182,7 +184,7 @@ export class PremiumDiamondGradeScanner {
         name: 'Performance Testing',
         category: 'performance',
         priority: 'high',
-        description: 'Test system performance and response times'
+        description: 'Test system performance and response times',
       });
 
       // Phase 3: Security Assessment
@@ -191,7 +193,7 @@ export class PremiumDiamondGradeScanner {
         name: 'Security Assessment',
         category: 'security',
         priority: 'critical',
-        description: 'Comprehensive security vulnerability assessment'
+        description: 'Comprehensive security vulnerability assessment',
       });
 
       // Phase 4: Functionality Testing
@@ -200,7 +202,7 @@ export class PremiumDiamondGradeScanner {
         name: 'Functionality Testing',
         category: 'functionality',
         priority: 'high',
-        description: 'Test all system functionalities and features'
+        description: 'Test all system functionalities and features',
       });
 
       // Phase 5: Data Integrity Check
@@ -209,7 +211,7 @@ export class PremiumDiamondGradeScanner {
         name: 'Data Integrity Check',
         category: 'data',
         priority: 'medium',
-        description: 'Verify data integrity and consistency'
+        description: 'Verify data integrity and consistency',
       });
 
       // Phase 6: Integration Testing
@@ -218,7 +220,7 @@ export class PremiumDiamondGradeScanner {
         name: 'Integration Testing',
         category: 'integration',
         priority: 'high',
-        description: 'Test system integrations and dependencies'
+        description: 'Test system integrations and dependencies',
       });
 
       // Calculate final score and grade
@@ -231,7 +233,6 @@ export class PremiumDiamondGradeScanner {
 
       scanResult.endTime = new Date();
       scanResult.status = 'completed';
-
     } catch (error) {
       scanResult.endTime = new Date();
       scanResult.status = 'failed';
@@ -242,19 +243,22 @@ export class PremiumDiamondGradeScanner {
   /**
    * Execute a single checkpoint
    */
-  private async executeCheckpoint(scanId: string, checkpoint: Omit<ScanCheckpoint, 'status' | 'timestamp'>): Promise<void> {
+  private async executeCheckpoint(
+    scanId: string,
+    checkpoint: Omit<ScanCheckpoint, 'status' | 'timestamp'>
+  ): Promise<void> {
     const scanResult = this.activeScans.get(scanId)!;
     const fullCheckpoint: ScanCheckpoint = {
       ...checkpoint,
       status: 'running',
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     scanResult.checkpoints.push(fullCheckpoint);
 
     try {
       console.log(`🔄 Executing checkpoint: ${checkpoint.name}`);
-      
+
       // Execute checkpoint using GLM orchestrator
       const operationId = await glmOrchestrator.submitOperation({
         type: 'analysis',
@@ -262,21 +266,21 @@ export class PremiumDiamondGradeScanner {
         payload: {
           checkpoint: checkpoint.name,
           category: checkpoint.category,
-          scanId
+          scanId,
         },
         agentRequirements: ['glm-4.5-flagship', 'glm-4.5-auto-think'],
-        expectedOutcome: `Complete ${checkpoint.name} successfully`
+        expectedOutcome: `Complete ${checkpoint.name} successfully`,
       });
 
       const result = await glmOrchestrator.getOperationResult(operationId);
-      
+
       if (result && result.success) {
         fullCheckpoint.status = 'passed';
         fullCheckpoint.result = result.result;
       } else {
         fullCheckpoint.status = 'failed';
         fullCheckpoint.error = result ? 'Operation failed' : 'No result received';
-        
+
         // Create issue for failed checkpoint
         const issue: ScanIssue = {
           id: this.generateIssueId(),
@@ -286,17 +290,16 @@ export class PremiumDiamondGradeScanner {
           description: `Checkpoint failed: ${checkpoint.name}`,
           detectedAt: new Date(),
           autoFixable: true,
-          fixApplied: false
+          fixApplied: false,
         };
-        
+
         scanResult.issues.push(issue);
         this.notifyIssueDetected(issue);
       }
-
     } catch (error) {
       fullCheckpoint.status = 'failed';
       fullCheckpoint.error = error instanceof Error ? error.message : 'Unknown error';
-      
+
       const issue: ScanIssue = {
         id: this.generateIssueId(),
         type: 'checkpoint-error',
@@ -305,9 +308,9 @@ export class PremiumDiamondGradeScanner {
         description: `Checkpoint error: ${checkpoint.name} - ${error instanceof Error ? error.message : 'Unknown error'}`,
         detectedAt: new Date(),
         autoFixable: true,
-        fixApplied: false
+        fixApplied: false,
       };
-      
+
       scanResult.issues.push(issue);
       this.notifyIssueDetected(issue);
     }
@@ -318,14 +321,14 @@ export class PremiumDiamondGradeScanner {
    */
   private calculateScanResults(scanId: string): void {
     const scanResult = this.activeScans.get(scanId)!;
-    
+
     const totalChecks = scanResult.checkpoints.length;
     const passedChecks = scanResult.checkpoints.filter(cp => cp.status === 'passed').length;
     const failedChecks = totalChecks - passedChecks;
-    
+
     // Calculate score (0-100)
     const score = Math.round((passedChecks / totalChecks) * 100);
-    
+
     // Determine grade
     let grade: 'A+' | 'A' | 'B' | 'C' | 'D' | 'F';
     if (score >= 98) grade = 'A+';
@@ -342,7 +345,7 @@ export class PremiumDiamondGradeScanner {
       passedChecks,
       failedChecks,
       fixedIssues: scanResult.issues.filter(issue => issue.fixApplied).length,
-      remainingIssues: scanResult.issues.filter(issue => !issue.fixApplied).length
+      remainingIssues: scanResult.issues.filter(issue => !issue.fixApplied).length,
     };
 
     // Generate recommendations
@@ -359,25 +362,25 @@ export class PremiumDiamondGradeScanner {
     for (const issue of fixableIssues) {
       try {
         console.log(`🔧 Applying auto-fix for issue: ${issue.type}`);
-        
+
         const operationId = await glmOrchestrator.submitOperation({
           type: 'optimization',
           priority: 'high',
           payload: {
             issue: issue,
-            fixType: 'auto-fix'
+            fixType: 'auto-fix',
           },
           agentRequirements: ['glm-4.5-full-stack'],
-          expectedOutcome: `Apply fix for ${issue.type}`
+          expectedOutcome: `Apply fix for ${issue.type}`,
         });
 
         const result = await glmOrchestrator.getOperationResult(operationId);
-        
+
         if (result && result.success) {
           issue.fixApplied = true;
           issue.fixTimestamp = new Date();
           scanResult.fixesApplied++;
-          
+
           console.log(`✅ Auto-fix applied successfully for: ${issue.type}`);
         }
       } catch (error) {
@@ -393,7 +396,9 @@ export class PremiumDiamondGradeScanner {
     const recommendations: string[] = [];
 
     if (scanResult.grade === 'A+' || scanResult.grade === 'A') {
-      recommendations.push('System is performing optimally. Continue current monitoring practices.');
+      recommendations.push(
+        'System is performing optimally. Continue current monitoring practices.'
+      );
     } else if (scanResult.grade === 'B' || scanResult.grade === 'C') {
       recommendations.push('System has minor issues. Consider implementing the suggested fixes.');
       recommendations.push('Schedule regular maintenance to prevent further degradation.');
@@ -434,7 +439,7 @@ export class PremiumDiamondGradeScanner {
       try {
         // Simulate issue detection - in real implementation, this would monitor system metrics
         const detectedIssues = await this.detectIssues();
-        
+
         for (const issue of detectedIssues) {
           this.notifyIssueDetected(issue);
         }
@@ -451,12 +456,12 @@ export class PremiumDiamondGradeScanner {
     // In a real implementation, this would monitor system metrics, logs, and performance
     // For now, we'll simulate occasional issues
     const issues: ScanIssue[] = [];
-    
+
     // Simulate random issue detection (5% chance)
     if (Math.random() < 0.05) {
       const issueTypes = ['memory-leak', 'cpu-spike', 'response-time', 'security-alert'];
       const components = ['performance', 'security', 'functionality', 'data'];
-      
+
       const issue: ScanIssue = {
         id: this.generateIssueId(),
         type: issueTypes[Math.floor(Math.random() * issueTypes.length)],
@@ -465,12 +470,12 @@ export class PremiumDiamondGradeScanner {
         description: 'Detected system anomaly requiring investigation',
         detectedAt: new Date(),
         autoFixable: true,
-        fixApplied: false
+        fixApplied: false,
       };
-      
+
       issues.push(issue);
     }
-    
+
     return issues;
   }
 
@@ -479,7 +484,7 @@ export class PremiumDiamondGradeScanner {
    */
   private notifyIssueDetected(issue: ScanIssue): void {
     console.log(`🚨 Issue Detected: ${issue.type} (${issue.severity}) in ${issue.component}`);
-    
+
     // Trigger scan for critical issues
     if (issue.severity === 'critical') {
       this.triggerScan(issue).catch(error => {
@@ -551,5 +556,5 @@ export const premiumDiamondGradeScanner = new PremiumDiamondGradeScanner({
   scanInterval: 30000, // 30 seconds
   criticalIssueThreshold: 3,
   checkpointTimeout: 60000, // 1 minute
-  maxConcurrentScans: 3
+  maxConcurrentScans: 3,
 });

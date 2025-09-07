@@ -30,13 +30,13 @@ export class AmbientIntelligenceManager {
   public getIntelligenceStatus(): { level: string; operational: boolean } {
     return {
       level: this.intelligenceLevel,
-      operational: this.isInitialized
+      operational: this.isInitialized,
     };
   }
 
   public getEcosystemAwareness(): { level: string } {
     return {
-      level: 'high'
+      level: 'high',
     };
   }
 

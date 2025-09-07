@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   Brain,
   Shield,
@@ -28,23 +28,23 @@ import {
   Crown,
   Gem,
   RefreshCw,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   useMultiModelAI,
   AIModel,
@@ -52,15 +52,13 @@ import {
   EnsembleAnalysisResult,
   AnalysisError,
   multiModelAIUtils,
-} from "@/lib/multi-model-ai";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+} from '@/lib/multi-model-ai';
+import { useSecureSubscription } from '@/lib/secure-subscription-manager';
 
 interface MultiModelAIAnalyzerProps {
   photoId: string;
   file: File;
-  onAnalysisComplete?: (
-    results: ModelAnalysisResult[] | EnsembleAnalysisResult,
-  ) => void;
+  onAnalysisComplete?: (results: ModelAnalysisResult[] | EnsembleAnalysisResult) => void;
   className?: string;
 }
 
@@ -68,17 +66,15 @@ export function MultiModelAIAnalyzer({
   photoId,
   file,
   onAnalysisComplete,
-  className = "",
+  className = '',
 }: MultiModelAIAnalyzerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [selectedModel, setSelectedModel] = useState<string>("auto");
-  const [analysisType, setAnalysisType] = useState<string>("comprehensive");
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedModel, setSelectedModel] = useState<string>('auto');
+  const [analysisType, setAnalysisType] = useState<string>('comprehensive');
   const [enableEnsemble, setEnableEnsemble] = useState(true);
   const [autoSelectModel, setAutoSelectModel] = useState(true);
-  const [analysisMode, setAnalysisMode] = useState<"single" | "ensemble">(
-    "ensemble",
-  );
+  const [analysisMode, setAnalysisMode] = useState<'single' | 'ensemble'>('ensemble');
 
   const { isPremium } = useSecureSubscription();
   const {
@@ -104,7 +100,7 @@ export function MultiModelAIAnalyzer({
           disagreements: [],
           enhancedAccuracy: 0.92,
           bestModel: analysisResults.reduce((best, current) =>
-            current.confidence > best.confidence ? current : best,
+            current.confidence > best.confidence ? current : best
           ).modelId,
           primaryResult: analysisResults[0].result,
         } as EnsembleAnalysisResult)
@@ -123,12 +119,12 @@ export function MultiModelAIAnalyzer({
     try {
       let result;
 
-      if (analysisMode === "ensemble" && enableEnsemble) {
+      if (analysisMode === 'ensemble' && enableEnsemble) {
         result = await performEnsembleAnalysis(photoId, file, analysisType);
       } else {
         let modelId = selectedModel;
 
-        if (autoSelectModel || selectedModel === "auto") {
+        if (autoSelectModel || selectedModel === 'auto') {
           modelId = await autoSelectBestModel(file, analysisType);
           setSelectedModel(modelId);
         }
@@ -138,7 +134,7 @@ export function MultiModelAIAnalyzer({
 
       onAnalysisComplete?.(result);
     } catch (error) {
-      console.error("Multi-model AI analysis failed:", error);
+      console.error('Multi-model AI analysis failed:', error);
     }
   }, [
     photoId,
@@ -157,15 +153,15 @@ export function MultiModelAIAnalyzer({
 
   const getModelIcon = (modelId: string) => {
     switch (modelId) {
-      case "glm-45v":
+      case 'glm-45v':
         return <Target className="w-4 h-4" />;
-      case "glm-45-auto-think":
+      case 'glm-45-auto-think':
         return <Lightbulb className="w-4 h-4" />;
-      case "glm-45-flagship":
+      case 'glm-45-flagship':
         return <Crown className="w-4 h-4" />;
-      case "air":
+      case 'air':
         return <Cpu className="w-4 h-4" />;
-      case "glm-45-full-stack":
+      case 'glm-45-full-stack':
         return <Network className="w-4 h-4" />;
       default:
         return <Brain className="w-4 h-4" />;
@@ -174,53 +170,50 @@ export function MultiModelAIAnalyzer({
 
   const getModelColor = (modelId: string) => {
     switch (modelId) {
-      case "glm-45v":
-        return "text-blue-600";
-      case "glm-45-auto-think":
-        return "text-orange-600";
-      case "glm-45-flagship":
-        return "text-yellow-600";
-      case "air":
-        return "text-purple-600";
-      case "glm-45-full-stack":
-        return "text-green-600";
+      case 'glm-45v':
+        return 'text-blue-600';
+      case 'glm-45-auto-think':
+        return 'text-orange-600';
+      case 'glm-45-flagship':
+        return 'text-yellow-600';
+      case 'air':
+        return 'text-purple-600';
+      case 'glm-45-full-stack':
+        return 'text-green-600';
       default:
-        return "text-gray-600";
-        const getModelIcon = (
-          modelId: string,
-          service?: "zai" | "openrouter",
-        ) => {
-          if (service === "openrouter") {
+        return 'text-gray-600';
+        const getModelIcon = (modelId: string, service?: 'zai' | 'openrouter') => {
+          if (service === 'openrouter') {
             switch (modelId) {
-              case "gpt-4o":
-              case "gpt-4o-mini":
+              case 'gpt-4o':
+              case 'gpt-4o-mini':
                 return <Target className="w-4 h-4" />;
-              case "claude-3.5-sonnet":
-              case "claude-3.5-haiku":
+              case 'claude-3.5-sonnet':
+              case 'claude-3.5-haiku':
                 return <Lightbulb className="w-4 h-4" />;
-              case "o1-preview":
-              case "o1-mini":
+              case 'o1-preview':
+              case 'o1-mini':
                 return <Crown className="w-4 h-4" />;
-              case "gemini-pro":
-              case "gemini-flash":
+              case 'gemini-pro':
+              case 'gemini-flash':
                 return <Cpu className="w-4 h-4" />;
-              case "llama-3.1-70b":
-              case "llama-3.1-8b":
+              case 'llama-3.1-70b':
+              case 'llama-3.1-8b':
                 return <Network className="w-4 h-4" />;
               default:
                 return <Brain className="w-4 h-4" />;
             }
           } else {
             switch (modelId) {
-              case "glm-45v":
+              case 'glm-45v':
                 return <Target className="w-4 h-4" />;
-              case "glm-45-auto-think":
+              case 'glm-45-auto-think':
                 return <Lightbulb className="w-4 h-4" />;
-              case "glm-45-flagship":
+              case 'glm-45-flagship':
                 return <Crown className="w-4 h-4" />;
-              case "air":
+              case 'air':
                 return <Cpu className="w-4 h-4" />;
-              case "glm-45-full-stack":
+              case 'glm-45-full-stack':
                 return <Network className="w-4 h-4" />;
               default:
                 return <Brain className="w-4 h-4" />;
@@ -228,50 +221,47 @@ export function MultiModelAIAnalyzer({
           }
         };
 
-        const getModelColor = (
-          modelId: string,
-          service?: "zai" | "openrouter",
-        ) => {
-          if (service === "openrouter") {
+        const getModelColor = (modelId: string, service?: 'zai' | 'openrouter') => {
+          if (service === 'openrouter') {
             switch (modelId) {
-              case "gpt-4o":
-              case "gpt-4o-mini":
-                return "text-emerald-600";
-              case "claude-3.5-sonnet":
-              case "claude-3.5-haiku":
-                return "text-orange-600";
-              case "o1-preview":
-              case "o1-mini":
-                return "text-blue-600";
-              case "gemini-pro":
-              case "gemini-flash":
-                return "text-cyan-600";
-              case "llama-3.1-70b":
-              case "llama-3.1-8b":
-                return "text-purple-600";
+              case 'gpt-4o':
+              case 'gpt-4o-mini':
+                return 'text-emerald-600';
+              case 'claude-3.5-sonnet':
+              case 'claude-3.5-haiku':
+                return 'text-orange-600';
+              case 'o1-preview':
+              case 'o1-mini':
+                return 'text-blue-600';
+              case 'gemini-pro':
+              case 'gemini-flash':
+                return 'text-cyan-600';
+              case 'llama-3.1-70b':
+              case 'llama-3.1-8b':
+                return 'text-purple-600';
               default:
-                return "text-gray-600";
+                return 'text-gray-600';
             }
           } else {
             switch (modelId) {
-              case "glm-45v":
-                return "text-blue-600";
-              case "glm-45-auto-think":
-                return "text-orange-600";
-              case "glm-45-flagship":
-                return "text-yellow-600";
-              case "air":
-                return "text-purple-600";
-              case "glm-45-full-stack":
-                return "text-green-600";
+              case 'glm-45v':
+                return 'text-blue-600';
+              case 'glm-45-auto-think':
+                return 'text-orange-600';
+              case 'glm-45-flagship':
+                return 'text-yellow-600';
+              case 'air':
+                return 'text-purple-600';
+              case 'glm-45-full-stack':
+                return 'text-green-600';
               default:
-                return "text-gray-600";
+                return 'text-gray-600';
             }
           }
         };
 
-        const getServiceBadge = (service: "zai" | "openrouter") => {
-          if (service === "openrouter") {
+        const getServiceBadge = (service: 'zai' | 'openrouter') => {
+          if (service === 'openrouter') {
             return (
               <Badge
                 variant="outline"
@@ -282,10 +272,7 @@ export function MultiModelAIAnalyzer({
             );
           } else {
             return (
-              <Badge
-                variant="outline"
-                className="text-xs bg-blue-50 text-blue-700 border-blue-200"
-              >
+              <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
                 Z.AI
               </Badge>
             );
@@ -293,9 +280,9 @@ export function MultiModelAIAnalyzer({
         };
 
         const getPerformanceColor = (score: number) => {
-          if (score >= 0.8) return "text-green-600";
-          if (score >= 0.6) return "text-yellow-600";
-          return "text-red-600";
+          if (score >= 0.8) return 'text-green-600';
+          if (score >= 0.6) return 'text-yellow-600';
+          return 'text-red-600';
         };
 
         if (!isPremium) {
@@ -304,14 +291,11 @@ export function MultiModelAIAnalyzer({
               <CardContent className="p-6">
                 <div className="text-center">
                   <Network className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">
-                    Multi-Model AI Analysis
-                  </h3>
+                  <h3 className="text-lg font-semibold mb-2">Multi-Model AI Analysis</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Unlock advanced GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5
-                    Flagship, GLM-4.5 Full Stack, and AIR models with our
-                    premium features Unlock advanced AI models including GPT-4o,
-                    Claude 3.5 Sonnet, Gemini Pro, Llama 3.1, and GLM-4.5V with
+                    Unlock advanced GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full
+                    Stack, and AIR models with our premium features Unlock advanced AI models
+                    including GPT-4o, Claude 3.5 Sonnet, Gemini Pro, Llama 3.1, and GLM-4.5V with
                     our premium features
                   </p>
                   <Button className="w-full">
@@ -336,9 +320,7 @@ export function MultiModelAIAnalyzer({
                     Initializing advanced AI capabilities...
                   </p>
                   {retryCount > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Retry attempt {retryCount}
-                    </p>
+                    <p className="text-xs text-muted-foreground">Retry attempt {retryCount}</p>
                   )}
                 </div>
               </CardContent>
@@ -368,8 +350,7 @@ export function MultiModelAIAnalyzer({
                           <strong>Code:</strong> {error.code}
                         </p>
                         <p className="text-xs">
-                          <strong>Time:</strong>{" "}
-                          {error.timestamp.toLocaleTimeString()}
+                          <strong>Time:</strong> {error.timestamp.toLocaleTimeString()}
                         </p>
                       </div>
                     </AlertDescription>
@@ -387,12 +368,7 @@ export function MultiModelAIAnalyzer({
                         Retry
                       </Button>
                     )}
-                    <Button
-                      onClick={clearError}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
+                    <Button onClick={clearError} variant="outline" size="sm" className="flex-1">
                       Dismiss
                     </Button>
                   </div>
@@ -410,22 +386,15 @@ export function MultiModelAIAnalyzer({
                   <Network className="w-5 h-5 text-purple-600" />
                   Multi-Model AI Analysis
                   {analysisResults.length > 0 && (
-                    <Badge
-                      variant="outline"
-                      className="text-green-600 border-green-600"
-                    >
+                    <Badge variant="outline" className="text-green-600 border-green-600">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Complete
                     </Badge>
                   )}
                 </CardTitle>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                  >
-                    {isExpanded ? "Collapse" : "Expand"}
+                  <Button variant="outline" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
+                    {isExpanded ? 'Collapse' : 'Expand'}
                   </Button>
                   <Button
                     variant="outline"
@@ -448,9 +417,7 @@ export function MultiModelAIAnalyzer({
                     <Label className="text-sm font-medium">Analysis Mode</Label>
                     <Select
                       value={analysisMode}
-                      onValueChange={(value: "single" | "ensemble") =>
-                        setAnalysisMode(value)
-                      }
+                      onValueChange={(value: 'single' | 'ensemble') => setAnalysisMode(value)}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -483,9 +450,7 @@ export function MultiModelAIAnalyzer({
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium">
-                      Model Selection
-                    </Label>
+                    <Label className="text-sm font-medium">Model Selection</Label>
                     <Select
                       value={selectedModel}
                       onValueChange={setSelectedModel}
@@ -506,7 +471,7 @@ export function MultiModelAIAnalyzer({
                             </div>
                           </div>
                         </SelectItem>
-                        {availableModels.map((model) => (
+                        {availableModels.map(model => (
                           <SelectItem key={model.id} value={model.id}>
                             <div className="flex items-start gap-2 py-1">
                               {getModelIcon(model.id)}
@@ -523,22 +488,17 @@ export function MultiModelAIAnalyzer({
                                   {model.description}
                                 </div>
                                 <div className="flex flex-wrap gap-1 mt-1">
-                                  {model.capabilities
-                                    .slice(0, 3)
-                                    .map((capability, idx) => (
-                                      <Badge
-                                        key={idx}
-                                        variant="outline"
-                                        className="text-xs px-1 py-0"
-                                      >
-                                        {capability.replace("-", " ")}
-                                      </Badge>
-                                    ))}
-                                  {model.capabilities.length > 3 && (
+                                  {model.capabilities.slice(0, 3).map((capability, idx) => (
                                     <Badge
+                                      key={idx}
                                       variant="outline"
                                       className="text-xs px-1 py-0"
                                     >
+                                      {capability.replace('-', ' ')}
+                                    </Badge>
+                                  ))}
+                                  {model.capabilities.length > 3 && (
+                                    <Badge variant="outline" className="text-xs px-1 py-0">
                                       +{model.capabilities.length - 3}
                                     </Badge>
                                   )}
@@ -546,8 +506,7 @@ export function MultiModelAIAnalyzer({
                                 {model.pricing && (
                                   <div className="text-xs text-muted-foreground mt-1">
                                     ${model.pricing.input.toFixed(4)}/input, $
-                                    {model.pricing.output.toFixed(4)}/output per
-                                    1K tokens
+                                    {model.pricing.output.toFixed(4)}/output per 1K tokens
                                   </div>
                                 )}
                               </div>
@@ -560,19 +519,14 @@ export function MultiModelAIAnalyzer({
 
                   <div className="space-y-2">
                     <Label className="text-sm font-medium">Analysis Type</Label>
-                    <Select
-                      value={analysisType}
-                      onValueChange={setAnalysisType}
-                    >
+                    <Select value={analysisType} onValueChange={setAnalysisType}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="comprehensive">
                           <div className="flex flex-col gap-1">
-                            <div className="font-medium">
-                              Comprehensive Analysis
-                            </div>
+                            <div className="font-medium">Comprehensive Analysis</div>
                             <div className="text-xs text-muted-foreground">
                               Complete multi-faceted evaluation
                             </div>
@@ -624,7 +578,7 @@ export function MultiModelAIAnalyzer({
                           id="ensemble"
                           checked={enableEnsemble}
                           onCheckedChange={setEnableEnsemble}
-                          disabled={analysisMode === "single"}
+                          disabled={analysisMode === 'single'}
                         />
                         <Label htmlFor="ensemble" className="text-xs">
                           Enable Ensemble
@@ -639,14 +593,11 @@ export function MultiModelAIAnalyzer({
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <div className="flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-800">
-                      Analysis Complete
-                    </span>
+                    <span className="text-sm font-medium text-green-800">Analysis Complete</span>
                   </div>
                   <p className="text-xs text-green-700 mt-1">
                     {analysisResults.length} model
-                    {analysisResults.length > 1 ? "s" : ""} analyzed
-                    successfully
+                    {analysisResults.length > 1 ? 's' : ''} analyzed successfully
                   </p>
                 </div>
               )}
@@ -656,9 +607,9 @@ export function MultiModelAIAnalyzer({
                   <div className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
                     <span className="text-sm font-medium">
-                      {analysisMode === "ensemble"
-                        ? "Multi-Model Analysis in Progress..."
-                        : "AI Analysis in Progress..."}
+                      {analysisMode === 'ensemble'
+                        ? 'Multi-Model Analysis in Progress...'
+                        : 'AI Analysis in Progress...'}
                     </span>
                   </div>
                   <div className="space-y-2">
@@ -671,14 +622,12 @@ export function MultiModelAIAnalyzer({
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Brain className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium text-blue-800">
-                        Analysis Details
-                      </span>
+                      <span className="text-sm font-medium text-blue-800">Analysis Details</span>
                     </div>
                     <p className="text-xs text-blue-700">
-                      {analysisMode === "ensemble"
-                        ? "Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, AIR, and base models for comprehensive insights..."
-                        : "Analyzing content with advanced AI capabilities..."}
+                      {analysisMode === 'ensemble'
+                        ? 'Running analysis with GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, GLM-4.5 Full Stack, AIR, and base models for comprehensive insights...'
+                        : 'Analyzing content with advanced AI capabilities...'}
                     </p>
                     <div className="mt-2 flex items-center gap-2 text-xs text-blue-600">
                       <Timer className="w-3 h-3" />
@@ -689,11 +638,7 @@ export function MultiModelAIAnalyzer({
               )}
 
               {analysisResults.length > 0 && isExpanded && (
-                <Tabs
-                  value={activeTab}
-                  onValueChange={setActiveTab}
-                  className="w-full"
-                >
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="grid w-full grid-cols-5 gap-1">
                     <TabsTrigger value="overview" className="text-xs">
                       <Eye className="w-3 h-3 mr-1" />
@@ -724,16 +669,13 @@ export function MultiModelAIAnalyzer({
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Award className="w-4 h-4 text-yellow-600" />
-                            <span className="text-sm font-medium">
-                              Best Model
-                            </span>
+                            <span className="text-sm font-medium">Best Model</span>
                           </div>
                           <div className="flex items-center gap-2">
                             {getModelIcon(ensembleResult.bestModel)}
                             <span className="text-sm font-semibold">
-                              {availableModels.find(
-                                (m) => m.id === ensembleResult.bestModel,
-                              )?.name || "Unknown"}
+                              {availableModels.find(m => m.id === ensembleResult.bestModel)?.name ||
+                                'Unknown'}
                             </span>
                           </div>
                         </div>
@@ -741,25 +683,18 @@ export function MultiModelAIAnalyzer({
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Target className="w-4 h-4 text-green-600" />
-                            <span className="text-sm font-medium">
-                              Consensus
-                            </span>
+                            <span className="text-sm font-medium">Consensus</span>
                           </div>
                           <div className="text-2xl font-bold text-green-600">
                             {Math.round(ensembleResult.consensus * 100)}%
                           </div>
-                          <Progress
-                            value={ensembleResult.consensus * 100}
-                            className="w-full"
-                          />
+                          <Progress value={ensembleResult.consensus * 100} className="w-full" />
                         </div>
 
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-purple-600" />
-                            <span className="text-sm font-medium">
-                              Enhanced Accuracy
-                            </span>
+                            <span className="text-sm font-medium">Enhanced Accuracy</span>
                           </div>
                           <div className="text-2xl font-bold text-purple-600">
                             {Math.round(ensembleResult.enhancedAccuracy * 100)}%
@@ -780,9 +715,7 @@ export function MultiModelAIAnalyzer({
                           <Card key={index} className="p-3">
                             <div className="flex items-center gap-2 mb-2">
                               {getModelIcon(result.modelId)}
-                              <span className="text-sm font-medium">
-                                {result.modelName}
-                              </span>
+                              <span className="text-sm font-medium">{result.modelName}</span>
                               <Badge variant="outline" className="text-xs">
                                 {Math.round(result.confidence * 100)}%
                               </Badge>
@@ -803,36 +736,26 @@ export function MultiModelAIAnalyzer({
                     <div className="space-y-4">
                       <h4 className="font-medium">Available AI Models</h4>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {availableModels.map((model) => (
+                        {availableModels.map(model => (
                           <Card key={model.id} className="p-4">
                             <div className="flex items-center gap-2 mb-3">
                               {getModelIcon(model.id)}
                               <div>
                                 <h5 className="font-medium">{model.name}</h5>
-                                <p className="text-xs text-muted-foreground">
-                                  {model.version}
-                                </p>
+                                <p className="text-xs text-muted-foreground">{model.version}</p>
                               </div>
                             </div>
                             <p className="text-sm text-muted-foreground mb-3">
                               {model.description}
                             </p>
                             <div className="space-y-2">
-                              <div className="text-xs font-medium">
-                                Capabilities:
-                              </div>
+                              <div className="text-xs font-medium">Capabilities:</div>
                               <div className="flex flex-wrap gap-1">
-                                {model.capabilities
-                                  .slice(0, 3)
-                                  .map((capability, idx) => (
-                                    <Badge
-                                      key={idx}
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {capability}
-                                    </Badge>
-                                  ))}
+                                {model.capabilities.slice(0, 3).map((capability, idx) => (
+                                  <Badge key={idx} variant="secondary" className="text-xs">
+                                    {capability}
+                                  </Badge>
+                                ))}
                                 {model.capabilities.length > 3 && (
                                   <Badge variant="outline" className="text-xs">
                                     +{model.capabilities.length - 3} more
@@ -853,30 +776,18 @@ export function MultiModelAIAnalyzer({
 
                         {/* Performance Comparison */}
                         <div className="space-y-3">
-                          <h5 className="text-sm font-medium">
-                            Performance Metrics
-                          </h5>
+                          <h5 className="text-sm font-medium">Performance Metrics</h5>
                           <div className="space-y-2">
                             {analysisResults.map((result, index) => (
-                              <div
-                                key={index}
-                                className="flex items-center gap-4"
-                              >
+                              <div key={index} className="flex items-center gap-4">
                                 <div className="flex items-center gap-2 w-48">
                                   {getModelIcon(result.modelId)}
-                                  <span className="text-sm">
-                                    {result.modelName}
-                                  </span>
+                                  <span className="text-sm">{result.modelName}</span>
                                 </div>
                                 <div className="flex-1">
                                   <div className="flex items-center gap-2">
-                                    <span className="text-xs w-16">
-                                      Confidence
-                                    </span>
-                                    <Progress
-                                      value={result.confidence * 100}
-                                      className="flex-1"
-                                    />
+                                    <span className="text-xs w-16">Confidence</span>
+                                    <Progress value={result.confidence * 100} className="flex-1" />
                                     <span className="text-xs w-12">
                                       {Math.round(result.confidence * 100)}%
                                     </span>
@@ -899,11 +810,9 @@ export function MultiModelAIAnalyzer({
                                 <div className="space-y-2">
                                   <strong>Model Disagreements Detected:</strong>
                                   <ul className="list-disc list-inside space-y-1 text-sm">
-                                    {ensembleResult.disagreements.map(
-                                      (disagreement, index) => (
-                                        <li key={index}>{disagreement}</li>
-                                      ),
-                                    )}
+                                    {ensembleResult.disagreements.map((disagreement, index) => (
+                                      <li key={index}>{disagreement}</li>
+                                    ))}
                                   </ul>
                                 </div>
                               </AlertDescription>
@@ -915,12 +824,10 @@ export function MultiModelAIAnalyzer({
 
                   <TabsContent value="performance" className="space-y-4">
                     <div className="space-y-4">
-                      <h4 className="font-medium">
-                        Model Performance Analytics
-                      </h4>
+                      <h4 className="font-medium">Model Performance Analytics</h4>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {availableModels.map((model) => (
+                        {availableModels.map(model => (
                           <Card key={model.id} className="p-4">
                             <div className="flex items-center gap-2 mb-3">
                               {getModelIcon(model.id)}
@@ -931,22 +838,12 @@ export function MultiModelAIAnalyzer({
                             </div>
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
-                                <span className="text-muted-foreground">
-                                  Status:
-                                </span>
-                                <Badge
-                                  variant={
-                                    model.isAvailable ? "default" : "secondary"
-                                  }
-                                >
-                                  {model.isAvailable
-                                    ? "Available"
-                                    : "Unavailable"}
+                                <span className="text-muted-foreground">Status:</span>
+                                <Badge variant={model.isAvailable ? 'default' : 'secondary'}>
+                                  {model.isAvailable ? 'Available' : 'Unavailable'}
                                 </Badge>
                               </div>
-                              <div className="text-muted-foreground">
-                                {model.description}
-                              </div>
+                              <div className="text-muted-foreground">{model.description}</div>
                             </div>
                           </Card>
                         ))}
@@ -956,16 +853,12 @@ export function MultiModelAIAnalyzer({
 
                   <TabsContent value="insights" className="space-y-4">
                     <div className="space-y-4">
-                      <h4 className="font-medium">
-                        AI Insights & Recommendations
-                      </h4>
+                      <h4 className="font-medium">AI Insights & Recommendations</h4>
 
                       {ensembleResult && (
                         <div className="space-y-4">
                           {/* Flagship Model Highlights */}
-                          {analysisResults.some(
-                            (r) => r.modelId === "glm-45-flagship",
-                          ) && (
+                          {analysisResults.some(r => r.modelId === 'glm-45-flagship') && (
                             <div className="bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-lg border border-yellow-200">
                               <div className="flex items-center gap-2 mb-2">
                                 <Crown className="w-4 h-4 text-yellow-600" />
@@ -974,29 +867,14 @@ export function MultiModelAIAnalyzer({
                                 </h5>
                               </div>
                               <ul className="text-sm text-yellow-800 space-y-1">
+                                <li>• Advanced-level reasoning with unprecedented accuracy</li>
+                                <li>• Quantum-level reasoning with unprecedented accuracy</li>
+                                <li>• Hyper-dimensional analysis across multiple contexts</li>
                                 <li>
-                                  • Advanced-level reasoning with unprecedented
-                                  accuracy
+                                  • Superintelligence capabilities surpassing all other models
                                 </li>
-                                <li>
-                                  • Quantum-level reasoning with unprecedented
-                                  accuracy
-                                </li>
-                                <li>
-                                  • Hyper-dimensional analysis across multiple
-                                  contexts
-                                </li>
-                                <li>
-                                  • Superintelligence capabilities surpassing
-                                  all other models
-                                </li>
-                                <li>
-                                  • Ultimate precision and perfect comprehension
-                                </li>
-                                <li>
-                                  • Creative synthesis and infinite pattern
-                                  recognition
-                                </li>
+                                <li>• Ultimate precision and perfect comprehension</li>
+                                <li>• Creative synthesis and infinite pattern recognition</li>
                               </ul>
                             </div>
                           )}
@@ -1005,21 +883,15 @@ export function MultiModelAIAnalyzer({
                           <div className="bg-blue-50 p-4 rounded-lg">
                             <div className="flex items-center gap-2 mb-2">
                               <Award className="w-4 h-4 text-blue-600" />
-                              <h5 className="font-medium text-blue-900">
-                                Recommended Model
-                              </h5>
+                              <h5 className="font-medium text-blue-900">Recommended Model</h5>
                             </div>
                             <p className="text-sm text-blue-800">
-                              Based on performance analysis,{" "}
+                              Based on performance analysis,{' '}
                               <strong>
-                                {
-                                  availableModels.find(
-                                    (m) => m.id === ensembleResult.bestModel,
-                                  )?.name
-                                }
+                                {availableModels.find(m => m.id === ensembleResult.bestModel)?.name}
                               </strong>
-                              is recommended for this type of analysis due to
-                              its superior accuracy and speed.
+                              is recommended for this type of analysis due to its superior accuracy
+                              and speed.
                             </p>
                           </div>
 
@@ -1033,22 +905,12 @@ export function MultiModelAIAnalyzer({
                                 </h5>
                               </div>
                               <ul className="text-sm text-green-800 space-y-1">
-                                <li>
-                                  • Enhanced accuracy through multi-model
-                                  consensus
-                                </li>
+                                <li>• Enhanced accuracy through multi-model consensus</li>
                                 <li>• Reduced bias and improved reliability</li>
+                                <li>• Comprehensive analysis from different AI perspectives</li>
                                 <li>
-                                  • Comprehensive analysis from different AI
-                                  perspectives
-                                </li>
-                                <li>
-                                  •{" "}
-                                  {Math.round(
-                                    (ensembleResult.enhancedAccuracy - 0.85) *
-                                      100,
-                                  )}
-                                  % accuracy improvement over single models
+                                  • {Math.round((ensembleResult.enhancedAccuracy - 0.85) * 100)}%
+                                  accuracy improvement over single models
                                 </li>
                               </ul>
                             </div>
@@ -1058,34 +920,28 @@ export function MultiModelAIAnalyzer({
                           <div className="bg-purple-50 p-4 rounded-lg">
                             <div className="flex items-center gap-2 mb-2">
                               <TrendingUp className="w-4 h-4 text-purple-600" />
-                              <h5 className="font-medium text-purple-900">
-                                Performance Insights
-                              </h5>
+                              <h5 className="font-medium text-purple-900">Performance Insights</h5>
                             </div>
                             <div className="text-sm text-purple-800 space-y-2">
                               <p>
-                                <strong>GLM-4.5V</strong> excels at visual
-                                understanding and spatial reasoning, making it
-                                ideal for complex image analysis.
+                                <strong>GLM-4.5V</strong> excels at visual understanding and spatial
+                                reasoning, making it ideal for complex image analysis.
                               </p>
                               <p>
-                                <strong>GLM-4.5 Flagship</strong> represents the
-                                pinnacle of AI achievement with advanced
-                                reasoning, universal comprehension, and
-                                superintelligence capabilities quantum
-                                reasoning, universal comprehension, and
-                                superintelligence capabilities that far surpass
+                                <strong>GLM-4.5 Flagship</strong> represents the pinnacle of AI
+                                achievement with advanced reasoning, universal comprehension, and
+                                superintelligence capabilities quantum reasoning, universal
+                                comprehension, and superintelligence capabilities that far surpass
                                 all other models.
                               </p>
                               <p>
-                                <strong>AIR</strong> provides superior logical
-                                reasoning and inference capabilities, perfect
-                                for risk assessment and behavioral analysis.
+                                <strong>AIR</strong> provides superior logical reasoning and
+                                inference capabilities, perfect for risk assessment and behavioral
+                                analysis.
                               </p>
                               <p>
-                                <strong>Base Model</strong> offers reliable
-                                general-purpose analysis with consistent
-                                performance across various image types.
+                                <strong>Base Model</strong> offers reliable general-purpose analysis
+                                with consistent performance across various image types.
                               </p>
                             </div>
                           </div>

@@ -1,14 +1,14 @@
 // Premium Context Engineering Protocol
 // Implements structured prompts with GLM-4.5, OpenRouter, and MCP integration
 
-import { mcpService, MCPAgentConfig } from "./mcp-service";
-import { agenticWorkflowEngine, AgenticTask } from "./agentic-workflow-engine";
+import { mcpService, MCPAgentConfig } from './mcp-service';
+import { agenticWorkflowEngine, AgenticTask } from './agentic-workflow-engine';
 
 export interface ContextPromptTemplate {
   id: string;
   name: string;
   description: string;
-  domain: "healthcare" | "legal" | "education" | "customer-service" | "general";
+  domain: 'healthcare' | 'legal' | 'education' | 'customer-service' | 'general';
   version: string;
   structure: PromptStructure;
   validationRules: ValidationRule[];
@@ -28,14 +28,7 @@ export interface PromptSection {
   id: string;
   name: string;
   description: string;
-  type:
-    | "directive"
-    | "profile"
-    | "state"
-    | "input"
-    | "output"
-    | "safeguard"
-    | "context";
+  type: 'directive' | 'profile' | 'state' | 'input' | 'output' | 'safeguard' | 'context';
   required: boolean;
   template: string;
   validation: SectionValidation;
@@ -44,7 +37,7 @@ export interface PromptSection {
 
 export interface PromptVariable {
   name: string;
-  type: "string" | "number" | "boolean" | "object" | "array";
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
   description: string;
   required: boolean;
   defaultValue?: any;
@@ -52,7 +45,7 @@ export interface PromptVariable {
 }
 
 export interface VariableValidation {
-  type: "string" | "number" | "boolean" | "object" | "array";
+  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
   constraints?: any;
   pattern?: string;
   min?: number;
@@ -72,14 +65,14 @@ export interface ValidationRule {
   id: string;
   name: string;
   description: string;
-  type: "syntax" | "semantic" | "compliance" | "security";
-  severity: "error" | "warning" | "info";
+  type: 'syntax' | 'semantic' | 'compliance' | 'security';
+  severity: 'error' | 'warning' | 'info';
   condition: string;
   message: string;
 }
 
 export interface OutputFormat {
-  type: "json" | "xml" | "text" | "markdown" | "custom";
+  type: 'json' | 'xml' | 'text' | 'markdown' | 'custom';
   schema?: any;
   template?: string;
   validation: OutputValidation;
@@ -105,7 +98,7 @@ export interface ComplianceRequirements {
   };
   auditTrail?: {
     enabled: boolean;
-    level: "basic" | "detailed" | "comprehensive";
+    level: 'basic' | 'detailed' | 'comprehensive';
   };
 }
 
@@ -133,7 +126,7 @@ export interface ValidationError {
   section: string;
   field: string;
   message: string;
-  severity: "error" | "warning" | "info";
+  severity: 'error' | 'warning' | 'info';
   ruleId: string;
 }
 
@@ -151,7 +144,7 @@ export interface ContextPromptGenerationRequest {
   options?: {
     strictValidation?: boolean;
     includeMetadata?: boolean;
-    complianceLevel?: "basic" | "standard" | "strict";
+    complianceLevel?: 'basic' | 'standard' | 'strict';
   };
 }
 
@@ -170,179 +163,178 @@ export interface ContextPromptGenerationResponse {
 // Premium Context Templates
 export const PREMIUM_CONTEXT_TEMPLATES: ContextPromptTemplate[] = [
   {
-    id: "customer-support-summary",
-    name: "Customer Support Summary",
-    description:
-      "Template for generating structured summaries from customer interactions",
-    domain: "customer-service",
-    version: "1.0.0",
+    id: 'customer-support-summary',
+    name: 'Customer Support Summary',
+    description: 'Template for generating structured summaries from customer interactions',
+    domain: 'customer-service',
+    version: '1.0.0',
     structure: {
       sections: [
         {
-          id: "task_directive",
-          name: "Task Directive",
-          description: "Clear instruction for the AI agent",
-          type: "directive",
+          id: 'task_directive',
+          name: 'Task Directive',
+          description: 'Clear instruction for the AI agent',
+          type: 'directive',
           required: true,
-          template: "[Task_Directive]\n{directive}",
+          template: '[Task_Directive]\n{directive}',
           validation: { required: true, minLength: 10, maxLength: 500 },
           variables: [
             {
-              name: "directive",
-              type: "string",
-              description: "Clear task instruction",
+              name: 'directive',
+              type: 'string',
+              description: 'Clear task instruction',
               required: true,
-              validation: { type: "string", minLength: 10, maxLength: 500 },
+              validation: { type: 'string', minLength: 10, maxLength: 500 },
             },
           ],
         },
         {
-          id: "agent_profile",
-          name: "Agent Profile",
-          description: "Persona and constraints for the AI agent",
-          type: "profile",
+          id: 'agent_profile',
+          name: 'Agent Profile',
+          description: 'Persona and constraints for the AI agent',
+          type: 'profile',
           required: true,
-          template: "[Agent_Profile]\n{profile}",
+          template: '[Agent_Profile]\n{profile}',
           validation: { required: true, minLength: 20, maxLength: 1000 },
           variables: [
             {
-              name: "profile",
-              type: "string",
-              description: "Agent persona and constraints",
+              name: 'profile',
+              type: 'string',
+              description: 'Agent persona and constraints',
               required: true,
-              validation: { type: "string", minLength: 20, maxLength: 1000 },
+              validation: { type: 'string', minLength: 20, maxLength: 1000 },
             },
           ],
         },
         {
-          id: "system_state",
-          name: "System State",
-          description: "Available tools and routing policies",
-          type: "state",
+          id: 'system_state',
+          name: 'System State',
+          description: 'Available tools and routing policies',
+          type: 'state',
           required: true,
-          template: "[System_State]\nMCP tools: {tools}\nRouting: {routing}",
+          template: '[System_State]\nMCP tools: {tools}\nRouting: {routing}',
           validation: { required: true },
           variables: [
             {
-              name: "tools",
-              type: "object",
-              description: "Available MCP tools",
+              name: 'tools',
+              type: 'object',
+              description: 'Available MCP tools',
               required: true,
             },
             {
-              name: "routing",
-              type: "string",
-              description: "Model routing configuration",
+              name: 'routing',
+              type: 'string',
+              description: 'Model routing configuration',
               required: true,
             },
           ],
         },
         {
-          id: "input_data",
-          name: "Input Data",
-          description: "Raw input data for processing",
-          type: "input",
+          id: 'input_data',
+          name: 'Input Data',
+          description: 'Raw input data for processing',
+          type: 'input',
           required: true,
-          template: "[Input_Data]\n{data}",
+          template: '[Input_Data]\n{data}',
           validation: { required: true },
           variables: [
             {
-              name: "data",
-              type: "object",
-              description: "Input data",
+              name: 'data',
+              type: 'object',
+              description: 'Input data',
               required: true,
             },
           ],
         },
         {
-          id: "output_format",
-          name: "Output Format",
-          description: "Desired structured output format",
-          type: "output",
+          id: 'output_format',
+          name: 'Output Format',
+          description: 'Desired structured output format',
+          type: 'output',
           required: true,
-          template: "[Output_Format_Spec]\n{format}",
+          template: '[Output_Format_Spec]\n{format}',
           validation: { required: true },
           variables: [
             {
-              name: "format",
-              type: "string",
-              description: "Output format specification",
+              name: 'format',
+              type: 'string',
+              description: 'Output format specification',
               required: true,
             },
           ],
         },
         {
-          id: "safeguard_policy",
-          name: "Safeguard Policy",
-          description: "Compliance rules and error prevention",
-          type: "safeguard",
+          id: 'safeguard_policy',
+          name: 'Safeguard Policy',
+          description: 'Compliance rules and error prevention',
+          type: 'safeguard',
           required: true,
-          template: "[Safeguard_Policy]\n{policy}",
+          template: '[Safeguard_Policy]\n{policy}',
           validation: { required: true, minLength: 10 },
           variables: [
             {
-              name: "policy",
-              type: "string",
-              description: "Safeguard policies",
+              name: 'policy',
+              type: 'string',
+              description: 'Safeguard policies',
               required: true,
-              validation: { type: "string", minLength: 10 },
+              validation: { type: 'string', minLength: 10 },
             },
           ],
         },
       ],
       requiredSections: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       optionalSections: [],
       order: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       dependencies: {},
     },
     validationRules: [
       {
-        id: "directive-clarity",
-        name: "Directive Clarity Check",
-        description: "Ensure task directive is clear and actionable",
-        type: "semantic",
-        severity: "error",
-        condition: "directive.length >= 10 && directive.length <= 500",
-        message: "Task directive must be between 10 and 500 characters",
+        id: 'directive-clarity',
+        name: 'Directive Clarity Check',
+        description: 'Ensure task directive is clear and actionable',
+        type: 'semantic',
+        severity: 'error',
+        condition: 'directive.length >= 10 && directive.length <= 500',
+        message: 'Task directive must be between 10 and 500 characters',
       },
       {
-        id: "profile-completeness",
-        name: "Profile Completeness Check",
-        description: "Ensure agent profile is comprehensive",
-        type: "semantic",
-        severity: "warning",
-        condition: "profile.length >= 20",
-        message: "Agent profile should be at least 20 characters long",
+        id: 'profile-completeness',
+        name: 'Profile Completeness Check',
+        description: 'Ensure agent profile is comprehensive',
+        type: 'semantic',
+        severity: 'warning',
+        condition: 'profile.length >= 20',
+        message: 'Agent profile should be at least 20 characters long',
       },
     ],
     outputFormat: {
-      type: "json",
+      type: 'json',
       schema: {
-        type: "object",
+        type: 'object',
         properties: {
-          summary: { type: "string" },
-          action_items: { type: "array", items: { type: "string" } },
-          priority: { type: "string", enum: ["low", "medium", "high"] },
+          summary: { type: 'string' },
+          action_items: { type: 'array', items: { type: 'string' } },
+          priority: { type: 'string', enum: ['low', 'medium', 'high'] },
         },
-        required: ["summary", "action_items", "priority"],
+        required: ['summary', 'action_items', 'priority'],
       },
       validation: {
         strict: true,
-        requiredFields: ["summary", "action_items", "priority"],
+        requiredFields: ['summary', 'action_items', 'priority'],
         optionalFields: [],
         typeChecking: true,
       },
@@ -356,198 +348,198 @@ export const PREMIUM_CONTEXT_TEMPLATES: ContextPromptTemplate[] = [
       },
       auditTrail: {
         enabled: true,
-        level: "detailed",
+        level: 'detailed',
       },
     },
   },
   {
-    id: "legal-document-analysis",
-    name: "Legal Document Analysis",
-    description: "Template for comprehensive legal document analysis",
-    domain: "legal",
-    version: "1.0.0",
+    id: 'legal-document-analysis',
+    name: 'Legal Document Analysis',
+    description: 'Template for comprehensive legal document analysis',
+    domain: 'legal',
+    version: '1.0.0',
     structure: {
       sections: [
         {
-          id: "task_directive",
-          name: "Task Directive",
-          description: "Legal analysis instruction",
-          type: "directive",
+          id: 'task_directive',
+          name: 'Task Directive',
+          description: 'Legal analysis instruction',
+          type: 'directive',
           required: true,
-          template: "[Task_Directive]\n{directive}",
+          template: '[Task_Directive]\n{directive}',
           validation: { required: true, minLength: 10 },
           variables: [
             {
-              name: "directive",
-              type: "string",
-              description: "Legal analysis task directive",
+              name: 'directive',
+              type: 'string',
+              description: 'Legal analysis task directive',
               required: true,
-              validation: { type: "string", minLength: 10 },
+              validation: { type: 'string', minLength: 10 },
             },
           ],
         },
         {
-          id: "agent_profile",
-          name: "Agent Profile",
-          description: "Legal expert persona",
-          type: "profile",
+          id: 'agent_profile',
+          name: 'Agent Profile',
+          description: 'Legal expert persona',
+          type: 'profile',
           required: true,
-          template: "[Agent_Profile]\n{profile}",
+          template: '[Agent_Profile]\n{profile}',
           validation: { required: true, minLength: 50 },
           variables: [
             {
-              name: "profile",
-              type: "string",
-              description: "Legal expert persona and constraints",
+              name: 'profile',
+              type: 'string',
+              description: 'Legal expert persona and constraints',
               required: true,
-              validation: { type: "string", minLength: 50 },
+              validation: { type: 'string', minLength: 50 },
             },
           ],
         },
         {
-          id: "system_state",
-          name: "System State",
-          description: "Legal analysis tools and compliance",
-          type: "state",
+          id: 'system_state',
+          name: 'System State',
+          description: 'Legal analysis tools and compliance',
+          type: 'state',
           required: true,
           template:
-            "[System_State]\nMCP tools: {tools}\nCompliance: {compliance}\nJurisdiction: {jurisdiction}",
+            '[System_State]\nMCP tools: {tools}\nCompliance: {compliance}\nJurisdiction: {jurisdiction}',
           validation: { required: true },
           variables: [
             {
-              name: "tools",
-              type: "object",
-              description: "Legal analysis tools",
+              name: 'tools',
+              type: 'object',
+              description: 'Legal analysis tools',
               required: true,
             },
             {
-              name: "compliance",
-              type: "string",
-              description: "Compliance requirements",
+              name: 'compliance',
+              type: 'string',
+              description: 'Compliance requirements',
               required: true,
             },
             {
-              name: "jurisdiction",
-              type: "string",
-              description: "Legal jurisdiction",
+              name: 'jurisdiction',
+              type: 'string',
+              description: 'Legal jurisdiction',
               required: true,
             },
           ],
         },
         {
-          id: "input_data",
-          name: "Input Data",
-          description: "Legal document data",
-          type: "input",
+          id: 'input_data',
+          name: 'Input Data',
+          description: 'Legal document data',
+          type: 'input',
           required: true,
-          template: "[Input_Data]\nDocument: {document}\nType: {documentType}",
+          template: '[Input_Data]\nDocument: {document}\nType: {documentType}',
           validation: { required: true },
           variables: [
             {
-              name: "document",
-              type: "string",
-              description: "Legal document text",
+              name: 'document',
+              type: 'string',
+              description: 'Legal document text',
               required: true,
             },
             {
-              name: "documentType",
-              type: "string",
-              description: "Document type",
-              required: true,
-            },
-          ],
-        },
-        {
-          id: "output_format",
-          name: "Output Format",
-          description: "Legal analysis output structure",
-          type: "output",
-          required: true,
-          template: "[Output_Format_Spec]\n{format}",
-          validation: { required: true },
-          variables: [
-            {
-              name: "format",
-              type: "string",
-              description: "Output format specification",
+              name: 'documentType',
+              type: 'string',
+              description: 'Document type',
               required: true,
             },
           ],
         },
         {
-          id: "safeguard_policy",
-          name: "Safeguard Policy",
-          description: "Legal compliance safeguards",
-          type: "safeguard",
+          id: 'output_format',
+          name: 'Output Format',
+          description: 'Legal analysis output structure',
+          type: 'output',
           required: true,
-          template: "[Safeguard_Policy]\n{policy}",
+          template: '[Output_Format_Spec]\n{format}',
           validation: { required: true },
           variables: [
             {
-              name: "policy",
-              type: "string",
-              description: "Legal compliance policies",
+              name: 'format',
+              type: 'string',
+              description: 'Output format specification',
+              required: true,
+            },
+          ],
+        },
+        {
+          id: 'safeguard_policy',
+          name: 'Safeguard Policy',
+          description: 'Legal compliance safeguards',
+          type: 'safeguard',
+          required: true,
+          template: '[Safeguard_Policy]\n{policy}',
+          validation: { required: true },
+          variables: [
+            {
+              name: 'policy',
+              type: 'string',
+              description: 'Legal compliance policies',
               required: true,
             },
           ],
         },
       ],
       requiredSections: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       optionalSections: [],
       order: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       dependencies: {},
     },
     validationRules: [
       {
-        id: "legal-jurisdiction",
-        name: "Legal Jurisdiction Check",
-        description: "Ensure legal jurisdiction is specified",
-        type: "compliance",
-        severity: "error",
-        condition: "jurisdiction && jurisdiction.length > 0",
-        message: "Legal jurisdiction must be specified",
+        id: 'legal-jurisdiction',
+        name: 'Legal Jurisdiction Check',
+        description: 'Ensure legal jurisdiction is specified',
+        type: 'compliance',
+        severity: 'error',
+        condition: 'jurisdiction && jurisdiction.length > 0',
+        message: 'Legal jurisdiction must be specified',
       },
       {
-        id: "document-confidentiality",
-        name: "Document Confidentiality Check",
-        description: "Ensure document confidentiality is maintained",
-        type: "security",
-        severity: "error",
+        id: 'document-confidentiality',
+        name: 'Document Confidentiality Check',
+        description: 'Ensure document confidentiality is maintained',
+        type: 'security',
+        severity: 'error',
         condition: 'policy.includes("confidential")',
-        message: "Confidentiality policy must be included",
+        message: 'Confidentiality policy must be included',
       },
     ],
     outputFormat: {
-      type: "json",
+      type: 'json',
       schema: {
-        type: "array",
+        type: 'array',
         items: {
-          type: "object",
+          type: 'object',
           properties: {
-            field_name: { type: "string" },
-            value: { type: "string" },
-            confidence: { type: "number", minimum: 0, maximum: 1 },
+            field_name: { type: 'string' },
+            value: { type: 'string' },
+            confidence: { type: 'number', minimum: 0, maximum: 1 },
           },
-          required: ["field_name", "value", "confidence"],
+          required: ['field_name', 'value', 'confidence'],
         },
       },
       validation: {
         strict: true,
-        requiredFields: ["field_name", "value", "confidence"],
+        requiredFields: ['field_name', 'value', 'confidence'],
         optionalFields: [],
         typeChecking: true,
       },
@@ -562,213 +554,202 @@ export const PREMIUM_CONTEXT_TEMPLATES: ContextPromptTemplate[] = [
       },
       auditTrail: {
         enabled: true,
-        level: "comprehensive",
+        level: 'comprehensive',
       },
     },
   },
   {
-    id: "medical-data-analysis",
-    name: "Medical Data Analysis",
-    description: "Template for medical data analysis with HIPAA compliance",
-    domain: "healthcare",
-    version: "1.0.0",
+    id: 'medical-data-analysis',
+    name: 'Medical Data Analysis',
+    description: 'Template for medical data analysis with HIPAA compliance',
+    domain: 'healthcare',
+    version: '1.0.0',
     structure: {
       sections: [
         {
-          id: "task_directive",
-          name: "Task Directive",
-          description: "Medical analysis instruction",
-          type: "directive",
+          id: 'task_directive',
+          name: 'Task Directive',
+          description: 'Medical analysis instruction',
+          type: 'directive',
           required: true,
-          template: "[Task_Directive]\n{directive}",
+          template: '[Task_Directive]\n{directive}',
           validation: { required: true, minLength: 10 },
           variables: [
             {
-              name: "directive",
-              type: "string",
-              description: "Medical analysis task directive",
+              name: 'directive',
+              type: 'string',
+              description: 'Medical analysis task directive',
               required: true,
-              validation: { type: "string", minLength: 10 },
+              validation: { type: 'string', minLength: 10 },
             },
           ],
         },
         {
-          id: "agent_profile",
-          name: "Agent Profile",
-          description: "Medical expert persona",
-          type: "profile",
+          id: 'agent_profile',
+          name: 'Agent Profile',
+          description: 'Medical expert persona',
+          type: 'profile',
           required: true,
-          template: "[Agent_Profile]\n{profile}",
+          template: '[Agent_Profile]\n{profile}',
           validation: { required: true, minLength: 50 },
           variables: [
             {
-              name: "profile",
-              type: "string",
-              description: "Medical expert persona and constraints",
+              name: 'profile',
+              type: 'string',
+              description: 'Medical expert persona and constraints',
               required: true,
-              validation: { type: "string", minLength: 50 },
+              validation: { type: 'string', minLength: 50 },
             },
           ],
         },
         {
-          id: "system_state",
-          name: "System State",
-          description: "Medical analysis tools and HIPAA compliance",
-          type: "state",
+          id: 'system_state',
+          name: 'System State',
+          description: 'Medical analysis tools and HIPAA compliance',
+          type: 'state',
           required: true,
           template:
-            "[System_State]\nMCP tools: {tools}\nHIPAA Compliance: {hipaa}\nMedical Standards: {standards}",
+            '[System_State]\nMCP tools: {tools}\nHIPAA Compliance: {hipaa}\nMedical Standards: {standards}',
           validation: { required: true },
           variables: [
             {
-              name: "tools",
-              type: "object",
-              description: "Medical analysis tools",
+              name: 'tools',
+              type: 'object',
+              description: 'Medical analysis tools',
               required: true,
             },
             {
-              name: "hipaa",
-              type: "string",
-              description: "HIPAA compliance status",
+              name: 'hipaa',
+              type: 'string',
+              description: 'HIPAA compliance status',
               required: true,
             },
             {
-              name: "standards",
-              type: "string",
-              description: "Medical standards",
+              name: 'standards',
+              type: 'string',
+              description: 'Medical standards',
               required: true,
             },
           ],
         },
         {
-          id: "input_data",
-          name: "Input Data",
-          description: "Medical data",
-          type: "input",
+          id: 'input_data',
+          name: 'Input Data',
+          description: 'Medical data',
+          type: 'input',
           required: true,
-          template:
-            "[Input_Data]\nPatient Data: {data}\nData Type: {dataType}\nConsent: {consent}",
+          template: '[Input_Data]\nPatient Data: {data}\nData Type: {dataType}\nConsent: {consent}',
           validation: { required: true },
           variables: [
             {
-              name: "data",
-              type: "object",
-              description: "Medical data",
+              name: 'data',
+              type: 'object',
+              description: 'Medical data',
               required: true,
             },
             {
-              name: "dataType",
-              type: "string",
-              description: "Data type",
+              name: 'dataType',
+              type: 'string',
+              description: 'Data type',
               required: true,
             },
             {
-              name: "consent",
-              type: "string",
-              description: "Patient consent information",
+              name: 'consent',
+              type: 'string',
+              description: 'Patient consent information',
               required: true,
             },
           ],
         },
         {
-          id: "output_format",
-          name: "Output Format",
-          description: "Medical analysis output structure",
-          type: "output",
+          id: 'output_format',
+          name: 'Output Format',
+          description: 'Medical analysis output structure',
+          type: 'output',
           required: true,
-          template: "[Output_Format_Spec]\n{format}",
+          template: '[Output_Format_Spec]\n{format}',
           validation: { required: true },
           variables: [
             {
-              name: "format",
-              type: "string",
-              description: "Output format specification",
+              name: 'format',
+              type: 'string',
+              description: 'Output format specification',
               required: true,
             },
           ],
         },
         {
-          id: "safeguard_policy",
-          name: "Safeguard Policy",
-          description: "HIPAA and medical safeguards",
-          type: "safeguard",
+          id: 'safeguard_policy',
+          name: 'Safeguard Policy',
+          description: 'HIPAA and medical safeguards',
+          type: 'safeguard',
           required: true,
-          template: "[Safeguard_Policy]\n{policy}",
+          template: '[Safeguard_Policy]\n{policy}',
           validation: { required: true },
           variables: [
             {
-              name: "policy",
-              type: "string",
-              description: "HIPAA compliance policies",
+              name: 'policy',
+              type: 'string',
+              description: 'HIPAA compliance policies',
               required: true,
             },
           ],
         },
       ],
       requiredSections: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       optionalSections: [],
       order: [
-        "task_directive",
-        "agent_profile",
-        "system_state",
-        "input_data",
-        "output_format",
-        "safeguard_policy",
+        'task_directive',
+        'agent_profile',
+        'system_state',
+        'input_data',
+        'output_format',
+        'safeguard_policy',
       ],
       dependencies: {},
     },
     validationRules: [
       {
-        id: "hipaa-compliance",
-        name: "HIPAA Compliance Check",
-        description: "Ensure HIPAA compliance requirements are met",
-        type: "compliance",
-        severity: "error",
+        id: 'hipaa-compliance',
+        name: 'HIPAA Compliance Check',
+        description: 'Ensure HIPAA compliance requirements are met',
+        type: 'compliance',
+        severity: 'error',
         condition: 'hipaa.includes("compliant") && policy.includes("HIPAA")',
-        message: "HIPAA compliance must be ensured",
+        message: 'HIPAA compliance must be ensured',
       },
       {
-        id: "patient-consent",
-        name: "Patient Consent Check",
-        description: "Ensure patient consent is documented",
-        type: "compliance",
-        severity: "error",
-        condition: "consent && consent.length > 0",
-        message: "Patient consent must be documented",
+        id: 'patient-consent',
+        name: 'Patient Consent Check',
+        description: 'Ensure patient consent is documented',
+        type: 'compliance',
+        severity: 'error',
+        condition: 'consent && consent.length > 0',
+        message: 'Patient consent must be documented',
       },
     ],
     outputFormat: {
-      type: "json",
+      type: 'json',
       schema: {
-        type: "object",
+        type: 'object',
         properties: {
-          terminology: { type: "array", items: { type: "string" } },
-          conditions: { type: "array", items: { type: "string" } },
-          medications: { type: "array", items: { type: "string" } },
-          recommendations: { type: "array", items: { type: "string" } },
+          terminology: { type: 'array', items: { type: 'string' } },
+          conditions: { type: 'array', items: { type: 'string' } },
+          medications: { type: 'array', items: { type: 'string' } },
+          recommendations: { type: 'array', items: { type: 'string' } },
         },
-        required: [
-          "terminology",
-          "conditions",
-          "medications",
-          "recommendations",
-        ],
+        required: ['terminology', 'conditions', 'medications', 'recommendations'],
       },
       validation: {
         strict: true,
-        requiredFields: [
-          "terminology",
-          "conditions",
-          "medications",
-          "recommendations",
-        ],
+        requiredFields: ['terminology', 'conditions', 'medications', 'recommendations'],
         optionalFields: [],
         typeChecking: true,
       },
@@ -783,7 +764,7 @@ export const PREMIUM_CONTEXT_TEMPLATES: ContextPromptTemplate[] = [
       },
       auditTrail: {
         enabled: true,
-        level: "comprehensive",
+        level: 'comprehensive',
       },
     },
   },
@@ -819,7 +800,7 @@ class PremiumContextEngineeringService {
 
   // Context Prompt Generation
   async generateContextPrompt(
-    request: ContextPromptGenerationRequest,
+    request: ContextPromptGenerationRequest
   ): Promise<ContextPromptGenerationResponse> {
     const startTime = Date.now();
 
@@ -830,10 +811,7 @@ class PremiumContextEngineeringService {
       }
 
       // Validate input variables
-      const variableValidation = this.validateVariables(
-        template,
-        request.variables,
-      );
+      const variableValidation = this.validateVariables(template, request.variables);
       if (!variableValidation.isValid) {
         return {
           success: false,
@@ -857,7 +835,7 @@ class PremiumContextEngineeringService {
           const sectionContent = this.generateSection(
             section,
             request.variables,
-            request.agentConfig,
+            request.agentConfig
           );
           sections[section.id] = sectionContent;
         } catch (error: any) {
@@ -879,11 +857,7 @@ class PremiumContextEngineeringService {
       }
 
       // Validate the complete prompt
-      const validation = this.validatePrompt(
-        template,
-        sections,
-        request.variables,
-      );
+      const validation = this.validatePrompt(template, sections, request.variables);
 
       // Create context prompt object
       const contextPrompt: ContextPrompt = {
@@ -914,8 +888,8 @@ class PremiumContextEngineeringService {
       return {
         success: true,
         prompt: contextPrompt,
-        errors: validation.errors.map((e) => e.message),
-        warnings: validation.warnings.map((w) => w.message),
+        errors: validation.errors.map(e => e.message),
+        warnings: validation.warnings.map(w => w.message),
         metadata: {
           generationTime,
           validationScore: validation.score,
@@ -939,14 +913,14 @@ class PremiumContextEngineeringService {
   private generateSection(
     section: PromptSection,
     variables: { [key: string]: any },
-    agentConfig: MCPAgentConfig,
+    agentConfig: MCPAgentConfig
   ): string {
     let content = section.template;
 
     // Replace variables in template
     for (const variable of section.variables) {
       const value = this.getVariableValue(variable, variables, agentConfig);
-      content = content.replace(new RegExp(`{${variable.name}}`, "g"), value);
+      content = content.replace(new RegExp(`{${variable.name}}`, 'g'), value);
     }
 
     // Validate section content
@@ -958,7 +932,7 @@ class PremiumContextEngineeringService {
   private getVariableValue(
     variable: PromptVariable,
     variables: { [key: string]: any },
-    agentConfig: MCPAgentConfig,
+    agentConfig: MCPAgentConfig
   ): string {
     let value = variables[variable.name];
 
@@ -968,53 +942,46 @@ class PremiumContextEngineeringService {
       } else if (variable.required) {
         throw new Error(`Required variable ${variable.name} is missing`);
       } else {
-        value = "";
+        value = '';
       }
     }
 
     // Special handling for complex variables
     switch (variable.name) {
-      case "tools":
+      case 'tools':
         return JSON.stringify(
           agentConfig.tools
-            .map((toolId) => {
+            .map(toolId => {
               const tool = mcpService.getTool(toolId);
-              return tool
-                ? { id: tool.id, name: tool.name, category: tool.category }
-                : null;
+              return tool ? { id: tool.id, name: tool.name, category: tool.category } : null;
             })
-            .filter(Boolean),
+            .filter(Boolean)
         );
 
-      case "routing":
+      case 'routing':
         return `Using OpenRouter with default routing to ${agentConfig.modelPreference}. Use thinking_mode=true for detailed breakdown.`;
 
-      case "compliance":
+      case 'compliance':
         return JSON.stringify(agentConfig.compliance);
 
-      case "jurisdiction":
-        return variables.jurisdiction || "US Federal";
+      case 'jurisdiction':
+        return variables.jurisdiction || 'US Federal';
 
-      case "hipaa":
-        return agentConfig.compliance.hipaa
-          ? "HIPAA Compliant"
-          : "Not HIPAA Applicable";
+      case 'hipaa':
+        return agentConfig.compliance.hipaa ? 'HIPAA Compliant' : 'Not HIPAA Applicable';
 
-      case "standards":
-        return "HL7, FHIR, DICOM";
+      case 'standards':
+        return 'HL7, FHIR, DICOM';
 
-      case "consent":
-        return variables.consent || "Patient consent documented";
+      case 'consent':
+        return variables.consent || 'Patient consent documented';
 
       default:
         return String(value);
     }
   }
 
-  private validateSectionContent(
-    section: PromptSection,
-    content: string,
-  ): void {
+  private validateSectionContent(section: PromptSection, content: string): void {
     const validation = section.validation;
 
     if (validation.required && !content.trim()) {
@@ -1023,29 +990,25 @@ class PremiumContextEngineeringService {
 
     if (validation.minLength && content.length < validation.minLength) {
       throw new Error(
-        `Section ${section.id} must be at least ${validation.minLength} characters long`,
+        `Section ${section.id} must be at least ${validation.minLength} characters long`
       );
     }
 
     if (validation.maxLength && content.length > validation.maxLength) {
-      throw new Error(
-        `Section ${section.id} must not exceed ${validation.maxLength} characters`,
-      );
+      throw new Error(`Section ${section.id} must not exceed ${validation.maxLength} characters`);
     }
 
     if (validation.pattern) {
       const regex = new RegExp(validation.pattern);
       if (!regex.test(content)) {
-        throw new Error(
-          `Section ${section.id} does not match required pattern`,
-        );
+        throw new Error(`Section ${section.id} does not match required pattern`);
       }
     }
   }
 
   private validateVariables(
     template: ContextPromptTemplate,
-    variables: { [key: string]: any },
+    variables: { [key: string]: any }
   ): {
     isValid: boolean;
     errors: string[];
@@ -1071,11 +1034,7 @@ class PremiumContextEngineeringService {
           const validation = variable.validation;
 
           if (validation) {
-            const typeError = this.validateVariableType(
-              variable.name,
-              value,
-              validation.type,
-            );
+            const typeError = this.validateVariableType(variable.name, value, validation.type);
             if (typeError) {
               errors.push(typeError);
               isValid = false;
@@ -1084,7 +1043,7 @@ class PremiumContextEngineeringService {
             const constraintError = this.validateVariableConstraints(
               variable.name,
               value,
-              validation,
+              validation
             );
             if (constraintError) {
               errors.push(constraintError);
@@ -1098,12 +1057,8 @@ class PremiumContextEngineeringService {
     return { isValid, errors };
   }
 
-  private validateVariableType(
-    name: string,
-    value: any,
-    expectedType: string,
-  ): string | null {
-    const actualType = Array.isArray(value) ? "array" : typeof value;
+  private validateVariableType(name: string, value: any, expectedType: string): string | null {
+    const actualType = Array.isArray(value) ? 'array' : typeof value;
 
     if (actualType !== expectedType) {
       return `Variable ${name} must be of type ${expectedType}, got ${actualType}`;
@@ -1115,7 +1070,7 @@ class PremiumContextEngineeringService {
   private validateVariableConstraints(
     name: string,
     value: any,
-    validation: VariableValidation,
+    validation: VariableValidation
   ): string | null {
     if (validation.min !== undefined && value < validation.min) {
       return `Variable ${name} must be at least ${validation.min}`;
@@ -1126,10 +1081,10 @@ class PremiumContextEngineeringService {
     }
 
     if (validation.enum && !validation.enum.includes(value)) {
-      return `Variable ${name} must be one of: ${validation.enum.join(", ")}`;
+      return `Variable ${name} must be one of: ${validation.enum.join(', ')}`;
     }
 
-    if (validation.pattern && typeof value === "string") {
+    if (validation.pattern && typeof value === 'string') {
       const regex = new RegExp(validation.pattern);
       if (!regex.test(value)) {
         return `Variable ${name} does not match required pattern`;
@@ -1142,7 +1097,7 @@ class PremiumContextEngineeringService {
   private validatePrompt(
     template: ContextPromptTemplate,
     sections: { [key: string]: string },
-    variables: { [key: string]: any },
+    variables: { [key: string]: any }
   ): {
     isValid: boolean;
     errors: ValidationError[];
@@ -1158,10 +1113,10 @@ class PremiumContextEngineeringService {
       if (!sections[sectionId] || !sections[sectionId].trim()) {
         errors.push({
           section: sectionId,
-          field: "content",
+          field: 'content',
           message: `Required section ${sectionId} is missing or empty`,
-          severity: "error",
-          ruleId: "required-section",
+          severity: 'error',
+          ruleId: 'required-section',
         });
         score -= 0.2;
       }
@@ -1173,14 +1128,14 @@ class PremiumContextEngineeringService {
         const result = this.evaluateValidationRule(rule, sections, variables);
         if (!result.passed) {
           const validationError = {
-            section: result.section || "general",
-            field: result.field || "validation",
+            section: result.section || 'general',
+            field: result.field || 'validation',
             message: rule.message,
             severity: rule.severity,
             ruleId: rule.id,
           };
 
-          if (rule.severity === "error") {
+          if (rule.severity === 'error') {
             errors.push(validationError);
             score -= 0.1;
           } else {
@@ -1190,10 +1145,10 @@ class PremiumContextEngineeringService {
         }
       } catch (error: any) {
         errors.push({
-          section: "validation",
-          field: "rule-evaluation",
+          section: 'validation',
+          field: 'rule-evaluation',
           message: `Rule ${rule.id} evaluation failed: ${error.message}`,
-          severity: "error",
+          severity: 'error',
           ruleId: rule.id,
         });
         score -= 0.05;
@@ -1203,7 +1158,7 @@ class PremiumContextEngineeringService {
     // Validate output format compatibility
     const formatValidation = this.validateOutputFormat(
       template.outputFormat,
-      sections.output_format,
+      sections.output_format
     );
     if (!formatValidation.isValid) {
       errors.push(...formatValidation.errors);
@@ -1221,7 +1176,7 @@ class PremiumContextEngineeringService {
   private evaluateValidationRule(
     rule: ValidationRule,
     sections: { [key: string]: string },
-    variables: { [key: string]: any },
+    variables: { [key: string]: any }
   ): {
     passed: boolean;
     section?: string;
@@ -1242,24 +1197,17 @@ class PremiumContextEngineeringService {
     // Simple rule evaluation (in production, use a proper expression evaluator)
     try {
       // Extract variable names from condition
-      const variableMatches =
-        rule.condition.match(/[a-zA-Z_][a-zA-Z0-9_]*/g) || [];
+      const variableMatches = rule.condition.match(/[a-zA-Z_][a-zA-Z0-9_]*/g) || [];
       let condition = rule.condition;
 
       // Replace variables with actual values
       for (const variable of variableMatches) {
         const value = context[variable];
         if (value !== undefined) {
-          if (typeof value === "string") {
-            condition = condition.replace(
-              new RegExp(`\\b${variable}\\b`, "g"),
-              `"${value}"`,
-            );
+          if (typeof value === 'string') {
+            condition = condition.replace(new RegExp(`\\b${variable}\\b`, 'g'), `"${value}"`);
           } else {
-            condition = condition.replace(
-              new RegExp(`\\b${variable}\\b`, "g"),
-              String(value),
-            );
+            condition = condition.replace(new RegExp(`\\b${variable}\\b`, 'g'), String(value));
           }
         }
       }
@@ -1269,14 +1217,14 @@ class PremiumContextEngineeringService {
 
       return {
         passed,
-        section: "general",
-        field: "validation",
+        section: 'general',
+        field: 'validation',
       };
     } catch {
       return {
         passed: false,
-        section: "validation",
-        field: "rule-evaluation",
+        section: 'validation',
+        field: 'rule-evaluation',
       };
     }
   }
@@ -1286,10 +1234,10 @@ class PremiumContextEngineeringService {
     try {
       // Handle simple comparisons
       if (
-        condition.includes(">=") ||
-        condition.includes("<=") ||
-        condition.includes(">") ||
-        condition.includes("<")
+        condition.includes('>=') ||
+        condition.includes('<=') ||
+        condition.includes('>') ||
+        condition.includes('<')
       ) {
         const parts = condition.split(/(>=|<=|>|<)/);
         if (parts.length === 3) {
@@ -1298,13 +1246,13 @@ class PremiumContextEngineeringService {
           const right = this.parseValue(parts[2].trim());
 
           switch (operator) {
-            case ">=":
+            case '>=':
               return left >= right;
-            case "<=":
+            case '<=':
               return left <= right;
-            case ">":
+            case '>':
               return left > right;
-            case "<":
+            case '<':
               return left < right;
             default:
               return false;
@@ -1313,21 +1261,19 @@ class PremiumContextEngineeringService {
       }
 
       // Handle includes/contains
-      if (condition.includes("includes")) {
-        const parts = condition.split(".includes(");
+      if (condition.includes('includes')) {
+        const parts = condition.split('.includes(');
         if (parts.length === 2) {
           const arrayName = parts[0].trim();
-          const value = parts[1].replace(")", "").replace(/"/g, "").trim();
+          const value = parts[1].replace(')', '').replace(/"/g, '').trim();
           // This is simplified - in production, properly parse the array
           return condition.includes(value);
         }
       }
 
       // Handle length checks
-      if (condition.includes("length")) {
-        const lengthMatch = condition.match(
-          /(\w+)\.length\s*(>=|<=|>|<)\s*(\d+)/,
-        );
+      if (condition.includes('length')) {
+        const lengthMatch = condition.match(/(\w+)\.length\s*(>=|<=|>|<)\s*(\d+)/);
         if (lengthMatch) {
           const variable = lengthMatch[1];
           const operator = lengthMatch[2];
@@ -1359,15 +1305,15 @@ class PremiumContextEngineeringService {
     }
 
     // Parse booleans
-    if (value === "true") return true;
-    if (value === "false") return false;
+    if (value === 'true') return true;
+    if (value === 'false') return false;
 
     return value;
   }
 
   private validateOutputFormat(
     format: OutputFormat,
-    outputSpec: string,
+    outputSpec: string
   ): {
     isValid: boolean;
     errors: ValidationError[];
@@ -1376,11 +1322,11 @@ class PremiumContextEngineeringService {
 
     if (!outputSpec || !outputSpec.trim()) {
       errors.push({
-        section: "output_format",
-        field: "content",
-        message: "Output format specification is required",
-        severity: "error",
-        ruleId: "output-format-required",
+        section: 'output_format',
+        field: 'content',
+        message: 'Output format specification is required',
+        severity: 'error',
+        ruleId: 'output-format-required',
       });
     }
 
@@ -1393,21 +1339,21 @@ class PremiumContextEngineeringService {
         for (const field of requiredFields) {
           if (!schemaFields.includes(field)) {
             errors.push({
-              section: "output_format",
-              field: "schema",
+              section: 'output_format',
+              field: 'schema',
               message: `Required field ${field} not found in schema`,
-              severity: "error",
-              ruleId: "schema-field-missing",
+              severity: 'error',
+              ruleId: 'schema-field-missing',
             });
           }
         }
       } catch (error: any) {
         errors.push({
-          section: "output_format",
-          field: "schema",
+          section: 'output_format',
+          field: 'schema',
           message: `Schema validation failed: ${error.message}`,
-          severity: "error",
-          ruleId: "schema-validation",
+          severity: 'error',
+          ruleId: 'schema-validation',
         });
       }
     }
@@ -1418,10 +1364,7 @@ class PremiumContextEngineeringService {
     };
   }
 
-  private calculateComplianceScore(
-    template: ContextPromptTemplate,
-    validation: any,
-  ): number {
+  private calculateComplianceScore(template: ContextPromptTemplate, validation: any): number {
     let score = 1;
 
     // Check compliance requirements
@@ -1448,7 +1391,7 @@ class PremiumContextEngineeringService {
 
     // Adjust based on validation errors
     const complianceErrors = validation.errors.filter((e: ValidationError) =>
-      e.ruleId.includes("compliance"),
+      e.ruleId.includes('compliance')
     );
     score -= complianceErrors.length * 0.1;
 
@@ -1486,24 +1429,15 @@ class PremiumContextEngineeringService {
     for (const prompts of this.promptHistory.values()) {
       for (const prompt of prompts) {
         // Template usage
-        templateUsage.set(
-          prompt.templateId,
-          (templateUsage.get(prompt.templateId) || 0) + 1,
-        );
+        templateUsage.set(prompt.templateId, (templateUsage.get(prompt.templateId) || 0) + 1);
 
         // Domain usage
-        domainUsage.set(
-          prompt.metadata.domain,
-          (domainUsage.get(prompt.metadata.domain) || 0) + 1,
-        );
+        domainUsage.set(prompt.metadata.domain, (domainUsage.get(prompt.metadata.domain) || 0) + 1);
 
         // Validation scores
         averageValidationScore += prompt.validation.score;
         complianceScores.push(
-          this.calculateComplianceScore(
-            this.templates.get(prompt.templateId)!,
-            prompt.validation,
-          ),
+          this.calculateComplianceScore(this.templates.get(prompt.templateId)!, prompt.validation)
         );
       }
     }
@@ -1512,22 +1446,17 @@ class PremiumContextEngineeringService {
       totalPrompts,
       templateUsage: Object.fromEntries(templateUsage),
       domainUsage: Object.fromEntries(domainUsage),
-      averageValidationScore:
-        totalPrompts > 0 ? averageValidationScore / totalPrompts : 0,
+      averageValidationScore: totalPrompts > 0 ? averageValidationScore / totalPrompts : 0,
       averageComplianceScore:
         complianceScores.length > 0
-          ? complianceScores.reduce((sum, score) => sum + score, 0) /
-            complianceScores.length
+          ? complianceScores.reduce((sum, score) => sum + score, 0) / complianceScores.length
           : 0,
     };
   }
 
   // Utility Methods
-  exportPrompt(
-    prompt: ContextPrompt,
-    format: "json" | "text" = "json",
-  ): string {
-    if (format === "json") {
+  exportPrompt(prompt: ContextPrompt, format: 'json' | 'text' = 'json'): string {
+    if (format === 'json') {
       return JSON.stringify(prompt, null, 2);
     }
 
@@ -1550,7 +1479,7 @@ class PremiumContextEngineeringService {
 
       // Validate prompt structure
       if (!prompt.id || !prompt.templateId || !prompt.sections) {
-        throw new Error("Invalid prompt structure");
+        throw new Error('Invalid prompt structure');
       }
 
       // Verify template exists
@@ -1560,12 +1489,11 @@ class PremiumContextEngineeringService {
 
       return prompt;
     } catch (error: any) {
-      console.error("Failed to import prompt:", error);
+      console.error('Failed to import prompt:', error);
       return null;
     }
   }
 }
 
 // Export singleton instance
-export const premiumContextEngineeringService =
-  new PremiumContextEngineeringService();
+export const premiumContextEngineeringService = new PremiumContextEngineeringService();

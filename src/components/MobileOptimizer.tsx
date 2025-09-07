@@ -1,15 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useCallback } from "react";
-import {
-  Smartphone,
-  Monitor,
-  Zap,
-  Shield,
-  Battery,
-  Wifi,
-  WifiOff,
-} from "lucide-react";
+import { useEffect, useState, useCallback } from 'react';
+import { Smartphone, Monitor, Zap, Shield, Battery, Wifi, WifiOff } from 'lucide-react';
 
 interface MobileOptimizerProps {
   children: React.ReactNode;
@@ -41,9 +33,9 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     isBatterySaving: false,
   });
 
-  const [performanceMode, setPerformanceMode] = useState<
-    "auto" | "high" | "medium" | "low"
-  >("auto");
+  const [performanceMode, setPerformanceMode] = useState<'auto' | 'high' | 'medium' | 'low'>(
+    'auto'
+  );
   const [isOnline, setIsOnline] = useState(true);
 
   // Detect device capabilities and optimize accordingly
@@ -67,7 +59,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
       // Connection quality detection
       const connection = (navigator as any).connection;
       const isSlowConnection = connection
-        ? connection.effectiveType.includes("2g") || connection.downlink < 1
+        ? connection.effectiveType.includes('2g') || connection.downlink < 1
         : false;
 
       // Battery detection
@@ -90,11 +82,11 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
 
       // Auto-adjust performance mode based on device capabilities
       if (isLowEndDevice || isSlowConnection || isBatterySaving) {
-        setPerformanceMode("low");
+        setPerformanceMode('low');
       } else if (isMobile) {
-        setPerformanceMode("medium");
+        setPerformanceMode('medium');
       } else {
-        setPerformanceMode("high");
+        setPerformanceMode('high');
       }
     };
 
@@ -102,40 +94,40 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     // Initial detection
     detectDevice();
 
     // Listen for screen size changes
-    window.addEventListener("resize", detectDevice);
+    window.addEventListener('resize', detectDevice);
 
     // Listen for connection changes
     const connection = (navigator as any).connection;
     if (connection) {
-      connection.addEventListener("change", detectDevice);
+      connection.addEventListener('change', detectDevice);
     }
 
     // Listen for battery changes
     const battery = (navigator as any).battery;
     if (battery) {
-      battery.addEventListener("levelchange", detectDevice);
-      battery.addEventListener("chargingchange", detectDevice);
+      battery.addEventListener('levelchange', detectDevice);
+      battery.addEventListener('chargingchange', detectDevice);
     }
 
     return () => {
-      window.removeEventListener("resize", detectDevice);
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('resize', detectDevice);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
 
       if (connection) {
-        connection.removeEventListener("change", detectDevice);
+        connection.removeEventListener('change', detectDevice);
       }
 
       if (battery) {
-        battery.removeEventListener("levelchange", detectDevice);
-        battery.removeEventListener("chargingchange", detectDevice);
+        battery.removeEventListener('levelchange', detectDevice);
+        battery.removeEventListener('chargingchange', detectDevice);
       }
     };
   }, []);
@@ -145,65 +137,53 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
     const root = document.documentElement;
 
     switch (performanceMode) {
-      case "low":
+      case 'low':
         // Reduce animations and effects for low-end devices
-        root.style.setProperty("--animation-fast", "0ms");
-        root.style.setProperty("--animation-normal", "0ms");
-        root.style.setProperty("--animation-slow", "0ms");
+        root.style.setProperty('--animation-fast', '0ms');
+        root.style.setProperty('--animation-normal', '0ms');
+        root.style.setProperty('--animation-slow', '0ms');
 
         // Reduce shadow effects
-        root.style.setProperty(
-          "--shadow-lg",
-          "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-        );
-        root.style.setProperty(
-          "--shadow-xl",
-          "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-        );
+        root.style.setProperty('--shadow-lg', '0 4px 6px -1px rgb(0 0 0 / 0.1)');
+        root.style.setProperty('--shadow-xl', '0 4px 6px -1px rgb(0 0 0 / 0.1)');
 
         // Disable complex backdrop filters
-        root.style.setProperty("--backdrop-blur", "none");
+        root.style.setProperty('--backdrop-blur', 'none');
         break;
 
-      case "medium":
+      case 'medium':
         // Balanced settings for mid-range devices
-        root.style.setProperty("--animation-fast", "100ms");
-        root.style.setProperty("--animation-normal", "200ms");
-        root.style.setProperty("--animation-slow", "300ms");
+        root.style.setProperty('--animation-fast', '100ms');
+        root.style.setProperty('--animation-normal', '200ms');
+        root.style.setProperty('--animation-slow', '300ms');
 
         // Moderate shadows
-        root.style.setProperty(
-          "--shadow-lg",
-          "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-        );
-        root.style.setProperty(
-          "--shadow-xl",
-          "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-        );
+        root.style.setProperty('--shadow-lg', '0 10px 15px -3px rgb(0 0 0 / 0.1)');
+        root.style.setProperty('--shadow-xl', '0 10px 15px -3px rgb(0 0 0 / 0.1)');
 
         // Simple backdrop filters
-        root.style.setProperty("--backdrop-blur", "blur(4px)");
+        root.style.setProperty('--backdrop-blur', 'blur(4px)');
         break;
 
-      case "high":
+      case 'high':
       default:
         // Full effects for high-end devices
-        root.style.setProperty("--animation-fast", "150ms");
-        root.style.setProperty("--animation-normal", "300ms");
-        root.style.setProperty("--animation-slow", "500ms");
+        root.style.setProperty('--animation-fast', '150ms');
+        root.style.setProperty('--animation-normal', '300ms');
+        root.style.setProperty('--animation-slow', '500ms');
 
         // Full shadow effects
         root.style.setProperty(
-          "--shadow-lg",
-          "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+          '--shadow-lg',
+          '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
         );
         root.style.setProperty(
-          "--shadow-xl",
-          "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+          '--shadow-xl',
+          '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)'
         );
 
         // Full backdrop filters
-        root.style.setProperty("--backdrop-blur", "blur(10px)");
+        root.style.setProperty('--backdrop-blur', 'blur(10px)');
         break;
     }
   }, [performanceMode]);
@@ -211,15 +191,15 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   // Optimize image loading based on connection and device
   const getOptimizedImageProps = useCallback(() => {
     const baseProps = {
-      loading: "lazy" as const,
-      fetchPriority: "low" as const,
+      loading: 'lazy' as const,
+      fetchPriority: 'low' as const,
     };
 
     if (deviceInfo.isSlowConnection || deviceInfo.isLowEndDevice) {
       return {
         ...baseProps,
         quality: 60,
-        sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+        sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
       };
     }
 
@@ -227,26 +207,26 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
       return {
         ...baseProps,
         quality: 80,
-        sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+        sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
       };
     }
 
     return {
       ...baseProps,
       quality: 90,
-      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
     };
   }, [deviceInfo]);
 
   // Memory management helper
   const cleanupResources = useCallback(() => {
     // Clear unused image URLs from memory
-    if (typeof URL !== "undefined") {
+    if (typeof URL !== 'undefined') {
       // This would be called when photos are deleted or when the component unmounts
     }
 
     // Force garbage collection on low-end devices
-    if (deviceInfo.isLowEndDevice && typeof gc !== "undefined") {
+    if (deviceInfo.isLowEndDevice && typeof gc !== 'undefined') {
       try {
         (gc as any)();
       } catch {
@@ -259,7 +239,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   useEffect(() => {
     if (deviceInfo.isMobile) {
       // Increase touch target sizes for better mobile UX
-      const style = document.createElement("style");
+      const style = document.createElement('style');
       style.textContent = `
         button, .clickable {
           min-height: 44px;
@@ -287,7 +267,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   useEffect(() => {
     if (deviceInfo.isBatterySaving) {
       // Reduce background activity when battery is low
-      const style = document.createElement("style");
+      const style = document.createElement('style');
       style.textContent = `
         .animate-pulse, .animate-bounce, .animate-spin {
           animation: none !important;
@@ -317,7 +297,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
   return (
     <div className={`mobile-optimizer ${performanceMode}`}>
       {/* Device info overlay for development (hidden in production) */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <div className="fixed bottom-4 left-4 z-50 bg-black/80 text-white p-3 rounded-lg text-xs space-y-1 max-w-xs">
           <div className="flex items-center gap-2">
             {deviceInfo.isMobile ? (
@@ -326,11 +306,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
               <Monitor className="w-3 h-3" />
             )}
             <span>
-              {deviceInfo.isMobile
-                ? "Mobile"
-                : deviceInfo.isTablet
-                  ? "Tablet"
-                  : "Desktop"}
+              {deviceInfo.isMobile ? 'Mobile' : deviceInfo.isTablet ? 'Tablet' : 'Desktop'}
             </span>
             <span>
               ({deviceInfo.screenWidth}x{deviceInfo.screenHeight})
@@ -346,7 +322,7 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
             ) : (
               <WifiOff className="w-3 h-3 text-red-400" />
             )}
-            <span>{isOnline ? "Online" : "Offline"}</span>
+            <span>{isOnline ? 'Online' : 'Offline'}</span>
           </div>
           {deviceInfo.batteryLevel !== undefined && (
             <div className="flex items-center gap-2">
@@ -370,13 +346,10 @@ export function MobileOptimizer({ children }: MobileOptimizerProps) {
 
 // Hook for using mobile optimizer in components
 export function useMobileOptimizer() {
-  const context =
-    typeof window !== "undefined"
-      ? (window as any).__mobileOptimizerContext
-      : null;
+  const context = typeof window !== 'undefined' ? (window as any).__mobileOptimizerContext : null;
 
   if (!context) {
-    throw new Error("useMobileOptimizer must be used within a MobileOptimizer");
+    throw new Error('useMobileOptimizer must be used within a MobileOptimizer');
   }
 
   return context;
@@ -400,10 +373,10 @@ export class PerformanceMonitor {
   }
 
   private initializeThresholds() {
-    this.thresholds.set("render", 16.67); // 60fps
-    this.thresholds.set("apiCall", 1000); // 1 second
-    this.thresholds.set("imageLoad", 3000); // 3 seconds
-    this.thresholds.set("animation", 33.33); // 30fps
+    this.thresholds.set('render', 16.67); // 60fps
+    this.thresholds.set('apiCall', 1000); // 1 second
+    this.thresholds.set('imageLoad', 3000); // 3 seconds
+    this.thresholds.set('animation', 33.33); // 30fps
   }
 
   startMeasure(name: string): () => void {
@@ -423,7 +396,7 @@ export class PerformanceMonitor {
       const threshold = this.thresholds.get(name);
       if (threshold && duration > threshold) {
         console.warn(
-          `Performance warning: ${name} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`,
+          `Performance warning: ${name} took ${duration.toFixed(2)}ms (threshold: ${threshold}ms)`
         );
         this.reportPerformanceIssue(name, duration);
       }
@@ -432,8 +405,8 @@ export class PerformanceMonitor {
 
   private reportPerformanceIssue(metric: string, duration: number) {
     // Send performance metrics to analytics or monitoring service
-    if (typeof window !== "undefined" && (window as any).gtag) {
-      (window as any).gtag("event", "performance_issue", {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'performance_issue', {
         metric_name: metric,
         duration: Math.round(duration),
         device_type: this.getDeviceType(),
@@ -443,15 +416,12 @@ export class PerformanceMonitor {
 
   private getDeviceType(): string {
     const width = window.innerWidth;
-    if (width <= 768) return "mobile";
-    if (width <= 1024) return "tablet";
-    return "desktop";
+    if (width <= 768) return 'mobile';
+    if (width <= 1024) return 'tablet';
+    return 'desktop';
   }
 
-  getMetrics(): Record<
-    string,
-    { average: number; min: number; max: number; count: number }
-  > {
+  getMetrics(): Record<string, { average: number; min: number; max: number; count: number }> {
     const result: Record<string, any> = {};
 
     for (const [name, values] of this.metrics.entries()) {

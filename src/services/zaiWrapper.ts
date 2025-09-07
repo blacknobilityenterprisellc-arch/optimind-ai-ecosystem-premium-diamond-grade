@@ -10,9 +10,9 @@
  * - Performance monitoring
  */
 
-import ZAI from "z-ai-web-dev-sdk";
+import ZAI from 'z-ai-web-dev-sdk';
 
-import { ModelResult } from "../types/index";
+import { ModelResult } from '../types/index';
 
 // Z.AI Client singleton
 let zaiClient: ZAI | null = null;
@@ -26,96 +26,91 @@ async function getZaiClient(): Promise<ZAI> {
 
 // JSON Schema for GLM-4.5V visual analysis output
 const VISION_ANALYSIS_SCHEMA = {
-  type: "object",
+  type: 'object',
   properties: {
     regions: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          label: { type: "string" },
-          score: { type: "number", minimum: 0, maximum: 1 },
+          label: { type: 'string' },
+          score: { type: 'number', minimum: 0, maximum: 1 },
           region: {
-            type: "object",
+            type: 'object',
             properties: {
-              x: { type: "number", minimum: 0, maximum: 1 },
-              y: { type: "number", minimum: 0, maximum: 1 },
-              width: { type: "number", minimum: 0, maximum: 1 },
-              height: { type: "number", minimum: 0, maximum: 1 },
+              x: { type: 'number', minimum: 0, maximum: 1 },
+              y: { type: 'number', minimum: 0, maximum: 1 },
+              width: { type: 'number', minimum: 0, maximum: 1 },
+              height: { type: 'number', minimum: 0, maximum: 1 },
             },
-            required: ["x", "y", "width", "height"],
+            required: ['x', 'y', 'width', 'height'],
           },
         },
-        required: ["label", "score"],
+        required: ['label', 'score'],
       },
     },
     tags: {
-      type: "array",
-      items: { type: "string" },
+      type: 'array',
+      items: { type: 'string' },
     },
     overall_assessment: {
-      type: "object",
+      type: 'object',
       properties: {
         primary_category: {
-          type: "string",
-          enum: ["safe", "nsfw", "deepfake", "violence", "hate", "other"],
+          type: 'string',
+          enum: ['safe', 'nsfw', 'deepfake', 'violence', 'hate', 'other'],
         },
-        confidence: { type: "number", minimum: 0, maximum: 1 },
-        reasoning: { type: "string" },
+        confidence: { type: 'number', minimum: 0, maximum: 1 },
+        reasoning: { type: 'string' },
       },
-      required: ["primary_category", "confidence", "reasoning"],
+      required: ['primary_category', 'confidence', 'reasoning'],
     },
-    saliency_map_requested: { type: "boolean" },
+    saliency_map_requested: { type: 'boolean' },
   },
-  required: ["regions", "tags", "overall_assessment"],
+  required: ['regions', 'tags', 'overall_assessment'],
 };
 
 // JSON Schema for GLM-4.5 text reasoning output
 const TEXT_REASONING_SCHEMA = {
-  type: "object",
+  type: 'object',
   properties: {
     analysis_summary: {
-      type: "object",
+      type: 'object',
       properties: {
-        content_category: { type: "string" },
+        content_category: { type: 'string' },
         risk_level: {
-          type: "string",
-          enum: ["low", "medium", "high", "critical"],
+          type: 'string',
+          enum: ['low', 'medium', 'high', 'critical'],
         },
-        confidence: { type: "number", minimum: 0, maximum: 1 },
+        confidence: { type: 'number', minimum: 0, maximum: 1 },
         key_indicators: {
-          type: "array",
-          items: { type: "string" },
+          type: 'array',
+          items: { type: 'string' },
         },
       },
-      required: [
-        "content_category",
-        "risk_level",
-        "confidence",
-        "key_indicators",
-      ],
+      required: ['content_category', 'risk_level', 'confidence', 'key_indicators'],
     },
     recommended_action: {
-      type: "string",
+      type: 'string',
       enum: [
-        "allow",
-        "monitor",
-        "quarantine",
-        "hold_for_review",
-        "escalate",
-        "delete_pending_appeal",
+        'allow',
+        'monitor',
+        'quarantine',
+        'hold_for_review',
+        'escalate',
+        'delete_pending_appeal',
       ],
     },
-    reasoning: { type: "string" },
+    reasoning: { type: 'string' },
     metadata_analysis: {
-      type: "object",
+      type: 'object',
       properties: {
-        context_relevance: { type: "string" },
-        additional_factors: { type: "array", items: { type: "string" } },
+        context_relevance: { type: 'string' },
+        additional_factors: { type: 'array', items: { type: 'string' } },
       },
     },
   },
-  required: ["analysis_summary", "recommended_action", "reasoning"],
+  required: ['analysis_summary', 'recommended_action', 'reasoning'],
 };
 
 /**
@@ -124,14 +119,14 @@ const TEXT_REASONING_SCHEMA = {
  */
 export async function zaiVisionAnalyze(
   imageBuffer: Buffer,
-  imageFormat: string = "jpeg",
+  imageFormat: string = 'jpeg'
 ): Promise<ModelResult> {
   const startTime = Date.now();
   const client = await getZaiClient();
 
   try {
     // Convert buffer to base64 for API
-    const base64Image = imageBuffer.toString("base64");
+    const base64Image = imageBuffer.toString('base64');
     const imageMime = `image/${imageFormat}`;
 
     const systemPrompt = `You are VisionAgent, an expert content moderation AI using GLM-4.5V. Analyze the provided image for potentially harmful content including:
@@ -160,18 +155,18 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
     const response = await client.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content: systemPrompt,
         },
         {
-          role: "user",
+          role: 'user',
           content: [
             {
-              type: "text",
+              type: 'text',
               text: userPrompt,
             },
             {
-              type: "image_url",
+              type: 'image_url',
               image_url: {
                 url: `data:${imageMime};base64,${base64Image}`,
               },
@@ -179,17 +174,17 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
           ],
         },
       ],
-      model: "glm-4.5v",
+      model: 'glm-4.5v',
       temperature: 0, // Deterministic output
       max_tokens: 2048,
       thinking: {
-        type: "enabled", // Enable multi-step reasoning
+        type: 'enabled', // Enable multi-step reasoning
       },
     });
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      throw new Error("No content received from GLM-4.5V");
+      throw new Error('No content received from GLM-4.5V');
     }
 
     // Parse and validate JSON response
@@ -197,14 +192,12 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
     try {
       analysis = JSON.parse(content);
     } catch (parseError) {
-      console.error("Failed to parse GLM-4.5V response:", content);
-      throw new Error(
-        `Invalid JSON response from GLM-4.5V: ${parseError.message}`,
-      );
+      console.error('Failed to parse GLM-4.5V response:', content);
+      throw new Error(`Invalid JSON response from GLM-4.5V: ${parseError.message}`);
     }
 
     // Convert analysis to ModelResult format
-    const labels: ModelResult["labels"] = [];
+    const labels: ModelResult['labels'] = [];
 
     // Add regions as labels with bounding boxes
     if (analysis.regions && Array.isArray(analysis.regions)) {
@@ -220,7 +213,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
     // Add tags as labels without bounding boxes
     if (analysis.tags && Array.isArray(analysis.tags)) {
       analysis.tags.forEach((tag: string) => {
-        if (!labels.find((l) => l.label === tag)) {
+        if (!labels.find(l => l.label === tag)) {
           labels.push({
             label: tag,
             score: analysis.overall_assessment.confidence * 0.8, // Slightly lower confidence for tags
@@ -240,17 +233,15 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
     const latencyMs = Date.now() - startTime;
 
     return {
-      modelName: "GLM-4.5V",
-      modelVersion: "2025-07-28",
+      modelName: 'GLM-4.5V',
+      modelVersion: '2025-07-28',
       labels,
       rawOutput: analysis,
       latencyMs,
-      saliencyUrl: analysis.saliency_map_requested
-        ? "pending_generation"
-        : undefined,
+      saliencyUrl: analysis.saliency_map_requested ? 'pending_generation' : undefined,
     };
   } catch (error) {
-    console.error("GLM-4.5V analysis failed:", error);
+    console.error('GLM-4.5V analysis failed:', error);
     throw new Error(`GLM-4.5V analysis failed: ${error.message}`);
   }
 }
@@ -295,33 +286,33 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
 
 Visual Analysis Summary: ${JSON.stringify(context.visualAnalysis || {})}
 Metadata: ${JSON.stringify(context.metadata || {})}
-User Context: ${context.userContext || "Not provided"}
-Additional Context: ${context.additionalPrompt || "Not provided"}
+User Context: ${context.userContext || 'Not provided'}
+Additional Context: ${context.additionalPrompt || 'Not provided'}
 
 Provide a comprehensive analysis including risk assessment, recommended action, and detailed reasoning.`;
 
     const response = await client.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content: systemPrompt,
         },
         {
-          role: "user",
+          role: 'user',
           content: userPrompt,
         },
       ],
-      model: "glm-4.5",
+      model: 'glm-4.5',
       temperature: 0, // Deterministic output
       max_tokens: 1024,
       thinking: {
-        type: "enabled", // Enable multi-step reasoning
+        type: 'enabled', // Enable multi-step reasoning
       },
     });
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      throw new Error("No content received from GLM-4.5");
+      throw new Error('No content received from GLM-4.5');
     }
 
     // Parse and validate JSON response
@@ -329,14 +320,12 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
     try {
       reasoning = JSON.parse(content);
     } catch (parseError) {
-      console.error("Failed to parse GLM-4.5 response:", content);
-      throw new Error(
-        `Invalid JSON response from GLM-4.5: ${parseError.message}`,
-      );
+      console.error('Failed to parse GLM-4.5 response:', content);
+      throw new Error(`Invalid JSON response from GLM-4.5: ${parseError.message}`);
     }
 
     // Convert reasoning to ModelResult format
-    const labels: ModelResult["labels"] = [];
+    const labels: ModelResult['labels'] = [];
 
     // Add analysis summary as labels
     if (reasoning.analysis_summary) {
@@ -355,14 +344,12 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
         reasoning.analysis_summary.key_indicators &&
         Array.isArray(reasoning.analysis_summary.key_indicators)
       ) {
-        reasoning.analysis_summary.key_indicators.forEach(
-          (indicator: string) => {
-            labels.push({
-              label: indicator.toLowerCase().replace(/\s+/g, "_"),
-              score: reasoning.analysis_summary.confidence * 0.9,
-            });
-          },
-        );
+        reasoning.analysis_summary.key_indicators.forEach((indicator: string) => {
+          labels.push({
+            label: indicator.toLowerCase().replace(/\s+/g, '_'),
+            score: reasoning.analysis_summary.confidence * 0.9,
+          });
+        });
       }
     }
 
@@ -377,14 +364,14 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
     const latencyMs = Date.now() - startTime;
 
     return {
-      modelName: "GLM-4.5",
-      modelVersion: "2025-07-28",
+      modelName: 'GLM-4.5',
+      modelVersion: '2025-07-28',
       labels,
       rawOutput: reasoning,
       latencyMs,
     };
   } catch (error) {
-    console.error("GLM-4.5 reasoning failed:", error);
+    console.error('GLM-4.5 reasoning failed:', error);
     throw new Error(`GLM-4.5 reasoning failed: ${error.message}`);
   }
 }
@@ -395,12 +382,12 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
  */
 export async function generateSaliencyMap(
   imageBuffer: Buffer,
-  imageFormat: string = "jpeg",
+  imageFormat: string = 'jpeg'
 ): Promise<string> {
   const client = await getZaiClient();
 
   try {
-    const base64Image = imageBuffer.toString("base64");
+    const base64Image = imageBuffer.toString('base64');
     const imageMime = `image/${imageFormat}`;
 
     const response = await client.images.generations.create({
@@ -416,18 +403,18 @@ export async function generateSaliencyMap(
       
       This is for professional content moderation analysis, not artistic creation.`,
       image: `data:${imageMime};base64,${base64Image}`,
-      size: "1024x1024",
+      size: '1024x1024',
       n: 1,
     });
 
     const imageData = response.data[0];
     if (!imageData || !imageData.base64) {
-      throw new Error("No image data received from saliency map generation");
+      throw new Error('No image data received from saliency map generation');
     }
 
     return `data:image/png;base64,${imageData.base64}`;
   } catch (error) {
-    console.error("Saliency map generation failed:", error);
+    console.error('Saliency map generation failed:', error);
     throw new Error(`Saliency map generation failed: ${error.message}`);
   }
 }
@@ -438,7 +425,7 @@ export async function generateSaliencyMap(
 export async function withRetry<T>(
   fn: () => Promise<T>,
   maxRetries: number = 3,
-  baseDelay: number = 1000,
+  baseDelay: number = 1000
 ): Promise<T> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -449,16 +436,13 @@ export async function withRetry<T>(
       }
 
       const delay = baseDelay * Math.pow(2, attempt - 1);
-      console.warn(
-        `Attempt ${attempt} failed, retrying in ${delay}ms:`,
-        error.message,
-      );
+      console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms:`, error.message);
 
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
   }
 
-  throw new Error("Max retries exceeded");
+  throw new Error('Max retries exceeded');
 }
 
 // Export utility functions for testing and monitoring

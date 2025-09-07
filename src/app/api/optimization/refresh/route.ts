@@ -1,15 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 export async function POST(request: NextRequest) {
   try {
     const { content, contentId, currentMetrics } = await request.json();
 
     if (!content) {
-      return NextResponse.json(
-        { error: "Content is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
     const zai = await ZAI.create();
@@ -19,7 +16,7 @@ export async function POST(request: NextRequest) {
     Analyze the following content and generate refresh recommendations:
 
     Content: "${content}"
-    Content ID: ${contentId || "unknown"}
+    Content ID: ${contentId || 'unknown'}
     Current Metrics: ${JSON.stringify(currentMetrics || {})}
 
     Analyze the content and provide specific refresh recommendations including:
@@ -71,12 +68,12 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are an expert content strategist specializing in content refresh and optimization. Provide specific, actionable recommendations to improve content performance and relevance.",
+            'You are an expert content strategist specializing in content refresh and optimization. Provide specific, actionable recommendations to improve content performance and relevance.',
         },
         {
-          role: "user",
+          role: 'user',
           content: refreshPrompt,
         },
       ],
@@ -87,7 +84,7 @@ export async function POST(request: NextRequest) {
     const refreshContent = completion.choices[0]?.message?.content;
 
     if (!refreshContent) {
-      throw new Error("No refresh recommendations received from AI");
+      throw new Error('No refresh recommendations received from AI');
     }
 
     // Parse the JSON response
@@ -95,7 +92,7 @@ export async function POST(request: NextRequest) {
     try {
       refreshResult = JSON.parse(refreshContent);
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       // Fallback response if JSON parsing fails
       refreshResult = {
         recommendations: [],
@@ -106,7 +103,7 @@ export async function POST(request: NextRequest) {
           lowPriorityCount: 0,
           averageImpact: 0,
           averageEffort: 0,
-          totalEstimatedTime: "0 hours",
+          totalEstimatedTime: '0 hours',
         },
       };
     }
@@ -117,17 +114,17 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Content refresh recommendations error:", error);
+    console.error('Content refresh recommendations error:', error);
     return NextResponse.json(
       {
-        error: "Failed to generate refresh recommendations",
+        error: 'Failed to generate refresh recommendations',
         details: error.message,
       },
       {
-        error: "Failed to generate refresh recommendations",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to generate refresh recommendations',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

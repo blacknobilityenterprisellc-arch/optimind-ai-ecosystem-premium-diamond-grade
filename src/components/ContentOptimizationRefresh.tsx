@@ -1,13 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Loader2, RefreshCw, Zap, CheckCircle, AlertTriangle, TrendingUp, Download } from "lucide-react";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import {
+  Loader2,
+  RefreshCw,
+  Zap,
+  CheckCircle,
+  AlertTriangle,
+  TrendingUp,
+  Download,
+} from 'lucide-react';
 
 interface OptimizationResult {
   originalScore: number;
@@ -24,23 +32,23 @@ interface OptimizationResult {
 }
 
 export function ContentOptimizationRefresh() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [optimizationResult, setOptimizationResult] = useState<OptimizationResult | null>(null);
   const [progress, setProgress] = useState(0);
 
   const optimizationOptions = [
-    { value: "seo", label: "SEO Optimization" },
-    { value: "readability", label: "Readability" },
-    { value: "engagement", label: "User Engagement" },
-    { value: "keywords", label: "Keyword Optimization" },
-    { value: "structure", label: "Content Structure" },
-    { value: "headings", label: "Heading Optimization" },
+    { value: 'seo', label: 'SEO Optimization' },
+    { value: 'readability', label: 'Readability' },
+    { value: 'engagement', label: 'User Engagement' },
+    { value: 'keywords', label: 'Keyword Optimization' },
+    { value: 'structure', label: 'Content Structure' },
+    { value: 'headings', label: 'Heading Optimization' },
   ];
 
   const handleOptimize = async () => {
     if (!content.trim()) {
-      toast.error("Please enter content to optimize");
+      toast.error('Please enter content to optimize');
       return;
     }
 
@@ -61,22 +69,22 @@ export function ContentOptimizationRefresh() {
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 5000));
-      
+
       setProgress(100);
-      
+
       // Mock optimization results
       const originalScore = Math.floor(Math.random() * 30) + 50; // 50-80
       const optimizedScore = Math.floor(Math.random() * 20) + 80; // 80-100
-      
+
       const mockResult: OptimizationResult = {
         originalScore,
         optimizedScore,
         improvements: [
-          "Improved keyword placement and density",
-          "Enhanced readability with better sentence structure",
-          "Added engaging subheadings and formatting",
-          "Optimized meta description potential",
-          "Improved content flow and logical structure"
+          'Improved keyword placement and density',
+          'Enhanced readability with better sentence structure',
+          'Added engaging subheadings and formatting',
+          'Optimized meta description potential',
+          'Improved content flow and logical structure',
         ],
         optimizedContent: content
           .split('\n\n')
@@ -90,24 +98,24 @@ export function ContentOptimizationRefresh() {
           })
           .join('\n\n'),
         recommendations: [
-          "Add more specific examples and case studies",
-          "Include relevant statistics and data points",
-          "Consider adding multimedia elements",
-          "Implement schema markup for better SEO",
-          "Add internal links to related content"
+          'Add more specific examples and case studies',
+          'Include relevant statistics and data points',
+          'Consider adding multimedia elements',
+          'Implement schema markup for better SEO',
+          'Add internal links to related content',
         ],
         metrics: {
           readability: Math.floor(Math.random() * 30) + 70,
           keywordDensity: Math.floor(Math.random() * 25) + 75,
           engagement: Math.floor(Math.random() * 35) + 65,
           seoScore: Math.floor(Math.random() * 25) + 75,
-        }
+        },
       };
 
       setOptimizationResult(mockResult);
-      toast.success("Content optimization completed!");
+      toast.success('Content optimization completed!');
     } catch (error) {
-      toast.error("Failed to optimize content");
+      toast.error('Failed to optimize content');
     } finally {
       setIsOptimizing(false);
     }
@@ -122,14 +130,14 @@ export function ContentOptimizationRefresh() {
       link.download = 'optimized-content.txt';
       link.click();
       URL.revokeObjectURL(url);
-      toast.success("Optimized content downloaded!");
+      toast.success('Optimized content downloaded!');
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   return (
@@ -146,23 +154,19 @@ export function ContentOptimizationRefresh() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Enter your content to optimize
-            </label>
+            <label className="text-sm font-medium mb-2 block">Enter your content to optimize</label>
             <Textarea
               placeholder="Paste your content here for optimization..."
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
               className="min-h-[200px]"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Optimization Focus Areas
-            </label>
+            <label className="text-sm font-medium mb-2 block">Optimization Focus Areas</label>
             <div className="flex flex-wrap gap-2">
-              {optimizationOptions.map((option) => (
+              {optimizationOptions.map(option => (
                 <Badge
                   key={option.value}
                   variant="outline"
@@ -211,8 +215,8 @@ export function ContentOptimizationRefresh() {
               <span>Optimization Results</span>
               <div className="flex items-center space-x-2">
                 <Badge variant="secondary" className="bg-green-100 text-green-800">
-                  <TrendingUp className="w-3 h-3 mr-1" />
-                  +{optimizationResult.optimizedScore - optimizationResult.originalScore}%
+                  <TrendingUp className="w-3 h-3 mr-1" />+
+                  {optimizationResult.optimizedScore - optimizationResult.originalScore}%
                 </Badge>
               </div>
             </CardTitle>
@@ -221,12 +225,16 @@ export function ContentOptimizationRefresh() {
             {/* Score Comparison */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-gray-600">{optimizationResult.originalScore}%</div>
+                <div className="text-3xl font-bold text-gray-600">
+                  {optimizationResult.originalScore}%
+                </div>
                 <div className="text-sm text-muted-foreground">Original Score</div>
                 <Progress value={optimizationResult.originalScore} className="w-full mt-2" />
               </div>
               <div className="text-center">
-                <div className={`text-3xl font-bold ${getScoreColor(optimizationResult.optimizedScore)}`}>
+                <div
+                  className={`text-3xl font-bold ${getScoreColor(optimizationResult.optimizedScore)}`}
+                >
                   {optimizationResult.optimizedScore}%
                 </div>
                 <div className="text-sm text-muted-foreground">Optimized Score</div>
@@ -237,19 +245,27 @@ export function ContentOptimizationRefresh() {
             {/* Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{optimizationResult.metrics.readability}%</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {optimizationResult.metrics.readability}%
+                </div>
                 <div className="text-xs text-muted-foreground">Readability</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{optimizationResult.metrics.keywordDensity}%</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {optimizationResult.metrics.keywordDensity}%
+                </div>
                 <div className="text-xs text-muted-foreground">Keywords</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{optimizationResult.metrics.engagement}%</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {optimizationResult.metrics.engagement}%
+                </div>
                 <div className="text-xs text-muted-foreground">Engagement</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{optimizationResult.metrics.seoScore}%</div>
+                <div className="text-2xl font-bold text-orange-600">
+                  {optimizationResult.metrics.seoScore}%
+                </div>
                 <div className="text-xs text-muted-foreground">SEO Score</div>
               </div>
             </div>
@@ -291,9 +307,11 @@ export function ContentOptimizationRefresh() {
               <h4 className="font-semibold mb-2">Optimized Content</h4>
               <Textarea
                 value={optimizationResult.optimizedContent}
-                onChange={(e) => setOptimizationResult(prev => 
-                  prev ? { ...prev, optimizedContent: e.target.value } : null
-                )}
+                onChange={e =>
+                  setOptimizationResult(prev =>
+                    prev ? { ...prev, optimizedContent: e.target.value } : null
+                  )
+                }
                 className="min-h-[200px]"
               />
             </div>

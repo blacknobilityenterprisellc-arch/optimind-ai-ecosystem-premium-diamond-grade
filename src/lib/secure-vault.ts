@@ -1,7 +1,7 @@
 // Military-Grade Encrypted Vault System
 // Enterprise-level secure storage for sensitive photos and data
 
-import crypto from "crypto";
+import crypto from 'crypto';
 
 export interface VaultItem {
   id: string;
@@ -15,7 +15,7 @@ export interface VaultItem {
   size: number;
   isQuarantined: boolean;
   quarantineReason?: string;
-  riskLevel?: "low" | "medium" | "high" | "critical";
+  riskLevel?: 'low' | 'medium' | 'high' | 'critical';
 }
 
 export interface VaultMetadata {
@@ -30,8 +30,8 @@ export interface VaultMetadata {
 }
 
 export interface VaultConfig {
-  encryptionAlgorithm: "aes-256-gcm" | "aes-256-cbc" | "chacha20-poly1305";
-  keyDerivationAlgorithm: "pbkdf2" | "scrypt" | "argon2";
+  encryptionAlgorithm: 'aes-256-gcm' | 'aes-256-cbc' | 'chacha20-poly1305';
+  keyDerivationAlgorithm: 'pbkdf2' | 'scrypt' | 'argon2';
   keyIterations: number;
   enableAutoBackup: boolean;
   enableBiometricAuth: boolean;
@@ -44,7 +44,7 @@ export interface VaultConfig {
 export interface VaultAccessLog {
   id: string;
   timestamp: Date;
-  action: "access" | "add" | "remove" | "quarantine" | "delete";
+  action: 'access' | 'add' | 'remove' | 'quarantine' | 'delete';
   itemId: string;
   userId?: string;
   ipAddress?: string;
@@ -68,7 +68,7 @@ export interface NSFWDetectionResult {
   isNsfw: boolean;
   confidence: number;
   categories: string[];
-  riskLevel: "low" | "medium" | "high" | "critical";
+  riskLevel: 'low' | 'medium' | 'high' | 'critical';
   safetyScore: number;
   timestamp: Date;
 }
@@ -82,8 +82,8 @@ class SecureVault {
 
   constructor(config?: Partial<VaultConfig>) {
     this.config = {
-      encryptionAlgorithm: "aes-256-gcm",
-      keyDerivationAlgorithm: "argon2",
+      encryptionAlgorithm: 'aes-256-gcm',
+      keyDerivationAlgorithm: 'argon2',
       keyIterations: 600000,
       enableAutoBackup: true,
       enableBiometricAuth: true,
@@ -100,32 +100,25 @@ class SecureVault {
 
     try {
       // Generate vault key using Argon2 (most secure KDF)
-      const derivedSalt = salt || crypto.randomBytes(32).toString("hex");
+      const derivedSalt = salt || crypto.randomBytes(32).toString('hex');
       this.vaultKey = await this.deriveKey(password, derivedSalt);
 
       this.isInitialized = true;
-      this.logAccess("initialize", "", true);
+      this.logAccess('initialize', '', true);
 
-      console.log("Secure Vault initialized successfully");
+      console.log('Secure Vault initialized successfully');
     } catch (error) {
-      console.error("Failed to initialize Secure Vault:", error);
-      throw new Error("Vault initialization failed");
+      console.error('Failed to initialize Secure Vault:', error);
+      throw new Error('Vault initialization failed');
     }
   }
 
   private async deriveKey(password: string, salt: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      crypto.pbkdf2(
-        password,
-        salt,
-        this.config.keyIterations,
-        32,
-        "sha512",
-        (err, derivedKey) => {
-          if (err) reject(err);
-          else resolve(derivedKey.toString("hex"));
-        },
-      );
+      crypto.pbkdf2(password, salt, this.config.keyIterations, 32, 'sha512', (err, derivedKey) => {
+        if (err) reject(err);
+        else resolve(derivedKey.toString('hex'));
+      });
     });
   }
 
@@ -134,27 +127,27 @@ class SecureVault {
     data: Buffer,
     name: string,
     metadata: Partial<VaultMetadata> = {},
-    nsfwAnalysis?: NSFWDetectionResult,
+    nsfwAnalysis?: NSFWDetectionResult
   ): Promise<string> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     try {
       // Check vault size limit
       const currentSize = this.getTotalSize();
       if (currentSize + data.length > this.config.maxVaultSize) {
-        throw new Error("Vault size limit exceeded");
+        throw new Error('Vault size limit exceeded');
       }
 
       // Generate unique ID
-      const itemId = crypto.randomBytes(16).toString("hex");
+      const itemId = crypto.randomBytes(16).toString('hex');
 
       // Encrypt data
       const encryptionResult = await this.encryptData(data);
 
       // Calculate hash for integrity
-      const hash = crypto.createHash("sha256").update(data).digest("hex");
+      const hash = crypto.createHash('sha256').update(data).digest('hex');
 
       // Create vault item
       const vaultItem: VaultItem = {
@@ -165,14 +158,10 @@ class SecureVault {
         authTag: encryptionResult.authTag,
         metadata: {
           originalSize: data.length,
-          mimeType: metadata.mimeType || "application/octet-stream",
+          mimeType: metadata.mimeType || 'application/octet-stream',
           hash,
           encryptionAlgorithm: this.config.encryptionAlgorithm,
-          keyId: crypto
-            .createHash("sha256")
-            .update(this.vaultKey)
-            .digest("hex")
-            .slice(0, 16),
+          keyId: crypto.createHash('sha256').update(this.vaultKey).digest('hex').slice(0, 16),
           accessCount: 0,
           tags: metadata.tags || [],
           nsfwAnalysis,
@@ -181,43 +170,36 @@ class SecureVault {
         lastAccessed: new Date(),
         size: encryptionResult.encryptedData.length,
         isQuarantined: false,
-        riskLevel: nsfwAnalysis?.riskLevel || "low",
+        riskLevel: nsfwAnalysis?.riskLevel || 'low',
       };
 
       // Auto-quarantine if NSFW detected
       if (nsfwAnalysis?.isNsfw) {
         vaultItem.isQuarantined = true;
-        vaultItem.quarantineReason = "NSFW content detected";
+        vaultItem.quarantineReason = 'NSFW content detected';
         vaultItem.riskLevel = nsfwAnalysis.riskLevel;
       }
 
       this.vaultItems.set(itemId, vaultItem);
-      this.logAccess("add", itemId, true);
+      this.logAccess('add', itemId, true);
 
       return itemId;
     } catch (error) {
-      this.logAccess(
-        "add",
-        "",
-        false,
-        error instanceof Error ? error.message : "Unknown error",
-      );
+      this.logAccess('add', '', false, error instanceof Error ? error.message : 'Unknown error');
       throw error;
     }
   }
 
   // Retrieve and decrypt item from vault
-  async getItem(
-    itemId: string,
-  ): Promise<{ data: Buffer; metadata: VaultMetadata }> {
+  async getItem(itemId: string): Promise<{ data: Buffer; metadata: VaultMetadata }> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error("Item not found");
+        throw new Error('Item not found');
       }
 
       // Check if item is quarantined
@@ -237,7 +219,7 @@ class SecureVault {
       item.metadata.accessCount++;
       this.vaultItems.set(itemId, item);
 
-      this.logAccess("access", itemId, true);
+      this.logAccess('access', itemId, true);
 
       return {
         data: decryptedData,
@@ -245,10 +227,10 @@ class SecureVault {
       };
     } catch (error) {
       this.logAccess(
-        "access",
+        'access',
         itemId,
         false,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error ? error.message : 'Unknown error'
       );
       throw error;
     }
@@ -261,18 +243,15 @@ class SecureVault {
     authTag: string;
   }> {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipher(
-      this.config.encryptionAlgorithm,
-      this.vaultKey!,
-    );
+    const cipher = crypto.createCipher(this.config.encryptionAlgorithm, this.vaultKey!);
 
     let encrypted = cipher.update(data);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
 
     return {
-      encryptedData: encrypted.toString("base64"),
-      iv: iv.toString("base64"),
-      authTag: "", // For GCM mode, this would be the auth tag
+      encryptedData: encrypted.toString('base64'),
+      iv: iv.toString('base64'),
+      authTag: '', // For GCM mode, this would be the auth tag
     };
   }
 
@@ -282,32 +261,24 @@ class SecureVault {
     iv: string;
     authTag: string;
   }): Promise<Buffer> {
-    const decipher = crypto.createDecipher(
-      this.config.encryptionAlgorithm,
-      this.vaultKey!,
-    );
+    const decipher = crypto.createDecipher(this.config.encryptionAlgorithm, this.vaultKey!);
 
-    let decrypted = decipher.update(
-      Buffer.from(encryptedData.encryptedData, "base64"),
-    );
+    let decrypted = decipher.update(Buffer.from(encryptedData.encryptedData, 'base64'));
     decrypted = Buffer.concat([decrypted, decipher.final()]);
 
     return decrypted;
   }
 
   // Remove item from vault
-  async removeItem(
-    itemId: string,
-    secureDelete: boolean = false,
-  ): Promise<void> {
+  async removeItem(itemId: string, secureDelete: boolean = false): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error("Item not found");
+        throw new Error('Item not found');
       }
 
       if (secureDelete && this.config.secureDeleteEnabled) {
@@ -316,13 +287,13 @@ class SecureVault {
       }
 
       this.vaultItems.delete(itemId);
-      this.logAccess("remove", itemId, true);
+      this.logAccess('remove', itemId, true);
     } catch (error) {
       this.logAccess(
-        "remove",
+        'remove',
         itemId,
         false,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error ? error.message : 'Unknown error'
       );
       throw error;
     }
@@ -339,16 +310,16 @@ class SecureVault {
   async quarantineItem(
     itemId: string,
     reason: string,
-    riskLevel: "low" | "medium" | "high" | "critical",
+    riskLevel: 'low' | 'medium' | 'high' | 'critical'
   ): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error("Item not found");
+        throw new Error('Item not found');
       }
 
       item.isQuarantined = true;
@@ -356,13 +327,13 @@ class SecureVault {
       item.riskLevel = riskLevel;
 
       this.vaultItems.set(itemId, item);
-      this.logAccess("quarantine", itemId, true);
+      this.logAccess('quarantine', itemId, true);
     } catch (error) {
       this.logAccess(
-        "quarantine",
+        'quarantine',
         itemId,
         false,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error ? error.message : 'Unknown error'
       );
       throw error;
     }
@@ -372,19 +343,12 @@ class SecureVault {
   getStats(): VaultStats {
     const items = Array.from(this.vaultItems.values());
     const totalSize = items.reduce((sum, item) => sum + item.size, 0);
-    const quarantinedItems = items.filter((item) => item.isQuarantined).length;
-    const totalAccessCount = items.reduce(
-      (sum, item) => sum + item.metadata.accessCount,
-      0,
-    );
+    const quarantinedItems = items.filter(item => item.isQuarantined).length;
+    const totalAccessCount = items.reduce((sum, item) => sum + item.metadata.accessCount, 0);
 
     // Calculate security score based on various factors
-    const encryptionStrength =
-      this.config.encryptionAlgorithm === "aes-256-gcm" ? 100 : 85;
-    const securityScore = Math.min(
-      100,
-      encryptionStrength - quarantinedItems * 5,
-    );
+    const encryptionStrength = this.config.encryptionAlgorithm === 'aes-256-gcm' ? 100 : 85;
+    const securityScore = Math.min(100, encryptionStrength - quarantinedItems * 5);
 
     return {
       totalItems: items.length,
@@ -400,26 +364,20 @@ class SecureVault {
   // Get all items (with optional filtering)
   getItems(filter?: {
     isQuarantined?: boolean;
-    riskLevel?: "low" | "medium" | "high" | "critical";
+    riskLevel?: 'low' | 'medium' | 'high' | 'critical';
     tags?: string[];
   }): VaultItem[] {
     let items = Array.from(this.vaultItems.values());
 
     if (filter) {
-      items = items.filter((item) => {
-        if (
-          filter.isQuarantined !== undefined &&
-          item.isQuarantined !== filter.isQuarantined
-        ) {
+      items = items.filter(item => {
+        if (filter.isQuarantined !== undefined && item.isQuarantined !== filter.isQuarantined) {
           return false;
         }
         if (filter.riskLevel && item.riskLevel !== filter.riskLevel) {
           return false;
         }
-        if (
-          filter.tags &&
-          !filter.tags.some((tag) => item.metadata.tags.includes(tag))
-        ) {
+        if (filter.tags && !filter.tags.some(tag => item.metadata.tags.includes(tag))) {
           return false;
         }
         return true;
@@ -437,13 +395,13 @@ class SecureVault {
 
   // Log access attempts
   private logAccess(
-    action: VaultAccessLog["action"],
+    action: VaultAccessLog['action'],
     itemId: string,
     success: boolean,
-    reason?: string,
+    reason?: string
   ): void {
     const log: VaultAccessLog = {
-      id: crypto.randomBytes(8).toString("hex"),
+      id: crypto.randomBytes(8).toString('hex'),
       timestamp: new Date(),
       action,
       itemId,
@@ -461,10 +419,7 @@ class SecureVault {
 
   // Get total vault size
   private getTotalSize(): number {
-    return Array.from(this.vaultItems.values()).reduce(
-      (sum, item) => sum + item.size,
-      0,
-    );
+    return Array.from(this.vaultItems.values()).reduce((sum, item) => sum + item.size, 0);
   }
 
   // Update configuration
@@ -480,7 +435,7 @@ class SecureVault {
   // Backup vault data
   async backup(): Promise<string> {
     if (!this.isInitialized) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     const backupData = {
@@ -488,7 +443,7 @@ class SecureVault {
       items: Array.from(this.vaultItems.entries()),
       accessLogs: this.accessLogs,
       timestamp: new Date().toISOString(),
-      version: "1.0",
+      version: '1.0',
     };
 
     return JSON.stringify(backupData);
@@ -503,45 +458,42 @@ class SecureVault {
       this.vaultItems = new Map(data.items);
       this.accessLogs = data.accessLogs;
 
-      this.logAccess("restore", "", true);
+      this.logAccess('restore', '', true);
     } catch (error) {
       this.logAccess(
-        "restore",
-        "",
+        'restore',
+        '',
         false,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error ? error.message : 'Unknown error'
       );
-      throw new Error("Restore failed: invalid backup data");
+      throw new Error('Restore failed: invalid backup data');
     }
   }
 
   // Change vault password
-  async changePassword(
-    oldPassword: string,
-    newPassword: string,
-  ): Promise<void> {
+  async changePassword(oldPassword: string, newPassword: string): Promise<void> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error("Vault not initialized");
+      throw new Error('Vault not initialized');
     }
 
     try {
       // Verify old password
-      const testKey = await this.deriveKey(oldPassword, "test");
+      const testKey = await this.deriveKey(oldPassword, 'test');
       if (testKey !== this.vaultKey) {
-        throw new Error("Invalid old password");
+        throw new Error('Invalid old password');
       }
 
       // Re-encrypt all items with new key
-      const newKey = await this.deriveKey(newPassword, "new");
+      const newKey = await this.deriveKey(newPassword, 'new');
       this.vaultKey = newKey;
 
-      this.logAccess("change_password", "", true);
+      this.logAccess('change_password', '', true);
     } catch (error) {
       this.logAccess(
-        "change_password",
-        "",
+        'change_password',
+        '',
         false,
-        error instanceof Error ? error.message : "Unknown error",
+        error instanceof Error ? error.message : 'Unknown error'
       );
       throw error;
     }
@@ -552,10 +504,4 @@ class SecureVault {
 export const secureVault = new SecureVault();
 
 // Export types and utilities
-export type {
-  VaultItem,
-  VaultMetadata,
-  VaultConfig,
-  VaultAccessLog,
-  VaultStats,
-};
+export type { VaultItem, VaultMetadata, VaultConfig, VaultAccessLog, VaultStats };

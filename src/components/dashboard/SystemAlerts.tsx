@@ -9,26 +9,15 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  AlertCircle,
-  AlertTriangle,
-  CheckCircle,
-  Activity,
-} from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
 
 interface SystemAlert {
   id: string;
-  type: "info" | "warning" | "error" | "success";
+  type: 'info' | 'warning' | 'error' | 'success';
   title: string;
   description: string;
   timestamp: string;
@@ -41,21 +30,18 @@ interface SystemAlertsProps {
 
 const getAlertIcon = (type: string) => {
   switch (type) {
-    case "error":
+    case 'error':
       return <AlertCircle className="h-4 w-4" />;
-    case "warning":
+    case 'warning':
       return <AlertTriangle className="h-4 w-4" />;
-    case "success":
+    case 'success':
       return <CheckCircle className="h-4 w-4" />;
     default:
       return <Activity className="h-4 w-4" />;
   }
 };
 
-const SystemAlerts: React.FC<SystemAlertsProps> = ({
-  alerts,
-  maxDisplay = 5,
-}) => {
+const SystemAlerts: React.FC<SystemAlertsProps> = ({ alerts, maxDisplay = 5 }) => {
   if (alerts.length === 0) return null;
 
   const displayAlerts = alerts.slice(0, maxDisplay);
@@ -64,17 +50,12 @@ const SystemAlerts: React.FC<SystemAlertsProps> = ({
     <Card>
       <CardHeader>
         <CardTitle>System Alerts</CardTitle>
-        <CardDescription>
-          Recent system notifications and alerts
-        </CardDescription>
+        <CardDescription>Recent system notifications and alerts</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {displayAlerts.map((alert) => (
-            <div
-              key={alert.id}
-              className="flex items-start gap-3 p-3 rounded-lg border"
-            >
+          {displayAlerts.map(alert => (
+            <div key={alert.id} className="flex items-start gap-3 p-3 rounded-lg border">
               {getAlertIcon(alert.type)}
               <div className="flex-1">
                 <div className="flex items-center justify-between">
@@ -83,9 +64,7 @@ const SystemAlerts: React.FC<SystemAlertsProps> = ({
                     {new Date(alert.timestamp).toLocaleString()}
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {alert.description}
-                </p>
+                <p className="text-sm text-muted-foreground mt-1">{alert.description}</p>
               </div>
             </div>
           ))}

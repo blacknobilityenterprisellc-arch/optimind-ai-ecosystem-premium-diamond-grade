@@ -1,6 +1,6 @@
 /**
  * GLM-4.5 Orchestrator API Endpoint
- * 
+ *
  * This endpoint demonstrates the GLM SDK as the primary orchestrator
  * for the OptiMind AI Ecosystem, providing centralized coordination
  * of all AI agents and system components.
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
           action: 'health-analysis',
           orchestrator: 'GLM-4.5',
           data: healthStatus,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'status':
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           action: 'status',
           orchestrator: 'GLM-4.5',
           data: status,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'test-analysis':
@@ -46,10 +46,10 @@ export async function GET(request: NextRequest) {
           priority: 'high' as const,
           payload: {
             target: 'system-performance',
-            metrics: ['response-time', 'throughput', 'error-rate']
+            metrics: ['response-time', 'throughput', 'error-rate'],
           },
           agentRequirements: ['glm-4.5-flagship', 'glm-4.5-auto-think'],
-          expectedOutcome: 'performance-analysis-report'
+          expectedOutcome: 'performance-analysis-report',
         };
 
         const analysisId = await glmOrchestrator.submitOperation(analysisOperation);
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
           orchestrator: 'GLM-4.5',
           operationId: analysisId,
           data: analysisResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'test-optimization':
@@ -70,10 +70,10 @@ export async function GET(request: NextRequest) {
           priority: 'medium' as const,
           payload: {
             target: 'resource-allocation',
-            parameters: ['cpu', 'memory', 'network']
+            parameters: ['cpu', 'memory', 'network'],
           },
           agentRequirements: ['glm-4.5-full-stack'],
-          expectedOutcome: 'optimized-resource-allocation'
+          expectedOutcome: 'optimized-resource-allocation',
         };
 
         const optimizationId = await glmOrchestrator.submitOperation(optimizationOperation);
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
           orchestrator: 'GLM-4.5',
           operationId: optimizationId,
           data: optimizationResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'test-prediction':
@@ -95,10 +95,10 @@ export async function GET(request: NextRequest) {
           payload: {
             task: 'system-behavior-prediction',
             timeframe: 'next-30-days',
-            metrics: ['performance', 'security', 'scalability']
+            metrics: ['performance', 'security', 'scalability'],
           },
           agentRequirements: ['glm-4.5-flagship', 'glm-4.5-auto-think'],
-          expectedOutcome: 'predictive-analysis-report'
+          expectedOutcome: 'predictive-analysis-report',
         };
 
         const predictionId = await glmOrchestrator.submitOperation(predictionOperation);
@@ -110,26 +110,37 @@ export async function GET(request: NextRequest) {
           orchestrator: 'GLM-4.5',
           operationId: predictionId,
           data: predictionResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['health', 'status', 'test-analysis', 'test-optimization', 'test-prediction'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: [
+              'health',
+              'status',
+              'test-analysis',
+              'test-optimization',
+              'test-prediction',
+            ],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('GLM Orchestrator API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      orchestrator: 'GLM-4.5',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        orchestrator: 'GLM-4.5',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -150,7 +161,7 @@ export async function POST(request: NextRequest) {
           priority: payload.priority || 'medium',
           payload: payload.data || {},
           agentRequirements: payload.agentRequirements || ['glm-4.5-flagship'],
-          expectedOutcome: payload.expectedOutcome || 'operation-completion'
+          expectedOutcome: payload.expectedOutcome || 'operation-completion',
         };
 
         const operationId = await glmOrchestrator.submitOperation(operation);
@@ -161,16 +172,19 @@ export async function POST(request: NextRequest) {
           orchestrator: 'GLM-4.5',
           operationId,
           message: 'Operation submitted successfully',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'get-result':
         if (!payload.operationId) {
-          return NextResponse.json({
-            success: false,
-            error: 'Operation ID is required',
-            timestamp: new Date().toISOString()
-          }, { status: 400 });
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Operation ID is required',
+              timestamp: new Date().toISOString(),
+            },
+            { status: 400 }
+          );
         }
 
         const result = await glmOrchestrator.getOperationResult(payload.operationId);
@@ -181,7 +195,7 @@ export async function POST(request: NextRequest) {
           orchestrator: 'GLM-4.5',
           operationId: payload.operationId,
           data: result,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'comprehensive-test':
@@ -194,25 +208,30 @@ export async function POST(request: NextRequest) {
           action: 'comprehensive-test',
           orchestrator: 'GLM-4.5',
           data: testReport,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['submit-operation', 'get-result', 'comprehensive-test'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: ['submit-operation', 'get-result', 'comprehensive-test'],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('GLM Orchestrator API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      orchestrator: 'GLM-4.5',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        orchestrator: 'GLM-4.5',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }

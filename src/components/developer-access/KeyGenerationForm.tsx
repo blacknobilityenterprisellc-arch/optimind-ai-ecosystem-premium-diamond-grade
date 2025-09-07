@@ -3,51 +3,39 @@
  * Allows administrators to generate new developer access keys
  */
 
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React, { useState } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { Key, Plus, AlertTriangle, CheckCircle } from "lucide-react";
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Key, Plus, AlertTriangle, CheckCircle } from 'lucide-react';
 
 interface GeneratedKey {
   id: string;
   keyId: string;
   userId: string;
-  keyType: "EXCLUSIVE" | "STANDARD" | "TEMPORARY";
-  accessLevel:
-    | "PUBLIC"
-    | "INTERNAL"
-    | "RESTRICTED"
-    | "CONFIDENTIAL"
-    | "SECRET"
-    | "TOP_SECRET";
+  keyType: 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY';
+  accessLevel: 'PUBLIC' | 'INTERNAL' | 'RESTRICTED' | 'CONFIDENTIAL' | 'SECRET' | 'TOP_SECRET';
   permissions: string[];
   allowedEndpoints: string[];
   expiresAt: string;
   isActive: boolean;
   metadata: {
     purpose?: string;
-    environment?: "development" | "staging" | "production";
+    environment?: 'development' | 'staging' | 'production';
     createdBy?: string;
   };
   createdAt: string;
@@ -60,20 +48,20 @@ interface KeyGenerationFormProps {
 
 export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
   const [formData, setFormData] = useState({
-    userId: "",
-    keyType: "STANDARD" as "EXCLUSIVE" | "STANDARD" | "TEMPORARY",
-    accessLevel: "INTERNAL" as
-      | "PUBLIC"
-      | "INTERNAL"
-      | "RESTRICTED"
-      | "CONFIDENTIAL"
-      | "SECRET"
-      | "TOP_SECRET",
+    userId: '',
+    keyType: 'STANDARD' as 'EXCLUSIVE' | 'STANDARD' | 'TEMPORARY',
+    accessLevel: 'INTERNAL' as
+      | 'PUBLIC'
+      | 'INTERNAL'
+      | 'RESTRICTED'
+      | 'CONFIDENTIAL'
+      | 'SECRET'
+      | 'TOP_SECRET',
     permissions: [] as string[],
     allowedEndpoints: [] as string[],
     expiresInSeconds: 86400 * 7, // 7 days default
-    purpose: "",
-    environment: "development" as "development" | "staging" | "production",
+    purpose: '',
+    environment: 'development' as 'development' | 'staging' | 'production',
     ipRestrictions: [] as string[],
   });
 
@@ -83,42 +71,42 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
   const [generatedKey, setGeneratedKey] = useState<GeneratedKey | null>(null);
 
   const predefinedPermissions = [
-    "api:read",
-    "api:write",
-    "api:delete",
-    "models:access",
-    "models:train",
-    "data:read",
-    "data:write",
-    "data:delete",
-    "admin:read",
-    "admin:write",
+    'api:read',
+    'api:write',
+    'api:delete',
+    'models:access',
+    'models:train',
+    'data:read',
+    'data:write',
+    'data:delete',
+    'admin:read',
+    'admin:write',
   ];
 
   const predefinedEndpoints = [
-    "/api/*",
-    "/api/models/*",
-    "/api/data/*",
-    "/api/admin/*",
-    "/api/developer-access/*",
-    "/api/quantum-security/*",
+    '/api/*',
+    '/api/models/*',
+    '/api/data/*',
+    '/api/admin/*',
+    '/api/developer-access/*',
+    '/api/quantum-security/*',
   ];
 
   const handlePermissionChange = (permission: string, checked: boolean) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       permissions: checked
         ? [...prev.permissions, permission]
-        : prev.permissions.filter((p) => p !== permission),
+        : prev.permissions.filter(p => p !== permission),
     }));
   };
 
   const handleEndpointChange = (endpoint: string, checked: boolean) => {
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       allowedEndpoints: checked
         ? [...prev.allowedEndpoints, endpoint]
-        : prev.allowedEndpoints.filter((e) => e !== endpoint),
+        : prev.allowedEndpoints.filter(e => e !== endpoint),
     }));
   };
 
@@ -129,10 +117,10 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
     setSuccess(null);
 
     try {
-      const response = await fetch("/api/developer-access/generate", {
-        method: "POST",
+      const response = await fetch('/api/developer-access/generate', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
@@ -147,17 +135,17 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
       const data = await response.json();
 
       if (!data.success) {
-        throw new Error(data.error || "Failed to generate key");
+        throw new Error(data.error || 'Failed to generate key');
       }
 
       setGeneratedKey(data.key);
-      setSuccess("Developer access key generated successfully!");
+      setSuccess('Developer access key generated successfully!');
 
       if (onKeyGenerated) {
         onKeyGenerated(data.key);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -165,33 +153,33 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
 
   const getAccessTypeColor = (keyType: string) => {
     switch (keyType) {
-      case "EXCLUSIVE":
-        return "bg-purple-100 text-purple-800";
-      case "STANDARD":
-        return "bg-blue-100 text-blue-800";
-      case "TEMPORARY":
-        return "bg-gray-100 text-gray-800";
+      case 'EXCLUSIVE':
+        return 'bg-purple-100 text-purple-800';
+      case 'STANDARD':
+        return 'bg-blue-100 text-blue-800';
+      case 'TEMPORARY':
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getAccessLevelColor = (accessLevel: string) => {
     switch (accessLevel) {
-      case "PUBLIC":
-        return "bg-green-100 text-green-800";
-      case "INTERNAL":
-        return "bg-blue-100 text-blue-800";
-      case "RESTRICTED":
-        return "bg-yellow-100 text-yellow-800";
-      case "CONFIDENTIAL":
-        return "bg-orange-100 text-orange-800";
-      case "SECRET":
-        return "bg-red-100 text-red-800";
-      case "TOP_SECRET":
-        return "bg-purple-100 text-purple-800";
+      case 'PUBLIC':
+        return 'bg-green-100 text-green-800';
+      case 'INTERNAL':
+        return 'bg-blue-100 text-blue-800';
+      case 'RESTRICTED':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'CONFIDENTIAL':
+        return 'bg-orange-100 text-orange-800';
+      case 'SECRET':
+        return 'bg-red-100 text-red-800';
+      case 'TOP_SECRET':
+        return 'bg-purple-100 text-purple-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -200,9 +188,9 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
     const hours = Math.floor((seconds % 86400) / 3600);
 
     if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""}`;
+      return `${days} day${days > 1 ? 's' : ''}`;
     } else if (hours > 0) {
-      return `${hours} hour${hours > 1 ? "s" : ""}`;
+      return `${hours} hour${hours > 1 ? 's' : ''}`;
     } else {
       return `${seconds} seconds`;
     }
@@ -217,8 +205,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             Generate Developer Access Key
           </CardTitle>
           <CardDescription>
-            Create exclusive access keys for developers with specific
-            permissions and monitoring
+            Create exclusive access keys for developers with specific permissions and monitoring
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -230,9 +217,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Input
                   id="userId"
                   value={formData.userId}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, userId: e.target.value }))
-                  }
+                  onChange={e => setFormData(prev => ({ ...prev, userId: e.target.value }))}
                   placeholder="Enter user ID"
                   required
                 />
@@ -242,9 +227,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Label htmlFor="keyType">Key Type *</Label>
                 <Select
                   value={formData.keyType}
-                  onValueChange={(value: any) =>
-                    setFormData((prev) => ({ ...prev, keyType: value }))
-                  }
+                  onValueChange={(value: any) => setFormData(prev => ({ ...prev, keyType: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select key type" />
@@ -252,25 +235,19 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                   <SelectContent>
                     <SelectItem value="EXCLUSIVE">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessTypeColor("EXCLUSIVE")}>
-                          EXCLUSIVE
-                        </Badge>
+                        <Badge className={getAccessTypeColor('EXCLUSIVE')}>EXCLUSIVE</Badge>
                         <span>High privileges, long expiry</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="STANDARD">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessTypeColor("STANDARD")}>
-                          STANDARD
-                        </Badge>
+                        <Badge className={getAccessTypeColor('STANDARD')}>STANDARD</Badge>
                         <span>Normal privileges, medium expiry</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="TEMPORARY">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessTypeColor("TEMPORARY")}>
-                          TEMPORARY
-                        </Badge>
+                        <Badge className={getAccessTypeColor('TEMPORARY')}>TEMPORARY</Badge>
                         <span>Limited privileges, short expiry</span>
                       </div>
                     </SelectItem>
@@ -283,7 +260,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Select
                   value={formData.accessLevel}
                   onValueChange={(value: any) =>
-                    setFormData((prev) => ({ ...prev, accessLevel: value }))
+                    setFormData(prev => ({ ...prev, accessLevel: value }))
                   }
                 >
                   <SelectTrigger>
@@ -292,49 +269,37 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                   <SelectContent>
                     <SelectItem value="PUBLIC">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("PUBLIC")}>
-                          PUBLIC
-                        </Badge>
+                        <Badge className={getAccessLevelColor('PUBLIC')}>PUBLIC</Badge>
                         <span>Basic access</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="INTERNAL">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("INTERNAL")}>
-                          INTERNAL
-                        </Badge>
+                        <Badge className={getAccessLevelColor('INTERNAL')}>INTERNAL</Badge>
                         <span>Internal access</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="RESTRICTED">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("RESTRICTED")}>
-                          RESTRICTED
-                        </Badge>
+                        <Badge className={getAccessLevelColor('RESTRICTED')}>RESTRICTED</Badge>
                         <span>Restricted access</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="CONFIDENTIAL">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("CONFIDENTIAL")}>
-                          CONFIDENTIAL
-                        </Badge>
+                        <Badge className={getAccessLevelColor('CONFIDENTIAL')}>CONFIDENTIAL</Badge>
                         <span>Confidential access</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="SECRET">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("SECRET")}>
-                          SECRET
-                        </Badge>
+                        <Badge className={getAccessLevelColor('SECRET')}>SECRET</Badge>
                         <span>Secret access</span>
                       </div>
                     </SelectItem>
                     <SelectItem value="TOP_SECRET">
                       <div className="flex items-center gap-2">
-                        <Badge className={getAccessLevelColor("TOP_SECRET")}>
-                          TOP_SECRET
-                        </Badge>
+                        <Badge className={getAccessLevelColor('TOP_SECRET')}>TOP_SECRET</Badge>
                         <span>Top secret access</span>
                       </div>
                     </SelectItem>
@@ -346,8 +311,8 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Label htmlFor="expiresInSeconds">Expiry Time</Label>
                 <Select
                   value={formData.expiresInSeconds.toString()}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({
+                  onValueChange={value =>
+                    setFormData(prev => ({
                       ...prev,
                       expiresInSeconds: parseInt(value),
                     }))
@@ -375,8 +340,8 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Textarea
                   id="purpose"
                   value={formData.purpose}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
+                  onChange={e =>
+                    setFormData(prev => ({
                       ...prev,
                       purpose: e.target.value,
                     }))
@@ -391,7 +356,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
                 <Select
                   value={formData.environment}
                   onValueChange={(value: any) =>
-                    setFormData((prev) => ({ ...prev, environment: value }))
+                    setFormData(prev => ({ ...prev, environment: value }))
                   }
                 >
                   <SelectTrigger>
@@ -410,12 +375,12 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             <div className="space-y-3">
               <Label>Permissions *</Label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {predefinedPermissions.map((permission) => (
+                {predefinedPermissions.map(permission => (
                   <div key={permission} className="flex items-center space-x-2">
                     <Checkbox
                       id={permission}
                       checked={formData.permissions.includes(permission)}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         handlePermissionChange(permission, checked as boolean)
                       }
                     />
@@ -431,12 +396,12 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             <div className="space-y-3">
               <Label>Allowed Endpoints *</Label>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {predefinedEndpoints.map((endpoint) => (
+                {predefinedEndpoints.map(endpoint => (
                   <div key={endpoint} className="flex items-center space-x-2">
                     <Checkbox
                       id={endpoint}
                       checked={formData.allowedEndpoints.includes(endpoint)}
-                      onCheckedChange={(checked) =>
+                      onCheckedChange={checked =>
                         handleEndpointChange(endpoint, checked as boolean)
                       }
                     />
@@ -474,7 +439,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
               }
             >
               {loading ? (
-                "Generating..."
+                'Generating...'
               ) : (
                 <>
                   <Plus className="h-4 w-4 mr-2" /> Generate Key
@@ -491,23 +456,18 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
           <CardHeader>
             <CardTitle>Generated Access Key</CardTitle>
             <CardDescription>
-              Your new developer access key has been created. Please save this
-              information securely.
+              Your new developer access key has been created. Please save this information securely.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label className="text-sm font-medium">Key ID</Label>
-                <p className="text-sm text-muted-foreground font-mono">
-                  {generatedKey.keyId}
-                </p>
+                <p className="text-sm text-muted-foreground font-mono">{generatedKey.keyId}</p>
               </div>
               <div>
                 <Label className="text-sm font-medium">User ID</Label>
-                <p className="text-sm text-muted-foreground">
-                  {generatedKey.userId}
-                </p>
+                <p className="text-sm text-muted-foreground">{generatedKey.userId}</p>
               </div>
               <div>
                 <Label className="text-sm font-medium">Key Type</Label>
@@ -517,9 +477,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
               </div>
               <div>
                 <Label className="text-sm font-medium">Access Level</Label>
-                <Badge
-                  className={getAccessLevelColor(generatedKey.accessLevel)}
-                >
+                <Badge className={getAccessLevelColor(generatedKey.accessLevel)}>
                   {generatedKey.accessLevel}
                 </Badge>
               </div>
@@ -528,7 +486,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             <div>
               <Label className="text-sm font-medium">Permissions</Label>
               <div className="flex flex-wrap gap-1 mt-1">
-                {generatedKey.permissions.map((permission) => (
+                {generatedKey.permissions.map(permission => (
                   <Badge key={permission} variant="outline" className="text-xs">
                     {permission}
                   </Badge>
@@ -539,7 +497,7 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             <div>
               <Label className="text-sm font-medium">Allowed Endpoints</Label>
               <div className="flex flex-wrap gap-1 mt-1">
-                {generatedKey.allowedEndpoints.map((endpoint) => (
+                {generatedKey.allowedEndpoints.map(endpoint => (
                   <Badge key={endpoint} variant="outline" className="text-xs">
                     {endpoint}
                   </Badge>
@@ -565,9 +523,8 @@ export function KeyGenerationForm({ onKeyGenerated }: KeyGenerationFormProps) {
             <Alert>
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Important:</strong> Save this key information securely.
-                The key ID is required for all API calls and cannot be recovered
-                if lost.
+                <strong>Important:</strong> Save this key information securely. The key ID is
+                required for all API calls and cannot be recovered if lost.
               </AlertDescription>
             </Alert>
           </CardContent>

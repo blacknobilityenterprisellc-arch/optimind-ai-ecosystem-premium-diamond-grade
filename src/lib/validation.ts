@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { ValidationError } from "@/lib/error-handler";
+import { ValidationError } from '@/lib/error-handler';
 
 // Validation rule interface
 export interface ValidationRule<T = any> {
@@ -39,7 +39,7 @@ export interface ValidationWarning {
   field: string;
   message: string;
   value: any;
-  severity: "low" | "medium" | "high";
+  severity: 'low' | 'medium' | 'high';
 }
 
 // Validation schema interface
@@ -50,41 +50,38 @@ export interface ValidationSchema<T = any> {
 // Built-in validation rules
 export class ValidationRules {
   // Required field validation
-  static required(message: string = "This field is required"): ValidationRule {
+  static required(message: string = 'This field is required'): ValidationRule {
     return {
-      name: "required",
-      validate: (value) =>
-        value !== null && value !== undefined && value !== "",
+      name: 'required',
+      validate: value => value !== null && value !== undefined && value !== '',
       message,
     };
   }
 
   // String validation
-  static string(message: string = "Must be a string"): ValidationRule {
+  static string(message: string = 'Must be a string'): ValidationRule {
     return {
-      name: "string",
-      validate: (value) => typeof value === "string",
+      name: 'string',
+      validate: value => typeof value === 'string',
       message,
     };
   }
 
   // Number validation
-  static number(message: string = "Must be a number"): ValidationRule {
+  static number(message: string = 'Must be a number'): ValidationRule {
     return {
-      name: "number",
-      validate: (value) => typeof value === "number" && !isNaN(value),
+      name: 'number',
+      validate: value => typeof value === 'number' && !isNaN(value),
       message,
     };
   }
 
   // Email validation
-  static email(
-    message: string = "Must be a valid email address",
-  ): ValidationRule {
+  static email(message: string = 'Must be a valid email address'): ValidationRule {
     return {
-      name: "email",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'email',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(value);
       },
@@ -95,9 +92,9 @@ export class ValidationRules {
   // Min length validation
   static minLength(min: number, message?: string): ValidationRule {
     return {
-      name: "minLength",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'minLength',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         return value.length >= min;
       },
       message: message || `Must be at least ${min} characters long`,
@@ -107,9 +104,9 @@ export class ValidationRules {
   // Max length validation
   static maxLength(max: number, message?: string): ValidationRule {
     return {
-      name: "maxLength",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'maxLength',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         return value.length <= max;
       },
       message: message || `Must be no more than ${max} characters long`,
@@ -119,9 +116,9 @@ export class ValidationRules {
   // Range validation
   static range(min: number, max: number, message?: string): ValidationRule {
     return {
-      name: "range",
-      validate: (value) => {
-        if (typeof value !== "number") return false;
+      name: 'range',
+      validate: value => {
+        if (typeof value !== 'number') return false;
         return value >= min && value <= max;
       },
       message: message || `Must be between ${min} and ${max}`,
@@ -131,9 +128,9 @@ export class ValidationRules {
   // Pattern validation
   static pattern(pattern: RegExp, message: string): ValidationRule {
     return {
-      name: "pattern",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'pattern',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         return pattern.test(value);
       },
       message,
@@ -143,57 +140,56 @@ export class ValidationRules {
   // Enum validation
   static enum<T extends string>(values: T[], message?: string): ValidationRule {
     return {
-      name: "enum",
-      validate: (value) => values.includes(value),
-      message: message || `Must be one of: ${values.join(", ")}`,
+      name: 'enum',
+      validate: value => values.includes(value),
+      message: message || `Must be one of: ${values.join(', ')}`,
     };
   }
 
   // Custom validation
   static custom<T = any>(
     validate: (value: T) => boolean | Promise<boolean>,
-    message: string | ((value: T) => string),
+    message: string | ((value: T) => string)
   ): ValidationRule<T> {
     return {
-      name: "custom",
+      name: 'custom',
       validate,
       message,
     };
   }
 
   // Array validation
-  static array(message: string = "Must be an array"): ValidationRule {
+  static array(message: string = 'Must be an array'): ValidationRule {
     return {
-      name: "array",
-      validate: (value) => Array.isArray(value),
+      name: 'array',
+      validate: value => Array.isArray(value),
       message,
     };
   }
 
   // Object validation
-  static object(message: string = "Must be an object"): ValidationRule {
+  static object(message: string = 'Must be an object'): ValidationRule {
     return {
-      name: "object",
-      validate: (value) =>
-        typeof value === "object" && value !== null && !Array.isArray(value),
+      name: 'object',
+      validate: value => typeof value === 'object' && value !== null && !Array.isArray(value),
       message,
     };
   }
 
   // Boolean validation
-  static boolean(message: string = "Must be a boolean"): ValidationRule {
+  static boolean(message: string = 'Must be a boolean'): ValidationRule {
     return {
-      name: "boolean",
-      validate: (value) => typeof value === "boolean",
+      name: 'boolean',
+      validate: value => typeof value === 'boolean',
       message,
     };
   }
 
   // Date validation
-  static date(message: string = "Must be a valid date"): ValidationRule {
+  static date(message: string = 'Must be a valid date'): ValidationRule {
     return {
-      name: "date",
-      validate: (value) => {
+      name: 'date',
+      validate: value => {
         return value instanceof Date || !isNaN(Date.parse(value));
       },
       message,
@@ -201,11 +197,11 @@ export class ValidationRules {
   }
 
   // URL validation
-  static url(message: string = "Must be a valid URL"): ValidationRule {
+  static url(message: string = 'Must be a valid URL'): ValidationRule {
     return {
-      name: "url",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'url',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         try {
           new URL(value);
           return true;
@@ -219,25 +215,19 @@ export class ValidationRules {
 
   // Password strength validation
   static passwordStrength(
-    message: string = "Password must be at least 8 characters with uppercase, lowercase, number, and special character",
+    message: string = 'Password must be at least 8 characters with uppercase, lowercase, number, and special character'
   ): ValidationRule {
     return {
-      name: "passwordStrength",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'passwordStrength',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         const hasUpperCase = /[A-Z]/.test(value);
         const hasLowerCase = /[a-z]/.test(value);
         const hasNumber = /[0-9]/.test(value);
         const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
         const hasMinLength = value.length >= 8;
 
-        return (
-          hasUpperCase &&
-          hasLowerCase &&
-          hasNumber &&
-          hasSpecialChar &&
-          hasMinLength
-        );
+        return hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar && hasMinLength;
       },
       message,
     };
@@ -245,12 +235,12 @@ export class ValidationRules {
 
   // Username validation
   static username(
-    message: string = "Username must be 3-20 characters with letters, numbers, and underscores only",
+    message: string = 'Username must be 3-20 characters with letters, numbers, and underscores only'
   ): ValidationRule {
     return {
-      name: "username",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'username',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         return /^[a-zA-Z0-9_]{3,20}$/.test(value);
       },
       message,
@@ -258,29 +248,25 @@ export class ValidationRules {
   }
 
   // Phone number validation
-  static phone(
-    message: string = "Must be a valid phone number",
-  ): ValidationRule {
+  static phone(message: string = 'Must be a valid phone number'): ValidationRule {
     return {
-      name: "phone",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
+      name: 'phone',
+      validate: value => {
+        if (typeof value !== 'string') return false;
         const phoneRegex = /^\+?[\d\s\-\(\)]+$/;
-        return phoneRegex.test(value) && value.replace(/\D/g, "").length >= 10;
+        return phoneRegex.test(value) && value.replace(/\D/g, '').length >= 10;
       },
       message,
     };
   }
 
   // Credit card validation
-  static creditCard(
-    message: string = "Must be a valid credit card number",
-  ): ValidationRule {
+  static creditCard(message: string = 'Must be a valid credit card number'): ValidationRule {
     return {
-      name: "creditCard",
-      validate: (value) => {
-        if (typeof value !== "string") return false;
-        const cleanNumber = value.replace(/\D/g, "");
+      name: 'creditCard',
+      validate: value => {
+        if (typeof value !== 'string') return false;
+        const cleanNumber = value.replace(/\D/g, '');
 
         // Luhn algorithm
         let sum = 0;
@@ -300,30 +286,24 @@ export class ValidationRules {
           isEven = !isEven;
         }
 
-        return (
-          sum % 10 === 0 && cleanNumber.length >= 13 && cleanNumber.length <= 19
-        );
+        return sum % 10 === 0 && cleanNumber.length >= 13 && cleanNumber.length <= 19;
       },
       message,
     };
   }
 
   // File validation
-  static file(
-    allowedTypes: string[],
-    maxSize: number,
-    message?: string,
-  ): ValidationRule {
+  static file(allowedTypes: string[], maxSize: number, message?: string): ValidationRule {
     return {
-      name: "file",
-      validate: (value) => {
+      name: 'file',
+      validate: value => {
         if (!(value instanceof File)) return false;
 
         if (value.size > maxSize) {
           return false;
         }
 
-        const fileExtension = value.name.split(".").pop()?.toLowerCase();
+        const fileExtension = value.name.split('.').pop()?.toLowerCase();
         if (!fileExtension || !allowedTypes.includes(fileExtension)) {
           return false;
         }
@@ -332,7 +312,7 @@ export class ValidationRules {
       },
       message:
         message ||
-        `File must be one of: ${allowedTypes.join(", ")} and less than ${maxSize / 1024 / 1024}MB`,
+        `File must be one of: ${allowedTypes.join(', ')} and less than ${maxSize / 1024 / 1024}MB`,
     };
   }
 }
@@ -353,7 +333,7 @@ export class Validator {
       strict?: boolean;
       stopOnFirstError?: boolean;
       includeWarnings?: boolean;
-    },
+    }
   ): Promise<ValidationResult> {
     const errors: ValidationError[] = [];
     this.warnings = [];
@@ -367,10 +347,7 @@ export class Validator {
 
       for (const rule of fieldRules) {
         // Skip validation for optional fields if value is empty
-        if (
-          rule.optional &&
-          (value === null || value === undefined || value === "")
-        ) {
+        if (rule.optional && (value === null || value === undefined || value === '')) {
           continue;
         }
 
@@ -378,10 +355,7 @@ export class Validator {
           const isValid = await Promise.resolve(rule.validate(value));
 
           if (!isValid) {
-            const message =
-              typeof rule.message === "function"
-                ? rule.message(value)
-                : rule.message;
+            const message = typeof rule.message === 'function' ? rule.message(value) : rule.message;
 
             errors.push(new ValidationError(message, field));
 
@@ -390,9 +364,7 @@ export class Validator {
             }
           }
         } catch (error) {
-          errors.push(
-            new ValidationError(`Validation failed: ${error}`, field),
-          );
+          errors.push(new ValidationError(`Validation failed: ${error}`, field));
 
           if (stopOnFirstError) {
             break;
@@ -408,9 +380,7 @@ export class Validator {
     // Check for unknown fields in strict mode
     if (strict) {
       const knownFields = Object.keys(this.schema);
-      const unknownFields = Object.keys(data).filter(
-        (field) => !knownFields.includes(field),
-      );
+      const unknownFields = Object.keys(data).filter(field => !knownFields.includes(field));
 
       for (const field of unknownFields) {
         errors.push(new ValidationError(`Unknown field: ${field}`, field));
@@ -429,7 +399,7 @@ export class Validator {
     field: string,
     message: string,
     value: any,
-    severity: "low" | "medium" | "high" = "medium",
+    severity: 'low' | 'medium' | 'high' = 'medium'
   ): void {
     this.warnings.push({
       field,
@@ -454,10 +424,7 @@ export class Validator {
     const errors: ValidationError[] = [];
 
     for (const rule of fieldRules) {
-      if (
-        rule.optional &&
-        (value === null || value === undefined || value === "")
-      ) {
+      if (rule.optional && (value === null || value === undefined || value === '')) {
         continue;
       }
 
@@ -465,10 +432,7 @@ export class Validator {
         const isValid = await Promise.resolve(rule.validate(value));
 
         if (!isValid) {
-          const message =
-            typeof rule.message === "function"
-              ? rule.message(value)
-              : rule.message;
+          const message = typeof rule.message === 'function' ? rule.message(value) : rule.message;
 
           errors.push(new ValidationError(message, field));
         }
@@ -516,7 +480,7 @@ export class SchemaBuilder {
       max?: number;
       pattern?: RegExp;
       message?: string;
-    },
+    }
   ): SchemaBuilder {
     const rules: ValidationRule[] = [ValidationRules.required()];
 
@@ -529,12 +493,7 @@ export class SchemaBuilder {
     }
 
     if (options?.pattern) {
-      rules.push(
-        ValidationRules.pattern(
-          options.pattern,
-          options?.message || "Invalid format",
-        ),
-      );
+      rules.push(ValidationRules.pattern(options.pattern, options?.message || 'Invalid format'));
     }
 
     this.schema[name] = rules;
@@ -575,7 +534,7 @@ export class SchemaBuilder {
       min?: number;
       max?: number;
       message?: string;
-    },
+    }
   ): SchemaBuilder {
     const rules: ValidationRule[] = [];
 
@@ -586,9 +545,7 @@ export class SchemaBuilder {
     rules.push(ValidationRules.number());
 
     if (options?.min !== undefined && options?.max !== undefined) {
-      rules.push(
-        ValidationRules.range(options.min, options.max, options?.message),
-      );
+      rules.push(ValidationRules.range(options.min, options.max, options?.message));
     }
 
     this.schema[name] = rules;
@@ -596,11 +553,7 @@ export class SchemaBuilder {
   }
 
   // Add enum field
-  enum<T extends string>(
-    name: string,
-    values: T[],
-    required: boolean = true,
-  ): SchemaBuilder {
+  enum<T extends string>(name: string, values: T[], required: boolean = true): SchemaBuilder {
     const rules: ValidationRule[] = [];
 
     if (required) {
@@ -628,50 +581,42 @@ export const Schemas = {
   // User registration schema
   userRegistration: () =>
     new SchemaBuilder()
-      .requiredString("email")
-      .email("email")
-      .requiredString("username")
-      .password("password")
-      .requiredString("firstName")
-      .requiredString("lastName")
-      .enum("role", ["user", "admin", "moderator", "analyst"], false)
+      .requiredString('email')
+      .email('email')
+      .requiredString('username')
+      .password('password')
+      .requiredString('firstName')
+      .requiredString('lastName')
+      .enum('role', ['user', 'admin', 'moderator', 'analyst'], false)
       .build(),
 
   // User login schema
-  userLogin: () =>
-    new SchemaBuilder()
-      .requiredString("email")
-      .requiredString("password")
-      .build(),
+  userLogin: () => new SchemaBuilder().requiredString('email').requiredString('password').build(),
 
   // Content creation schema
   contentCreation: () =>
     new SchemaBuilder()
-      .requiredString("title")
-      .requiredString("content")
-      .enum("type", [
-        "blog",
-        "article",
-        "product-description",
-        "social-media",
-        "email",
-        "documentation",
+      .requiredString('title')
+      .requiredString('content')
+      .enum('type', [
+        'blog',
+        'article',
+        'product-description',
+        'social-media',
+        'email',
+        'documentation',
       ])
-      .enum("status", ["draft", "published", "archived"], false)
-      .array("tags", false)
+      .enum('status', ['draft', 'published', 'archived'], false)
+      .array('tags', false)
       .build(),
 
   // AI request schema
   aiRequest: () =>
     new SchemaBuilder()
-      .requiredString("prompt")
-      .enum(
-        "model",
-        ["gpt-3.5-turbo", "gpt-4", "claude-3-opus", "gemini-pro"],
-        false,
-      )
-      .number("temperature", { required: false, min: 0, max: 2 })
-      .number("maxTokens", { required: false, min: 1, max: 8000 })
+      .requiredString('prompt')
+      .enum('model', ['gpt-3.5-turbo', 'gpt-4', 'claude-3-opus', 'gemini-pro'], false)
+      .number('temperature', { required: false, min: 0, max: 2 })
+      .number('maxTokens', { required: false, min: 1, max: 8000 })
       .build(),
 };
 

@@ -1,16 +1,10 @@
-"use client";
+'use client';
 
-import { Component, ReactNode } from "react";
-import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { Component, ReactNode } from 'react';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -34,7 +28,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("Error caught by error boundary:", error, errorInfo);
+    console.error('Error caught by error boundary:', error, errorInfo);
     this.setState({ error, errorInfo });
   }
 
@@ -59,16 +53,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </div>
               <CardTitle className="text-xl">Something went wrong</CardTitle>
               <CardDescription>
-                We encountered an unexpected error. Please try refreshing the
-                page or go back to the dashboard.
+                We encountered an unexpected error. Please try refreshing the page or go back to the
+                dashboard.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <div className="p-3 bg-muted rounded-lg">
-                  <p className="text-sm font-mono text-red-600">
-                    {this.state.error.message}
-                  </p>
+                  <p className="text-sm font-mono text-red-600">{this.state.error.message}</p>
                 </div>
               )}
 
@@ -79,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                 </Button>
                 <Button
                   variant="outline"
-                  onClick={() => (window.location.href = "/")}
+                  onClick={() => (window.location.href = '/')}
                   className="w-full"
                 >
                   <Home className="w-4 h-4 mr-2" />

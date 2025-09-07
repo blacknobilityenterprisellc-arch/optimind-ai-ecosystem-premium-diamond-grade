@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   FolderOpen,
   Sparkles,
@@ -49,25 +49,25 @@ import {
   Trash2,
   Download,
   Share2,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { useSecureSubscription } from '@/lib/secure-subscription-manager';
 
 interface Photo {
   id: string;
@@ -101,27 +101,25 @@ interface Album {
   tags: string[];
   isSmart: boolean;
   autoUpdate: boolean;
-  category: "event" | "people" | "location" | "time" | "subject" | "custom";
+  category: 'event' | 'people' | 'location' | 'time' | 'subject' | 'custom';
 }
 
 export function AIImageOrganizer() {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [sortBy, setSortBy] = useState<"date" | "name" | "size" | "quality">(
-    "date",
-  );
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [filterBy, setFilterBy] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState<'date' | 'name' | 'size' | 'quality'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [filterBy, setFilterBy] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedAlbum, setSelectedAlbum] = useState<string | null>(null);
   const [isOrganizing, setIsOrganizing] = useState(false);
   const [organizationProgress, setOrganizationProgress] = useState(0);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [autoOrganize, setAutoOrganize] = useState(true);
   const [smartAlbumsEnabled, setSmartAlbumsEnabled] = useState(true);
-  const [newAlbumName, setNewAlbumName] = useState("");
+  const [newAlbumName, setNewAlbumName] = useState('');
   const [showCreateAlbum, setShowCreateAlbum] = useState(false);
 
   const { isPremium } = useSecureSubscription();
@@ -130,131 +128,131 @@ export function AIImageOrganizer() {
   useEffect(() => {
     const mockPhotos: Photo[] = [
       {
-        id: "1",
-        url: "https://picsum.photos/seed/photo1/400/300.jpg",
-        name: "Beach Sunset",
-        uploadDate: new Date("2024-01-15"),
-        uploadDate: new Date("2025-01-15"),
+        id: '1',
+        url: 'https://picsum.photos/seed/photo1/400/300.jpg',
+        name: 'Beach Sunset',
+        uploadDate: new Date('2024-01-15'),
+        uploadDate: new Date('2025-01-15'),
         fileSize: 2048000,
-        tags: ["beach", "sunset", "nature", "vacation"],
-        location: "Malibu, CA",
-        people: ["John", "Sarah"],
-        event: "Summer Vacation 2024",
+        tags: ['beach', 'sunset', 'nature', 'vacation'],
+        location: 'Malibu, CA',
+        people: ['John', 'Sarah'],
+        event: 'Summer Vacation 2024',
         quality: 95,
         isFavorite: true,
-        albums: ["Vacation 2024", "Beaches", "Sunsets"],
-        event: "Summer Vacation 2025",
+        albums: ['Vacation 2024', 'Beaches', 'Sunsets'],
+        event: 'Summer Vacation 2025',
         quality: 95,
         isFavorite: true,
-        albums: ["Vacation 2025", "Beaches", "Sunsets"],
+        albums: ['Vacation 2025', 'Beaches', 'Sunsets'],
         aiAnalysis: {
-          objects: ["ocean", "sun", "clouds", "people"],
-          scene: "beach sunset",
-          mood: "peaceful",
-          colors: ["orange", "blue", "yellow"],
+          objects: ['ocean', 'sun', 'clouds', 'people'],
+          scene: 'beach sunset',
+          mood: 'peaceful',
+          colors: ['orange', 'blue', 'yellow'],
           quality: 95,
         },
       },
       {
-        id: "2",
-        url: "https://picsum.photos/seed/photo2/400/300.jpg",
-        name: "City Skyline",
-        uploadDate: new Date("2024-01-20"),
-        uploadDate: new Date("2025-01-20"),
+        id: '2',
+        url: 'https://picsum.photos/seed/photo2/400/300.jpg',
+        name: 'City Skyline',
+        uploadDate: new Date('2024-01-20'),
+        uploadDate: new Date('2025-01-20'),
         fileSize: 1536000,
-        tags: ["city", "skyline", "urban", "night"],
-        location: "New York, NY",
+        tags: ['city', 'skyline', 'urban', 'night'],
+        location: 'New York, NY',
         quality: 88,
         isFavorite: false,
-        albums: ["Urban", "Night Photography"],
+        albums: ['Urban', 'Night Photography'],
         aiAnalysis: {
-          objects: ["buildings", "lights", "sky"],
-          scene: "urban skyline",
-          mood: "energetic",
-          colors: ["black", "blue", "yellow"],
+          objects: ['buildings', 'lights', 'sky'],
+          scene: 'urban skyline',
+          mood: 'energetic',
+          colors: ['black', 'blue', 'yellow'],
           quality: 88,
         },
       },
       {
-        id: "3",
-        url: "https://picsum.photos/seed/photo3/400/300.jpg",
-        name: "Family Portrait",
-        uploadDate: new Date("2024-01-25"),
-        uploadDate: new Date("2025-01-25"),
+        id: '3',
+        url: 'https://picsum.photos/seed/photo3/400/300.jpg',
+        name: 'Family Portrait',
+        uploadDate: new Date('2024-01-25'),
+        uploadDate: new Date('2025-01-25'),
         fileSize: 3072000,
-        tags: ["family", "portrait", "people", "indoor"],
-        people: ["John", "Sarah", "Mike", "Emma"],
-        event: "Family Reunion",
+        tags: ['family', 'portrait', 'people', 'indoor'],
+        people: ['John', 'Sarah', 'Mike', 'Emma'],
+        event: 'Family Reunion',
         quality: 92,
         isFavorite: true,
-        albums: ["Family", "Portraits"],
+        albums: ['Family', 'Portraits'],
         aiAnalysis: {
-          objects: ["people", "furniture"],
-          scene: "indoor portrait",
-          mood: "happy",
-          colors: ["brown", "beige", "white"],
+          objects: ['people', 'furniture'],
+          scene: 'indoor portrait',
+          mood: 'happy',
+          colors: ['brown', 'beige', 'white'],
           quality: 92,
         },
       },
       {
-        id: "4",
-        url: "https://picsum.photos/seed/photo4/400/300.jpg",
-        name: "Mountain Hiking",
-        uploadDate: new Date("2024-02-01"),
-        uploadDate: new Date("2025-02-01"),
+        id: '4',
+        url: 'https://picsum.photos/seed/photo4/400/300.jpg',
+        name: 'Mountain Hiking',
+        uploadDate: new Date('2024-02-01'),
+        uploadDate: new Date('2025-02-01'),
         fileSize: 2560000,
-        tags: ["mountain", "hiking", "nature", "adventure"],
-        location: "Rocky Mountains",
-        people: ["John", "Mike"],
-        event: "Hiking Trip",
+        tags: ['mountain', 'hiking', 'nature', 'adventure'],
+        location: 'Rocky Mountains',
+        people: ['John', 'Mike'],
+        event: 'Hiking Trip',
         quality: 90,
         isFavorite: false,
-        albums: ["Nature", "Adventure", "Hiking"],
+        albums: ['Nature', 'Adventure', 'Hiking'],
         aiAnalysis: {
-          objects: ["mountains", "trees", "hikers"],
-          scene: "mountain trail",
-          mood: "adventurous",
-          colors: ["green", "brown", "blue"],
+          objects: ['mountains', 'trees', 'hikers'],
+          scene: 'mountain trail',
+          mood: 'adventurous',
+          colors: ['green', 'brown', 'blue'],
           quality: 90,
         },
       },
       {
-        id: "5",
-        url: "https://picsum.photos/seed/photo5/400/300.jpg",
-        name: "Birthday Party",
-        uploadDate: new Date("2024-02-10"),
-        uploadDate: new Date("2025-02-10"),
+        id: '5',
+        url: 'https://picsum.photos/seed/photo5/400/300.jpg',
+        name: 'Birthday Party',
+        uploadDate: new Date('2024-02-10'),
+        uploadDate: new Date('2025-02-10'),
         fileSize: 2816000,
-        tags: ["party", "birthday", "celebration", "people"],
-        people: ["Sarah", "Emma", "Mike", "Lisa", "Tom"],
+        tags: ['party', 'birthday', 'celebration', 'people'],
+        people: ['Sarah', 'Emma', 'Mike', 'Lisa', 'Tom'],
         event: "Emma's Birthday",
         quality: 85,
         isFavorite: true,
-        albums: ["Celebrations", "Birthdays"],
+        albums: ['Celebrations', 'Birthdays'],
         aiAnalysis: {
-          objects: ["people", "cake", "decorations"],
-          scene: "indoor party",
-          mood: "festive",
-          colors: ["pink", "white", "gold"],
+          objects: ['people', 'cake', 'decorations'],
+          scene: 'indoor party',
+          mood: 'festive',
+          colors: ['pink', 'white', 'gold'],
           quality: 85,
         },
       },
       {
-        id: "6",
-        url: "https://picsum.photos/seed/photo6/400/300.jpg",
-        name: "Pet Portrait",
-        uploadDate: new Date("2024-02-15"),
-        uploadDate: new Date("2025-02-15"),
+        id: '6',
+        url: 'https://picsum.photos/seed/photo6/400/300.jpg',
+        name: 'Pet Portrait',
+        uploadDate: new Date('2024-02-15'),
+        uploadDate: new Date('2025-02-15'),
         fileSize: 1792000,
-        tags: ["pet", "dog", "portrait", "cute"],
+        tags: ['pet', 'dog', 'portrait', 'cute'],
         quality: 93,
         isFavorite: true,
-        albums: ["Pets", "Portraits"],
+        albums: ['Pets', 'Portraits'],
         aiAnalysis: {
-          objects: ["dog", "toys"],
-          scene: "indoor pet",
-          mood: "playful",
-          colors: ["brown", "beige", "gray"],
+          objects: ['dog', 'toys'],
+          scene: 'indoor pet',
+          mood: 'playful',
+          colors: ['brown', 'beige', 'gray'],
           quality: 93,
         },
       },
@@ -262,66 +260,66 @@ export function AIImageOrganizer() {
 
     const mockAlbums: Album[] = [
       {
-        id: "1",
-        name: "Vacation 2024",
-        description: "Our amazing summer vacation photos",
-        coverPhoto: "https://picsum.photos/seed/album1/400/300.jpg",
+        id: '1',
+        name: 'Vacation 2024',
+        description: 'Our amazing summer vacation photos',
+        coverPhoto: 'https://picsum.photos/seed/album1/400/300.jpg',
         photoCount: 45,
-        createdDate: new Date("2024-01-15"),
-        tags: ["vacation", "travel", "2024"],
-        name: "Vacation 2025",
-        description: "Our amazing summer vacation photos",
-        coverPhoto: "https://picsum.photos/seed/album1/400/300.jpg",
+        createdDate: new Date('2024-01-15'),
+        tags: ['vacation', 'travel', '2024'],
+        name: 'Vacation 2025',
+        description: 'Our amazing summer vacation photos',
+        coverPhoto: 'https://picsum.photos/seed/album1/400/300.jpg',
         photoCount: 45,
-        createdDate: new Date("2025-01-15"),
-        tags: ["vacation", "travel", "2025"],
+        createdDate: new Date('2025-01-15'),
+        tags: ['vacation', 'travel', '2025'],
         isSmart: false,
         autoUpdate: false,
-        category: "event",
+        category: 'event',
       },
       {
-        id: "2",
-        name: "Family & Friends",
-        description: "Photos with family and friends",
-        coverPhoto: "https://picsum.photos/seed/album2/400/300.jpg",
+        id: '2',
+        name: 'Family & Friends',
+        description: 'Photos with family and friends',
+        coverPhoto: 'https://picsum.photos/seed/album2/400/300.jpg',
         photoCount: 128,
-        createdDate: new Date("2024-01-01"),
-        createdDate: new Date("2025-01-01"),
-        tags: ["family", "friends", "people"],
+        createdDate: new Date('2024-01-01'),
+        createdDate: new Date('2025-01-01'),
+        tags: ['family', 'friends', 'people'],
         isSmart: true,
         autoUpdate: true,
-        category: "people",
+        category: 'people',
       },
       {
-        id: "3",
-        name: "Nature & Landscapes",
-        description: "Beautiful nature and landscape photography",
-        coverPhoto: "https://picsum.photos/seed/album3/400/300.jpg",
+        id: '3',
+        name: 'Nature & Landscapes',
+        description: 'Beautiful nature and landscape photography',
+        coverPhoto: 'https://picsum.photos/seed/album3/400/300.jpg',
         photoCount: 67,
-        createdDate: new Date("2024-01-10"),
-        createdDate: new Date("2025-01-10"),
-        tags: ["nature", "landscape", "outdoor"],
+        createdDate: new Date('2024-01-10'),
+        createdDate: new Date('2025-01-10'),
+        tags: ['nature', 'landscape', 'outdoor'],
         isSmart: true,
         autoUpdate: true,
-        category: "subject",
+        category: 'subject',
       },
       {
-        id: "4",
-        name: "Best of 2024",
-        description: "Highest quality photos from this year",
-        coverPhoto: "https://picsum.photos/seed/album4/400/300.jpg",
+        id: '4',
+        name: 'Best of 2024',
+        description: 'Highest quality photos from this year',
+        coverPhoto: 'https://picsum.photos/seed/album4/400/300.jpg',
         photoCount: 23,
-        createdDate: new Date("2024-01-01"),
-        tags: ["best", "quality", "2024"],
-        name: "Best of 2025",
-        description: "Highest quality photos from this year",
-        coverPhoto: "https://picsum.photos/seed/album4/400/300.jpg",
+        createdDate: new Date('2024-01-01'),
+        tags: ['best', 'quality', '2024'],
+        name: 'Best of 2025',
+        description: 'Highest quality photos from this year',
+        coverPhoto: 'https://picsum.photos/seed/album4/400/300.jpg',
         photoCount: 23,
-        createdDate: new Date("2025-01-01"),
-        tags: ["best", "quality", "2025"],
+        createdDate: new Date('2025-01-01'),
+        tags: ['best', 'quality', '2025'],
         isSmart: true,
         autoUpdate: true,
-        category: "custom",
+        category: 'custom',
       },
     ];
 
@@ -335,30 +333,27 @@ export function AIImageOrganizer() {
 
     // Simulate AI organization process
     const steps = [
-      { progress: 20, message: "Analyzing photo content..." },
-      { progress: 40, message: "Detecting faces and objects..." },
-      { progress: 60, message: "Identifying locations and events..." },
-      { progress: 80, message: "Creating smart albums..." },
-      { progress: 100, message: "Organization complete!" },
+      { progress: 20, message: 'Analyzing photo content...' },
+      { progress: 40, message: 'Detecting faces and objects...' },
+      { progress: 60, message: 'Identifying locations and events...' },
+      { progress: 80, message: 'Creating smart albums...' },
+      { progress: 100, message: 'Organization complete!' },
     ];
 
     for (const step of steps) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       setOrganizationProgress(step.progress);
     }
 
     // Update photos with enhanced AI analysis
-    setPhotos((prev) =>
-      prev.map((photo) => ({
+    setPhotos(prev =>
+      prev.map(photo => ({
         ...photo,
         aiAnalysis: {
           ...photo.aiAnalysis!,
-          quality: Math.min(
-            100,
-            photo.aiAnalysis!.quality + Math.floor(Math.random() * 10),
-          ),
+          quality: Math.min(100, photo.aiAnalysis!.quality + Math.floor(Math.random() * 10)),
         },
-      })),
+      }))
     );
 
     setIsOrganizing(false);
@@ -373,44 +368,40 @@ export function AIImageOrganizer() {
       description: `Auto-created album: ${newAlbumName}`,
       coverPhoto:
         selectedPhotos.length > 0
-          ? photos.find((p) => p.id === selectedPhotos[0])?.url ||
-            "https://picsum.photos/seed/new/400/300.jpg"
-          : "https://picsum.photos/seed/new/400/300.jpg",
+          ? photos.find(p => p.id === selectedPhotos[0])?.url ||
+            'https://picsum.photos/seed/new/400/300.jpg'
+          : 'https://picsum.photos/seed/new/400/300.jpg',
       photoCount: selectedPhotos.length,
       createdDate: new Date(),
       tags: [],
       isSmart: false,
       autoUpdate: false,
-      category: "custom",
+      category: 'custom',
     };
 
-    setAlbums((prev) => [...prev, newAlbum]);
-    setNewAlbumName("");
+    setAlbums(prev => [...prev, newAlbum]);
+    setNewAlbumName('');
     setShowCreateAlbum(false);
     setSelectedPhotos([]);
   }, [newAlbumName, selectedPhotos, photos]);
 
   const handleToggleFavorite = useCallback((photoId: string) => {
-    setPhotos((prev) =>
-      prev.map((photo) =>
-        photo.id === photoId
-          ? { ...photo, isFavorite: !photo.isFavorite }
-          : photo,
-      ),
+    setPhotos(prev =>
+      prev.map(photo =>
+        photo.id === photoId ? { ...photo, isFavorite: !photo.isFavorite } : photo
+      )
     );
   }, []);
 
   const handleSelectPhoto = useCallback((photoId: string) => {
-    setSelectedPhotos((prev) =>
-      prev.includes(photoId)
-        ? prev.filter((id) => id !== photoId)
-        : [...prev, photoId],
+    setSelectedPhotos(prev =>
+      prev.includes(photoId) ? prev.filter(id => id !== photoId) : [...prev, photoId]
     );
   }, []);
 
   const handleSelectAll = useCallback(() => {
     const filteredPhotos = getFilteredAndSortedPhotos();
-    setSelectedPhotos(filteredPhotos.map((p) => p.id));
+    setSelectedPhotos(filteredPhotos.map(p => p.id));
   }, [photos, filterBy, searchQuery, selectedAlbum]);
 
   const handleClearSelection = useCallback(() => {
@@ -422,40 +413,36 @@ export function AIImageOrganizer() {
 
     // Apply album filter
     if (selectedAlbum) {
-      filtered = filtered.filter((photo) =>
-        photo.albums.includes(selectedAlbum),
-      );
+      filtered = filtered.filter(photo => photo.albums.includes(selectedAlbum));
     }
 
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(
-        (photo) =>
+        photo =>
           photo.name.toLowerCase().includes(query) ||
-          photo.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+          photo.tags.some(tag => tag.toLowerCase().includes(query)) ||
           photo.location?.toLowerCase().includes(query) ||
-          photo.people?.some((person) => person.toLowerCase().includes(query)),
+          photo.people?.some(person => person.toLowerCase().includes(query))
       );
     }
 
     // Apply category filter
-    if (filterBy !== "all") {
-      filtered = filtered.filter((photo) => {
+    if (filterBy !== 'all') {
+      filtered = filtered.filter(photo => {
         switch (filterBy) {
-          case "favorites":
+          case 'favorites':
             return photo.isFavorite;
-          case "recent":
-            return (
-              photo.uploadDate > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-            );
-          case "high-quality":
+          case 'recent':
+            return photo.uploadDate > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+          case 'high-quality':
             return photo.quality >= 90;
-          case "people":
+          case 'people':
             return photo.people && photo.people.length > 0;
-          case "locations":
+          case 'locations':
             return photo.location;
-          case "events":
+          case 'events':
             return photo.event;
           default:
             return true;
@@ -467,20 +454,20 @@ export function AIImageOrganizer() {
     filtered.sort((a, b) => {
       let comparison = 0;
       switch (sortBy) {
-        case "date":
+        case 'date':
           comparison = a.uploadDate.getTime() - b.uploadDate.getTime();
           break;
-        case "name":
+        case 'name':
           comparison = a.name.localeCompare(b.name);
           break;
-        case "size":
+        case 'size':
           comparison = a.fileSize - b.fileSize;
           break;
-        case "quality":
+        case 'quality':
           comparison = a.quality - b.quality;
           break;
       }
-      return sortOrder === "desc" ? -comparison : comparison;
+      return sortOrder === 'desc' ? -comparison : comparison;
     });
 
     return filtered;
@@ -488,19 +475,19 @@ export function AIImageOrganizer() {
 
   const filteredPhotos = getFilteredAndSortedPhotos();
 
-  const getAlbumIcon = (category: Album["category"]) => {
+  const getAlbumIcon = (category: Album['category']) => {
     switch (category) {
-      case "event":
+      case 'event':
         return <Celebration className="w-5 h-5" />;
-      case "people":
+      case 'people':
         return <Users className="w-5 h-5" />;
-      case "location":
+      case 'location':
         return <MapPin className="w-5 h-5" />;
-      case "time":
+      case 'time':
         return <Clock className="w-5 h-5" />;
-      case "subject":
+      case 'subject':
         return <Camera className="w-5 h-5" />;
-      case "custom":
+      case 'custom':
         return <FolderOpen className="w-5 h-5" />;
       default:
         return <FolderOpen className="w-5 h-5" />;
@@ -509,17 +496,17 @@ export function AIImageOrganizer() {
 
   const getFilterIcon = (filter: string) => {
     switch (filter) {
-      case "favorites":
+      case 'favorites':
         return <Heart className="w-4 h-4" />;
-      case "recent":
+      case 'recent':
         return <Clock className="w-4 h-4" />;
-      case "high-quality":
+      case 'high-quality':
         return <Star className="w-4 h-4" />;
-      case "people":
+      case 'people':
         return <Users className="w-4 h-4" />;
-      case "locations":
+      case 'locations':
         return <MapPin className="w-4 h-4" />;
-      case "events":
+      case 'events':
         return <Calendar className="w-4 h-4" />;
       default:
         return <ImageIcon className="w-4 h-4" />;
@@ -527,13 +514,11 @@ export function AIImageOrganizer() {
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
+    if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return (
-      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-    );
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   if (!isPremium) {
@@ -546,8 +531,8 @@ export function AIImageOrganizer() {
             </div>
             <h2 className="text-2xl font-bold">AI Image Organizer</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Automatically organize your photo collection with AI-powered smart
-              albums, face recognition, and intelligent categorization.
+              Automatically organize your photo collection with AI-powered smart albums, face
+              recognition, and intelligent categorization.
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="text-center">
@@ -582,16 +567,10 @@ export function AIImageOrganizer() {
             <FolderOpen className="w-6 h-6 text-green-600" />
             AI Image Organizer
           </h2>
-          <p className="text-muted-foreground">
-            Smart photo organization with AI-powered albums
-          </p>
+          <p className="text-muted-foreground">Smart photo organization with AI-powered albums</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            onClick={handleOrganizePhotos}
-            disabled={isOrganizing}
-            className="premium-button"
-          >
+          <Button onClick={handleOrganizePhotos} disabled={isOrganizing} className="premium-button">
             {isOrganizing ? (
               <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
             ) : (
@@ -602,13 +581,9 @@ export function AIImageOrganizer() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
-            {viewMode === "grid" ? (
-              <List className="w-4 h-4" />
-            ) : (
-              <Grid className="w-4 h-4" />
-            )}
+            {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
           </Button>
         </div>
       </div>
@@ -619,24 +594,20 @@ export function AIImageOrganizer() {
           <CardContent className="p-6">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">
-                  AI Organization Progress
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {organizationProgress}%
-                </span>
+                <span className="text-sm font-medium">AI Organization Progress</span>
+                <span className="text-sm text-muted-foreground">{organizationProgress}%</span>
               </div>
               <Progress value={organizationProgress} className="h-2" />
               <p className="text-xs text-muted-foreground">
                 {organizationProgress < 20
-                  ? "Analyzing photo content..."
+                  ? 'Analyzing photo content...'
                   : organizationProgress < 40
-                    ? "Detecting faces and objects..."
+                    ? 'Detecting faces and objects...'
                     : organizationProgress < 60
-                      ? "Identifying locations and events..."
+                      ? 'Identifying locations and events...'
                       : organizationProgress < 80
-                        ? "Creating smart albums..."
-                        : "Organization complete!"}
+                        ? 'Creating smart albums...'
+                        : 'Organization complete!'}
               </p>
             </div>
           </CardContent>
@@ -662,7 +633,7 @@ export function AIImageOrganizer() {
                     <Input
                       placeholder="Search photos..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={e => setSearchQuery(e.target.value)}
                       className="pl-10"
                     />
                   </div>
@@ -722,8 +693,8 @@ export function AIImageOrganizer() {
                 {/* Sort */}
                 <Select
                   value={`${sortBy}-${sortOrder}`}
-                  onValueChange={(value) => {
-                    const [field, order] = value.split("-");
+                  onValueChange={value => {
+                    const [field, order] = value.split('-');
                     setSortBy(field as any);
                     setSortOrder(order as any);
                   }}
@@ -768,11 +739,7 @@ export function AIImageOrganizer() {
                 {/* Selection Controls */}
                 {selectedPhotos.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={handleClearSelection}
-                    >
+                    <Button size="sm" variant="outline" onClick={handleClearSelection}>
                       Clear ({selectedPhotos.length})
                     </Button>
                     <Button size="sm" onClick={() => setShowCreateAlbum(true)}>
@@ -794,22 +761,14 @@ export function AIImageOrganizer() {
                     <Input
                       placeholder="Album name..."
                       value={newAlbumName}
-                      onChange={(e) => setNewAlbumName(e.target.value)}
-                      onKeyPress={(e) =>
-                        e.key === "Enter" && handleCreateAlbum()
-                      }
+                      onChange={e => setNewAlbumName(e.target.value)}
+                      onKeyPress={e => e.key === 'Enter' && handleCreateAlbum()}
                       className="flex-1"
                     />
-                    <Button
-                      onClick={handleCreateAlbum}
-                      disabled={!newAlbumName.trim()}
-                    >
+                    <Button onClick={handleCreateAlbum} disabled={!newAlbumName.trim()}>
                       Create
                     </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => setShowCreateAlbum(false)}
-                    >
+                    <Button variant="outline" onClick={() => setShowCreateAlbum(false)}>
                       Cancel
                     </Button>
                   </div>
@@ -825,39 +784,35 @@ export function AIImageOrganizer() {
           {filteredPhotos.length > 0 ? (
             <div
               className={`grid gap-4 ${
-                viewMode === "grid"
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "grid-cols-1"
+                viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'grid-cols-1'
               }`}
             >
-              {filteredPhotos.map((photo) => (
+              {filteredPhotos.map(photo => (
                 <Card
                   key={photo.id}
                   className={`overflow-hidden cursor-pointer transition-all ${
                     selectedPhotos.includes(photo.id)
-                      ? "ring-2 ring-blue-500 bg-blue-50"
-                      : "hover:shadow-md"
+                      ? 'ring-2 ring-blue-500 bg-blue-50'
+                      : 'hover:shadow-md'
                   }`}
                   onClick={() => handleSelectPhoto(photo.id)}
                 >
                   <div className="relative aspect-square">
-                    <img
-                      src={photo.url}
-                      alt={photo.name}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={photo.url} alt={photo.name} className="w-full h-full object-cover" />
                     <div className="absolute top-2 right-2 flex gap-1">
                       <Button
                         size="sm"
                         variant="secondary"
                         className="w-8 h-8 p-0"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           handleToggleFavorite(photo.id);
                         }}
                       >
                         <Heart
-                          className={`w-4 h-4 ${photo.isFavorite ? "fill-red-500 text-red-500" : ""}`}
+                          className={`w-4 h-4 ${photo.isFavorite ? 'fill-red-500 text-red-500' : ''}`}
                         />
                       </Button>
                       {selectedPhotos.includes(photo.id) && (
@@ -874,20 +829,14 @@ export function AIImageOrganizer() {
                   </div>
                   <CardContent className="p-3">
                     <div className="space-y-2">
-                      <h3 className="font-medium text-sm line-clamp-1">
-                        {photo.name}
-                      </h3>
+                      <h3 className="font-medium text-sm line-clamp-1">{photo.name}</h3>
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>{photo.uploadDate.toLocaleDateString()}</span>
                         <span>{formatFileSize(photo.fileSize)}</span>
                       </div>
                       <div className="flex flex-wrap gap-1">
-                        {photo.tags.slice(0, 3).map((tag) => (
-                          <Badge
-                            key={tag}
-                            variant="outline"
-                            className="text-xs"
-                          >
+                        {photo.tags.slice(0, 3).map(tag => (
+                          <Badge key={tag} variant="outline" className="text-xs">
                             {tag}
                           </Badge>
                         ))}
@@ -912,8 +861,8 @@ export function AIImageOrganizer() {
                 </p>
                 <Button
                   onClick={() => {
-                    setSearchQuery("");
-                    setFilterBy("all");
+                    setSearchQuery('');
+                    setFilterBy('all');
                     setSelectedAlbum(null);
                   }}
                 >
@@ -936,7 +885,7 @@ export function AIImageOrganizer() {
 
           {/* Albums Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {albums.map((album) => (
+            {albums.map(album => (
               <Card
                 key={album.id}
                 className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
@@ -949,11 +898,8 @@ export function AIImageOrganizer() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-2 right-2">
-                    <Badge
-                      variant={album.isSmart ? "default" : "secondary"}
-                      className="text-xs"
-                    >
-                      {album.isSmart ? "Smart" : "Manual"}
+                    <Badge variant={album.isSmart ? 'default' : 'secondary'} className="text-xs">
+                      {album.isSmart ? 'Smart' : 'Manual'}
                     </Badge>
                   </div>
                   <div className="absolute bottom-2 left-2">
@@ -979,7 +925,7 @@ export function AIImageOrganizer() {
                       {album.autoUpdate && <RefreshCw className="w-3 h-3" />}
                     </div>
                     <div className="flex flex-wrap gap-1">
-                      {album.tags.slice(0, 3).map((tag) => (
+                      {album.tags.slice(0, 3).map(tag => (
                         <Badge key={tag} variant="outline" className="text-xs">
                           {tag}
                         </Badge>
@@ -1005,14 +951,10 @@ export function AIImageOrganizer() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label>Enable Smart Albums</Label>
-                  <Switch
-                    checked={smartAlbumsEnabled}
-                    onCheckedChange={setSmartAlbumsEnabled}
-                  />
+                  <Switch checked={smartAlbumsEnabled} onCheckedChange={setSmartAlbumsEnabled} />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Automatically create albums based on people, locations,
-                  events, and photo content.
+                  Automatically create albums based on people, locations, events, and photo content.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
@@ -1046,14 +988,10 @@ export function AIImageOrganizer() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <Label>Auto-organize new photos</Label>
-                  <Switch
-                    checked={autoOrganize}
-                    onCheckedChange={setAutoOrganize}
-                  />
+                  <Switch checked={autoOrganize} onCheckedChange={setAutoOrganize} />
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Automatically organize new photos as they are uploaded using
-                  AI analysis.
+                  Automatically organize new photos as they are uploaded using AI analysis.
                 </p>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm">
@@ -1088,24 +1026,16 @@ export function AIImageOrganizer() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {photos.length}
-                  </div>
+                  <div className="text-2xl font-bold text-blue-600">{photos.length}</div>
                   <div className="text-sm text-blue-800">Total Photos</div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">
-                    {albums.length}
-                  </div>
+                  <div className="text-2xl font-bold text-green-600">{albums.length}</div>
                   <div className="text-sm text-green-800">Albums Created</div>
                 </div>
                 <div className="text-center p-4 bg-purple-50 rounded-lg">
                   <div className="text-2xl font-bold text-purple-600">
-                    {Math.round(
-                      photos.reduce((sum, p) => sum + p.quality, 0) /
-                        photos.length,
-                    )}
-                    %
+                    {Math.round(photos.reduce((sum, p) => sum + p.quality, 0) / photos.length)}%
                   </div>
                   <div className="text-sm text-purple-800">Avg Quality</div>
                 </div>
@@ -1114,15 +1044,11 @@ export function AIImageOrganizer() {
               <div className="mt-4 space-y-2">
                 <div className="flex items-center gap-2 text-sm">
                   <TrendingUp className="w-4 h-4 text-green-600" />
-                  <span>
-                    Photo quality improved by 15% after AI enhancement
-                  </span>
+                  <span>Photo quality improved by 15% after AI enhancement</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Lightbulb className="w-4 h-4 text-yellow-600" />
-                  <span>
-                    AI suggests creating albums for recent vacation photos
-                  </span>
+                  <span>AI suggests creating albums for recent vacation photos</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Users className="w-4 h-4 text-blue-600" />

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   Palette,
   Sparkles,
@@ -36,30 +36,27 @@ import {
   Rocket,
   Star,
   Gem,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import {
-  useSecureSubscription,
-  useAIArtGenerator,
-} from "@/lib/ai-art-generator";
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { useSecureSubscription, useAIArtGenerator } from '@/lib/ai-art-generator';
 
 interface ArtGenerationConfig {
   prompt: string;
@@ -98,10 +95,10 @@ interface ArtStyle {
 
 export function AIArtGenerator() {
   const [config, setConfig] = useState<ArtGenerationConfig>({
-    prompt: "",
-    negativePrompt: "",
-    style: "realistic",
-    model: "flux-pro",
+    prompt: '',
+    negativePrompt: '',
+    style: 'realistic',
+    model: 'flux-pro',
     width: 1024,
     height: 1024,
     steps: 30,
@@ -114,11 +111,9 @@ export function AIArtGenerator() {
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationProgress, setGenerationProgress] = useState(0);
-  const [currentGeneration, setCurrentGeneration] = useState<string | null>(
-    null,
-  );
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [selectedStyle, setSelectedStyle] = useState<string>("realistic");
+  const [currentGeneration, setCurrentGeneration] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedStyle, setSelectedStyle] = useState<string>('realistic');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [batchMode, setBatchMode] = useState(false);
   const [batchCount, setBatchCount] = useState(4);
@@ -135,80 +130,80 @@ export function AIArtGenerator() {
 
   const artStyles: ArtStyle[] = [
     {
-      id: "realistic",
-      name: "Photorealistic",
-      description: "Ultra-realistic photographic quality",
+      id: 'realistic',
+      name: 'Photorealistic',
+      description: 'Ultra-realistic photographic quality',
       icon: <Camera className="w-5 h-5" />,
-      preview: "📸",
+      preview: '📸',
       credits: 100,
     },
     {
-      id: "artistic",
-      name: "Artistic",
-      description: "Painterly and artistic styles",
+      id: 'artistic',
+      name: 'Artistic',
+      description: 'Painterly and artistic styles',
       icon: <Palette className="w-5 h-5" />,
-      preview: "🎨",
+      preview: '🎨',
       credits: 120,
     },
     {
-      id: "anime",
-      name: "Anime",
-      description: "Japanese anime and manga style",
+      id: 'anime',
+      name: 'Anime',
+      description: 'Japanese anime and manga style',
       icon: <Star className="w-5 h-5" />,
-      preview: "🌸",
+      preview: '🌸',
       credits: 90,
     },
     {
-      id: "fantasy",
-      name: "Fantasy",
-      description: "Magical and fantastical scenes",
+      id: 'fantasy',
+      name: 'Fantasy',
+      description: 'Magical and fantastical scenes',
       icon: <Gem className="w-5 h-5" />,
-      preview: "🏰",
+      preview: '🏰',
       credits: 110,
     },
     {
-      id: "sci-fi",
-      name: "Sci-Fi",
-      description: "Futuristic and science fiction",
+      id: 'sci-fi',
+      name: 'Sci-Fi',
+      description: 'Futuristic and science fiction',
       icon: <Rocket className="w-5 h-5" />,
-      preview: "🚀",
+      preview: '🚀',
       credits: 115,
     },
     {
-      id: "abstract",
-      name: "Abstract",
-      description: "Abstract and conceptual art",
+      id: 'abstract',
+      name: 'Abstract',
+      description: 'Abstract and conceptual art',
       icon: <Brush className="w-5 h-5" />,
-      preview: "🎭",
+      preview: '🎭',
       credits: 95,
     },
     {
-      id: "landscape",
-      name: "Landscape",
-      description: "Natural landscapes and scenery",
+      id: 'landscape',
+      name: 'Landscape',
+      description: 'Natural landscapes and scenery',
       icon: <Mountain className="w-5 h-5" />,
-      preview: "🏔️",
+      preview: '🏔️',
       credits: 85,
     },
     {
-      id: "portrait",
-      name: "Portrait",
-      description: "Character and portrait focus",
+      id: 'portrait',
+      name: 'Portrait',
+      description: 'Character and portrait focus',
       icon: <Users className="w-5 h-5" />,
-      preview: "👤",
+      preview: '👤',
       credits: 105,
     },
   ];
 
   const presetPrompts = [
-    "A serene mountain landscape at sunset with golden light",
-    "Futuristic cyberpunk city with neon lights and flying cars",
-    "Magical forest with glowing mushrooms and ancient trees",
-    "Underwater scene with colorful coral reefs and tropical fish",
-    "Steampunk airship floating above Victorian-era city",
-    "Cosmic nebula with distant galaxies and stars",
-    "Medieval castle on a hill surrounded by mist",
-    "Modern minimalist living room with large windows",
+    'A serene mountain landscape at sunset with golden light',
+    'Futuristic cyberpunk city with neon lights and flying cars',
+    'Magical forest with glowing mushrooms and ancient trees',
+    'Underwater scene with colorful coral reefs and tropical fish',
+    'Steampunk airship floating above Victorian-era city',
+    'Cosmic nebula with distant galaxies and stars',
+    'Medieval castle on a hill surrounded by mist',
+    'Modern minimalist living room with large windows',
   ];
 
   const handleGenerate = useCallback(async () => {
@@ -243,10 +238,10 @@ export function AIArtGenerator() {
         }
 
         // Small delay for visual feedback
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
 
-      setGeneratedImages((prev) => [...newImages, ...prev]);
+      setGeneratedImages(prev => [...newImages, ...prev]);
       setGenerationProgress(100);
 
       setTimeout(() => {
@@ -254,7 +249,7 @@ export function AIArtGenerator() {
         setIsGenerating(false);
       }, 1000);
     } catch (error) {
-      console.error("Generation failed:", error);
+      console.error('Generation failed:', error);
       setIsGenerating(false);
       setCurrentGeneration(null);
     }
@@ -265,7 +260,7 @@ export function AIArtGenerator() {
       const response = await fetch(image.url);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = url;
       a.download = `ai-art-${image.id}.png`;
       document.body.appendChild(a);
@@ -273,7 +268,7 @@ export function AIArtGenerator() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      console.error("Download failed:", error);
+      console.error('Download failed:', error);
     }
   }, []);
 
@@ -282,21 +277,18 @@ export function AIArtGenerator() {
   }, []);
 
   const handleToggleFavorite = useCallback((imageId: string) => {
-    setGeneratedImages((prev) =>
-      prev.map((img) =>
-        img.id === imageId ? { ...img, isFavorite: !img.isFavorite } : img,
-      ),
+    setGeneratedImages(prev =>
+      prev.map(img => (img.id === imageId ? { ...img, isFavorite: !img.isFavorite } : img))
     );
   }, []);
 
   const handleStyleSelect = useCallback((styleId: string) => {
     setSelectedStyle(styleId);
-    setConfig((prev) => ({ ...prev, style: styleId }));
+    setConfig(prev => ({ ...prev, style: styleId }));
   }, []);
 
   const estimateCredits = useCallback(() => {
-    const baseCredits =
-      artStyles.find((s) => s.id === selectedStyle)?.credits || 100;
+    const baseCredits = artStyles.find(s => s.id === selectedStyle)?.credits || 100;
     const multiplier = batchMode ? batchCount : 1;
     let total = baseCredits * multiplier;
 
@@ -324,12 +316,11 @@ export function AIArtGenerator() {
             </div>
             <h2 className="text-2xl font-bold">AI Art Generator</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Create stunning artwork from text descriptions using advanced AI
-              models. Access multiple artistic styles and generate high-quality
-              images.
+              Create stunning artwork from text descriptions using advanced AI models. Access
+              multiple artistic styles and generate high-quality images.
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-md mx-auto">
-              {artStyles.slice(0, 4).map((style) => (
+              {artStyles.slice(0, 4).map(style => (
                 <div key={style.id} className="text-center">
                   <div className="text-2xl mb-1">{style.preview}</div>
                   <div className="text-xs font-medium">{style.name}</div>
@@ -355,9 +346,7 @@ export function AIArtGenerator() {
             <Palette className="w-6 h-6 text-purple-600" />
             AI Art Generator
           </h2>
-          <p className="text-muted-foreground">
-            Create stunning artwork from text descriptions
-          </p>
+          <p className="text-muted-foreground">Create stunning artwork from text descriptions</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-purple-600">
@@ -366,13 +355,9 @@ export function AIArtGenerator() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
-            {viewMode === "grid" ? (
-              <List className="w-4 h-4" />
-            ) : (
-              <Grid className="w-4 h-4" />
-            )}
+            {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
           </Button>
         </div>
       </div>
@@ -392,13 +377,13 @@ export function AIArtGenerator() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {artStyles.map((style) => (
+                {artStyles.map(style => (
                   <div
                     key={style.id}
                     className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                       selectedStyle === style.id
-                        ? "border-purple-500 bg-purple-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? 'border-purple-500 bg-purple-50'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => handleStyleSelect(style.id)}
                   >
@@ -429,24 +414,20 @@ export function AIArtGenerator() {
                     id="prompt"
                     placeholder="Describe what you want to create..."
                     value={config.prompt}
-                    onChange={(e) =>
-                      setConfig((prev) => ({ ...prev, prompt: e.target.value }))
-                    }
+                    onChange={e => setConfig(prev => ({ ...prev, prompt: e.target.value }))}
                     rows={4}
                     className="mt-2"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="negative-prompt">
-                    Negative Prompt (Optional)
-                  </Label>
+                  <Label htmlFor="negative-prompt">Negative Prompt (Optional)</Label>
                   <Textarea
                     id="negative-prompt"
                     placeholder="What to avoid in the image..."
                     value={config.negativePrompt}
-                    onChange={(e) =>
-                      setConfig((prev) => ({
+                    onChange={e =>
+                      setConfig(prev => ({
                         ...prev,
                         negativePrompt: e.target.value,
                       }))
@@ -465,9 +446,7 @@ export function AIArtGenerator() {
                         key={idx}
                         variant="outline"
                         size="sm"
-                        onClick={() =>
-                          setConfig((prev) => ({ ...prev, prompt }))
-                        }
+                        onClick={() => setConfig(prev => ({ ...prev, prompt }))}
                         className="text-xs"
                       >
                         {prompt.slice(0, 30)}...
@@ -483,11 +462,7 @@ export function AIArtGenerator() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">Advanced Settings</CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowAdvanced(!showAdvanced)}
-                  >
+                  <Button variant="ghost" size="sm" onClick={() => setShowAdvanced(!showAdvanced)}>
                     <Settings className="w-4 h-4" />
                   </Button>
                 </div>
@@ -499,21 +474,15 @@ export function AIArtGenerator() {
                     <Label>Model</Label>
                     <Select
                       value={config.model}
-                      onValueChange={(value) =>
-                        setConfig((prev) => ({ ...prev, model: value }))
-                      }
+                      onValueChange={value => setConfig(prev => ({ ...prev, model: value }))}
                     >
                       <SelectTrigger className="mt-2">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="flux-pro">FLUX Pro</SelectItem>
-                        <SelectItem value="flux-schnell">
-                          FLUX Schnell
-                        </SelectItem>
-                        <SelectItem value="sd-xl">
-                          Stable Diffusion XL
-                        </SelectItem>
+                        <SelectItem value="flux-schnell">FLUX Schnell</SelectItem>
+                        <SelectItem value="sd-xl">Stable Diffusion XL</SelectItem>
                         <SelectItem value="midjourney">MidJourney</SelectItem>
                       </SelectContent>
                     </Select>
@@ -523,9 +492,9 @@ export function AIArtGenerator() {
                     <Label>Size</Label>
                     <Select
                       value={`${config.width}x${config.height}`}
-                      onValueChange={(value) => {
-                        const [width, height] = value.split("x").map(Number);
-                        setConfig((prev) => ({ ...prev, width, height }));
+                      onValueChange={value => {
+                        const [width, height] = value.split('x').map(Number);
+                        setConfig(prev => ({ ...prev, width, height }));
                       }}
                     >
                       <SelectTrigger className="mt-2">
@@ -548,9 +517,7 @@ export function AIArtGenerator() {
                       <Label>Steps: {config.steps}</Label>
                       <Slider
                         value={[config.steps]}
-                        onValueChange={(value) =>
-                          setConfig((prev) => ({ ...prev, steps: value[0] }))
-                        }
+                        onValueChange={value => setConfig(prev => ({ ...prev, steps: value[0] }))}
                         max={50}
                         min={10}
                         step={1}
@@ -562,8 +529,8 @@ export function AIArtGenerator() {
                       <Label>Guidance: {config.guidance}</Label>
                       <Slider
                         value={[config.guidance]}
-                        onValueChange={(value) =>
-                          setConfig((prev) => ({ ...prev, guidance: value[0] }))
+                        onValueChange={value =>
+                          setConfig(prev => ({ ...prev, guidance: value[0] }))
                         }
                         max={20}
                         min={1}
@@ -577,45 +544,39 @@ export function AIArtGenerator() {
                         <Switch
                           id="enhance-details"
                           checked={config.enhanceDetails}
-                          onCheckedChange={(checked) =>
-                            setConfig((prev) => ({
+                          onCheckedChange={checked =>
+                            setConfig(prev => ({
                               ...prev,
                               enhanceDetails: checked,
                             }))
                           }
                         />
-                        <Label htmlFor="enhance-details">
-                          Enhance Details (+20% credits)
-                        </Label>
+                        <Label htmlFor="enhance-details">Enhance Details (+20% credits)</Label>
                       </div>
 
                       <div className="flex items-center space-x-2">
                         <Switch
                           id="fix-faces"
                           checked={config.fixFaces}
-                          onCheckedChange={(checked) =>
-                            setConfig((prev) => ({
+                          onCheckedChange={checked =>
+                            setConfig(prev => ({
                               ...prev,
                               fixFaces: checked,
                             }))
                           }
                         />
-                        <Label htmlFor="fix-faces">
-                          Fix Faces (+10% credits)
-                        </Label>
+                        <Label htmlFor="fix-faces">Fix Faces (+10% credits)</Label>
                       </div>
 
                       <div className="flex items-center space-x-2">
                         <Switch
                           id="upscale"
                           checked={config.upscale}
-                          onCheckedChange={(checked) =>
-                            setConfig((prev) => ({ ...prev, upscale: checked }))
+                          onCheckedChange={checked =>
+                            setConfig(prev => ({ ...prev, upscale: checked }))
                           }
                         />
-                        <Label htmlFor="upscale">
-                          4K Upscale (+50% credits)
-                        </Label>
+                        <Label htmlFor="upscale">4K Upscale (+50% credits)</Label>
                       </div>
                     </div>
                   </div>
@@ -624,19 +585,13 @@ export function AIArtGenerator() {
                 {/* Batch Mode */}
                 <div className="flex items-center justify-between pt-4 border-t">
                   <div className="flex items-center space-x-2">
-                    <Switch
-                      id="batch-mode"
-                      checked={batchMode}
-                      onCheckedChange={setBatchMode}
-                    />
+                    <Switch id="batch-mode" checked={batchMode} onCheckedChange={setBatchMode} />
                     <Label htmlFor="batch-mode">Batch Mode</Label>
                   </div>
                   {batchMode && (
                     <Select
                       value={batchCount.toString()}
-                      onValueChange={(value) =>
-                        setBatchCount(Number.parseInt(value))
-                      }
+                      onValueChange={value => setBatchCount(Number.parseInt(value))}
                     >
                       <SelectTrigger className="w-20">
                         <SelectValue />
@@ -661,11 +616,7 @@ export function AIArtGenerator() {
 
                   <Button
                     onClick={handleGenerate}
-                    disabled={
-                      !config.prompt.trim() ||
-                      isGenerating ||
-                      credits < estimateCredits()
-                    }
+                    disabled={!config.prompt.trim() || isGenerating || credits < estimateCredits()}
                     className="w-full"
                     size="lg"
                   >
@@ -692,9 +643,7 @@ export function AIArtGenerator() {
               <CardContent className="p-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">
-                      Generating Artwork
-                    </span>
+                    <span className="text-sm font-medium">Generating Artwork</span>
                     <span className="text-sm text-muted-foreground">
                       {Math.round(generationProgress)}%
                     </span>
@@ -702,14 +651,14 @@ export function AIArtGenerator() {
                   <Progress value={generationProgress} className="h-2" />
                   <p className="text-xs text-muted-foreground">
                     {generationProgress < 25
-                      ? "Initializing AI model..."
+                      ? 'Initializing AI model...'
                       : generationProgress < 50
-                        ? "Processing your prompt..."
+                        ? 'Processing your prompt...'
                         : generationProgress < 75
-                          ? "Generating artwork..."
+                          ? 'Generating artwork...'
                           : generationProgress < 100
-                            ? "Finalizing details..."
-                            : "Complete!"}
+                            ? 'Finalizing details...'
+                            : 'Complete!'}
                   </p>
                 </div>
               </CardContent>
@@ -730,12 +679,12 @@ export function AIArtGenerator() {
           {generatedImages.length > 0 ? (
             <div
               className={`grid gap-4 ${
-                viewMode === "grid"
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "grid-cols-1"
+                viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'grid-cols-1'
               }`}
             >
-              {generatedImages.map((image) => (
+              {generatedImages.map(image => (
                 <Card key={image.id} className="overflow-hidden">
                   <div className="relative aspect-square">
                     <img
@@ -751,16 +700,14 @@ export function AIArtGenerator() {
                         onClick={() => handleToggleFavorite(image.id)}
                       >
                         <Heart
-                          className={`w-4 h-4 ${image.isFavorite ? "fill-red-500 text-red-500" : ""}`}
+                          className={`w-4 h-4 ${image.isFavorite ? 'fill-red-500 text-red-500' : ''}`}
                         />
                       </Button>
                     </div>
                   </div>
                   <CardContent className="p-3">
                     <div className="space-y-2">
-                      <p className="text-sm font-medium line-clamp-2">
-                        {image.prompt}
-                      </p>
+                      <p className="text-sm font-medium line-clamp-2">{image.prompt}</p>
                       <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>{image.timestamp.toLocaleDateString()}</span>
                         <span>{image.creditsUsed} credits</span>
@@ -792,18 +739,11 @@ export function AIArtGenerator() {
             <Card>
               <CardContent className="p-12 text-center">
                 <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  No Artwork Generated Yet
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">No Artwork Generated Yet</h3>
                 <p className="text-muted-foreground mb-4">
-                  Create your first AI-generated artwork using the Create Art
-                  tab
+                  Create your first AI-generated artwork using the Create Art tab
                 </p>
-                <Button
-                  onClick={() =>
-                    setConfig((prev) => ({ ...prev, prompt: presetPrompts[0] }))
-                  }
-                >
+                <Button onClick={() => setConfig(prev => ({ ...prev, prompt: presetPrompts[0] }))}>
                   Try a Sample Prompt
                 </Button>
               </CardContent>
@@ -813,28 +753,22 @@ export function AIArtGenerator() {
 
         <TabsContent value="styles" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {artStyles.map((style) => (
+            {artStyles.map(style => (
               <Card key={style.id} className="overflow-hidden">
                 <CardContent className="p-6">
                   <div className="flex items-start gap-4">
                     <div className="text-4xl">{style.preview}</div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold mb-1">
-                        {style.name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {style.description}
-                      </p>
+                      <h3 className="text-lg font-semibold mb-1">{style.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{style.description}</p>
                       <div className="flex items-center justify-between">
                         <Badge variant="outline">{style.credits} credits</Badge>
                         <Button
                           size="sm"
-                          variant={
-                            selectedStyle === style.id ? "default" : "outline"
-                          }
+                          variant={selectedStyle === style.id ? 'default' : 'outline'}
                           onClick={() => handleStyleSelect(style.id)}
                         >
-                          {selectedStyle === style.id ? "Selected" : "Select"}
+                          {selectedStyle === style.id ? 'Selected' : 'Select'}
                         </Button>
                       </div>
                     </div>

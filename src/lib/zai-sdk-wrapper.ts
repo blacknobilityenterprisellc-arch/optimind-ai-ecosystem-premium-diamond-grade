@@ -68,7 +68,7 @@ class PremiumZAIWrapper {
 
       // Check if we have a real API key
       const apiKey = this.config.apiKey || process.env.ZAI_API_KEY;
-      
+
       if (!apiKey || apiKey.includes('testing') || apiKey.includes('demo')) {
         console.log('⚠️ Using fallback mode for ZAI SDK (no valid API key)');
         this.setupFallbackMode();
@@ -84,7 +84,7 @@ class PremiumZAIWrapper {
 
       // Test the connection
       const testResult = await this.testConnection();
-      
+
       if (testResult.success) {
         this.healthStatus = {
           initialized: true,
@@ -96,16 +96,19 @@ class PremiumZAIWrapper {
       } else {
         throw new Error(testResult.error || 'Connection test failed');
       }
-
     } catch (error) {
       console.warn('⚠️ ZAI SDK initialization failed, falling back to mock mode:', error);
       this.setupFallbackMode();
     }
   }
 
-  private async testConnection(): Promise<{ success: boolean; error?: string; responseTime?: number }> {
+  private async testConnection(): Promise<{
+    success: boolean;
+    error?: string;
+    responseTime?: number;
+  }> {
     const startTime = Date.now();
-    
+
     try {
       const response = await this.zai.chat.completions.create({
         messages: [
@@ -130,11 +133,10 @@ class PremiumZAIWrapper {
       } else {
         return { success: false, error: 'Unexpected response content' };
       }
-
     } catch (error: any) {
-      return { 
-        success: false, 
-        error: error?.message || 'Unknown error during connection test' 
+      return {
+        success: false,
+        error: error?.message || 'Unknown error during connection test',
       };
     }
   }
@@ -145,34 +147,38 @@ class PremiumZAIWrapper {
       chat: {
         completions: {
           create: async (params: any) => ({
-            choices: [{
-              message: {
-                content: this.generateMockResponse(params.messages)
-              }
-            }],
+            choices: [
+              {
+                message: {
+                  content: this.generateMockResponse(params.messages),
+                },
+              },
+            ],
             usage: {
               prompt_tokens: 10,
               completion_tokens: 20,
-              total_tokens: 30
-            }
-          })
-        }
+              total_tokens: 30,
+            },
+          }),
+        },
       },
       images: {
         generations: {
           create: async (params: any) => ({
-            data: [{
-              base64: 'mock_base64_image_data'
-            }]
-          })
-        }
+            data: [
+              {
+                base64: 'mock_base64_image_data',
+              },
+            ],
+          }),
+        },
       },
       functions: {
         invoke: async (functionName: string, params: any) => ({
           result: `Mock result for ${functionName}`,
-          success: true
-        })
-      }
+          success: true,
+        }),
+      },
     };
 
     this.healthStatus = {
@@ -188,11 +194,11 @@ class PremiumZAIWrapper {
   private generateMockResponse(messages: any[]): string {
     const lastMessage = messages[messages.length - 1];
     const content = lastMessage?.content || '';
-    
+
     if (content.toLowerCase().includes('health check')) {
       return 'OK';
     }
-    
+
     return `Mock response for: "${content.substring(0, 100)}${content.length > 100 ? '...' : ''}"`;
   }
 
@@ -200,18 +206,19 @@ class PremiumZAIWrapper {
     // Refresh health status if needed
     const now = new Date();
     const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
-    
-    if (timeSinceLastCheck > 60000) { // Check every minute
+
+    if (timeSinceLastCheck > 60000) {
+      // Check every minute
       await this.refreshHealthStatus();
     }
-    
+
     return { ...this.healthStatus };
   }
 
   private async refreshHealthStatus(): Promise<void> {
     try {
       const testResult = await this.testConnection();
-      
+
       this.healthStatus = {
         initialized: testResult.success,
         modelAvailable: testResult.success,
@@ -233,11 +240,11 @@ class PremiumZAIWrapper {
     if (!this.healthStatus.initialized) {
       await this.initialize();
     }
-    
+
     if (!this.zai) {
       throw new Error('ZAI SDK not available');
     }
-    
+
     return this.zai;
   }
 
@@ -277,15 +284,15 @@ class PremiumZAIWrapper {
 
   async waitForAvailability(timeout: number = 30000): Promise<boolean> {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       if (this.isAvailable()) {
         return true;
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
-    
+
     return false;
   }
 }
@@ -297,4 +304,5 @@ export const premiumZAIWrapper = PremiumZAIWrapper.getInstance();
 export const getZAIInstance = () => premiumZAIWrapper.getZAIInstance();
 export const createChatCompletion = (params: any) => premiumZAIWrapper.createChatCompletion(params);
 export const generateImage = (params: any) => premiumZAIWrapper.generateImage(params);
-export const invokeZAIFunction = (name: string, params: any) => premiumZAIWrapper.invokeFunction(name, params);
+export const invokeZAIFunction = (name: string, params: any) =>
+  premiumZAIWrapper.invokeFunction(name, params);

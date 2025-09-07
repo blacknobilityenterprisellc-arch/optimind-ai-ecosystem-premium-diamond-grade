@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   Brain,
   Search,
@@ -20,18 +20,12 @@ import {
   Zap,
   Crown,
   ChevronDown,
-} from "lucide-react";
-import {
-  TestTube,
-  Activity,
-  TrendingUp,
-  AlertTriangle,
-  FileCheck,
-} from "lucide-react";
+} from 'lucide-react';
+import { TestTube, Activity, TrendingUp, AlertTriangle, FileCheck } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +33,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 
 export default function NavigationHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,61 +41,61 @@ export default function NavigationHeader() {
 
   const navigationItems = [
     {
-      title: "Dashboard",
-      href: "/",
+      title: 'Dashboard',
+      href: '/',
       icon: BarChart3,
-      description: "Overview and analytics",
+      description: 'Overview and analytics',
     },
     {
-      title: "OptiTest AI",
-      href: "/testing",
+      title: 'OptiTest AI',
+      href: '/testing',
       icon: TestTube,
-      description: "Autonomous testing framework",
+      description: 'Autonomous testing framework',
     },
     {
-      title: "AI Content & Creation",
-      href: "/content-creation",
+      title: 'AI Content & Creation',
+      href: '/content-creation',
       icon: FileText,
-      description: "Generate content, art, and media",
+      description: 'Generate content, art, and media',
     },
     {
-      title: "AI Optimization",
-      href: "/optimization",
+      title: 'AI Optimization',
+      href: '/optimization',
       icon: Target,
-      description: "SEO, AEO, GEO, and performance",
+      description: 'SEO, AEO, GEO, and performance',
     },
     {
-      title: "AI Research & Analysis",
-      href: "/research-analysis",
+      title: 'AI Research & Analysis',
+      href: '/research-analysis',
       icon: Brain,
-      description: "Multi-model analysis and insights",
+      description: 'Multi-model analysis and insights',
     },
   ];
 
   const testingSubItems = [
     {
-      title: "Testing Dashboard",
-      href: "/testing",
+      title: 'Testing Dashboard',
+      href: '/testing',
       icon: Activity,
-      description: "Main testing overview",
+      description: 'Main testing overview',
     },
     {
-      title: "Automated Remediation",
-      href: "/testing/remediation",
+      title: 'Automated Remediation',
+      href: '/testing/remediation',
       icon: AlertTriangle,
-      description: "Self-healing and repair system",
+      description: 'Self-healing and repair system',
     },
     {
-      title: "Enterprise Reports",
-      href: "/testing/reports",
+      title: 'Enterprise Reports',
+      href: '/testing/reports',
       icon: FileCheck,
-      description: "Comprehensive reporting and alerts",
+      description: 'Comprehensive reporting and alerts',
     },
   ];
 
   const isActive = (href: string) => {
-    if (href === "/") {
-      return pathname === "/";
+    if (href === '/') {
+      return pathname === '/';
     }
     return pathname.startsWith(href);
   };
@@ -117,23 +111,19 @@ export default function NavigationHeader() {
                 <Sparkles className="h-3 w-3 text-purple-500" />
               </div>
             </div>
-            <span className="hidden font-bold sm:inline-block">
-              OptiMind AI
-            </span>
+            <span className="hidden font-bold sm:inline-block">OptiMind AI</span>
             <Badge variant="secondary" className="ml-1 text-xs">
               Diamond
             </Badge>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            {navigationItems.map((item) =>
-              item.title === "OptiTest AI" ? (
+            {navigationItems.map(item =>
+              item.title === 'OptiTest AI' ? (
                 <DropdownMenu key={item.href}>
                   <DropdownMenuTrigger asChild>
                     <button
                       className={`flex items-center space-x-1 transition-colors hover:text-foreground/80 ${
-                        isActive(item.href)
-                          ? "text-foreground"
-                          : "text-foreground/60"
+                        isActive(item.href) ? 'text-foreground' : 'text-foreground/60'
                       }`}
                     >
                       <item.icon className="h-4 w-4" />
@@ -142,14 +132,12 @@ export default function NavigationHeader() {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    {testingSubItems.map((subItem) => (
+                    {testingSubItems.map(subItem => (
                       <DropdownMenuItem key={subItem.href} asChild>
                         <Link
                           href={subItem.href}
                           className={`flex items-center space-x-2 ${
-                            isActive(subItem.href)
-                              ? "bg-accent text-accent-foreground"
-                              : ""
+                            isActive(subItem.href) ? 'bg-accent text-accent-foreground' : ''
                           }`}
                         >
                           <subItem.icon className="h-4 w-4" />
@@ -169,14 +157,12 @@ export default function NavigationHeader() {
                   key={item.href}
                   href={item.href}
                   className={`transition-colors hover:text-foreground/80 ${
-                    isActive(item.href)
-                      ? "text-foreground"
-                      : "text-foreground/60"
+                    isActive(item.href) ? 'text-foreground' : 'text-foreground/60'
                   }`}
                 >
                   {item.title}
                 </Link>
-              ),
+              )
             )}
           </nav>
         </div>
@@ -186,11 +172,7 @@ export default function NavigationHeader() {
           className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
-          {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
+          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           <span className="sr-only">Toggle Menu</span>
         </Button>
 
@@ -213,10 +195,7 @@ export default function NavigationHeader() {
           <nav className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-8 w-8 rounded-full"
-                >
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/avatars/01.png" alt="@user" />
                     <AvatarFallback>U</AvatarFallback>
@@ -229,12 +208,8 @@ export default function NavigationHeader() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      Premium User
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      user@optimind.ai
-                    </p>
+                    <p className="text-sm font-medium leading-none">Premium User</p>
+                    <p className="text-xs leading-none text-muted-foreground">user@optimind.ai</p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -264,31 +239,27 @@ export default function NavigationHeader() {
       {isMobileMenuOpen && (
         <div className="md:hidden">
           <nav className="flex flex-col space-y-1 border-t p-4">
-            {navigationItems.map((item) =>
-              item.title === "OptiTest AI" ? (
+            {navigationItems.map(item =>
+              item.title === 'OptiTest AI' ? (
                 <div key={item.href} className="space-y-1">
                   <div className="flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium">
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
                   </div>
                   <div className="ml-6 space-y-1">
-                    {testingSubItems.map((subItem) => (
+                    {testingSubItems.map(subItem => (
                       <Link
                         key={subItem.href}
                         href={subItem.href}
                         className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                          isActive(subItem.href)
-                            ? "bg-accent text-accent-foreground"
-                            : ""
+                          isActive(subItem.href) ? 'bg-accent text-accent-foreground' : ''
                         }`}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <subItem.icon className="h-4 w-4" />
                         <div>
                           <div>{subItem.title}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {subItem.description}
-                          </div>
+                          <div className="text-xs text-muted-foreground">{subItem.description}</div>
                         </div>
                       </Link>
                     ))}
@@ -299,21 +270,17 @@ export default function NavigationHeader() {
                   key={item.href}
                   href={item.href}
                   className={`flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground ${
-                    isActive(item.href)
-                      ? "bg-accent text-accent-foreground"
-                      : ""
+                    isActive(item.href) ? 'bg-accent text-accent-foreground' : ''
                   }`}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <item.icon className="h-4 w-4" />
                   <div>
                     <div>{item.title}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {item.description}
-                    </div>
+                    <div className="text-xs text-muted-foreground">{item.description}</div>
                   </div>
                 </Link>
-              ),
+              )
             )}
           </nav>
         </div>

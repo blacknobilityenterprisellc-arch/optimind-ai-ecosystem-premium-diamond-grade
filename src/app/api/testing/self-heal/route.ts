@@ -10,14 +10,14 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 interface SelfHealRequest {
   failedTests: {
     id: string;
     name: string;
-    type: "unit" | "integration" | "e2e" | "security" | "performance";
+    type: 'unit' | 'integration' | 'e2e' | 'security' | 'performance';
     error: string;
     stackTrace?: string;
     code: string;
@@ -35,7 +35,7 @@ interface SelfHealRequest {
 }
 
 interface SelfHealResponse {
-  status: "success" | "partial" | "failed";
+  status: 'success' | 'partial' | 'failed';
   healedTests: {
     id: string;
     name: string;
@@ -43,7 +43,7 @@ interface SelfHealResponse {
     fixedCode: string;
     changes: string[];
     confidence: number;
-    validationStatus: "pending" | "validated" | "failed";
+    validationStatus: 'pending' | 'validated' | 'failed';
   }[];
   metrics: {
     totalFailed: number;
@@ -70,8 +70,8 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!body.failedTests || !body.codebase || !body.context) {
       return NextResponse.json(
-        { error: "Missing required fields: failedTests, codebase, context" },
-        { status: 400 },
+        { error: 'Missing required fields: failedTests, codebase, context' },
+        { status: 400 }
       );
     }
 
@@ -121,12 +121,12 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are the OptiTest AI Controller, an expert in autonomous test healing and maintenance with deep knowledge of testing frameworks and debugging techniques.",
+            'You are the OptiTest AI Controller, an expert in autonomous test healing and maintenance with deep knowledge of testing frameworks and debugging techniques.',
         },
         {
-          role: "user",
+          role: 'user',
           content: healingPrompt,
         },
       ],
@@ -139,9 +139,9 @@ Respond with a JSON structure containing:
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       aiResponse = {
         healedTests: [],
         metrics: {
@@ -151,20 +151,20 @@ Respond with a JSON structure containing:
           successRate: 0,
         },
         analysis: {
-          rootCauses: ["AI response parsing failed"],
+          rootCauses: ['AI response parsing failed'],
           patterns: [],
-          recommendations: ["Manual review required for all failed tests"],
+          recommendations: ['Manual review required for all failed tests'],
         },
         predictions: {
           futureFailures: body.failedTests.length,
-          riskAreas: ["Self-healing system"],
-          preventionSuggestions: ["Retry healing process"],
+          riskAreas: ['Self-healing system'],
+          preventionSuggestions: ['Retry healing process'],
         },
       };
     }
 
     const response: SelfHealResponse = {
-      status: aiResponse.healedTests?.length > 0 ? "success" : "partial",
+      status: aiResponse.healedTests?.length > 0 ? 'success' : 'partial',
       healedTests: aiResponse.healedTests || [],
       metrics: {
         ...aiResponse.metrics,
@@ -184,33 +184,32 @@ Respond with a JSON structure containing:
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Self-healing error:", error);
+    console.error('Self-healing error:', error);
     return NextResponse.json(
       {
-        error: "Failed to heal tests",
-        details: error instanceof Error ? error.message : "Unknown error",
-        status: "failed",
+        error: 'Failed to heal tests',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        status: 'failed',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: "OptiTest AI Self-Healing API",
-    version: "1.0.0",
+    message: 'OptiTest AI Self-Healing API',
+    version: '1.0.0',
     endpoints: {
-      "POST /api/testing/self-heal": "Heal failed tests automatically",
-      "GET /api/testing/self-heal/status":
-        "Get self-healing status and metrics",
+      'POST /api/testing/self-heal': 'Heal failed tests automatically',
+      'GET /api/testing/self-heal/status': 'Get self-healing status and metrics',
     },
     capabilities: [
-      "Automatic test repair",
-      "Root cause analysis",
-      "Pattern recognition",
-      "Predictive maintenance",
-      "Intelligent debugging",
+      'Automatic test repair',
+      'Root cause analysis',
+      'Pattern recognition',
+      'Predictive maintenance',
+      'Intelligent debugging',
     ],
   });
 }

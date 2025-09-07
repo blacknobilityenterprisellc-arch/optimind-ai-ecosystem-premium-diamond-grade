@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
     // Get session token from authorization header
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const sessionToken = authHeader.slice(7);
@@ -23,16 +23,13 @@ export async function GET(request: NextRequest) {
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: "Invalid or expired session" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: 'Invalid or expired session' }, { status: 401 });
     }
 
     // Get subscription
     const subscription = await db.subscription.findFirst({
       orderBy: {
-        created_at: "desc",
+        created_at: 'desc',
       },
     });
 
@@ -47,9 +44,9 @@ export async function GET(request: NextRequest) {
 
       // Check subscription status
       if (subscription.current_period_end < now) {
-        subscriptionData.status = "expired";
+        subscriptionData.status = 'expired';
         isPremium = false;
-      } else if (subscription.status === "trial" && subscription.trial_end) {
+      } else if (subscription.status === 'trial' && subscription.trial_end) {
         if (subscription.trial_end > now) {
           const trialEnd = new Date(subscription.trial_end);
           const diffTime = trialEnd.getTime() - now.getTime();
@@ -57,18 +54,18 @@ export async function GET(request: NextRequest) {
           isPremium = true;
           hasActiveTrial = true;
         } else {
-          subscriptionData.status = "expired";
+          subscriptionData.status = 'expired';
           isPremium = false;
         }
       } else {
-        isPremium = subscription.status === "active";
+        isPremium = subscription.status === 'active';
       }
     }
 
     // Get usage data
     const usage = await db.subscriptionUsage.findFirst({
       orderBy: {
-        created_at: "desc",
+        created_at: 'desc',
       },
     });
 
@@ -102,19 +99,19 @@ export async function GET(request: NextRequest) {
       usage: usageData,
     });
   } catch (error: any) {
-    console.error("Subscription fetch error:", error);
+    console.error('Subscription fetch error:', error);
     return NextResponse.json(
-      { error: "Internal server error", details: error?.message },
-      { status: 500 },
+      { error: 'Internal server error', details: error?.message },
+      { status: 500 }
     );
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const sessionToken = authHeader.slice(7);
@@ -130,19 +127,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session) {
-      return NextResponse.json(
-        { error: "Invalid or expired session" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: 'Invalid or expired session' }, { status: 401 });
     }
 
     const { planId, action } = await request.json();
 
-    if (!planId || !["subscribe", "trial"].includes(action)) {
-      return NextResponse.json(
-        { error: "Invalid request parameters" },
-        { status: 400 },
-      );
+    if (!planId || !['subscribe', 'trial'].includes(action)) {
+      return NextResponse.json({ error: 'Invalid request parameters' }, { status: 400 });
     }
 
     const now = new Date();
@@ -150,32 +141,25 @@ export async function POST(request: NextRequest) {
     let status: string;
     let trialEnd: Date | null = null;
 
-    if (action === "trial") {
+    if (action === 'trial') {
       currentPeriodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days
       trialEnd = currentPeriodEnd;
-      status = "trial";
+      status = 'trial';
     } else {
       switch (planId) {
-        case "monthly":
+        case 'monthly':
           currentPeriodEnd = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
           break;
-        case "annual":
-          currentPeriodEnd = new Date(
-            now.getTime() + 365 * 24 * 60 * 60 * 1000,
-          );
+        case 'annual':
+          currentPeriodEnd = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000);
           break;
-        case "lifetime":
-          currentPeriodEnd = new Date(
-            now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000,
-          ); // 50 years
+        case 'lifetime':
+          currentPeriodEnd = new Date(now.getTime() + 50 * 365 * 24 * 60 * 60 * 1000); // 50 years
           break;
         default:
-          return NextResponse.json(
-            { error: "Invalid plan ID" },
-            { status: 400 },
-          );
+          return NextResponse.json({ error: 'Invalid plan ID' }, { status: 400 });
       }
-      status = "active";
+      status = 'active';
     }
 
     // Create subscription
@@ -204,9 +188,7 @@ export async function POST(request: NextRequest) {
         id: usageId,
         subscription_id: subscriptionId,
         storage_used: 150 * 1024 * 1024, // 150MB
-        storage_limit: isPremium
-          ? 1024 * 1024 * 1024 * 1024
-          : 500 * 1024 * 1024, // 1TB vs 500MB
+        storage_limit: isPremium ? 1024 * 1024 * 1024 * 1024 : 500 * 1024 * 1024, // 1TB vs 500MB
         photos_scanned: 45,
         scan_limit: isPremium ? 10000 : 100,
         ai_tags_generated: 120,
@@ -233,14 +215,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       subscription: subscriptionData,
       isPremium: true,
-      hasActiveTrial: action === "trial",
-      trialDaysRemaining: action === "trial" ? 30 : 0,
+      hasActiveTrial: action === 'trial',
+      trialDaysRemaining: action === 'trial' ? 30 : 0,
     });
   } catch (error: any) {
-    console.error("Subscription creation error:", error);
+    console.error('Subscription creation error:', error);
     return NextResponse.json(
-      { error: "Internal server error", details: error?.message },
-      { status: 500 },
+      { error: 'Internal server error', details: error?.message },
+      { status: 500 }
     );
   }
 }

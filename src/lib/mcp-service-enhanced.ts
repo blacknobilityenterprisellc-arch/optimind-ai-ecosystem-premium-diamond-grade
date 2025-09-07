@@ -72,13 +72,12 @@ class EnhancedMCPService {
 
       // Initialize tools
       await this.initializeTools();
-      
+
       // Perform initial health check
       await this.performHealthCheck();
-      
+
       this.isInitialized = true;
       console.log('✅ Enhanced MCP Service initialized successfully');
-
     } catch (error) {
       console.error('❌ Enhanced MCP Service initialization failed:', error);
       this.setupFallbackMode();
@@ -227,10 +226,10 @@ class EnhancedMCPService {
         inputSchema: {
           type: 'object',
           properties: {
-            components: { 
-              type: 'array', 
+            components: {
+              type: 'array',
               description: 'Components to check',
-              items: { type: 'string' }
+              items: { type: 'string' },
             },
             detailed: { type: 'boolean', description: 'Perform detailed analysis' },
           },
@@ -258,7 +257,7 @@ class EnhancedMCPService {
 
   private setupFallbackMode(): void {
     console.log('⚠️ Setting up fallback MCP service mode');
-    
+
     // Create minimal fallback tools
     const fallbackTools: EnhancedMCPTool[] = [
       {
@@ -318,7 +317,9 @@ class EnhancedMCPService {
         errors.push('OpenRouter models not available');
         recommendations.push('Check OpenRouter API configuration');
       } else {
-        healthyTools += Array.from(this.tools.values()).filter(t => t.provider === 'openrouter').length;
+        healthyTools += Array.from(this.tools.values()).filter(
+          t => t.provider === 'openrouter'
+        ).length;
       }
 
       // Internal tools are always available
@@ -329,7 +330,7 @@ class EnhancedMCPService {
       // Determine overall status
       let status: 'HEALTHY' | 'DEGRADED' | 'UNHEALTHY';
       const healthRatio = healthyTools / this.tools.size;
-      
+
       if (healthRatio >= 0.9 && errors.length === 0) {
         status = 'HEALTHY';
       } else if (healthRatio >= 0.5) {
@@ -347,7 +348,6 @@ class EnhancedMCPService {
         errors,
         recommendations,
       };
-
     } catch (error) {
       this.healthStatus = {
         status: 'UNHEALTHY',
@@ -412,7 +412,6 @@ class EnhancedMCPService {
       }
 
       return result;
-
     } catch (error) {
       console.error(`Tool execution failed for ${toolId}:`, error);
       throw error;
@@ -448,7 +447,9 @@ class EnhancedMCPService {
           throw new Error(`Unknown ZAI tool: ${tool.id}`);
       }
     } catch (error) {
-      throw new Error(`ZAI tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `ZAI tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
@@ -467,14 +468,20 @@ class EnhancedMCPService {
           throw new Error(`Unknown OpenRouter tool: ${tool.id}`);
       }
     } catch (error) {
-      throw new Error(`OpenRouter tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `OpenRouter tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+      );
     }
   }
 
   private async executeInternalTool(tool: EnhancedMCPTool, parameters: any): Promise<any> {
     switch (tool.id) {
       case 'data-analysis':
-        return this.performDataAnalysis(parameters.dataset, parameters.analysisType, parameters.parameters);
+        return this.performDataAnalysis(
+          parameters.dataset,
+          parameters.analysisType,
+          parameters.parameters
+        );
 
       case 'system-health-check':
         return this.performSystemHealthCheck(parameters.components, parameters.detailed);
@@ -510,9 +517,12 @@ class EnhancedMCPService {
     };
   }
 
-  private async performSystemHealthCheck(components: string[] = [], detailed: boolean = false): Promise<any> {
+  private async performSystemHealthCheck(
+    components: string[] = [],
+    detailed: boolean = false
+  ): Promise<any> {
     const componentStatus: Record<string, any> = {};
-    
+
     if (components.length === 0 || components.includes('zai')) {
       const zaiHealth = await premiumZAIWrapper.getHealthStatus();
       componentStatus.zai = zaiHealth;
@@ -542,11 +552,12 @@ class EnhancedMCPService {
     // Refresh health status if needed
     const now = new Date();
     const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
-    
-    if (timeSinceLastCheck > 60000) { // Check every minute
+
+    if (timeSinceLastCheck > 60000) {
+      // Check every minute
       await this.performHealthCheck();
     }
-    
+
     return { ...this.healthStatus };
   }
 
@@ -556,7 +567,7 @@ class EnhancedMCPService {
 
   async getToolPerformanceStats(): Promise<Record<string, any>> {
     const stats: Record<string, any> = {};
-    
+
     for (const [toolId, tool] of this.tools) {
       stats[toolId] = {
         usageCount: this.toolUsage.get(toolId) || 0,
@@ -565,7 +576,7 @@ class EnhancedMCPService {
         provider: tool.provider,
       };
     }
-    
+
     return stats;
   }
 
@@ -575,16 +586,16 @@ class EnhancedMCPService {
 
   async waitForHealthy(timeout: number = 30000): Promise<boolean> {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       if (this.isHealthy()) {
         return true;
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, 1000));
       await this.performHealthCheck();
     }
-    
+
     return false;
   }
 }
@@ -594,5 +605,6 @@ export const enhancedMCPService = EnhancedMCPService.getInstance();
 
 // Export convenience functions
 export const getAvailableTools = () => enhancedMCPService.getAvailableTools();
-export const executeMCPTool = (toolId: string, params: any) => enhancedMCPService.executeTool(toolId, params);
+export const executeMCPTool = (toolId: string, params: any) =>
+  enhancedMCPService.executeTool(toolId, params);
 export const getMCPHealthStatus = () => enhancedMCPService.getHealthStatus();

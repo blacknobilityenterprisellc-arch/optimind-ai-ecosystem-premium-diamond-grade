@@ -1,44 +1,44 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTheme } from "next-themes";
+import { useState } from 'react';
+import { useTheme } from 'next-themes';
 
-import { cn } from "@/lib/utils";
-import { PINPad } from "@/components/PINPad";
-import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils';
+import { PINPad } from '@/components/PINPad';
+import { useToast } from '@/hooks/use-toast';
 
 interface PremiumBadgeProps {
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   animated?: boolean;
   text?: string;
 }
 
 export function PremiumBadge({
   className,
-  size = "md",
+  size = 'md',
   animated = true,
-  text = "PRO",
+  text = 'PRO',
 }: PremiumBadgeProps) {
   const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const isDark = theme === 'dark';
   const sizeClasses = {
-    sm: "text-xs px-2 py-1",
-    md: "text-sm px-3 py-1.5",
-    lg: "text-base px-4 py-2",
+    sm: 'text-xs px-2 py-1',
+    md: 'text-sm px-3 py-1.5',
+    lg: 'text-base px-4 py-2',
   };
 
   return (
     <div
       className={cn(
-        "relative inline-flex items-center justify-center font-bold text-white rounded-full",
+        'relative inline-flex items-center justify-center font-bold text-white rounded-full',
         isDark
-          ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600"
-          : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500",
-        "shadow-lg",
+          ? 'bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600'
+          : 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500',
+        'shadow-lg',
         sizeClasses[size],
-        animated && "animate-pulse",
-        className,
+        animated && 'animate-pulse',
+        className
       )}
     >
       {/* Glow effect */}
@@ -46,18 +46,16 @@ export function PremiumBadge({
         <>
           <div
             className={cn(
-              "absolute inset-0 rounded-full bg-gradient-to-r opacity-50 blur-md animate-pulse",
+              'absolute inset-0 rounded-full bg-gradient-to-r opacity-50 blur-md animate-pulse',
               isDark
-                ? "from-yellow-500 via-yellow-600 to-orange-600"
-                : "from-yellow-400 via-yellow-500 to-orange-500",
+                ? 'from-yellow-500 via-yellow-600 to-orange-600'
+                : 'from-yellow-400 via-yellow-500 to-orange-500'
             )}
           />
           <div
             className={cn(
-              "absolute inset-0 rounded-full bg-gradient-to-r opacity-30 blur-sm animate-pulse",
-              isDark
-                ? "from-yellow-400 to-yellow-500"
-                : "from-yellow-300 to-yellow-400",
+              'absolute inset-0 rounded-full bg-gradient-to-r opacity-30 blur-sm animate-pulse',
+              isDark ? 'from-yellow-400 to-yellow-500' : 'from-yellow-300 to-yellow-400'
             )}
           />
         </>
@@ -80,17 +78,13 @@ interface PremiumFeatureProps {
   className?: string;
 }
 
-export function PremiumFeature({
-  children,
-  isPremium = true,
-  className,
-}: PremiumFeatureProps) {
+export function PremiumFeature({ children, isPremium = true, className }: PremiumFeatureProps) {
   if (!isPremium) {
     return <>{children}</>;
   }
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn('relative group', className)}>
       {children}
       <div className="absolute -top-2 -right-2 z-10">
         <PremiumBadge size="sm" text="PRO" />
@@ -112,7 +106,7 @@ interface PremiumButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
   className?: string;
-  variant?: "default" | "outline" | "glow";
+  variant?: 'default' | 'outline' | 'glow';
   requireAuth?: boolean;
   onAuthSuccess?: () => void;
 }
@@ -121,26 +115,26 @@ export function PremiumButton({
   children,
   onClick,
   className,
-  variant = "default",
+  variant = 'default',
   requireAuth = false,
   onAuthSuccess,
 }: PremiumButtonProps) {
   const [showPINPad, setShowPINPad] = useState(false);
   const { theme } = useTheme();
   const { toast } = useToast();
-  const isDark = theme === "dark";
+  const isDark = theme === 'dark';
 
   const baseClasses =
-    "relative inline-flex items-center justify-center font-bold text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95";
+    'relative inline-flex items-center justify-center font-bold text-white rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95';
 
   const variantClasses = {
     default: isDark
-      ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg"
-      : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg",
-    outline: "border-2 text-yellow-400 hover:bg-yellow-400/10",
+      ? 'bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg'
+      : 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg',
+    outline: 'border-2 text-yellow-400 hover:bg-yellow-400/10',
     glow: isDark
-      ? "bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg shadow-yellow-600/25 hover:shadow-yellow-600/40"
-      : "bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40",
+      ? 'bg-gradient-to-r from-yellow-500 via-yellow-600 to-orange-600 shadow-lg shadow-yellow-600/25 hover:shadow-yellow-600/40'
+      : 'bg-gradient-to-r from-yellow-400 via-yellow-500 to-orange-500 shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40',
   };
 
   const handleClick = () => {
@@ -155,17 +149,17 @@ export function PremiumButton({
     setShowPINPad(false);
     onAuthSuccess?.();
     toast({
-      title: "Authentication Successful",
-      description: "Premium access granted",
+      title: 'Authentication Successful',
+      description: 'Premium access granted',
     });
     onClick?.();
   };
 
   const handleAuthError = (error: string) => {
     toast({
-      title: "Authentication Failed",
+      title: 'Authentication Failed',
       description: error,
-      variant: "destructive",
+      variant: 'destructive',
     });
   };
 
@@ -173,30 +167,23 @@ export function PremiumButton({
     <>
       <button
         onClick={handleClick}
-        className={cn(
-          baseClasses,
-          variantClasses[variant],
-          "px-6 py-3",
-          className,
-        )}
+        className={cn(baseClasses, variantClasses[variant], 'px-6 py-3', className)}
       >
         {/* Glow effects */}
-        {(variant === "default" || variant === "glow") && (
+        {(variant === 'default' || variant === 'glow') && (
           <>
             <div
               className={cn(
-                "absolute inset-0 rounded-xl bg-gradient-to-r opacity-50 blur-md animate-pulse",
+                'absolute inset-0 rounded-xl bg-gradient-to-r opacity-50 blur-md animate-pulse',
                 isDark
-                  ? "from-yellow-500 via-yellow-600 to-orange-600"
-                  : "from-yellow-400 via-yellow-500 to-orange-500",
+                  ? 'from-yellow-500 via-yellow-600 to-orange-600'
+                  : 'from-yellow-400 via-yellow-500 to-orange-500'
               )}
             />
             <div
               className={cn(
-                "absolute inset-0 rounded-xl bg-gradient-to-r opacity-30 blur-sm",
-                isDark
-                  ? "from-yellow-400 to-yellow-500"
-                  : "from-yellow-300 to-yellow-400",
+                'absolute inset-0 rounded-xl bg-gradient-to-r opacity-30 blur-sm',
+                isDark ? 'from-yellow-400 to-yellow-500' : 'from-yellow-300 to-yellow-400'
               )}
             />
           </>

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { openRouterService } from "@/lib/openrouter-service";
+import { openRouterService } from '@/lib/openrouter-service';
 
 export async function GET() {
   try {
@@ -9,22 +9,20 @@ export async function GET() {
 
     // Test connection to a model
     const testModel = models[0];
-    const connectionTest = await openRouterService.testModelConnection(
-      testModel.id,
-    );
+    const connectionTest = await openRouterService.testModelConnection(testModel.id);
 
     return NextResponse.json({
       success: true,
-      service: "Open Router",
+      service: 'Open Router',
       totalModels: models.length,
-      providers: [...new Set(models.map((m) => m.provider))],
+      providers: [...new Set(models.map(m => m.provider))],
       testModel: {
         id: testModel.id,
         name: testModel.name,
         provider: testModel.provider,
         connectionStatus: connectionTest,
       },
-      sampleModels: models.slice(0, 5).map((m) => ({
+      sampleModels: models.slice(0, 5).map(m => ({
         id: m.id,
         name: m.name,
         provider: m.provider,
@@ -32,14 +30,14 @@ export async function GET() {
       })),
     });
   } catch (error: any) {
-    console.error("Open Router test failed:", error);
+    console.error('Open Router test failed:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Open Router test failed",
+        error: error.message || 'Open Router test failed',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -47,15 +45,15 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { prompt, modelId = "gpt-4o" } = body;
+    const { prompt, modelId = 'gpt-4o' } = body;
 
     if (!prompt) {
       return NextResponse.json(
         {
           success: false,
-          error: "Prompt is required",
+          error: 'Prompt is required',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -76,14 +74,14 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error("Open Router analysis test failed:", error);
+    console.error('Open Router analysis test failed:', error);
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Open Router analysis failed",
+        error: error.message || 'Open Router analysis failed',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

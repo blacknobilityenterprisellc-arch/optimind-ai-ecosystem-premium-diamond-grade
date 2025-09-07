@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   Palette,
   Sparkles,
@@ -890,35 +890,32 @@ import {
   Artifacts,
   Objects,
   Items,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import {
-  useSecureSubscription,
-  useAIStyleTransfer,
-} from "@/lib/ai-style-transfer";
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Switch } from '@/components/ui/switch';
+import { useSecureSubscription, useAIStyleTransfer } from '@/lib/ai-style-transfer';
 
 interface ArtStyle {
   id: string;
   name: string;
   description: string;
-  category: "classic" | "modern" | "digital" | "abstract" | "photography";
+  category: 'classic' | 'modern' | 'digital' | 'abstract' | 'photography';
   preview: string;
   icon: React.ReactNode;
   credits: number;
@@ -957,8 +954,8 @@ export function AIStyleTransfer() {
   const [results, setResults] = useState<StyleTransferResult[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingProgress, setProcessingProgress] = useState(0);
-  const [currentAction, setCurrentAction] = useState("");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [currentAction, setCurrentAction] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [batchMode, setBatchMode] = useState(false);
   const [comparisonMode, setComparisonMode] = useState(false);
@@ -986,179 +983,179 @@ export function AIStyleTransfer() {
 
   const artStyles: ArtStyle[] = [
     {
-      id: "van-gogh",
-      name: "Van Gogh",
-      description: "Post-impressionist style with swirling brushstrokes",
-      category: "classic",
-      preview: "🎨",
+      id: 'van-gogh',
+      name: 'Van Gogh',
+      description: 'Post-impressionist style with swirling brushstrokes',
+      category: 'classic',
+      preview: '🎨',
       icon: <Brush className="w-5 h-5" />,
       credits: 80,
       isPremium: true,
-      artist: "Vincent van Gogh",
-      era: "Post-Impressionism",
+      artist: 'Vincent van Gogh',
+      era: 'Post-Impressionism',
     },
     {
-      id: "picasso",
-      name: "Picasso",
-      description: "Cubist style with geometric shapes",
-      category: "classic",
-      preview: "🔷",
+      id: 'picasso',
+      name: 'Picasso',
+      description: 'Cubist style with geometric shapes',
+      category: 'classic',
+      preview: '🔷',
       icon: <Artwork className="w-5 h-5" />,
       credits: 85,
       isPremium: true,
-      artist: "Pablo Picasso",
-      era: "Cubism",
+      artist: 'Pablo Picasso',
+      era: 'Cubism',
     },
     {
-      id: "monet",
-      name: "Monet",
-      description: "Impressionist style with light effects",
-      category: "classic",
-      preview: "🌅",
+      id: 'monet',
+      name: 'Monet',
+      description: 'Impressionist style with light effects',
+      category: 'classic',
+      preview: '🌅',
       icon: <Sun className="w-5 h-5" />,
       credits: 75,
       isPremium: true,
-      artist: "Claude Monet",
-      era: "Impressionism",
+      artist: 'Claude Monet',
+      era: 'Impressionism',
     },
     {
-      id: "dali",
-      name: "Dalí",
-      description: "Surrealist style with dreamlike elements",
-      category: "classic",
-      preview: "🌙",
+      id: 'dali',
+      name: 'Dalí',
+      description: 'Surrealist style with dreamlike elements',
+      category: 'classic',
+      preview: '🌙',
       icon: <Moon className="w-5 h-5" />,
       credits: 90,
       isPremium: true,
-      artist: "Salvador Dalí",
-      era: "Surrealism",
+      artist: 'Salvador Dalí',
+      era: 'Surrealism',
     },
     {
-      id: "manga",
-      name: "Manga",
-      description: "Japanese manga and anime style",
-      category: "modern",
-      preview: "🌸",
+      id: 'manga',
+      name: 'Manga',
+      description: 'Japanese manga and anime style',
+      category: 'modern',
+      preview: '🌸',
       icon: <Star className="w-5 h-5" />,
       credits: 70,
       isPremium: true,
     },
     {
-      id: "cyberpunk",
-      name: "Cyberpunk",
-      description: "Futuristic digital art style",
-      category: "digital",
-      preview: "🌆",
+      id: 'cyberpunk',
+      name: 'Cyberpunk',
+      description: 'Futuristic digital art style',
+      category: 'digital',
+      preview: '🌆',
       icon: <Zap className="w-5 h-5" />,
       credits: 95,
       isPremium: true,
     },
     {
-      id: "watercolor",
-      name: "Watercolor",
-      description: "Soft watercolor painting effect",
-      category: "classic",
-      preview: "💧",
+      id: 'watercolor',
+      name: 'Watercolor',
+      description: 'Soft watercolor painting effect',
+      category: 'classic',
+      preview: '💧',
       icon: <Waves className="w-5 h-5" />,
       credits: 65,
       isPremium: false,
     },
     {
-      id: "oil-painting",
-      name: "Oil Painting",
-      description: "Traditional oil painting technique",
-      category: "classic",
-      preview: "🖼️",
+      id: 'oil-painting',
+      name: 'Oil Painting',
+      description: 'Traditional oil painting technique',
+      category: 'classic',
+      preview: '🖼️',
       icon: <Palette className="w-5 h-5" />,
       credits: 70,
       isPremium: false,
     },
     {
-      id: "pencil-sketch",
-      name: "Pencil Sketch",
-      description: "Hand-drawn pencil sketch effect",
-      category: "classic",
-      preview: "✏️",
+      id: 'pencil-sketch',
+      name: 'Pencil Sketch',
+      description: 'Hand-drawn pencil sketch effect',
+      category: 'classic',
+      preview: '✏️',
       icon: <PencilSketch className="w-5 h-5" />,
       credits: 55,
       isPremium: false,
     },
     {
-      id: "cartoon",
-      name: "Cartoon",
-      description: "Animated cartoon style",
-      category: "modern",
-      preview: "🎭",
+      id: 'cartoon',
+      name: 'Cartoon',
+      description: 'Animated cartoon style',
+      category: 'modern',
+      preview: '🎭',
       icon: <Camera className="w-5 h-5" />,
       credits: 60,
       isPremium: false,
     },
     {
-      id: "pixel-art",
-      name: "Pixel Art",
-      description: "Retro 8-bit pixel art style",
-      category: "digital",
-      preview: "🎮",
+      id: 'pixel-art',
+      name: 'Pixel Art',
+      description: 'Retro 8-bit pixel art style',
+      category: 'digital',
+      preview: '🎮',
       icon: <Grid className="w-5 h-5" />,
       credits: 50,
       isPremium: false,
     },
     {
-      id: "noir",
-      name: "Film Noir",
-      description: "Black and white dramatic style",
-      category: "photography",
-      preview: "🎬",
+      id: 'noir',
+      name: 'Film Noir',
+      description: 'Black and white dramatic style',
+      category: 'photography',
+      preview: '🎬',
       icon: <Noir className="w-5 h-5" />,
       credits: 45,
       isPremium: false,
     },
     {
-      id: "vintage",
-      name: "Vintage",
-      description: "Aged vintage photograph effect",
-      category: "photography",
-      preview: "📸",
+      id: 'vintage',
+      name: 'Vintage',
+      description: 'Aged vintage photograph effect',
+      category: 'photography',
+      preview: '📸',
       icon: <Vintage className="w-5 h-5" />,
       credits: 40,
       isPremium: false,
     },
     {
-      id: "pop-art",
-      name: "Pop Art",
-      description: "Colorful pop art style",
-      category: "modern",
-      preview: "🎨",
+      id: 'pop-art',
+      name: 'Pop Art',
+      description: 'Colorful pop art style',
+      category: 'modern',
+      preview: '🎨',
       icon: <PopArt className="w-5 h-5" />,
       credits: 75,
       isPremium: true,
     },
     {
-      id: "art-nouveau",
-      name: "Art Nouveau",
-      description: "Elegant decorative art style",
-      category: "classic",
-      preview: "🌿",
+      id: 'art-nouveau',
+      name: 'Art Nouveau',
+      description: 'Elegant decorative art style',
+      category: 'classic',
+      preview: '🌿',
       icon: <ArtNouveau className="w-5 h-5" />,
       credits: 85,
       isPremium: true,
     },
     {
-      id: "baroque",
-      name: "Baroque",
-      description: "Ornate and dramatic art style",
-      category: "classic",
-      preview: "🏛️",
+      id: 'baroque',
+      name: 'Baroque',
+      description: 'Ornate and dramatic art style',
+      category: 'classic',
+      preview: '🏛️',
       icon: <Baroque className="w-5 h-5" />,
       credits: 90,
       isPremium: true,
     },
     {
-      id: "renaissance",
-      name: "Renaissance",
-      description: "Classical Renaissance art style",
-      category: "classic",
-      preview: "🏰",
+      id: 'renaissance',
+      name: 'Renaissance',
+      description: 'Classical Renaissance art style',
+      category: 'classic',
+      preview: '🏰',
       icon: <Renaissance className="w-5 h-5" />,
       credits: 100,
       isPremium: true,
@@ -1170,14 +1167,10 @@ export function AIStyleTransfer() {
 
     try {
       setIsProcessing(true);
-      setCurrentAction("Transferring style...");
+      setCurrentAction('Transferring style...');
       setProcessingProgress(0);
 
-      const result = await transferStyle(
-        selectedImage,
-        selectedStyle,
-        settings,
-      );
+      const result = await transferStyle(selectedImage, selectedStyle, settings);
 
       if (result.success) {
         const styleTransferResult: StyleTransferResult = {
@@ -1191,12 +1184,12 @@ export function AIStyleTransfer() {
           processingTime: result.processingTime,
         };
 
-        setResults((prev) => [styleTransferResult, ...prev]);
+        setResults(prev => [styleTransferResult, ...prev]);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error("Style transfer failed:", error);
+      console.error('Style transfer failed:', error);
       setIsProcessing(false);
     }
   }, [selectedImage, selectedStyle, isPremium, settings, transferStyle]);
@@ -1206,14 +1199,10 @@ export function AIStyleTransfer() {
 
     try {
       setIsProcessing(true);
-      setCurrentAction("Creating style variations...");
+      setCurrentAction('Creating style variations...');
       setProcessingProgress(0);
 
-      const variations = await createStyleVariations(
-        selectedImage,
-        selectedStyle,
-        4,
-      );
+      const variations = await createStyleVariations(selectedImage, selectedStyle, 4);
 
       if (variations.length > 0) {
         const newResults = variations.map((variation, index) => ({
@@ -1227,24 +1216,18 @@ export function AIStyleTransfer() {
           processingTime: variation.processingTime,
         }));
 
-        setResults((prev) => [...newResults, ...prev]);
+        setResults(prev => [...newResults, ...prev]);
       }
 
       setIsProcessing(false);
     } catch (error) {
-      console.error("Variation creation failed:", error);
+      console.error('Variation creation failed:', error);
       setIsProcessing(false);
     }
-  }, [
-    selectedImage,
-    selectedStyle,
-    isPremium,
-    settings,
-    createStyleVariations,
-  ]);
+  }, [selectedImage, selectedStyle, isPremium, settings, createStyleVariations]);
 
   const handleDownload = useCallback((result: StyleTransferResult) => {
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = result.stylizedUrl;
     link.download = `style-transfer-${result.styleId}-${Date.now()}.jpg`;
     link.click();
@@ -1256,7 +1239,7 @@ export function AIStyleTransfer() {
 
       try {
         setIsProcessing(true);
-        setCurrentAction("Comparing styles...");
+        setCurrentAction('Comparing styles...');
         setProcessingProgress(0);
 
         const comparisons = await compareStyles(selectedImage, styleIds);
@@ -1264,15 +1247,15 @@ export function AIStyleTransfer() {
         // Process comparison results
         setIsProcessing(false);
       } catch (error) {
-        console.error("Style comparison failed:", error);
+        console.error('Style comparison failed:', error);
         setIsProcessing(false);
       }
     },
-    [selectedImage, isPremium, compareStyles],
+    [selectedImage, isPremium, compareStyles]
   );
 
   const estimateCredits = useCallback(() => {
-    const style = artStyles.find((s) => s.id === selectedStyle);
+    const style = artStyles.find(s => s.id === selectedStyle);
     if (!style) return 0;
 
     let total = style.credits;
@@ -1284,12 +1267,12 @@ export function AIStyleTransfer() {
   }, [selectedStyle, settings, batchMode]);
 
   const getStyleIcon = (categoryId: string) => {
-    const style = artStyles.find((s) => s.id === categoryId);
+    const style = artStyles.find(s => s.id === categoryId);
     return style?.icon || <Brush className="w-5 h-5" />;
   };
 
-  const getCategoryStyles = (category: ArtStyle["category"]) => {
-    return artStyles.filter((style) => style.category === category);
+  const getCategoryStyles = (category: ArtStyle['category']) => {
+    return artStyles.filter(style => style.category === category);
   };
 
   if (!isPremium) {
@@ -1302,9 +1285,8 @@ export function AIStyleTransfer() {
             </div>
             <h2 className="text-2xl font-bold">AI Style Transfer</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
-              Transform your photos into stunning artworks using advanced AI
-              style transfer. Choose from dozens of artistic styles and famous
-              artists' techniques.
+              Transform your photos into stunning artworks using advanced AI style transfer. Choose
+              from dozens of artistic styles and famous artists' techniques.
             </p>
             <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
               <div className="text-center">
@@ -1339,9 +1321,7 @@ export function AIStyleTransfer() {
             <Palette className="w-6 h-6 text-purple-600" />
             AI Style Transfer
           </h2>
-          <p className="text-muted-foreground">
-            Transform photos with artistic AI styles
-          </p>
+          <p className="text-muted-foreground">Transform photos with artistic AI styles</p>
         </div>
         <div className="flex items-center gap-2">
           <Badge variant="outline" className="text-purple-600">
@@ -1350,13 +1330,9 @@ export function AIStyleTransfer() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+            onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
           >
-            {viewMode === "grid" ? (
-              <List className="w-4 h-4" />
-            ) : (
-              <Grid className="w-4 h-4" />
-            )}
+            {viewMode === 'grid' ? <List className="w-4 h-4" /> : <Grid className="w-4 h-4" />}
           </Button>
         </div>
       </div>
@@ -1368,14 +1344,10 @@ export function AIStyleTransfer() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{currentAction}</span>
-                <span className="text-sm text-muted-foreground">
-                  {processingProgress}%
-                </span>
+                <span className="text-sm text-muted-foreground">{processingProgress}%</span>
               </div>
               <Progress value={processingProgress} className="h-2" />
-              <p className="text-xs text-muted-foreground">
-                Applying artistic style with AI...
-              </p>
+              <p className="text-xs text-muted-foreground">Applying artistic style with AI...</p>
             </div>
           </CardContent>
         </Card>
@@ -1407,14 +1379,14 @@ export function AIStyleTransfer() {
                     </TabsList>
 
                     <TabsContent value="all" className="space-y-2">
-                      {artStyles.map((style) => (
+                      {artStyles.map(style => (
                         <div
                           key={style.id}
                           className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
                             selectedStyle === style.id
-                              ? "border-purple-500 bg-purple-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          } ${style.isPremium && credits < style.credits ? "opacity-50" : ""}`}
+                              ? 'border-purple-500 bg-purple-50'
+                              : 'border-gray-200 hover:border-gray-300'
+                          } ${style.isPremium && credits < style.credits ? 'opacity-50' : ''}`}
                           onClick={() =>
                             style.isPremium && credits >= style.credits
                               ? setSelectedStyle(style.id)
@@ -1424,42 +1396,30 @@ export function AIStyleTransfer() {
                           <div className="flex items-center gap-3">
                             <div className="text-2xl">{style.preview}</div>
                             <div className="flex-1">
-                              <div className="font-medium text-sm">
-                                {style.name}
-                              </div>
+                              <div className="font-medium text-sm">{style.name}</div>
                               <div className="text-xs text-muted-foreground">
                                 {style.description}
                               </div>
                               {style.artist && (
-                                <div className="text-xs text-purple-600">
-                                  {style.artist}
-                                </div>
+                                <div className="text-xs text-purple-600">{style.artist}</div>
                               )}
                             </div>
-                            {style.isPremium && (
-                              <Crown className="w-3 h-3 text-yellow-500" />
-                            )}
+                            {style.isPremium && <Crown className="w-3 h-3 text-yellow-500" />}
                           </div>
                         </div>
                       ))}
                     </TabsContent>
 
-                    {(
-                      ["classic", "modern", "digital", "photography"] as const
-                    ).map((category) => (
-                      <TabsContent
-                        key={category}
-                        value={category}
-                        className="space-y-2"
-                      >
-                        {getCategoryStyles(category).map((style) => (
+                    {(['classic', 'modern', 'digital', 'photography'] as const).map(category => (
+                      <TabsContent key={category} value={category} className="space-y-2">
+                        {getCategoryStyles(category).map(style => (
                           <div
                             key={style.id}
                             className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
                               selectedStyle === style.id
-                                ? "border-purple-500 bg-purple-50"
-                                : "border-gray-200 hover:border-gray-300"
-                            } ${style.isPremium && credits < style.credits ? "opacity-50" : ""}`}
+                                ? 'border-purple-500 bg-purple-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            } ${style.isPremium && credits < style.credits ? 'opacity-50' : ''}`}
                             onClick={() =>
                               style.isPremium && credits >= style.credits
                                 ? setSelectedStyle(style.id)
@@ -1469,16 +1429,12 @@ export function AIStyleTransfer() {
                             <div className="flex items-center gap-3">
                               <div className="text-2xl">{style.preview}</div>
                               <div className="flex-1">
-                                <div className="font-medium text-sm">
-                                  {style.name}
-                                </div>
+                                <div className="font-medium text-sm">{style.name}</div>
                                 <div className="text-xs text-muted-foreground">
                                   {style.description}
                                 </div>
                               </div>
-                              {style.isPremium && (
-                                <Crown className="w-3 h-3 text-yellow-500" />
-                              )}
+                              {style.isPremium && <Crown className="w-3 h-3 text-yellow-500" />}
                             </div>
                           </div>
                         ))}
@@ -1511,9 +1467,8 @@ export function AIStyleTransfer() {
                           </Button>
                           <Badge variant="outline">
                             {selectedStyle
-                              ? artStyles.find((s) => s.id === selectedStyle)
-                                  ?.name
-                              : "No style selected"}
+                              ? artStyles.find(s => s.id === selectedStyle)?.name
+                              : 'No style selected'}
                           </Badge>
                         </div>
                       </div>
@@ -1521,9 +1476,7 @@ export function AIStyleTransfer() {
                       <div className="space-y-4">
                         <ImageIcon className="w-16 h-16 mx-auto text-gray-400" />
                         <div>
-                          <h3 className="text-lg font-semibold mb-2">
-                            Upload Your Photo
-                          </h3>
+                          <h3 className="text-lg font-semibold mb-2">Upload Your Photo</h3>
                           <p className="text-muted-foreground">
                             Select an image to apply artistic styles
                           </p>
@@ -1565,8 +1518,8 @@ export function AIStyleTransfer() {
                         </div>
                         <Slider
                           value={[settings.intensity]}
-                          onValueChange={(value) =>
-                            setSettings((prev) => ({
+                          onValueChange={value =>
+                            setSettings(prev => ({
                               ...prev,
                               intensity: value[0],
                             }))
@@ -1586,8 +1539,8 @@ export function AIStyleTransfer() {
                         </div>
                         <Slider
                           value={[settings.detailLevel]}
-                          onValueChange={(value) =>
-                            setSettings((prev) => ({
+                          onValueChange={value =>
+                            setSettings(prev => ({
                               ...prev,
                               detailLevel: value[0],
                             }))
@@ -1607,8 +1560,8 @@ export function AIStyleTransfer() {
                         </div>
                         <Slider
                           value={[settings.smoothness]}
-                          onValueChange={(value) =>
-                            setSettings((prev) => ({
+                          onValueChange={value =>
+                            setSettings(prev => ({
                               ...prev,
                               smoothness: value[0],
                             }))
@@ -1628,17 +1581,14 @@ export function AIStyleTransfer() {
                             <Switch
                               id="preserve-colors"
                               checked={settings.preserveColors}
-                              onCheckedChange={(checked) =>
-                                setSettings((prev) => ({
+                              onCheckedChange={checked =>
+                                setSettings(prev => ({
                                   ...prev,
                                   preserveColors: checked,
                                 }))
                               }
                             />
-                            <Label
-                              htmlFor="preserve-colors"
-                              className="text-sm"
-                            >
+                            <Label htmlFor="preserve-colors" className="text-sm">
                               Preserve Original Colors
                             </Label>
                           </div>
@@ -1647,17 +1597,14 @@ export function AIStyleTransfer() {
                             <Switch
                               id="enhance-details"
                               checked={settings.enhanceDetails}
-                              onCheckedChange={(checked) =>
-                                setSettings((prev) => ({
+                              onCheckedChange={checked =>
+                                setSettings(prev => ({
                                   ...prev,
                                   enhanceDetails: checked,
                                 }))
                               }
                             />
-                            <Label
-                              htmlFor="enhance-details"
-                              className="text-sm"
-                            >
+                            <Label htmlFor="enhance-details" className="text-sm">
                               Enhance Details (+20%)
                             </Label>
                           </div>
@@ -1666,8 +1613,8 @@ export function AIStyleTransfer() {
                             <Switch
                               id="upscale"
                               checked={settings.upscale}
-                              onCheckedChange={(checked) =>
-                                setSettings((prev) => ({
+                              onCheckedChange={checked =>
+                                setSettings(prev => ({
                                   ...prev,
                                   upscale: checked,
                                 }))
@@ -1695,9 +1642,7 @@ export function AIStyleTransfer() {
                     {/* Action Buttons */}
                     <div className="pt-4 border-t space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">
-                          Estimated Cost
-                        </span>
+                        <span className="text-sm font-medium">Estimated Cost</span>
                         <span className="text-lg font-bold text-purple-600">
                           {estimateCredits()} credits
                         </span>
@@ -1706,11 +1651,7 @@ export function AIStyleTransfer() {
                       <div className="flex gap-2">
                         <Button
                           onClick={handleStyleTransfer}
-                          disabled={
-                            !selectedImage ||
-                            !selectedStyle ||
-                            credits < estimateCredits()
-                          }
+                          disabled={!selectedImage || !selectedStyle || credits < estimateCredits()}
                           className="flex-1"
                         >
                           <Wand2 className="w-4 h-4 mr-2" />
@@ -1721,9 +1662,7 @@ export function AIStyleTransfer() {
                           variant="outline"
                           onClick={handleCreateVariations}
                           disabled={
-                            !selectedImage ||
-                            !selectedStyle ||
-                            credits < estimateCredits() * 3
+                            !selectedImage || !selectedStyle || credits < estimateCredits() * 3
                           }
                         >
                           <Sparkles className="w-4 h-4 mr-2" />
@@ -1742,22 +1681,20 @@ export function AIStyleTransfer() {
           {/* Gallery Header */}
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Style Transfer Gallery</h3>
-            <div className="text-sm text-muted-foreground">
-              {results.length} artworks created
-            </div>
+            <div className="text-sm text-muted-foreground">{results.length} artworks created</div>
           </div>
 
           {/* Gallery Grid */}
           {results.length > 0 ? (
             <div
               className={`grid gap-4 ${
-                viewMode === "grid"
-                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "grid-cols-1"
+                viewMode === 'grid'
+                  ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  : 'grid-cols-1'
               }`}
             >
-              {results.map((result) => {
-                const style = artStyles.find((s) => s.id === result.styleId);
+              {results.map(result => {
+                const style = artStyles.find(s => s.id === result.styleId);
                 return (
                   <Card key={result.id} className="overflow-hidden">
                     <div className="relative aspect-square">
@@ -1812,15 +1749,11 @@ export function AIStyleTransfer() {
             <Card>
               <CardContent className="p-12 text-center">
                 <Palette className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">
-                  No Artworks Created Yet
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">No Artworks Created Yet</h3>
                 <p className="text-muted-foreground mb-4">
                   Create your first AI-styled artwork using the Create Art tab
                 </p>
-                <Button onClick={() => setSelectedStyle("van-gogh")}>
-                  Try Van Gogh Style
-                </Button>
+                <Button onClick={() => setSelectedStyle('van-gogh')}>Try Van Gogh Style</Button>
               </CardContent>
             </Card>
           )}
@@ -1829,54 +1762,46 @@ export function AIStyleTransfer() {
         <TabsContent value="styles" className="space-y-6">
           {/* Style Categories */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {(["classic", "modern", "digital", "photography"] as const).map(
-              (category) => (
-                <Card key={category}>
-                  <CardHeader>
-                    <CardTitle className="text-lg capitalize">
-                      {category} Styles
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-3">
-                      {getCategoryStyles(category).map((style) => (
-                        <div
-                          key={style.id}
-                          className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                            selectedStyle === style.id
-                              ? "border-purple-500 bg-purple-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          } ${style.isPremium && credits < style.credits ? "opacity-50" : ""}`}
-                          onClick={() =>
-                            style.isPremium && credits >= style.credits
-                              ? setSelectedStyle(style.id)
-                              : null
-                          }
-                        >
-                          <div className="text-center">
-                            <div className="text-3xl mb-2">{style.preview}</div>
-                            <div className="font-medium text-sm">
-                              {style.name}
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              {style.credits} credits
-                            </div>
-                            {style.artist && (
-                              <div className="text-xs text-purple-600 mt-1">
-                                {style.artist}
-                              </div>
-                            )}
-                            {style.isPremium && (
-                              <Crown className="w-3 h-3 text-yellow-500 mx-auto mt-1" />
-                            )}
+            {(['classic', 'modern', 'digital', 'photography'] as const).map(category => (
+              <Card key={category}>
+                <CardHeader>
+                  <CardTitle className="text-lg capitalize">{category} Styles</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-3">
+                    {getCategoryStyles(category).map(style => (
+                      <div
+                        key={style.id}
+                        className={`p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                          selectedStyle === style.id
+                            ? 'border-purple-500 bg-purple-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                        } ${style.isPremium && credits < style.credits ? 'opacity-50' : ''}`}
+                        onClick={() =>
+                          style.isPremium && credits >= style.credits
+                            ? setSelectedStyle(style.id)
+                            : null
+                        }
+                      >
+                        <div className="text-center">
+                          <div className="text-3xl mb-2">{style.preview}</div>
+                          <div className="font-medium text-sm">{style.name}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {style.credits} credits
                           </div>
+                          {style.artist && (
+                            <div className="text-xs text-purple-600 mt-1">{style.artist}</div>
+                          )}
+                          {style.isPremium && (
+                            <Crown className="w-3 h-3 text-yellow-500 mx-auto mt-1" />
+                          )}
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ),
-            )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
           {/* Style Information */}
@@ -1885,30 +1810,27 @@ export function AIStyleTransfer() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {getStyleIcon(selectedStyle)}
-                  {artStyles.find((s) => s.id === selectedStyle)?.name}
+                  {artStyles.find(s => s.id === selectedStyle)?.name}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <p className="text-muted-foreground">
-                    {artStyles.find((s) => s.id === selectedStyle)?.description}
+                    {artStyles.find(s => s.id === selectedStyle)?.description}
                   </p>
 
-                  {artStyles.find((s) => s.id === selectedStyle)?.artist && (
+                  {artStyles.find(s => s.id === selectedStyle)?.artist && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <Label className="text-sm font-medium">Artist</Label>
                         <div className="text-sm text-muted-foreground">
-                          {
-                            artStyles.find((s) => s.id === selectedStyle)
-                              ?.artist
-                          }
+                          {artStyles.find(s => s.id === selectedStyle)?.artist}
                         </div>
                       </div>
                       <div>
                         <Label className="text-sm font-medium">Era</Label>
                         <div className="text-sm text-muted-foreground">
-                          {artStyles.find((s) => s.id === selectedStyle)?.era}
+                          {artStyles.find(s => s.id === selectedStyle)?.era}
                         </div>
                       </div>
                     </div>
@@ -1916,26 +1838,19 @@ export function AIStyleTransfer() {
 
                   <div className="flex items-center justify-between pt-4 border-t">
                     <div>
-                      <Label className="text-sm font-medium">
-                        Credits Required
-                      </Label>
+                      <Label className="text-sm font-medium">Credits Required</Label>
                       <div className="text-lg font-bold text-purple-600">
-                        {artStyles.find((s) => s.id === selectedStyle)?.credits}{" "}
-                        credits
+                        {artStyles.find(s => s.id === selectedStyle)?.credits} credits
                       </div>
                     </div>
                     <Button
                       onClick={() => {
                         // Simulate image selection and style application
-                        setSelectedImage(
-                          "https://picsum.photos/seed/demo/400/300.jpg",
-                        );
+                        setSelectedImage('https://picsum.photos/seed/demo/400/300.jpg');
                         handleStyleTransfer();
                       }}
                       disabled={
-                        credits <
-                        (artStyles.find((s) => s.id === selectedStyle)
-                          ?.credits || 0)
+                        credits < (artStyles.find(s => s.id === selectedStyle)?.credits || 0)
                       }
                     >
                       Try This Style

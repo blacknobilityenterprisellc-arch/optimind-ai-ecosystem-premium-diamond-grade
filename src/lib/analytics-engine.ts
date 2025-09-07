@@ -7,7 +7,7 @@ export async function configureAnalytics() {
 export function trackPremiumEvent(event: string, data: any) {
   // Premium event tracking with enhanced metrics
   console.log(`📈 Tracking premium event: ${event}`, data);
-  
+
   // Send to premium analytics service
   // Implementation depends on your analytics provider
 }
@@ -21,7 +21,7 @@ export function generatePremiumReport(userId: string) {
     metrics: {
       usage: 'premium',
       features: 'all',
-      insights: 'enhanced'
-    }
+      insights: 'enhanced',
+    },
   };
 }

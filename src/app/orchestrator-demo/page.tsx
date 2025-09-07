@@ -1,6 +1,6 @@
 /**
  * Agent Orchestrator Demo Page
- * 
+ *
  * This page provides a web interface to demonstrate the enhanced
  * agent coordination system with real-time monitoring.
  */
@@ -54,20 +54,20 @@ export default function OrchestratorDemoPage() {
     setLoading(true);
     setError(null);
     addLog('Starting orchestrator demo...');
-    
+
     try {
       const response = await fetch('/api/orchestrator/demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'start' })
+        body: JSON.stringify({ action: 'start' }),
       });
 
       const result: DemoResponse = await response.json();
-      
+
       if (response.ok) {
         setDemoRunning(true);
         addLog(`✅ ${result.message}`);
-        
+
         // Start polling for status updates
         const interval = setInterval(() => {
           fetchStatus();
@@ -93,16 +93,16 @@ export default function OrchestratorDemoPage() {
     setLoading(true);
     setError(null);
     addLog('Stopping orchestrator demo...');
-    
+
     try {
       const response = await fetch('/api/orchestrator/demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'stop' })
+        body: JSON.stringify({ action: 'stop' }),
       });
 
       const result: DemoResponse = await response.json();
-      
+
       if (response.ok) {
         setDemoRunning(false);
         addLog(`✅ ${result.message}`);
@@ -131,9 +131,7 @@ export default function OrchestratorDemoPage() {
     <div className="container mx-auto p-6 space-y-6">
       <div className="text-center space-y-2">
         <h1 className="text-4xl font-bold">Agent Orchestrator Demo</h1>
-        <p className="text-lg text-muted-foreground">
-          Enhanced AI Agent Coordination System
-        </p>
+        <p className="text-lg text-muted-foreground">Enhanced AI Agent Coordination System</p>
       </div>
 
       {/* Status Overview */}
@@ -146,9 +144,7 @@ export default function OrchestratorDemoPage() {
                 {status.orchestrator.status}
               </Badge>
             </CardTitle>
-            <CardDescription>
-              Version {status.orchestrator.version}
-            </CardDescription>
+            <CardDescription>Version {status.orchestrator.version}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -191,9 +187,7 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>Demo Controls</CardTitle>
-          <CardDescription>
-            Start and stop the orchestrator demonstration
-          </CardDescription>
+          <CardDescription>Start and stop the orchestrator demonstration</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-4 items-center">
@@ -212,11 +206,7 @@ export default function OrchestratorDemoPage() {
             >
               {loading ? 'Stopping...' : 'Stop Demo'}
             </Button>
-            <Button
-              onClick={clearLogs}
-              variant="ghost"
-              disabled={logs.length === 0}
-            >
+            <Button onClick={clearLogs} variant="ghost" disabled={logs.length === 0}>
               Clear Logs
             </Button>
           </div>
@@ -234,9 +224,7 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>Activity Log</CardTitle>
-          <CardDescription>
-            Real-time system activity and events
-          </CardDescription>
+          <CardDescription>Real-time system activity and events</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="bg-muted p-4 rounded-md h-64 overflow-y-auto font-mono text-sm">
@@ -257,9 +245,7 @@ export default function OrchestratorDemoPage() {
       <Card>
         <CardHeader>
           <CardTitle>System Information</CardTitle>
-          <CardDescription>
-            Technical details about the orchestrator system
-          </CardDescription>
+          <CardDescription>Technical details about the orchestrator system</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">

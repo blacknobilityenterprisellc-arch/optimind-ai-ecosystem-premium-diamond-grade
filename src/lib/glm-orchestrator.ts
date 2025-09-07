@@ -1,6 +1,6 @@
 /**
  * GLM-4.5 Primary Orchestrator for OptiMind AI Ecosystem
- * 
+ *
  * This module implements GLM-4.5 as the central AI coordinator and system analyzer,
  * serving as the main orchestrator that coordinates all AI agents and system components.
  * This is the core orchestrator that should be used throughout the system.
@@ -36,7 +36,7 @@ const logger = {
   },
   warn: (message: string, ...args: unknown[]) => {
     console.warn(message, ...args);
-  }
+  },
 };
 
 // Define proper types for operation results
@@ -141,11 +141,11 @@ export class GLMOrchestrator {
     try {
       this.zai = await ZAI.create();
       this.isInitialized = true;
-      
+
       if (this.config.enableRealTimeMonitoring) {
         this.startHealthMonitoring();
       }
-      
+
       logger.log('GLM-4.5 Orchestrator initialized successfully');
     } catch (error) {
       logger.error('Failed to initialize GLM Orchestrator:', error);
@@ -165,7 +165,7 @@ export class GLMOrchestrator {
     const fullOperation: OrchestratedOperation = {
       ...operation,
       id: operationId,
-      timeout: operation.timeout || this.config.operationTimeout
+      timeout: operation.timeout || this.config.operationTimeout,
     };
 
     const operationPromise = this.executeOrchestratedOperation(fullOperation);
@@ -221,17 +221,17 @@ export class GLMOrchestrator {
             - Component-specific health statuses
             - Performance metrics
             - Key insights
-            - Actionable recommendations`
+            - Actionable recommendations`,
           },
           {
             role: 'user',
             content: `Perform comprehensive system health analysis for OptiMind AI Ecosystem. 
             Current timestamp: ${new Date().toISOString()}
-            Analyze all system components and provide detailed health assessment.`
-          }
+            Analyze all system components and provide detailed health assessment.`,
+          },
         ],
         temperature: 0.1,
-        max_tokens: 2000
+        max_tokens: 2000,
       });
 
       const response = healthAnalysis.choices[0]?.message?.content || '{}';
@@ -246,25 +246,25 @@ export class GLMOrchestrator {
           mcpProtocol: analysis.components?.mcpProtocol || 'healthy',
           database: analysis.components?.database || 'healthy',
           api: analysis.components?.api || 'healthy',
-          security: analysis.components?.security || 'healthy'
+          security: analysis.components?.security || 'healthy',
         },
         metrics: {
           responseTime: analysis.metrics?.responseTime || Math.random() * 100 + 50,
           successRate: analysis.metrics?.successRate || 0.95 + Math.random() * 0.04,
           throughput: analysis.metrics?.throughput || Math.random() * 1000 + 500,
-          errorRate: analysis.metrics?.errorRate || Math.random() * 0.05
+          errorRate: analysis.metrics?.errorRate || Math.random() * 0.05,
         },
         insights: analysis.insights || [
           'System operating within normal parameters',
           'All primary AI agents responding optimally',
-          'Security protocols functioning correctly'
+          'Security protocols functioning correctly',
         ],
         recommendations: analysis.recommendations || [
           'Continue monitoring system performance',
           'Maintain current security protocols',
-          'Optimize resource allocation based on demand'
+          'Optimize resource allocation based on demand',
         ],
-        lastChecked: new Date()
+        lastChecked: new Date(),
       };
 
       return enhancedAnalysis;
@@ -277,7 +277,9 @@ export class GLMOrchestrator {
   /**
    * Execute orchestrated operation
    */
-  private async executeOrchestratedOperation(operation: OrchestratedOperation): Promise<OrchestratedResult> {
+  private async executeOrchestratedOperation(
+    operation: OrchestratedOperation
+  ): Promise<OrchestratedResult> {
     const startTime = Date.now();
 
     try {
@@ -311,7 +313,8 @@ export class GLMOrchestrator {
           messages: [
             {
               role: 'system',
-              content: 'You are GLM-4.5, providing insights and recommendations for AI ecosystem operations.'
+              content:
+                'You are GLM-4.5, providing insights and recommendations for AI ecosystem operations.',
             },
             {
               role: 'user',
@@ -319,11 +322,11 @@ export class GLMOrchestrator {
               Operation: ${operation.type}
               Result: ${JSON.stringify(result, null, 2)}
               
-              Provide 2-3 key insights and 2-3 actionable recommendations in JSON format.`
-            }
+              Provide 2-3 key insights and 2-3 actionable recommendations in JSON format.`,
+            },
           ],
           temperature: 0.2,
-          max_tokens: 1000
+          max_tokens: 1000,
         });
 
         const insightContent = insightResponse.choices[0]?.message?.content || '{}';
@@ -347,7 +350,7 @@ export class GLMOrchestrator {
         confidence: 0.9 + Math.random() * 0.1,
         processingTime,
         orchestratedBy: 'GLM-4.5',
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.completedOperations.set(operation.id, orchestratedResult);
@@ -362,7 +365,7 @@ export class GLMOrchestrator {
         confidence: 0,
         processingTime,
         orchestratedBy: 'GLM-4.5',
-        timestamp: new Date()
+        timestamp: new Date(),
       };
 
       this.completedOperations.set(operation.id, errorResult);
@@ -375,28 +378,30 @@ export class GLMOrchestrator {
   /**
    * Execute analysis operation
    */
-  private async executeAnalysisOperation(operation: OrchestratedOperation): Promise<AnalysisResult> {
+  private async executeAnalysisOperation(
+    operation: OrchestratedOperation
+  ): Promise<AnalysisResult> {
     if (!this.zai) throw new Error('ZAI not initialized');
 
     const response = await this.zai.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: 'You are GLM-4.5 performing advanced analysis for the OptiMind AI Ecosystem.'
+          content: 'You are GLM-4.5 performing advanced analysis for the OptiMind AI Ecosystem.',
         },
         {
           role: 'user',
-          content: `Perform analysis operation: ${JSON.stringify(operation.payload)}`
-        }
+          content: `Perform analysis operation: ${JSON.stringify(operation.payload)}`,
+        },
       ],
       temperature: 0.1,
-      max_tokens: 1500
+      max_tokens: 1500,
     });
 
     return {
       data: response,
       insights: ['Analysis completed successfully'],
-      confidence: 0.9
+      confidence: 0.9,
     };
   }
 
@@ -410,15 +415,15 @@ export class GLMOrchestrator {
       messages: [
         {
           role: 'system',
-          content: 'You are GLM-4.5 performing system optimization for the OptiMind AI Ecosystem.'
+          content: 'You are GLM-4.5 performing system optimization for the OptiMind AI Ecosystem.',
         },
         {
           role: 'user',
-          content: `Perform optimization operation: ${JSON.stringify(operation.payload)}`
-        }
+          content: `Perform optimization operation: ${JSON.stringify(operation.payload)}`,
+        },
       ],
       temperature: 0.2,
-      max_tokens: 1500
+      max_tokens: 1500,
     });
   }
 
@@ -432,15 +437,15 @@ export class GLMOrchestrator {
       messages: [
         {
           role: 'system',
-          content: 'You are GLM-4.5 performing real-time monitoring for the OptiMind AI Ecosystem.'
+          content: 'You are GLM-4.5 performing real-time monitoring for the OptiMind AI Ecosystem.',
         },
         {
           role: 'user',
-          content: `Perform monitoring operation: ${JSON.stringify(operation.payload)}`
-        }
+          content: `Perform monitoring operation: ${JSON.stringify(operation.payload)}`,
+        },
       ],
       temperature: 0.1,
-      max_tokens: 1000
+      max_tokens: 1000,
     });
   }
 
@@ -454,15 +459,16 @@ export class GLMOrchestrator {
       messages: [
         {
           role: 'system',
-          content: 'You are GLM-4.5 performing quantum security operations for the OptiMind AI Ecosystem.'
+          content:
+            'You are GLM-4.5 performing quantum security operations for the OptiMind AI Ecosystem.',
         },
         {
           role: 'user',
-          content: `Perform security operation: ${JSON.stringify(operation.payload)}`
-        }
+          content: `Perform security operation: ${JSON.stringify(operation.payload)}`,
+        },
       ],
       temperature: 0.05,
-      max_tokens: 1200
+      max_tokens: 1200,
     });
   }
 
@@ -476,15 +482,15 @@ export class GLMOrchestrator {
       messages: [
         {
           role: 'system',
-          content: 'You are GLM-4.5 performing predictive analytics for the OptiMind AI Ecosystem.'
+          content: 'You are GLM-4.5 performing predictive analytics for the OptiMind AI Ecosystem.',
         },
         {
           role: 'user',
-          content: `Perform prediction operation: ${JSON.stringify(operation.payload)}`
-        }
+          content: `Perform prediction operation: ${JSON.stringify(operation.payload)}`,
+        },
       ],
       temperature: 0.3,
-      max_tokens: 2000
+      max_tokens: 2000,
     });
   }
 
@@ -498,7 +504,7 @@ export class GLMOrchestrator {
         logger.log('GLM Orchestrator Health Status:', {
           overall: healthStatus.overall,
           timestamp: healthStatus.lastChecked,
-          insights: healthStatus.insights.slice(0, 2)
+          insights: healthStatus.insights.slice(0, 2),
         });
       } catch (error) {
         logger.error('Health monitoring failed:', error);
@@ -514,7 +520,7 @@ export class GLMOrchestrator {
       isInitialized: this.isInitialized,
       activeOperations: this.activeOperations.size,
       completedOperations: this.completedOperations.size,
-      config: this.config
+      config: this.config,
     };
   }
 
@@ -547,5 +553,5 @@ export const glmOrchestrator = new GLMOrchestrator({
   enableRealTimeMonitoring: true,
   maxConcurrentOperations: 10,
   operationTimeout: 30000,
-  healthCheckInterval: 60000
+  healthCheckInterval: 60000,
 });

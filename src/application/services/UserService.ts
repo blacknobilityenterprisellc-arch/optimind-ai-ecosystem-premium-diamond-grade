@@ -17,21 +17,21 @@ import {
   UserProfile,
   UserSecurity,
   Subscription,
-} from "@/domain/entities/User";
-import { Email } from "@/domain/value-objects/Email";
-import { Money } from "@/domain/value-objects/Money";
-import { UserRepository } from "@/domain/repositories/UserRepository";
+} from '@/domain/entities/User';
+import { Email } from '@/domain/value-objects/Email';
+import { Money } from '@/domain/value-objects/Money';
+import { UserRepository } from '@/domain/repositories/UserRepository';
 import {
   ValidationError,
   AuthenticationError,
   AuthorizationError,
   NotFoundError,
   ApplicationError,
-} from "@/lib/error-handler";
-import { withErrorHandling, withRetry } from "@/lib/error-handler";
-import { PasswordHasher } from "@/infrastructure/security/bcrypt/PasswordHasher";
-import { JWTService } from "@/infrastructure/security/jwt/JWTService";
-import { EmailService } from "@/infrastructure/email/EmailService";
+} from '@/lib/error-handler';
+import { withErrorHandling, withRetry } from '@/lib/error-handler';
+import { PasswordHasher } from '@/infrastructure/security/bcrypt/PasswordHasher';
+import { JWTService } from '@/infrastructure/security/jwt/JWTService';
+import { EmailService } from '@/infrastructure/email/EmailService';
 
 export interface CreateUserRequest {
   email: string;
@@ -86,25 +86,21 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly passwordHasher: PasswordHasher,
     private readonly jwtService: JWTService,
-    private readonly emailService: EmailService,
+    private readonly emailService: EmailService
   ) {}
 
   // Use case: Create new user
-  @withErrorHandling("UserService.createUser")
+  @withErrorHandling('UserService.createUser')
   async createUser(request: CreateUserRequest): Promise<User> {
     // Check if user already exists
-    const existingEmail = await this.userRepository.findByEmail(
-      new Email(request.email),
-    );
+    const existingEmail = await this.userRepository.findByEmail(new Email(request.email));
     if (existingEmail) {
-      throw new ValidationError("User with this email already exists");
+      throw new ValidationError('User with this email already exists');
     }
 
-    const existingUsername = await this.userRepository.findByUsername(
-      request.username,
-    );
+    const existingUsername = await this.userRepository.findByUsername(request.username);
     if (existingUsername) {
-      throw new ValidationError("Username already taken");
+      throw new ValidationError('Username already taken');
     }
 
     // Hash password
@@ -117,9 +113,7 @@ export class UserService {
       firstName: request.firstName,
       lastName: request.lastName,
       role: request.role || UserRole.USER,
-      permissions:
-        request.permissions ||
-        this.getDefaultPermissions(request.role || UserRole.USER),
+      permissions: request.permissions || this.getDefaultPermissions(request.role || UserRole.USER),
       profile: this.getDefaultProfile(request.profile),
       security: {
         twoFactorEnabled: false,
@@ -140,32 +134,28 @@ export class UserService {
   }
 
   // Use case: Update user
-  @withErrorHandling("UserService.updateUser")
+  @withErrorHandling('UserService.updateUser')
   async updateUser(request: UpdateUserRequest): Promise<User> {
     const user = await this.userRepository.findById(request.userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     // Update user properties
     const updates: Partial<UserProps> = {};
 
     if (request.email) {
-      const existingEmail = await this.userRepository.findByEmail(
-        new Email(request.email),
-      );
+      const existingEmail = await this.userRepository.findByEmail(new Email(request.email));
       if (existingEmail && existingEmail.id !== request.userId) {
-        throw new ValidationError("Email already in use");
+        throw new ValidationError('Email already in use');
       }
       updates.email = request.email;
     }
 
     if (request.username) {
-      const existingUsername = await this.userRepository.findByUsername(
-        request.username,
-      );
+      const existingUsername = await this.userRepository.findByUsername(request.username);
       if (existingUsername && existingUsername.id !== request.userId) {
-        throw new ValidationError("Username already taken");
+        throw new ValidationError('Username already taken');
       }
       updates.username = request.username;
     }
@@ -195,11 +185,11 @@ export class UserService {
   }
 
   // Use case: Change password
-  @withErrorHandling("UserService.changePassword")
+  @withErrorHandling('UserService.changePassword')
   async changePassword(request: ChangePasswordRequest): Promise<void> {
     const user = await this.userRepository.findById(request.userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     // Verify current password (this would require storing password hashes)
@@ -223,23 +213,19 @@ export class UserService {
   }
 
   // Use case: Login
-  @withErrorHandling("UserService.login")
+  @withErrorHandling('UserService.login')
   async login(request: LoginRequest): Promise<LoginResponse> {
-    const user = await this.userRepository.findByEmail(
-      new Email(request.email),
-    );
+    const user = await this.userRepository.findByEmail(new Email(request.email));
     if (!user) {
-      throw new AuthenticationError("Invalid email or password");
+      throw new AuthenticationError('Invalid email or password');
     }
 
     if (!user.isActive()) {
-      throw new AuthenticationError("Account is inactive");
+      throw new AuthenticationError('Account is inactive');
     }
 
     if (user.isLocked()) {
-      throw new AuthenticationError(
-        "Account is locked. Please try again later.",
-      );
+      throw new AuthenticationError('Account is locked. Please try again later.');
     }
 
     // Verify password (this would require storing password hashes)
@@ -278,7 +264,7 @@ export class UserService {
   }
 
   // Use case: Register new user
-  @withErrorHandling("UserService.register")
+  @withErrorHandling('UserService.register')
   async register(request: CreateUserRequest): Promise<RegisterResponse> {
     const user = await this.createUser(request);
 
@@ -304,57 +290,53 @@ export class UserService {
   }
 
   // Use case: Get user by ID
-  @withErrorHandling("UserService.getUserById")
+  @withErrorHandling('UserService.getUserById')
   async getUserById(userId: string): Promise<User> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
     return user;
   }
 
   // Use case: Get user by email
-  @withErrorHandling("UserService.getUserByEmail")
+  @withErrorHandling('UserService.getUserByEmail')
   async getUserByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findByEmail(new Email(email));
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
     return user;
   }
 
   // Use case: Get all users (admin only)
-  @withErrorHandling("UserService.getAllUsers")
+  @withErrorHandling('UserService.getAllUsers')
   async getAllUsers(options?: any): Promise<User[]> {
     return await this.userRepository.findAll(options);
   }
 
   // Use case: Delete user
-  @withErrorHandling("UserService.deleteUser")
+  @withErrorHandling('UserService.deleteUser')
   async deleteUser(userId: string, requestingUserId: string): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     // Users cannot delete themselves
     if (userId === requestingUserId) {
-      throw new AuthorizationError("Cannot delete your own account");
+      throw new AuthorizationError('Cannot delete your own account');
     }
 
     await this.userRepository.delete(userId);
   }
 
   // Use case: Lock user account
-  @withErrorHandling("UserService.lockUser")
-  async lockUser(
-    userId: string,
-    reason: string,
-    duration?: number,
-  ): Promise<void> {
+  @withErrorHandling('UserService.lockUser')
+  async lockUser(userId: string, reason: string, duration?: number): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     const lockUntil = duration ? new Date(Date.now() + duration) : undefined;
@@ -365,11 +347,11 @@ export class UserService {
   }
 
   // Use case: Unlock user account
-  @withErrorHandling("UserService.unlockUser")
+  @withErrorHandling('UserService.unlockUser')
   async unlockUser(userId: string): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     await this.userRepository.unlockUser(userId);
@@ -381,14 +363,11 @@ export class UserService {
   }
 
   // Use case: Update user subscription
-  @withErrorHandling("UserService.updateSubscription")
-  async updateSubscription(
-    userId: string,
-    subscription: Subscription,
-  ): Promise<void> {
+  @withErrorHandling('UserService.updateSubscription')
+  async updateSubscription(userId: string, subscription: Subscription): Promise<void> {
     const user = await this.userRepository.findById(userId);
     if (!user) {
-      throw new NotFoundError("User");
+      throw new NotFoundError('User');
     }
 
     user.updateSubscription(subscription);
@@ -397,7 +376,7 @@ export class UserService {
   }
 
   // Use case: Get user analytics
-  @withErrorHandling("UserService.getUserAnalytics")
+  @withErrorHandling('UserService.getUserAnalytics')
   async getUserAnalytics(): Promise<any> {
     return await this.userRepository.getUserAnalytics();
   }
@@ -406,36 +385,36 @@ export class UserService {
   private getDefaultPermissions(role: UserRole): Permission[] {
     const permissions: Record<UserRole, Permission[]> = {
       [UserRole.ADMIN]: [
-        { resource: "*", action: "create" },
-        { resource: "*", action: "read" },
-        { resource: "*", action: "update" },
-        { resource: "*", action: "delete" },
-        { resource: "*", action: "execute" },
+        { resource: '*', action: 'create' },
+        { resource: '*', action: 'read' },
+        { resource: '*', action: 'update' },
+        { resource: '*', action: 'delete' },
+        { resource: '*', action: 'execute' },
       ],
       [UserRole.USER]: [
-        { resource: "content", action: "create" },
-        { resource: "content", action: "read" },
-        { resource: "content", action: "update" },
-        { resource: "ai", action: "execute" },
-        { resource: "profile", action: "read" },
-        { resource: "profile", action: "update" },
+        { resource: 'content', action: 'create' },
+        { resource: 'content', action: 'read' },
+        { resource: 'content', action: 'update' },
+        { resource: 'ai', action: 'execute' },
+        { resource: 'profile', action: 'read' },
+        { resource: 'profile', action: 'update' },
       ],
       [UserRole.MODERATOR]: [
-        { resource: "content", action: "create" },
-        { resource: "content", action: "read" },
-        { resource: "content", action: "update" },
-        { resource: "content", action: "delete" },
-        { resource: "ai", action: "execute" },
-        { resource: "profile", action: "read" },
-        { resource: "profile", action: "update" },
-        { resource: "users", action: "read" },
+        { resource: 'content', action: 'create' },
+        { resource: 'content', action: 'read' },
+        { resource: 'content', action: 'update' },
+        { resource: 'content', action: 'delete' },
+        { resource: 'ai', action: 'execute' },
+        { resource: 'profile', action: 'read' },
+        { resource: 'profile', action: 'update' },
+        { resource: 'users', action: 'read' },
       ],
       [UserRole.ANALYST]: [
-        { resource: "content", action: "read" },
-        { resource: "analytics", action: "read" },
-        { resource: "ai", action: "execute" },
-        { resource: "profile", action: "read" },
-        { resource: "profile", action: "update" },
+        { resource: 'content', action: 'read' },
+        { resource: 'analytics', action: 'read' },
+        { resource: 'ai', action: 'execute' },
+        { resource: 'profile', action: 'read' },
+        { resource: 'profile', action: 'update' },
       ],
     };
 
@@ -447,19 +426,17 @@ export class UserService {
       avatar: profile?.avatar,
       bio: profile?.bio,
       preferences: {
-        theme: profile?.preferences?.theme || "auto",
-        language: profile?.preferences?.language || "en",
-        timezone: profile?.preferences?.timezone || "UTC",
+        theme: profile?.preferences?.theme || 'auto',
+        language: profile?.preferences?.language || 'en',
+        timezone: profile?.preferences?.timezone || 'UTC',
         notifications: {
           email: profile?.preferences?.notifications?.email ?? true,
           push: profile?.preferences?.notifications?.push ?? true,
           sms: profile?.preferences?.notifications?.sms ?? false,
-          frequency:
-            profile?.preferences?.notifications?.frequency || "immediate",
+          frequency: profile?.preferences?.notifications?.frequency || 'immediate',
         },
         privacy: {
-          profileVisibility:
-            profile?.preferences?.privacy?.profileVisibility || "private",
+          profileVisibility: profile?.preferences?.privacy?.profileVisibility || 'private',
           dataCollection: profile?.preferences?.privacy?.dataCollection ?? true,
           analytics: profile?.preferences?.privacy?.analytics ?? true,
           marketing: profile?.preferences?.privacy?.marketing ?? false,
@@ -467,7 +444,7 @@ export class UserService {
       },
       settings: {
         ai: {
-          defaultModel: profile?.settings?.ai?.defaultModel || "gpt-3.5-turbo",
+          defaultModel: profile?.settings?.ai?.defaultModel || 'gpt-3.5-turbo',
           temperature: profile?.settings?.ai?.temperature || 0.7,
           maxTokens: profile?.settings?.ai?.maxTokens || 1000,
           autoSave: profile?.settings?.ai?.autoSave ?? true,
@@ -482,8 +459,7 @@ export class UserService {
         security: {
           sessionTimeout: profile?.settings?.security?.sessionTimeout || 3600,
           twoFactor: profile?.settings?.security?.twoFactor ?? false,
-          loginNotifications:
-            profile?.settings?.security?.loginNotifications ?? true,
+          loginNotifications: profile?.settings?.security?.loginNotifications ?? true,
           dataEncryption: profile?.settings?.security?.dataEncryption ?? true,
         },
         analytics: {
@@ -499,15 +475,15 @@ export class UserService {
     try {
       await this.emailService.sendEmail({
         to: user.email,
-        subject: "Welcome to OptiMind AI Ecosystem!",
-        template: "welcome",
+        subject: 'Welcome to OptiMind AI Ecosystem!',
+        template: 'welcome',
         data: {
           username: user.username,
           firstName: user.firstName,
         },
       });
     } catch (error) {
-      console.error("Failed to send welcome email:", error);
+      console.error('Failed to send welcome email:', error);
       // Don't throw error - user creation should succeed even if email fails
     }
   }
@@ -516,27 +492,24 @@ export class UserService {
     try {
       await this.emailService.sendEmail({
         to: user.email,
-        subject: "Password Changed Successfully",
-        template: "password-changed",
+        subject: 'Password Changed Successfully',
+        template: 'password-changed',
         data: {
           username: user.username,
           timestamp: new Date().toISOString(),
         },
       });
     } catch (error) {
-      console.error("Failed to send password change email:", error);
+      console.error('Failed to send password change email:', error);
     }
   }
 
-  private async sendAccountLockEmail(
-    user: User,
-    reason: string,
-  ): Promise<void> {
+  private async sendAccountLockEmail(user: User, reason: string): Promise<void> {
     try {
       await this.emailService.sendEmail({
         to: user.email,
-        subject: "Account Locked",
-        template: "account-locked",
+        subject: 'Account Locked',
+        template: 'account-locked',
         data: {
           username: user.username,
           reason,
@@ -544,7 +517,7 @@ export class UserService {
         },
       });
     } catch (error) {
-      console.error("Failed to send account lock email:", error);
+      console.error('Failed to send account lock email:', error);
     }
   }
 
@@ -552,15 +525,15 @@ export class UserService {
     try {
       await this.emailService.sendEmail({
         to: user.email,
-        subject: "Account Unlocked",
-        template: "account-unlocked",
+        subject: 'Account Unlocked',
+        template: 'account-unlocked',
         data: {
           username: user.username,
           timestamp: new Date().toISOString(),
         },
       });
     } catch (error) {
-      console.error("Failed to send account unlock email:", error);
+      console.error('Failed to send account unlock email:', error);
     }
   }
 }

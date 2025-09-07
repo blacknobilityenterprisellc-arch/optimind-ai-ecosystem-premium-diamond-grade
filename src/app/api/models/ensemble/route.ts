@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { zaiApiService } from "@/lib/zai-api-service";
+import { zaiApiService } from '@/lib/zai-api-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,8 +9,8 @@ export async function POST(request: NextRequest) {
 
     if (!imageBase64 || !analysisType) {
       return NextResponse.json(
-        { error: "Missing required fields: imageBase64, analysisType" },
-        { status: 400 },
+        { error: 'Missing required fields: imageBase64, analysisType' },
+        { status: 400 }
       );
     }
 
@@ -18,18 +18,15 @@ export async function POST(request: NextRequest) {
       {
         imageBase64,
         analysisType,
-        modelId: "ensemble",
+        modelId: 'ensemble',
         customPrompt,
       },
-      modelIds,
+      modelIds
     );
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Ensemble analysis failed:", error);
-    return NextResponse.json(
-      { error: "Ensemble analysis failed" },
-      { status: 500 },
-    );
+    console.error('Ensemble analysis failed:', error);
+    return NextResponse.json({ error: 'Ensemble analysis failed' }, { status: 500 });
   }
 }
