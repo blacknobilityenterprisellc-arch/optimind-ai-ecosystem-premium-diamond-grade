@@ -77,7 +77,7 @@ class PremiumZAIWrapper {
 
       // Attempt to create ZAI instance with real API key
       this.zai = await ZAI.create({
-        apiKey: apiKey,
+        apiKey,
         baseUrl: this.config.baseUrl,
         timeout: this.config.timeout,
       });

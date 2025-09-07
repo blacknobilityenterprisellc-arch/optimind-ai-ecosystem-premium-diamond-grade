@@ -70,7 +70,7 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
   try {
     const failedAnalysis = await db.moderationAnalysis.create({
       data: {
-        inputRef: inputRef,
+        inputRef,
         type: AnalysisType.CONSENSUS, // Use consensus as the fallback type
         labels: [{ label: 'analysis_failed', score: 1 }],
         reasons: [
@@ -129,7 +129,7 @@ async function createReviewItem(
       data: {
         imageId,
         priority: calculatedPriority,
-        reasons: reasons,
+        reasons,
         metadata: {
           labels,
           severity: calculateSeverity(labels),

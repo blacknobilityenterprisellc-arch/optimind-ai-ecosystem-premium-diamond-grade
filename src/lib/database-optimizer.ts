@@ -444,7 +444,7 @@ export class DatabaseConnectionPool {
     ) {
       optimizations.push({
         description: 'Add WHERE clause to limit results',
-        apply: q => q + ' WHERE 1=1 LIMIT 1000',
+        apply: q => `${q  } WHERE 1=1 LIMIT 1000`,
       });
     }
 
@@ -457,7 +457,7 @@ export class DatabaseConnectionPool {
     ) {
       optimizations.push({
         description: 'Add LIMIT clause to prevent large result sets',
-        apply: q => q + ' LIMIT 1000',
+        apply: q => `${q  } LIMIT 1000`,
       });
     }
 

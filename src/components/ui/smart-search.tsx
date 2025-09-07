@@ -139,7 +139,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
           usage: data.usage,
         });
       } else {
-        alert('Failed to search: ' + data.error);
+        alert(`Failed to search: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error searching:', error);
@@ -176,7 +176,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
           usage: data.usage,
         });
       } else {
-        alert('Failed to get recommendations: ' + data.error);
+        alert(`Failed to get recommendations: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error getting recommendations:', error);

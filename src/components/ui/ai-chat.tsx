@@ -141,7 +141,7 @@ export function AIChat({ className }: AIChatProps) {
       ...currentSession,
       messages: [...currentSession.messages, userMessage],
       title:
-        currentSession.messages.length === 0 ? input.slice(0, 50) + '...' : currentSession.title,
+        currentSession.messages.length === 0 ? `${input.slice(0, 50)  }...` : currentSession.title,
     };
 
     setCurrentSession(updatedSession);
@@ -187,7 +187,7 @@ export function AIChat({ className }: AIChatProps) {
         const updatedSessions = sessions.map(s => (s.id === finalSession.id ? finalSession : s));
         saveSessions(updatedSessions);
       } else {
-        alert('Failed to get response: ' + data.error);
+        alert(`Failed to get response: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error sending message:', error);

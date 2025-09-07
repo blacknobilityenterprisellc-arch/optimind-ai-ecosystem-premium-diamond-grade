@@ -1079,11 +1079,11 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   private generateAPIKey(): string {
-    return 'ak_' + Math.random().toString(36).substr(2, 32);
+    return `ak_${  Math.random().toString(36).substr(2, 32)}`;
   }
 
   private generateAPISecret(): string {
-    return 'as_' + Math.random().toString(36).substr(2, 64);
+    return `as_${  Math.random().toString(36).substr(2, 64)}`;
   }
 
   // Public API methods

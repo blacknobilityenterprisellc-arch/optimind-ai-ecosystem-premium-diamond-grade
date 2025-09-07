@@ -66,7 +66,7 @@ export class SecureStorage {
       const encryptedBuffer = await window.crypto.subtle.encrypt(
         {
           name: 'AES-GCM',
-          iv: iv,
+          iv,
         },
         cryptoKey,
         dataBuffer
@@ -118,7 +118,7 @@ export class SecureStorage {
       const decryptedBuffer = await window.crypto.subtle.decrypt(
         {
           name: 'AES-GCM',
-          iv: iv,
+          iv,
         },
         cryptoKey,
         encrypted
