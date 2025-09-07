@@ -8,6 +8,10 @@
  * lightning, premium, and monitoring checks using GLM models, MCP, and Open Router.
  */
 
+// Load environment variables
+import { config } from 'dotenv';
+config({ path: '.env' });
+
 import { AIHealthCheckLightning, HealthCheckResult as LightningResult } from './health-check-lightning';
 import { AIHealthCheckPremium, PremiumHealthCheckResult as PremiumResult } from './health-check-premium';
 import { AIHealthCheckMonitor, MonitoringResult as MonitoringResult } from './health-check-monitor';

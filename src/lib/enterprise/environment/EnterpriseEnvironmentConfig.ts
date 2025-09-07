@@ -19,6 +19,10 @@
  * @compliance: Enterprise Security Standards
  */
 
+// Load environment variables immediately
+import { config } from 'dotenv';
+config({ path: '.env' });
+
 import { z, ZodSchema, ZodError } from 'zod';
 import { EventEmitter } from 'events';
 

@@ -61,14 +61,13 @@
   12:34  error  Parsing error: Unexpected token :
 
 /home/z/my-project/src/app/api/health-fast/route.ts
-   8:13  error    'process' is not defined           no-undef
-   9:13  error    'process' is not defined           no-undef
-  10:14  error    'process' is not defined           no-undef
-  11:15  error    'process' is not defined           no-undef
-  12:11  error    'process' is not defined           no-undef
-  13:14  error    'process' is not defined           no-undef
-  18:30  error    'require' is not defined           no-undef
-  23:12  warning  'error' is defined but never used  no-unused-vars
+   8:13  error  'process' is not defined  no-undef
+   9:13  error  'process' is not defined  no-undef
+  10:14  error  'process' is not defined  no-undef
+  11:15  error  'process' is not defined  no-undef
+  12:11  error  'process' is not defined  no-undef
+  13:14  error  'process' is not defined  no-undef
+  18:30  error  'require' is not defined  no-undef
 
 /home/z/my-project/src/app/api/health/route.ts
   5:22  error  Parsing error: Unexpected token as
@@ -262,9 +261,6 @@
 /home/z/my-project/src/app/orchestrator-demo/page.tsx
   15:1  error  Parsing error: The keyword 'interface' is reserved
 
-/home/z/my-project/src/app/page.tsx
-  5:5  error  Parsing error: Unexpected token <
-
 /home/z/my-project/src/app/premium-scanner-demo/page.tsx
   11:1  error  Parsing error: The keyword 'interface' is reserved
 
@@ -289,6 +285,6 @@
 /home/z/my-project/src/app/testing/reports/page.tsx
   51:1  error  Parsing error: The keyword 'interface' is reserved
 
-✖ 100 problems (99 errors, 1 warning)
+✖ 98 problems (98 errors, 0 warnings)
 
 Fast lint completed

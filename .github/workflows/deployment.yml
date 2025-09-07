@@ -151,7 +151,7 @@ jobs:
     
     strategy:
       matrix:
-        deployment_type: ${{ github.event.inputs.deployment_type && github.event.inputs.deployment_type != '' && [github.event.inputs.deployment_type] || ['vercel', 'netlify'] }}
+        deployment_type: ${{ github.event.inputs.deployment_type && github.event.inputs.deployment_type != '' && github.event.inputs.deployment_type || 'vercel' }}
       fail-fast: false
     
     steps:
