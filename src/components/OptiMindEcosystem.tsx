@@ -10,28 +10,22 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Brain, 
   Shield, 
   Zap, 
-  Users, 
   BarChart3, 
   Image as ImageIcon, 
   MessageSquare, 
   Search,
-  Target,
-  Lightbulb,
-  Rocket,
-  Cpu,
-  Network,
   Eye,
-  Lock,
-  Sparkles
+  Sparkles,
+  Cpu,
+  Rocket
 } from "lucide-react";
 
 interface EcosystemFeature {

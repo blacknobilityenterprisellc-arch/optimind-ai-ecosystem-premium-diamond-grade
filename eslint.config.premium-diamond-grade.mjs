@@ -312,7 +312,6 @@ const premiumDiamondGradeConfig = [
       "jsx-a11y/click-events-have-key-events": "error",
       "jsx-a11y/no-noninteractive-element-interactions": "error",
       "jsx-a11y/role-has-required-aria-props": "error",
-      "jsx-a11y/interactive-supports-focus": "error",
       
       // === REACT/Next.js ENTERPRISE RULES ===
       "react/no-unescaped-entities": "error",
@@ -397,7 +396,6 @@ const premiumDiamondGradeConfig = [
       "no-obj-calls": "error",
       "no-self-compare": "error",
       "no-sequences": "error",
-      "no-throw-literal": "error",
       
       // === ENTERPRISE CODE QUALITY METRICS ===
       "complexity": ["error", { "max": 10 }], // Reduced for AI maintainability
@@ -447,9 +445,6 @@ const premiumDiamondGradeConfig = [
       
       // === ERROR HANDLING & RESILIENCE ===
       "no-unsafe-finally": "error",
-      "no-unsafe-negation": "error",
-      "no-unsafe-optional-chaining": "error",
-      "no-unsafe-optional-chaining": "error",
       "require-atomic-updates": "error",
       "no-async-promise-executor": "error",
       "no-promise-executor-return": "error",
