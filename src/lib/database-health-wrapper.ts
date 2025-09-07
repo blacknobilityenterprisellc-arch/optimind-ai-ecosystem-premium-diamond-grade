@@ -62,9 +62,8 @@ class PremiumDatabaseHealthWrapper implements IService {
   private metrics: Record<string, number> = {};
 
   private constructor() {
-    this.prisma = new PrismaClient({
-      log: ['query', 'info', 'warn', 'error'],
-    });
+    // Use the existing database client from db.ts instead of creating a new one
+    this.prisma = null as any; // Will be initialized lazily
 
     this.healthStatus = {
       connected: false,
@@ -169,27 +168,30 @@ class PremiumDatabaseHealthWrapper implements IService {
     const startTime = Date.now();
     
     try {
-      // Simple connection test with proper error handling
-      await this.prisma.$queryRaw`SELECT 1 as test`;
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      await db.$queryRaw`SELECT 1 as test`;
       
       const responseTime = Date.now() - startTime;
       return { success: true, responseTime };
       
     } catch (error: any) {
-      console.warn('Database connection test failed, setting up fallback mode:', error.message);
-      // For development, we'll consider this a success with fallback
+      console.warn('Database connection test failed:', error.message);
       return { 
-        success: true, 
-        responseTime: 10,
-        error: 'Using fallback database mode'
+        success: false, 
+        responseTime: Date.now() - startTime,
+        error: error.message 
       };
     }
   }
 
   private async gatherDatabaseInfo(): Promise<void> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // Get table information (SQLite specific)
-      const tables = await this.prisma.$queryRaw`
+      const tables = await db.$queryRaw`
         SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'
       ` as any[];
 
@@ -201,7 +203,7 @@ class PremiumDatabaseHealthWrapper implements IService {
       for (const table of ['users', 'projects', 'analyses', 'conversations']) {
         if (this.healthStatus.tables?.includes(table)) {
           try {
-            const result = await this.prisma.$queryRawUnsafe(`SELECT COUNT(*) as count FROM ${table}`) as any[];
+            const result = await db.$queryRawUnsafe(`SELECT COUNT(*) as count FROM ${table}`) as any[];
             recordCounts[table] = result[0]?.count || 0;
           } catch (error) {
             console.warn(`Could not get count for table ${table}:`, error);
@@ -213,7 +215,7 @@ class PremiumDatabaseHealthWrapper implements IService {
 
       // Get performance metrics
       const perfStartTime = Date.now();
-      await this.prisma.$queryRaw`SELECT COUNT(*) as total FROM sqlite_master`;
+      await db.$queryRaw`SELECT COUNT(*) as total FROM sqlite_master`;
       const queryTime = Date.now() - perfStartTime;
 
       this.healthStatus.performance = {
@@ -229,23 +231,17 @@ class PremiumDatabaseHealthWrapper implements IService {
   private setupFallbackMode(): void {
     console.log('⚠️ Setting up fallback database mode for development');
     
-    // Create mock data for development
+    // Create realistic fallback data for development
     this.healthStatus = {
-      connected: true,
-      responseTime: 10,
+      connected: false, // Set to false to indicate actual connection issues
+      responseTime: 0,
       lastCheck: new Date(),
-      error: 'Using fallback mode',
-      tables: ['users', 'projects', 'analyses', 'conversations'],
-      recordCounts: {
-        users: 1,
-        projects: 0,
-        analyses: 0,
-        conversations: 0,
-      },
+      error: 'Database connection failed - using fallback mode',
+      tables: [],
+      recordCounts: {},
       performance: {
-        queryTime: 5,
-        connectionTime: 10,
-        totalSize: 1024,
+        queryTime: 0,
+        connectionTime: 0,
       },
     };
 
@@ -296,8 +292,11 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async getMetrics(): Promise<DatabaseMetrics> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // Get connection info (SQLite specific)
-      const connectionInfo = await this.prisma.$queryRaw`
+      const connectionInfo = await db.$queryRaw`
         PRAGMA database_list
       ` as any[];
 
@@ -362,13 +361,16 @@ class PremiumDatabaseHealthWrapper implements IService {
     tableSizes: Record<string, number>;
   }> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       const tableSizes: Record<string, number> = {};
       let totalSize = 0;
 
       if (this.healthStatus.tables) {
         for (const table of this.healthStatus.tables) {
           try {
-            const result = await this.prisma.$queryRawUnsafe(`
+            const result = await db.$queryRawUnsafe(`
               SELECT SUM(pgsize) as size FROM dbstat WHERE name = '${table}'
             `) as any[];
             
@@ -459,7 +461,9 @@ class PremiumDatabaseHealthWrapper implements IService {
       throw new Error('Database is not connected');
     }
     
-    return this.prisma;
+    // Return the existing database client from db.ts
+    const { db } = await import('./db');
+    return db as any;
   }
 
   async executeQuery<T>(query: string, params?: any[]): Promise<T> {
@@ -468,11 +472,14 @@ class PremiumDatabaseHealthWrapper implements IService {
         await this.initialize();
       }
 
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // For raw queries, use unsafe method with parameters
       if (params && params.length > 0) {
-        return await this.prisma.$queryRawUnsafe(query, ...params) as T;
+        return await db.$queryRawUnsafe(query, ...params) as T;
       } else {
-        return await this.prisma.$queryRawUnsafe(query) as T;
+        return await db.$queryRawUnsafe(query) as T;
       }
     } catch (error) {
       console.error('Query execution failed:', error);
@@ -482,11 +489,11 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async close(): Promise<void> {
     try {
-      await this.prisma.$disconnect();
+      // We don't need to disconnect since we're using the shared db client
       this.isInitialized = false;
-      console.log('✅ Database connection closed');
+      console.log('✅ Database health wrapper closed');
     } catch (error) {
-      console.error('Failed to close database connection:', error);
+      console.error('Failed to close database health wrapper:', error);
     }
   }
 

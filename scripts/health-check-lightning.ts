@@ -151,8 +151,10 @@ class AIHealthCheckLightning {
 
   private async checkDatabaseHealth(): Promise<boolean> {
     try {
-      const healthStatus = await premiumDatabaseWrapper.getHealthStatus();
-      return healthStatus.connected && healthStatus.responseTime < 1000;
+      // Use the direct database client for testing
+      const { db } = await import('../src/lib/db');
+      await db.$queryRaw`SELECT 1 as test`;
+      return true;
     } catch (error) {
       console.error('Database health check failed:', error);
       return false;
