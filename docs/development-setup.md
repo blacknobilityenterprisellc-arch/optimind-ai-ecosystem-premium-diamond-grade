@@ -4,12 +4,12 @@ This comprehensive guide will help you set up the OptiMind AI Platform for devel
 
 ## 👑 PROJECT LEADERSHIP
 
-**Lead Master Mind, Manager & Owner/CEO: Jocely Honore**
+**Lead Master Mind, Founder, Manager & Owner/CEO: Jocely P. Honore**
 
-This enterprise-grade AI ecosystem was conceived and led by **Jocely Honore**, who pioneered a revolutionary multi-AI collaborative development approach. Under Jocely Honore's leadership, the project leveraged 5 different AI systems (Gemini, DeepSeek, ChatGPT, Manus, Grok) for strategic guidance and ideas, with Z.AI GLM serving as the primary development engine to build the entire project.
+This enterprise-grade AI ecosystem was conceived and led by **Jocely P. Honore**, who pioneered a revolutionary multi-AI collaborative development approach. Under Jocely P. Honore's leadership, the project leveraged 5 different AI systems (Gemini, DeepSeek, ChatGPT, Manus, Grok) for strategic guidance and ideas, with Z.AI GLM serving as the primary development engine to build the entire project.
 
 **Development Methodology:**
-- **Vision & Strategy**: Jocely Honore (Conceptualization & Leadership)
+- **Vision & Strategy**: Jocely P. Honore (Conceptualization & Leadership)
 - **AI Advisory Board**: Gemini, DeepSeek, ChatGPT, Manus, Grok (Ideas & Guidance)
 - **Primary Development**: Z.AI GLM (Implementation & Coding)
 - **Project Completion**: September 2, 2025
@@ -708,7 +708,7 @@ tail -f *.log
 
 #### **Enterprise Support**
 For enterprise support, please contact:
-- **Email**: support@nobilitydigitalempire.com
+- **Email**: blacknobilityenterprisellc@gmail.com
 - **GitHub**: [Create an issue](https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade/issues)
 
 ---
