@@ -135,4 +135,3 @@ class AIPremiumEditorService {
 }
 
 export const aiPremiumEditorService = AIPremiumEditorService.getInstance();
-export const useAIPremiumEditor = () => ({ edit: () => {} });

@@ -96,4 +96,3 @@ class AIBackgroundGeneratorService {
 
 export const aiBackgroundGeneratorService =
   AIBackgroundGeneratorService.getInstance();
-export const aiBackgroundGenerator = aiBackgroundGeneratorService;

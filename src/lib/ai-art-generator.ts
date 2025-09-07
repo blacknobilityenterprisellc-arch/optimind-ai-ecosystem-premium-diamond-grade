@@ -618,4 +618,3 @@ export function useAIArtGenerator() {
     models: service.getModels(),
   };
 }
-export const useSecureSubscription = () => 'secure';
