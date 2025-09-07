@@ -315,7 +315,7 @@ export class EnterpriseErrorHandler {
 
     // Limit error size
     if (sanitized.length > this.config.security.maxErrorSize) {
-      sanitized = `${sanitized.slice(0, Math.max(0, this.config.security.maxErrorSize))  }...`;
+      sanitized = `${sanitized.slice(0, Math.max(0, this.config.security.maxErrorSize))}...`;
     }
 
     return sanitized;

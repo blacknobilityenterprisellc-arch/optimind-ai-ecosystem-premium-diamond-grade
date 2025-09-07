@@ -141,10 +141,9 @@ export function ActivityFeed() {
       setTimeout(() => {
         socket.emit('ai_response', {
           queryId: Date.now().toString(),
-          response:
-            `I can help you understand the system status! Currently, there are ${ 
-            userCount 
-            } active users connected to the platform. The system is running smoothly with real-time updates enabled.`,
+          response: `I can help you understand the system status! Currently, there are ${
+            userCount
+          } active users connected to the platform. The system is running smoothly with real-time updates enabled.`,
         });
       }, 2000);
     }
