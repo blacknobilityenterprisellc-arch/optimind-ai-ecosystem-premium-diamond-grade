@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 // Health status constants
 const HEALTH_STATUS = {
@@ -131,7 +131,7 @@ function handleHealthError(error: unknown): NextResponse {
   );
 }
 
-export async function GET(_request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   try {
     const healthData = buildHealthData();
     return NextResponse.json(healthData);
