@@ -213,7 +213,7 @@ class DatabaseUpdateValidator {
 
       // Generate and save report
       const report = this.generateReport(result);
-      console.log('\\n' + report);
+      console.log(`\\n${  report}`);
       await this.saveReport(report);
 
       return result;

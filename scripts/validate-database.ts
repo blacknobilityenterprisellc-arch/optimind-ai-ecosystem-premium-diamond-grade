@@ -165,7 +165,7 @@ async function main() {
     const status = await validateDatabase();
     const report = generateReport(status);
     
-    console.log('\n' + report);
+    console.log(`\n${  report}`);
     
     if (status.isValid) {
       console.log('🎉 Database validation completed successfully!');

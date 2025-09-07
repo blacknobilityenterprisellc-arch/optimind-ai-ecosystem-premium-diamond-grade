@@ -48,7 +48,7 @@ function checkGitignore(): boolean {
   } else {
     log('❌ CRITICAL: .env is NOT in .gitignore', 'red');
     log('   Adding .env to .gitignore now...', 'red');
-    writeFileSync(gitignorePath, gitignoreContent + '\n# Environment files\n.env*\n');
+    writeFileSync(gitignorePath, `${gitignoreContent  }\n# Environment files\n.env*\n`);
     log('✅ Added .env to .gitignore', 'green');
     return true;
   }

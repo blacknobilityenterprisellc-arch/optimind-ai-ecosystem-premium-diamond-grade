@@ -112,7 +112,7 @@ export function computeConsensus(modelResults: ModelResult[]): ConsensusResult {
       models: provenanceModels,
       timestamp: new Date().toISOString(),
     },
-    recommendedAction: recommendedAction,
+    recommendedAction,
     reasons,
   };
 

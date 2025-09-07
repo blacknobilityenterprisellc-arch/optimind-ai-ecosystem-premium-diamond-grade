@@ -208,7 +208,7 @@ class EcosystemIntelligenceCore {
       this.consciousnessStream.push({
         timestamp: new Date(),
         type: 'anticipation',
-        need: need,
+        need,
         response: 'proactive-preparation',
         confidence: 0.85,
       });
@@ -352,7 +352,7 @@ class EcosystemIntelligenceCore {
   private processExperienceForLearning(experience: any): void {
     const learning = {
       timestamp: new Date(),
-      experience: experience,
+      experience,
       insights: this.extractLearningInsights(experience),
       adaptations: this.generateAdaptations(experience),
       wisdom: this.synthesizeWisdom(experience),
@@ -498,7 +498,7 @@ class EcosystemIntelligenceCore {
   private createAdaptiveResponse(change: any): void {
     const response = {
       timestamp: new Date(),
-      change: change,
+      change,
       response: 'adaptive-evolution',
       strategy: 'intelligent-transformation',
     };

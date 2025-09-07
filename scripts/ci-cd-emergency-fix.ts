@@ -237,7 +237,7 @@ class CICDEmergencyFix {
       });
 
       if (missingVars.length > 0) {
-        const newVars = missingVars.join('\n') + '\n';
+        const newVars = `${missingVars.join('\n')  }\n`;
         fs.appendFileSync(envPath, newVars);
         changes.push(`Added missing environment variables: ${missingVars.length}`);
       }

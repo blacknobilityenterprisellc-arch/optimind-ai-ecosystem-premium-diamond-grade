@@ -48,8 +48,8 @@ async function initializeAPIKeySystem() {
       const apiKey = await db.apiKey.create({
         data: {
           name: 'Admin API Key',
-          key: 'optimind-admin-api-key-' + Date.now(),
-          secret: 'optimind-admin-secret-' + Date.now(),
+          key: `optimind-admin-api-key-${  Date.now()}`,
+          secret: `optimind-admin-secret-${  Date.now()}`,
           userId: adminUser.id,
           permissions: JSON.stringify(['read', 'write', 'admin']),
           rateLimit: 1000,
@@ -63,7 +63,7 @@ async function initializeAPIKeySystem() {
       // Create developer access key
       const devAccessKey = await db.developerAccessKey.create({
         data: {
-          keyId: 'dev-access-key-' + Date.now(),
+          keyId: `dev-access-key-${  Date.now()}`,
           userId: adminUser.id,
           keyType: 'EXCLUSIVE',
           accessLevel: 'TOP_SECRET',
@@ -101,8 +101,8 @@ async function initializeAPIKeySystem() {
         const serviceKey = await db.apiKey.create({
           data: {
             name: service.name,
-            key: service.key + '-' + Date.now(),
-            secret: service.key + '-secret-' + Date.now(),
+            key: `${service.key  }-${  Date.now()}`,
+            secret: `${service.key  }-secret-${  Date.now()}`,
             userId: adminUser!.id,
             permissions: JSON.stringify([`service:${service.service}`, 'read', 'write']),
             rateLimit: 500,

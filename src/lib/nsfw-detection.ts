@@ -195,7 +195,7 @@ class NSFWDetectionService {
         isNsfw: analysis.isNsfw || false,
         confidence: analysis.confidence || 0.5,
         categories: analysis.categories || [],
-        analysis: analysis,
+        analysis,
         processingTime: Date.now() - modelStartTime,
       };
     } catch (error) {

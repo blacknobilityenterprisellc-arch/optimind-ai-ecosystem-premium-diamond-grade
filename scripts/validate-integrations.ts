@@ -715,7 +715,7 @@ class IntegrationValidator {
       totalFailed += result.failed;
     }
     
-    console.log('\n' + '='.repeat(60));
+    console.log(`\n${  '='.repeat(60)}`);
     console.log(`\nOverall Summary:`);
     console.log(`Total Tests: ${totalPassed + totalFailed}`);
     console.log(`Passed: ${totalPassed}`);
