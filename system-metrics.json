@@ -1,19 +1,19 @@
 {
-  "uptime": 210124,
+  "uptime": 900566,
   "memory": {
-    "usage": 42.2,
-    "available": 4719,
+    "usage": 47.72,
+    "available": 4269,
     "total": 8166
   },
   "cpu": {
-    "usage": 7.21,
+    "usage": 6.47,
     "cores": 4
   },
   "disk": {
-    "usage": 43.51,
-    "available": 5693,
+    "usage": 43.92,
+    "available": 5652,
     "total": 10079
   },
-  "responseTime": 888,
-  "errorRate": 7
+  "responseTime": 861,
+  "errorRate": 10
 }

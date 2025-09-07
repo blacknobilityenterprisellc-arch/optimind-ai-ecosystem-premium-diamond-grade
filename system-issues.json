@@ -56,8 +56,8 @@
     "description": "Z.AI API key not configured",
     "timestamp": "2025-09-07T04:10:19.609Z",
     "resolved": false,
-    "resolutionAttempts": 2,
-    "lastAttempt": "2025-09-07T04:10:50.103Z"
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:11:20.138Z"
   },
   {
     "id": "issue_1757218249691_qumvx2lig",
@@ -66,7 +66,237 @@
     "description": "Z.AI API key not configured",
     "timestamp": "2025-09-07T04:10:49.691Z",
     "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:11:49.863Z"
+  },
+  {
+    "id": "issue_1757218279673_09atiekhm",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:11:19.673Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:12:19.764Z"
+  },
+  {
+    "id": "issue_1757218309739_8ai71drwd",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:11:49.739Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:12:50.066Z"
+  },
+  {
+    "id": "issue_1757218339634_p37nrbop9",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:12:19.634Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:13:20.195Z"
+  },
+  {
+    "id": "issue_1757218369678_iikx63h2i",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:12:49.678Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:13:49.974Z"
+  },
+  {
+    "id": "issue_1757218400062_tavpxc0ot",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:13:20.062Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:14:20.006Z"
+  },
+  {
+    "id": "issue_1757218429707_yhn59wf9r",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:13:49.707Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:14:50.199Z"
+  },
+  {
+    "id": "issue_1757218459707_9hi2go3ap",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:14:19.707Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:15:20.310Z"
+  },
+  {
+    "id": "issue_1757218489736_voea7veec",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:14:49.736Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:15:50.469Z"
+  },
+  {
+    "id": "issue_1757218520024_sy4el55b8",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:15:20.024Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:16:20.190Z"
+  },
+  {
+    "id": "issue_1757218550075_3pw9yoguz",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:15:50.075Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:16:50.020Z"
+  },
+  {
+    "id": "issue_1757218579878_cngovigh6",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:16:19.878Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:17:20.175Z"
+  },
+  {
+    "id": "issue_1757218609896_vdnukyehr",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:16:49.896Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:17:50.061Z"
+  },
+  {
+    "id": "issue_1757218639861_6ee2wiewd",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:17:19.861Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:18:20.109Z"
+  },
+  {
+    "id": "issue_1757218669938_4gg2baztc",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:17:49.938Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:18:50.377Z"
+  },
+  {
+    "id": "issue_1757218699991_3w2dkk02y",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:18:19.991Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:19:20.492Z"
+  },
+  {
+    "id": "issue_1757218729986_kqsg4fa1e",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:18:49.986Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:19:50.152Z"
+  },
+  {
+    "id": "issue_1757218760104_rzaf1mf1b",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:19:20.104Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:20:20.508Z"
+  },
+  {
+    "id": "issue_1757218790024_jlrv81otd",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:19:50.024Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:20:50.456Z"
+  },
+  {
+    "id": "issue_1757218820376_9jmfw8ci4",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:20:20.376Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:21:20.256Z"
+  },
+  {
+    "id": "issue_1757218850322_0rd45rh46",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:20:50.322Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:21:50.216Z"
+  },
+  {
+    "id": "issue_1757218880135_c4lmekcpb",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:21:20.135Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:22:20.226Z"
+  },
+  {
+    "id": "issue_1757218910092_xsyplju5q",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:21:50.092Z",
+    "resolved": false,
+    "resolutionAttempts": 2,
+    "lastAttempt": "2025-09-07T04:22:20.226Z"
+  },
+  {
+    "id": "issue_1757218940106_ycg9f5jft",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:22:20.106Z",
+    "resolved": false,
     "resolutionAttempts": 1,
-    "lastAttempt": "2025-09-07T04:10:50.103Z"
+    "lastAttempt": "2025-09-07T04:22:20.226Z"
   }
 ]
