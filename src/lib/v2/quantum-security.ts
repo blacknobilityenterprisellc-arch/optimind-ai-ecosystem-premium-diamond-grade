@@ -132,8 +132,8 @@ class QuantumSecurityV2 {
     // Extract private key components
     const [privateKey] = keyPair.privateKey.split(":");
 
-    // Create cipher
-    const cipher = crypto.createCipher(this.config.algorithm, privateKey);
+    // Create cipher using modern crypto API
+    const cipher = crypto.createCipheriv(this.config.algorithm, privateKey.slice(0, 32), iv);
 
     // Encrypt data
     let encrypted = cipher.update(data, "utf8", "hex");
@@ -176,8 +176,8 @@ class QuantumSecurityV2 {
     // Extract private key components
     const [privateKey] = keyPair.privateKey.split(":");
 
-    // Create decipher
-    const decipher = crypto.createDecipher(secureMessage.algorithm, privateKey);
+    // Create decipher using modern crypto API
+    const decipher = crypto.createDecipheriv(secureMessage.algorithm, privateKey.slice(0, 32), Buffer.from(secureMessage.iv, "hex"));
 
     // Set authentication tag
     const tag = Buffer.from(secureMessage.tag, "hex");
@@ -452,6 +452,48 @@ class QuantumSecurityV2 {
       totalAudits,
       successRate,
       quantumResistance: true,
+    };
+  }
+
+  /**
+   * Get quantum security status
+   */
+  async getSecurityStatus(): Promise<{
+    level: 'HIGH' | 'MEDIUM' | 'LOW';
+    status: 'ACTIVE' | 'DEGRADED' | 'INACTIVE';
+    quantumResistance: boolean;
+    keyCount: number;
+    auditCount: number;
+    lastHealthCheck: Date;
+  }> {
+    const healthCheck = await this.healthCheck();
+    const metrics = this.getSecurityMetrics();
+    
+    let level: 'HIGH' | 'MEDIUM' | 'LOW';
+    if (healthCheck.status === 'healthy' && metrics.successRate > 95) {
+      level = 'HIGH';
+    } else if (healthCheck.status === 'degraded' || metrics.successRate > 80) {
+      level = 'MEDIUM';
+    } else {
+      level = 'LOW';
+    }
+    
+    let status: 'ACTIVE' | 'DEGRADED' | 'INACTIVE';
+    if (healthCheck.status === 'healthy') {
+      status = 'ACTIVE';
+    } else if (healthCheck.status === 'degraded') {
+      status = 'DEGRADED';
+    } else {
+      status = 'INACTIVE';
+    }
+    
+    return {
+      level,
+      status,
+      quantumResistance: metrics.quantumResistance,
+      keyCount: metrics.activeKeys,
+      auditCount: metrics.totalAudits,
+      lastHealthCheck: new Date(),
     };
   }
 

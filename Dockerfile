@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
-=======
 # Use the official Node.js runtime as the base image
 FROM node:20-alpine AS base
 
@@ -90,4 +81,3 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 # Run database migrations
 CMD ["npx", "prisma", "migrate", "deploy"]
->>>>>>> 047c9acbdd081d44b0c91a6d808495994921dfdb

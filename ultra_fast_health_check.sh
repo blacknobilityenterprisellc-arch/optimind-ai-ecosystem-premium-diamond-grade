@@ -4,6 +4,11 @@
 echo "⚡ Ultra-Fast Health Check..."
 echo "=================================="
 
+# Source environment file if it exists
+if [ -f ".env" ]; then
+    source .env
+fi
+
 START_TIME=$(date +%s)
 
 # Quick checks only

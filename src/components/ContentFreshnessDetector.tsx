@@ -1,433 +1,251 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Calendar,
-  Clock,
-  AlertTriangle,
-  CheckCircle,
-  TrendingUp,
-  RefreshCw,
-  Loader2,
-  FileText,
-  BarChart3,
-  Target,
-  Zap,
-} from "lucide-react";
-
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Loader2, RefreshCw, Clock, Calendar, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react";
 
-interface FreshnessIssue {
-  id: string;
-  type:
-    | "outdated_statistics"
-    | "broken_links"
-    | "missing_trends"
-    | "old_references"
-    | "expired_information";
-  severity: "high" | "medium" | "low";
-  description: string;
-  location: string;
-  suggestion: string;
-  impact: number;
+interface ContentAnalysis {
+  url: string;
+  freshnessScore: number;
+  lastUpdated: string;
+  recommendations: string[];
+  issues: string[];
+  opportunities: string[];
+  wordCount: number;
+  readingTime: string;
 }
 
-interface FreshnessScore {
-  overall: number;
-  contentAge: number;
-  dataFreshness: number;
-  linkHealth: number;
-  trendRelevance: number;
-}
-
-export default function ContentFreshnessDetector() {
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
+export function ContentFreshnessDetector() {
   const [contentUrl, setContentUrl] = useState("");
-  const [contentText, setContentText] = useState("");
-  const [freshnessScore, setFreshnessScore] = useState<FreshnessScore | null>(
-    null,
-  );
-  const [issues, setIssues] = useState<FreshnessIssue[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResults, setAnalysisResults] = useState<ContentAnalysis | null>(null);
+  const [progress, setProgress] = useState(0);
 
-  // Mock data for demonstration
-  const mockFreshnessScore: FreshnessScore = {
-    overall: 74,
-    contentAge: 68,
-    dataFreshness: 82,
-    linkHealth: 91,
-    trendRelevance: 55,
-  };
-
-  const mockIssues: FreshnessIssue[] = [
-    {
-      id: "1",
-      type: "outdated_statistics",
-      severity: "high",
-      description: "Voice search statistics from 2022 are outdated",
-      location: "Section 2: Voice Search Trends",
-      suggestion: "Update with 2024 voice search statistics and trends",
-      suggestion: "Update with 2025 voice search statistics and trends",
-      impact: 85,
-    },
-    {
-      id: "2",
-      type: "missing_trends",
-      severity: "medium",
-      description: "No mention of AI assistant optimization",
-      location: "Main content",
-      suggestion:
-        "Add section on optimizing for AI assistants like ChatGPT and Claude",
-      impact: 70,
-    },
-    {
-      id: "3",
-      type: "old_references",
-      severity: "medium",
-      description: "References to deprecated Google features",
-      location: "Section 4: Implementation",
-      suggestion: "Update references to current Google Search features",
-      impact: 60,
-    },
-    {
-      id: "4",
-      type: "broken_links",
-      severity: "low",
-      description: "One external link returns 404 error",
-      location: "Resources section",
-      suggestion: "Remove or replace broken link with current resource",
-      impact: 30,
-    },
-  ];
-
-  const handleAnalyzeFreshness = async () => {
-    if (!contentUrl && !contentText) return;
+  const handleAnalyze = async () => {
+    if (!contentUrl.trim()) {
+      toast.error("Please enter a content URL");
+      return;
+    }
 
     setIsAnalyzing(true);
-    // Simulate API call
-    setTimeout(() => {
-      setFreshnessScore(mockFreshnessScore);
-      setIssues(mockIssues);
+    setProgress(0);
+
+    try {
+      // Simulate analysis progress
+      const progressInterval = setInterval(() => {
+        setProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90;
+          }
+          return prev + 15;
+        });
+      }, 250);
+
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      setProgress(100);
+      
+      // Mock analysis results
+      const mockResults: ContentAnalysis = {
+        url: contentUrl,
+        freshnessScore: Math.floor(Math.random() * 40) + 60, // 60-100
+        lastUpdated: new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        recommendations: [
+          "Update statistics and data points",
+          "Add recent industry developments",
+          "Refresh examples and case studies",
+          "Update outbound links to current resources"
+        ],
+        issues: [
+          "Some statistics are outdated",
+          "References to old industry standards",
+          "Missing recent trend analysis"
+        ],
+        opportunities: [
+          "Add new multimedia content",
+          "Include expert quotes or insights",
+          "Expand on emerging topics"
+        ],
+        wordCount: Math.floor(Math.random() * 2000) + 1000,
+        readingTime: `${Math.floor(Math.random() * 8) + 3} min read`,
+      };
+
+      setAnalysisResults(mockResults);
+      toast.success("Content freshness analysis completed!");
+    } catch (error) {
+      toast.error("Failed to analyze content freshness");
+    } finally {
       setIsAnalyzing(false);
-    }, 3000);
-  };
-
-  const getIssueIcon = (type: string) => {
-    switch (type) {
-      case "outdated_statistics":
-        return <BarChart3 className="w-4 h-4 text-red-500" />;
-      case "broken_links":
-        return <Target className="w-4 h-4 text-orange-500" />;
-      case "missing_trends":
-        return <TrendingUp className="w-4 h-4 text-blue-500" />;
-      case "old_references":
-        return <FileText className="w-4 h-4 text-yellow-500" />;
-      case "expired_information":
-        return <AlertTriangle className="w-4 h-4 text-red-500" />;
-      default:
-        return <AlertTriangle className="w-4 h-4 text-gray-500" />;
     }
   };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "high":
-        return "text-red-600";
-      case "medium":
-        return "text-yellow-600";
-      case "low":
-        return "text-green-600";
-      default:
-        return "text-gray-600";
-    }
+  const getFreshnessColor = (score: number) => {
+    if (score >= 80) return "text-green-600";
+    if (score >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
-  const getSeverityBadge = (severity: string) => {
-    switch (severity) {
-      case "high":
-        return "destructive";
-      case "medium":
-        return "default";
-      case "low":
-        return "secondary";
-      default:
-        return "outline";
-    }
+  const getFreshnessStatus = (score: number) => {
+    if (score >= 80) return "Fresh";
+    if (score >= 60) return "Needs Update";
+    return "Outdated";
   };
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-2xl font-bold">Content Freshness Detector</h3>
-          <p className="text-muted-foreground">
-            Identify outdated content and get actionable refresh recommendations
-          </p>
-        </div>
-      </div>
-
-      {/* Input Section */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-blue-600" />
-            Analyze Content Freshness
+          <CardTitle className="flex items-center space-x-2">
+            <RefreshCw className="w-5 h-5" />
+            <span>Content Freshness Detector</span>
           </CardTitle>
           <CardDescription>
-            Enter your content URL or paste content text to analyze for
-            freshness issues
+            Analyze your content to determine if it's fresh, relevant, and up-to-date for your audience.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Tabs defaultValue="url" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="url">URL Analysis</TabsTrigger>
-              <TabsTrigger value="text">Text Analysis</TabsTrigger>
-            </TabsList>
+          <div className="flex space-x-2">
+            <Input
+              placeholder="Enter content URL to analyze"
+              value={contentUrl}
+              onChange={(e) => setContentUrl(e.target.value)}
+              className="flex-1"
+            />
+            <Button
+              onClick={handleAnalyze}
+              disabled={isAnalyzing || !contentUrl.trim()}
+            >
+              {isAnalyzing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <RefreshCw className="w-4 h-4" />
+              )}
+            </Button>
+          </div>
 
-            <TabsContent value="url" className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Content URL
-                </label>
-                <Input
-                  placeholder="https://example.com/your-content"
-                  value={contentUrl}
-                  onChange={(e) => setContentUrl(e.target.value)}
-                />
+          {isAnalyzing && (
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span>Analyzing content freshness...</span>
+                <span>{progress}%</span>
               </div>
-            </TabsContent>
-
-            <TabsContent value="text" className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">
-                  Content Text
-                </label>
-                <Textarea
-                  placeholder="Paste your content here for analysis..."
-                  value={contentText}
-                  onChange={(e) => setContentText(e.target.value)}
-                  className="min-h-[150px]"
-                />
-              </div>
-            </TabsContent>
-          </Tabs>
-
-          <Button
-            onClick={handleAnalyzeFreshness}
-            disabled={(!contentUrl && !contentText) || isAnalyzing}
-            className="w-full"
-          >
-            {isAnalyzing ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Analyzing Freshness...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Analyze Freshness
-              </>
-            )}
-          </Button>
+              <Progress value={progress} className="w-full" />
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {freshnessScore && (
-        <>
-          {/* Freshness Score */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-green-600" />
-                Freshness Score Analysis
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
+      {analysisResults && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Freshness Analysis Results</span>
+              <Badge 
+                variant="secondary" 
+                className={getFreshnessColor(analysisResults.freshnessScore)}
+              >
+                {getFreshnessStatus(analysisResults.freshnessScore)}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Freshness Score */}
+            <div className="text-center">
+              <div className={`text-6xl font-bold ${getFreshnessColor(analysisResults.freshnessScore)}`}>
+                {analysisResults.freshnessScore}%
+              </div>
+              <div className="text-sm text-muted-foreground">Content Freshness Score</div>
+              <Progress value={analysisResults.freshnessScore} className="w-full max-w-md mx-auto mt-2" />
+            </div>
+
+            {/* Content Metadata */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-4xl font-bold mb-2">
-                  <span
-                    className={
-                      freshnessScore.overall >= 80
-                        ? "text-green-600"
-                        : freshnessScore.overall >= 60
-                          ? "text-yellow-600"
-                          : "text-red-600"
-                    }
-                  >
-                    {freshnessScore.overall}%
-                  </span>
+                <div className="flex items-center justify-center">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  <span className="font-semibold">{analysisResults.lastUpdated}</span>
                 </div>
-                <div className="text-sm text-muted-foreground">
-                  Overall Freshness Score
-                </div>
-                <Progress
-                  value={freshnessScore.overall}
-                  className="max-w-md mx-auto mt-2"
-                />
+                <div className="text-sm text-muted-foreground">Last Updated</div>
               </div>
-
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {freshnessScore.contentAge}%
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Content Age
-                  </div>
-                  <Progress
-                    value={freshnessScore.contentAge}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">
-                    {freshnessScore.dataFreshness}%
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Data Freshness
-                  </div>
-                  <Progress
-                    value={freshnessScore.dataFreshness}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">
-                    {freshnessScore.linkHealth}%
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Link Health
-                  </div>
-                  <Progress
-                    value={freshnessScore.linkHealth}
-                    className="mt-1"
-                  />
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">
-                    {freshnessScore.trendRelevance}%
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Trend Relevance
-                  </div>
-                  <Progress
-                    value={freshnessScore.trendRelevance}
-                    className="mt-1"
-                  />
-                </div>
+              <div className="text-center">
+                <div className="font-semibold">{analysisResults.wordCount.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">Word Count</div>
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-center">
+                <div className="flex items-center justify-center">
+                  <Clock className="w-4 h-4 mr-2" />
+                  <span className="font-semibold">{analysisResults.readingTime}</span>
+                </div>
+                <div className="text-sm text-muted-foreground">Reading Time</div>
+              </div>
+            </div>
 
-          {/* Freshness Issues */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                Identified Issues
-              </CardTitle>
-              <CardDescription>
-                Issues found that need attention to improve content freshness
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {issues.map((issue) => (
-                  <Card key={issue.id} className="border-l-4 border-l-red-500">
-                    <CardContent className="pt-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          {getIssueIcon(issue.type)}
-                          <Badge variant={getSeverityBadge(issue.severity)}>
-                            {issue.severity}
-                          </Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          Impact: {issue.impact}%
-                        </div>
-                      </div>
-
-                      <h4 className="font-semibold mb-2">
-                        {issue.description}
-                      </h4>
-                      <div className="text-sm text-muted-foreground mb-2">
-                        Location: {issue.location}
-                      </div>
-                      <div className="bg-blue-50 p-3 rounded-lg">
-                        <div className="text-sm font-medium text-blue-800 mb-1">
-                          Suggestion:
-                        </div>
-                        <div className="text-sm text-blue-700">
-                          {issue.suggestion}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+            {/* Recommendations */}
+            <div>
+              <h4 className="font-semibold mb-2 flex items-center">
+                <TrendingUp className="w-4 h-4 mr-2 text-green-600" />
+                Recommendations
+              </h4>
+              <div className="space-y-1">
+                {analysisResults.recommendations.map((rec, index) => (
+                  <div key={index} className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{rec}</span>
+                  </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Recommendations Summary */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-purple-600" />
-                Refresh Recommendations
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-3">
-                  <h4 className="font-semibold">High Priority Actions</h4>
-                  <div className="space-y-2">
-                    {issues
-                      .filter((i) => i.severity === "high")
-                      .map((issue) => (
-                        <div
-                          key={issue.id}
-                          className="flex items-center gap-2 p-2 bg-red-50 rounded"
-                        >
-                          <AlertTriangle className="w-4 h-4 text-red-500" />
-                          <span className="text-sm">{issue.description}</span>
-                        </div>
-                      ))}
+            {/* Issues */}
+            <div>
+              <h4 className="font-semibold mb-2 flex items-center">
+                <AlertTriangle className="w-4 h-4 mr-2 text-yellow-600" />
+                Issues Found
+              </h4>
+              <div className="space-y-1">
+                {analysisResults.issues.map((issue, index) => (
+                  <div key={index} className="flex items-start space-x-2">
+                    <AlertTriangle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{issue}</span>
                   </div>
-                </div>
-
-                <div className="space-y-3">
-                  <h4 className="font-semibold">Medium Priority Actions</h4>
-                  <div className="space-y-2">
-                    {issues
-                      .filter((i) => i.severity === "medium")
-                      .map((issue) => (
-                        <div
-                          key={issue.id}
-                          className="flex items-center gap-2 p-2 bg-yellow-50 rounded"
-                        >
-                          <Clock className="w-4 h-4 text-yellow-500" />
-                          <span className="text-sm">{issue.description}</span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
-        </>
+            </div>
+
+            {/* Opportunities */}
+            <div>
+              <h4 className="font-semibold mb-2 flex items-center">
+                <TrendingUp className="w-4 h-4 mr-2 text-blue-600" />
+                Opportunities
+              </h4>
+              <div className="space-y-1">
+                {analysisResults.opportunities.map((opportunity, index) => (
+                  <div key={index} className="flex items-start space-x-2">
+                    <CheckCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm">{opportunity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-center space-x-2">
+              <Button variant="outline" onClick={() => setAnalysisResults(null)}>
+                Analyze Another
+              </Button>
+              <Button>
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh Content
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

@@ -1,0 +1,99 @@
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    OPTIMIND AI ECOSYSTEM - API TEST REPORT                    ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  Generated: 2025-09-07T02:32:23.293Z                                                      ║
+║  Status: NEEDS IMPROVEMENT (0.0% Success Rate)            ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+📊 OVERALL RESULTS:
+├── Total Endpoints Tested: 34
+├── Successful: 0 ✅
+├── Failed: 34 ❌
+└── Success Rate: 0.0%
+
+📋 CATEGORY BREAKDOWN:
+├── Health: 0/3 (0.0%) ❌
+├── Database: 0/3 (0.0%) ❌
+├── Core: 0/8 (0.0%) ❌
+├── Testing: 0/3 (0.0%) ❌
+
+🔍 DETAILED RESULTS:
+❌ GET /api/health - N/A (37ms) [Error: fetch failed]
+❌ GET /api/v2/health - N/A (1ms) [Error: fetch failed]
+❌ GET /api/v2/database/health - N/A (1ms) [Error: fetch failed]
+❌ POST /api/models/glm-45-flagship - N/A (3ms) [Error: fetch failed]
+❌ POST /api/models/glm-45-auto-think - N/A (1ms) [Error: fetch failed]
+❌ POST /api/models/glm-45-full-stack - N/A (2ms) [Error: fetch failed]
+❌ POST /api/models/air - N/A (1ms) [Error: fetch failed]
+❌ POST /api/chat - N/A (1ms) [Error: fetch failed]
+❌ POST /api/images - N/A (2ms) [Error: fetch failed]
+❌ POST /api/recommendations - N/A (2ms) [Error: fetch failed]
+❌ GET /api/v2/predictive-analytics - N/A (1ms) [Error: fetch failed]
+❌ POST /api/v2/predictive-analytics - N/A (N/A) [Error: fetch failed]
+❌ GET /api/v2/predictive-analytics/models - N/A (1ms) [Error: fetch failed]
+❌ POST /api/v2/predictive-analytics/predict - N/A (1ms) [Error: fetch failed]
+❌ GET /api/v2/predictive-analytics/insights - N/A (1ms) [Error: fetch failed]
+❌ GET /api/v2/quantum-security - N/A (N/A) [Error: fetch failed]
+❌ GET /api/v2/quantum-security/keys - N/A (1ms) [Error: fetch failed]
+❌ POST /api/v2/quantum-security/encrypt - N/A (1ms) [Error: fetch failed]
+❌ POST /api/v2/quantum-security/decrypt - N/A (2ms) [Error: fetch failed]
+❌ GET /api/v2/database-manager - N/A (N/A) [Error: fetch failed]
+❌ POST /api/v2/database/backup - N/A (N/A) [Error: fetch failed]
+❌ GET /api/v2/database/backup - N/A (1ms) [Error: fetch failed]
+❌ GET /api/v2/mcp-integration - N/A (N/A) [Error: fetch failed]
+❌ GET /api/analytics - N/A (1ms) [Error: fetch failed]
+❌ GET /api/projects - N/A (1ms) [Error: fetch failed]
+❌ GET /api/users - N/A (N/A) [Error: fetch failed]
+❌ GET /api/settings - N/A (1ms) [Error: fetch failed]
+❌ POST /api/upload - N/A (N/A) [Error: fetch failed]
+❌ POST /api/search - N/A (N/A) [Error: fetch failed]
+❌ POST /api/smart-search - N/A (1ms) [Error: fetch failed]
+❌ POST /api/validate-form - N/A (1ms) [Error: fetch failed]
+❌ POST /api/testing/generate - N/A (N/A) [Error: fetch failed]
+❌ GET /api/testing/monitor - N/A (1ms) [Error: fetch failed]
+❌ POST /api/testing/diagnose - N/A (1ms) [Error: fetch failed]
+
+⚠️  FAILED ENDPOINTS:
+❌ GET /api/health - fetch failed
+❌ GET /api/v2/health - fetch failed
+❌ GET /api/v2/database/health - fetch failed
+❌ POST /api/models/glm-45-flagship - fetch failed
+❌ POST /api/models/glm-45-auto-think - fetch failed
+❌ POST /api/models/glm-45-full-stack - fetch failed
+❌ POST /api/models/air - fetch failed
+❌ POST /api/chat - fetch failed
+❌ POST /api/images - fetch failed
+❌ POST /api/recommendations - fetch failed
+❌ GET /api/v2/predictive-analytics - fetch failed
+❌ POST /api/v2/predictive-analytics - fetch failed
+❌ GET /api/v2/predictive-analytics/models - fetch failed
+❌ POST /api/v2/predictive-analytics/predict - fetch failed
+❌ GET /api/v2/predictive-analytics/insights - fetch failed
+❌ GET /api/v2/quantum-security - fetch failed
+❌ GET /api/v2/quantum-security/keys - fetch failed
+❌ POST /api/v2/quantum-security/encrypt - fetch failed
+❌ POST /api/v2/quantum-security/decrypt - fetch failed
+❌ GET /api/v2/database-manager - fetch failed
+❌ POST /api/v2/database/backup - fetch failed
+❌ GET /api/v2/database/backup - fetch failed
+❌ GET /api/v2/mcp-integration - fetch failed
+❌ GET /api/analytics - fetch failed
+❌ GET /api/projects - fetch failed
+❌ GET /api/users - fetch failed
+❌ GET /api/settings - fetch failed
+❌ POST /api/upload - fetch failed
+❌ POST /api/search - fetch failed
+❌ POST /api/smart-search - fetch failed
+❌ POST /api/validate-form - fetch failed
+❌ POST /api/testing/generate - fetch failed
+❌ GET /api/testing/monitor - fetch failed
+❌ POST /api/testing/diagnose - fetch failed
+
+🎯 RECOMMENDATIONS:
+⚠️  System needs attention. 34 endpoints are failing.
+🔧 Prioritize fixing critical endpoints before production deployment.
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          END OF TEST REPORT                                   ║
+╚══════════════════════════════════════════════════════════════════════════════╝
