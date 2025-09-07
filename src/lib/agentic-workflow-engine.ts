@@ -772,7 +772,7 @@ class AgenticWorkflowEngine {
       taskId: task.id,
       taskType: task.type,
       input: task.input,
-      context: context,
+      context,
     };
 
     // Add tool-specific parameters
@@ -974,7 +974,7 @@ class AgenticWorkflowEngine {
       reasoningSummary: reasoningSteps.map(s => ({
         type: s.type,
         confidence: s.confidence,
-        content: s.content.slice(0, 100) + '...',
+        content: `${s.content.slice(0, 100)  }...`,
       })),
       metadata: {
         totalSteps: reasoningSteps.length,

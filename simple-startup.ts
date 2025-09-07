@@ -157,14 +157,14 @@ ZAI_API_KEY="1dc8da695f1846c5a76483eb2252023d.pYnbmJbwCWPpNHvY"
     log('info', '   • Database: READY');
     log('info', '');
     log('info', '📋 Log Files:');
-    log('info', '   • Startup Log: ' + LOG_FILE);
-    log('info', '   • Server Log: ' + path.join(PROJECT_DIR, 'dev-server.log'));
-    log('info', '   • Monitor Log: ' + path.join(PROJECT_DIR, 'self-healing-monitor.log'));
+    log('info', `   • Startup Log: ${  LOG_FILE}`);
+    log('info', `   • Server Log: ${  path.join(PROJECT_DIR, 'dev-server.log')}`);
+    log('info', `   • Monitor Log: ${  path.join(PROJECT_DIR, 'self-healing-monitor.log')}`);
     log('info', '');
     log('info', '🛠️  Management:');
     log('info', '   • Stop server: kill $(cat .server.pid)');
     log('info', '   • Stop monitor: kill $(cat .monitor.pid)');
-    log('info', '   • View logs: tail -f ' + LOG_FILE);
+    log('info', `   • View logs: tail -f ${  LOG_FILE}`);
     
   } catch (error) {
     log('error', `Startup failed: ${error}`);

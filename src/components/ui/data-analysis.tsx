@@ -159,7 +159,7 @@ Error Rate: 1.2%`,
           usage: data.usage,
         });
       } else {
-        alert('Failed to analyze data: ' + data.error);
+        alert(`Failed to analyze data: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error analyzing data:', error);

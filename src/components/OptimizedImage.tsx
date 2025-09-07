@@ -250,7 +250,7 @@ export function LazyLoad({ children, placeholder, className, height = 200 }: Laz
   }, []);
 
   return (
-    <div ref={ref} className={className} style={{ height: height }}>
+    <div ref={ref} className={className} style={{ height }}>
       {isInView
         ? children
         : placeholder || (

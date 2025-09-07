@@ -432,7 +432,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
       passed: accuracy >= 0.8,
       details: `Model accuracy evaluated at ${(accuracy * 100).toFixed(1)}%`,
       evidence: [
-        { test_type: 'classification', accuracy: accuracy },
+        { test_type: 'classification', accuracy },
         { sample_size: input.testCases?.length || 100 }
       ]
     };
