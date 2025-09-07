@@ -163,7 +163,7 @@ export default function NaturalLanguageQuery({
   const startVoiceInput = () => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       const SpeechRecognition =
-        (window as WindowWithSpeechRecognition).SpeechRecognition || 
+        (window as WindowWithSpeechRecognition).SpeechRecognition ||
         (window as WindowWithSpeechRecognition).webkitSpeechRecognition;
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
