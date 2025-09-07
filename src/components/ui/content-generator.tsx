@@ -97,7 +97,7 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
           usage: data.usage,
         });
       } else {
-        alert(`Failed to generate content: ${  data.error}`);
+        alert(`Failed to generate content: ${data.error}`);
       }
     } catch (error) {
       console.error('Error generating content:', error);

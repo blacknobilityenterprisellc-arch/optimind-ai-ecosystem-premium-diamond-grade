@@ -617,10 +617,9 @@ export default function PremiumScannerDemo() {
                                     {checkpoint.priority}
                                   </Badge>
                                   <Badge
-                                    className={
-                                      `${getCheckpointStatusColor(checkpoint.status) 
-                                      } text-white text-xs`
-                                    }
+                                    className={`${getCheckpointStatusColor(
+                                      checkpoint.status
+                                    )} text-white text-xs`}
                                   >
                                     {checkpoint.status.toUpperCase()}
                                   </Badge>
@@ -665,9 +664,7 @@ export default function PremiumScannerDemo() {
                                       {issue.component}
                                     </Badge>
                                     <Badge
-                                      className={
-                                        `${getSeverityColor(issue.severity)  } text-white text-xs`
-                                      }
+                                      className={`${getSeverityColor(issue.severity)} text-white text-xs`}
                                     >
                                       {issue.severity.toUpperCase()}
                                     </Badge>
