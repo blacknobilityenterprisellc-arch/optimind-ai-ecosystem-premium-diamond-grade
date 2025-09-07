@@ -1,1 +1,1 @@
-TypeScript analysis completed for standard mode
+Simulated TypeScript analysis completed

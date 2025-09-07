@@ -1,1 +1,290 @@
-ESLint analysis completed for standard mode
+
+> optimind-ai-ecosystem@1.0.0 lint:fast
+> timeout 15s npx eslint src/app/ --config eslint.config.ultra-minimal.mjs --max-warnings 10 || echo 'Fast lint completed'
+
+
+/home/z/my-project/src/app/api/analytics/route.ts
+  5:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/analyze-data/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/auth/pin/route.ts
+  8:50  error  Parsing error: Unexpected token ;
+
+/home/z/my-project/src/app/api/chat/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/code-assist/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/content/generate/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/content/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/contractwise/analyze/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/contractwise/list/route.ts
+  7:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/contractwise/template/route.ts
+  7:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/conversations/[id]/route.ts
+  6:10  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/conversations/route.ts
+  5:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/developer-access/events/route.ts
+  9:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/developer-access/generate/route.ts
+  9:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/developer-access/metrics/route.ts
+  9:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/developer-access/revoke/route.ts
+  9:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/developer-access/validate/route.ts
+  9:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/enhance-text/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/glm-orchestrator/route.ts
+  12:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/health-fast/route.ts
+   8:13  error  'process' is not defined  no-undef
+   9:13  error  'process' is not defined  no-undef
+  10:14  error  'process' is not defined  no-undef
+  11:15  error  'process' is not defined  no-undef
+  12:11  error  'process' is not defined  no-undef
+  13:14  error  'process' is not defined  no-undef
+  18:30  error  'require' is not defined  no-undef
+
+/home/z/my-project/src/app/api/health/route.ts
+  5:22  error  Parsing error: Unexpected token as
+
+/home/z/my-project/src/app/api/hello/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/images/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/air/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/ensemble/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/glm-45-auto-think/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/glm-45-flagship/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/glm-45-full-stack/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/glm-45v/route.ts
+  5:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/openrouter/route.ts
+  26:31  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/models/route.ts
+  17:17  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/moderation/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/multimodal/analyze/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/optimization/competitor/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/optimization/freshness/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/optimization/performance/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/optimization/refresh/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/orchestrator/demo/route.ts
+  11:17  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/premium-scanner/route.ts
+  11:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/projects/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/recommendations/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/research/analyze-content/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/research/generate-content/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/research/keyword-clusters/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/research/track-brand/route.ts
+  4:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/scan/route.ts
+  3:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/search/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/self-healing/route.ts
+  11:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/settings/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/smart-search/route.ts
+  3:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/subscription/route.ts
+  5:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/test-models/route.ts
+  8:22  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/test-openrouter/route.ts
+  34:17  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/testing/diagnose/route.ts
+  16:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/testing/generate/route.ts
+  16:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/testing/monitor/route.ts
+  15:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/testing/multi-dimensional/route.ts
+  16:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/testing/predictive/route.ts
+  16:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/testing/self-heal/route.ts
+  16:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/api/upload/route.ts
+  3:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/users/[id]/route.ts
+  4:10  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/users/route.ts
+  3:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/database-manager/route.ts
+  13:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/database/backup/route.ts
+  12:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/database/health/route.ts
+  12:34  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/health/route.ts
+  18:22  error  Parsing error: Unexpected token as
+
+/home/z/my-project/src/app/api/v2/mcp-integration/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/predictive-analytics/insights/route.ts
+  10:8  error  Parsing error: Unexpected token PredictiveInsightRequest
+
+/home/z/my-project/src/app/api/v2/predictive-analytics/models/route.ts
+  10:8  error  Parsing error: Unexpected token ModelManagementRequest
+
+/home/z/my-project/src/app/api/v2/predictive-analytics/predict/route.ts
+  12:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/predictive-analytics/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/quantum-security/decrypt/route.ts
+  12:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/quantum-security/encrypt/route.ts
+  12:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/quantum-security/key-pair/route.ts
+  12:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/v2/quantum-security/keys/route.ts
+  10:8  error  Parsing error: Unexpected token QuantumKeyManagementRequest
+
+/home/z/my-project/src/app/api/v2/quantum-security/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/api/validate-form/route.ts
+  10:35  error  Parsing error: Unexpected token :
+
+/home/z/my-project/src/app/content-creation/page.tsx
+  96:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/developer-access/page.tsx
+  33:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/glm-orchestrator-demo/page.tsx
+  10:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/layout.tsx
+  1:13  error  Parsing error: Unexpected token {
+
+/home/z/my-project/src/app/moderation-results/page.tsx
+  33:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/optimization/page.tsx
+  132:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/orchestrator-demo/page.tsx
+  15:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/premium-scanner-demo/page.tsx
+  11:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/research-analysis/page.tsx
+  1113:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/self-healing-demo/page.tsx
+  11:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/test-models/page.tsx
+  25:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/test-moderation/page.tsx
+  29:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/testing/page.tsx
+  48:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/testing/remediation/page.tsx
+  48:1  error  Parsing error: The keyword 'interface' is reserved
+
+/home/z/my-project/src/app/testing/reports/page.tsx
+  51:1  error  Parsing error: The keyword 'interface' is reserved
+
+✖ 98 problems (98 errors, 0 warnings)
+
+Fast lint completed

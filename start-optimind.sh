@@ -86,13 +86,13 @@ check_tsx() {
         log_success "tsx found: $tsx_version"
         return 0
     else
-        log_warning "tsx not found, installing..."
-        npm install -g tsx
-        if command -v tsx &> /dev/null; then
-            log_success "tsx installed successfully"
+        log_warning "tsx not found, checking via npx..."
+        if npx tsx --version &> /dev/null; then
+            local tsx_version=$(npx tsx --version)
+            log_success "tsx available via npx: $tsx_version"
             return 0
         else
-            log_error "Failed to install tsx"
+            log_error "tsx not available via npx. Please install tsx locally"
             return 1
         fi
     fi
@@ -128,7 +128,7 @@ start_optimind() {
     log_info "Attempting to start with Autonomous Controller..."
     if [ -f "$SCRIPT_DIR/autonomous-controller.ts" ]; then
         log_info "Starting Autonomous Controller..."
-        nohup tsx autonomous-controller.ts > "$SCRIPT_DIR/autonomous-controller.log" 2>&1 &
+        nohup npx tsx autonomous-controller.ts > "$SCRIPT_DIR/autonomous-controller.log" 2>&1 &
         local controller_pid=$!
         echo "$controller_pid" > "$SCRIPT_DIR/.autonomous-controller.pid"
         
@@ -149,7 +149,7 @@ start_optimind() {
     log_info "Attempting to start with Intelligent Startup..."
     if [ -f "$SCRIPT_DIR/intelligent-startup.ts" ]; then
         log_info "Starting Intelligent Startup..."
-        nohup tsx intelligent-startup.ts > "$SCRIPT_DIR/intelligent-startup.log" 2>&1 &
+        nohup npx tsx intelligent-startup.ts > "$SCRIPT_DIR/intelligent-startup.log" 2>&1 &
         local startup_pid=$!
         echo "$startup_pid" > "$SCRIPT_DIR/.intelligent-startup.pid"
         
