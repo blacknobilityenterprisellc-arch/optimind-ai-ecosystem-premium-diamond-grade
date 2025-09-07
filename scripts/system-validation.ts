@@ -518,8 +518,8 @@ class SystemValidator {
     }
 
     console.log('');
-    console.log('🏆 Validation Complete - OptiMind AI Ecosystem Status: ' + 
-      (successRate >= 90 ? 'OPERATIONAL' : successRate >= 75 ? 'FUNCTIONAL' : 'NEEDS ATTENTION'));
+    console.log(`🏆 Validation Complete - OptiMind AI Ecosystem Status: ${  
+      successRate >= 90 ? 'OPERATIONAL' : successRate >= 75 ? 'FUNCTIONAL' : 'NEEDS ATTENTION'}`);
     console.log('='.repeat(80));
     console.log('Report generated at:', new Date().toISOString());
     console.log('='.repeat(80));

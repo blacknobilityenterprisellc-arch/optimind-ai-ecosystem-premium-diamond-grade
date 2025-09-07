@@ -611,7 +611,7 @@ async function main() {
     const results = await tester.runComprehensiveTests();
     const report = tester.generateReport(results);
     
-    console.log('\n' + report);
+    console.log(`\n${  report}`);
     
     // Save report
     await tester.saveReport(report);

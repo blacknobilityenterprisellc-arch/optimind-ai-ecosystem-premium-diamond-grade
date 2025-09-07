@@ -431,7 +431,7 @@ class OptiMindEcosystem {
     const uptime = this.operationStartTime ? Date.now() - this.operationStartTime.getTime() : 0;
 
     return {
-      uptime: uptime,
+      uptime,
       status: this.ecosystem.status,
       security: intelligentSecurityOrchestrator.getEcosystemStatus(),
       harmony: ecosystemHarmonyManager.getHarmonyStatus(),

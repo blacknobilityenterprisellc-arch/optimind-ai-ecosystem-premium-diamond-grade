@@ -618,8 +618,8 @@ export default function PremiumScannerDemo() {
                                   </Badge>
                                   <Badge
                                     className={
-                                      getCheckpointStatusColor(checkpoint.status) +
-                                      ' text-white text-xs'
+                                      `${getCheckpointStatusColor(checkpoint.status) 
+                                      } text-white text-xs`
                                     }
                                   >
                                     {checkpoint.status.toUpperCase()}
@@ -666,7 +666,7 @@ export default function PremiumScannerDemo() {
                                     </Badge>
                                     <Badge
                                       className={
-                                        getSeverityColor(issue.severity) + ' text-white text-xs'
+                                        `${getSeverityColor(issue.severity)  } text-white text-xs`
                                       }
                                     >
                                       {issue.severity.toUpperCase()}

@@ -136,7 +136,7 @@ export function CodeAssistant({ className }: CodeAssistantProps) {
           usage: data.usage,
         });
       } else {
-        alert('Failed to process code: ' + data.error);
+        alert(`Failed to process code: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error processing code:', error);

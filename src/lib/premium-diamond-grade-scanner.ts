@@ -367,7 +367,7 @@ export class PremiumDiamondGradeScanner {
           type: 'optimization',
           priority: 'high',
           payload: {
-            issue: issue,
+            issue,
             fixType: 'auto-fix',
           },
           agentRequirements: ['glm-4.5-full-stack'],

@@ -136,7 +136,7 @@ export function SmartForm({ className }: SmartFormProps) {
           usage: data.usage,
         });
       } else {
-        alert('Failed to enhance text: ' + data.error);
+        alert(`Failed to enhance text: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error enhancing text:', error);
@@ -164,7 +164,7 @@ export function SmartForm({ className }: SmartFormProps) {
       if (data.success) {
         setValidationResults(data.validationResults);
       } else {
-        alert('Failed to validate form: ' + data.error);
+        alert(`Failed to validate form: ${  data.error}`);
       }
     } catch (error) {
       console.error('Error validating form:', error);

@@ -165,7 +165,7 @@ export class AdaptiveConsensusEngine {
       provenanceModels.push({
         name: modelName,
         version: result.modelVersion,
-        weight: weight,
+        weight,
         latency: result.latencyMs || 0,
       });
 

@@ -539,7 +539,7 @@ const main = async () => {
     logInfo(`Setup report generated: ${path.join(SCRIPT_DIR, 'setup-report.md')}`);
     
     // Display system status
-    console.log(colors.CYAN + 'System Status:' + colors.NC);
+    console.log(`${colors.CYAN  }System Status:${  colors.NC}`);
     console.log(`├── Development Server: ${colors.GREEN}RUNNING${colors.NC}`);
     console.log(`├── Monitoring Service: ${colors.GREEN}RUNNING${colors.NC}`);
     console.log(`├── Database: ${colors.GREEN}READY${colors.NC}`);
@@ -554,7 +554,7 @@ const main = async () => {
     process.exit(0);
   } catch (error) {
     logError(`Setup failed: ${error}`);
-    console.log(colors.RED + 'Setup failed. Check the error log for details.' + colors.NC);
+    console.log(`${colors.RED  }Setup failed. Check the error log for details.${  colors.NC}`);
     process.exit(1);
   }
 };

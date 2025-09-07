@@ -168,7 +168,7 @@ export async function zaiVisionAnalyze(
       // best-effort: return empty labels
       parsed = { labels: [], provenance: { model: options.model } };
     } else {
-      throw new Error('[zaiVisionAnalyze] failed to parse model JSON: ' + (err as Error).message);
+      throw new Error(`[zaiVisionAnalyze] failed to parse model JSON: ${  (err as Error).message}`);
     }
   }
 
