@@ -432,4 +432,3 @@ export default function ContentFreshnessDetector() {
     </div>
   );
 }
-export const ContentFreshnessDetector = () => null;

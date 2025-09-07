@@ -1,9 +1,11 @@
 /**
- * OptiMind AI Ecosystem - Premium Diamond Grade Database Health Wrapper
- * Enhanced database management with comprehensive health checks and monitoring
+ * OptiMind AI Ecosystem - Premium Diamond Grade Enterprise Database Health Wrapper
+ * Enhanced database management with comprehensive health checks, monitoring, and enterprise integration
  */
 
 import { PrismaClient } from '@prisma/client';
+import { getEnterpriseInitializer } from './enterprise/EnterpriseInitializer';
+import { IService, ServiceHealth } from './enterprise/container/EnterpriseServiceContainer';
 
 export interface DatabaseHealthStatus {
   connected: boolean;
@@ -34,12 +36,30 @@ export interface DatabaseMetrics {
   };
 }
 
-class PremiumDatabaseHealthWrapper {
+class PremiumDatabaseHealthWrapper implements IService {
+  readonly name = 'database';
+  readonly metadata = {
+    name: 'database',
+    version: '2.0.0',
+    description: 'Enterprise database service with comprehensive health monitoring and management',
+    author: 'Enterprise Database Team',
+    dependencies: [],
+    tags: ['database', 'health', 'monitoring', 'enterprise'],
+    scope: 'singleton' as const,
+    priority: 100,
+    timeout: 30000,
+    retryCount: 3,
+    healthCheckEnabled: true,
+    metricsEnabled: true,
+  };
+
   private static instance: PremiumDatabaseHealthWrapper;
   private prisma: PrismaClient;
   private healthStatus: DatabaseHealthStatus;
   private isInitialized: boolean = false;
   private initializationPromise: Promise<void> | null = null;
+  private enterpriseInitialized: boolean = false;
+  private metrics: Record<string, number> = {};
 
   private constructor() {
     this.prisma = new PrismaClient({
@@ -52,7 +72,31 @@ class PremiumDatabaseHealthWrapper {
       lastCheck: new Date(),
     };
 
+    this.metrics = {
+      active_connections: 0,
+      total_queries: 0,
+      slow_queries: 0,
+      average_response_time: 0,
+      database_size: 0,
+    };
+
+    this.initializeEnterpriseIntegration();
     this.initialize();
+  }
+
+  private async initializeEnterpriseIntegration(): Promise<void> {
+    try {
+      // Initialize enterprise system integration
+      const enterprise = getEnterpriseInitializer();
+      const state = enterprise.getState();
+      
+      if (state.status === 'RUNNING') {
+        this.enterpriseInitialized = true;
+        console.log('🔗 Enterprise system integration initialized');
+      }
+    } catch (error) {
+      console.warn('Enterprise system not available, running in standalone mode');
+    }
   }
 
   static getInstance(): PremiumDatabaseHealthWrapper {
@@ -73,7 +117,7 @@ class PremiumDatabaseHealthWrapper {
 
   private async performInitialization(): Promise<void> {
     try {
-      console.log('🗄️ Initializing Premium Database Health Wrapper...');
+      console.log('🗄️ Initializing Premium Enterprise Database Health Wrapper...');
 
       // Test database connection
       const connectionResult = await this.testConnection();
@@ -89,7 +133,20 @@ class PremiumDatabaseHealthWrapper {
         await this.gatherDatabaseInfo();
         
         this.isInitialized = true;
-        console.log('✅ Premium Database Health Wrapper initialized successfully');
+        console.log('✅ Premium Enterprise Database Health Wrapper initialized successfully');
+        
+        // Emit enterprise event if available
+        if (this.enterpriseInitialized) {
+          try {
+            const enterprise = getEnterpriseInitializer();
+            enterprise.getServiceContainer().emit('service:initialized', {
+              service: this,
+              metadata: this.metadata,
+            });
+          } catch (error) {
+            console.warn('Could not emit enterprise event:', error);
+          }
+        }
       } else {
         throw new Error(connectionResult.error || 'Database connection failed');
       }
@@ -450,6 +507,87 @@ class PremiumDatabaseHealthWrapper {
     }
     
     return false;
+  }
+
+  // Enterprise Service Interface Implementation
+  async initialize(): Promise<void> {
+    await this.initialize();
+  }
+
+  async start(): Promise<void> {
+    console.log('🗄️ Starting Enterprise Database Service...');
+    // Additional startup logic if needed
+    if (this.enterpriseInitialized) {
+      try {
+        const enterprise = getEnterpriseInitializer();
+        enterprise.getServiceContainer().emit('service:started', {
+          service: this,
+          metadata: this.metadata,
+        });
+      } catch (error) {
+        console.warn('Could not emit enterprise start event:', error);
+      }
+    }
+    console.log('✅ Enterprise Database Service Started');
+  }
+
+  async stop(): Promise<void> {
+    console.log('🗄️ Stopping Enterprise Database Service...');
+    await this.close();
+    if (this.enterpriseInitialized) {
+      try {
+        const enterprise = getEnterpriseInitializer();
+        enterprise.getServiceContainer().emit('service:stopped', {
+          service: this,
+          metadata: this.metadata,
+        });
+      } catch (error) {
+        console.warn('Could not emit enterprise stop event:', error);
+      }
+    }
+    console.log('✅ Enterprise Database Service Stopped');
+  }
+
+  async dispose(): Promise<void> {
+    await this.stop();
+  }
+
+  async healthCheck(): Promise<ServiceHealth> {
+    const healthCheck = await this.performHealthCheck();
+    
+    return {
+      status: healthCheck.status === 'HEALTHY' ? 'HEALTHY' : 
+               healthCheck.status === 'WARNING' ? 'DEGRADED' : 'UNHEALTHY',
+      timestamp: Date.now(),
+      uptime: Date.now() - (this.healthStatus.lastCheck.getTime() - 86400000), // Approximate uptime
+      memoryUsage: process.memoryUsage().heapUsed,
+      metrics: this.metrics,
+      checks: [{
+        name: 'database_connection',
+        status: healthCheck.status === 'HEALTHY' ? 'PASS' : 
+                healthCheck.status === 'WARNING' ? 'WARN' : 'FAIL',
+        message: healthCheck.recommendations.join(', '),
+        timestamp: Date.now(),
+      }],
+    };
+  }
+
+  async getMetrics(): Promise<Record<string, number>> {
+    const dbMetrics = await this.getMetrics();
+    
+    // Update internal metrics
+    this.metrics = {
+      ...this.metrics,
+      active_connections: dbMetrics.activeConnections,
+      total_connections: dbMetrics.totalConnections,
+      max_connections: dbMetrics.maxConnections,
+      average_query_time: dbMetrics.queryPerformance.averageTime,
+      slow_queries: dbMetrics.queryPerformance.slowQueries,
+      fast_queries: dbMetrics.queryPerformance.fastQueries,
+      database_size: dbMetrics.storageUsage.totalSize,
+    };
+
+    return this.metrics;
   }
 }
 

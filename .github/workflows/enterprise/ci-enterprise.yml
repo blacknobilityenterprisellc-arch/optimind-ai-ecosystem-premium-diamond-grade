@@ -57,7 +57,7 @@ jobs:
       id: types
       run: |
         echo "::group::TypeScript Analysis"
-        npm run type-check || echo "⚠️ Type check completed with warnings"
+        npm run type-check
         echo "::endgroup::"
         echo "score=95" >> $GITHUB_OUTPUT
 
@@ -65,7 +65,7 @@ jobs:
       id: security
       run: |
         echo "::group::Security Analysis"
-        npm audit --audit-level=moderate || echo "⚠️ Security audit completed"
+        npm audit --audit-level=moderate
         echo "::endgroup::"
         echo "score=98" >> $GITHUB_OUTPUT
 
@@ -73,7 +73,7 @@ jobs:
       id: quality
       run: |
         echo "::group::Code Quality Analysis"
-        npm run lint || echo "⚠️ Linting completed with warnings"
+        npm run lint
         echo "::endgroup::"
         echo "score=92" >> $GITHUB_OUTPUT
 
@@ -167,7 +167,7 @@ jobs:
     - name: 🧪 Enterprise ${{ matrix.test-suite }} Testing
       run: |
         echo "::group::Enterprise ${{ matrix.test-suite }} Tests"
-        ${{ matrix.command }} || echo "⚠️ Tests completed with warnings"
+        ${{ matrix.command }}
         echo "::endgroup::"
 
     - name: 📊 Coverage Analysis

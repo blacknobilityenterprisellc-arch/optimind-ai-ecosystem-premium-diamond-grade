@@ -92,4 +92,3 @@ export const performAnalysis = async (
     timestamp: new Date().toISOString(),
   };
 };
-export const multiModelAIUtils = { getAvailableModels, performAnalysis };

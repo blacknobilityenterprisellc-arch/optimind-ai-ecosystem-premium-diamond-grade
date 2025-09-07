@@ -319,7 +319,6 @@ import {
   Ancient,
   Prehistoric,
   Historic,
-  Prehistoric,
   Archaeological,
   Paleontological,
   Geological,
