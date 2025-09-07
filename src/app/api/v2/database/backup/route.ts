@@ -5,9 +5,9 @@
  * Database backup and restore operations
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { databaseManagerV2 } from "@/lib/v2/database-manager";
+import { databaseManagerV2 } from '@/lib/v2/database-manager';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,16 +24,16 @@ export async function POST(request: NextRequest) {
         status: backup.status,
         checksum: backup.checksum,
       },
-      message: "Database backup created successfully",
+      message: 'Database backup created successfully',
     });
   } catch (error) {
-    console.error("Database backup creation failed:", error);
+    console.error('Database backup creation failed:', error);
     return NextResponse.json(
       {
-        error: "Failed to create database backup",
+        error: 'Failed to create database backup',
         details: error.message,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -48,19 +48,18 @@ export async function GET(request: NextRequest) {
       data: {
         backups: backupHistory,
         total: backupHistory.length,
-        lastBackup:
-          backupHistory.length > 0 ? backupHistory[0].timestamp : null,
+        lastBackup: backupHistory.length > 0 ? backupHistory[0].timestamp : null,
       },
-      message: "Backup history retrieved successfully",
+      message: 'Backup history retrieved successfully',
     });
   } catch (error) {
-    console.error("Failed to get backup history:", error);
+    console.error('Failed to get backup history:', error);
     return NextResponse.json(
       {
-        error: "Failed to get backup history",
+        error: 'Failed to get backup history',
         details: error.message,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

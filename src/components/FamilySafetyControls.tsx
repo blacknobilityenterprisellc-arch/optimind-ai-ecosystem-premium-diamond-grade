@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from 'react';
 import {
   Shield,
   Users,
@@ -170,24 +170,24 @@ import {
   Brush as BrushIcon2,
   ImageDown as ImageDownIcon2,
   Wrench as WrenchIcon2,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 interface FamilyMember {
   id: string;
   name: string;
   age: number;
-  role: "parent" | "child" | "teenager";
+  role: 'parent' | 'child' | 'teenager';
   avatar: string;
   isOnline: boolean;
   lastActive: Date;
@@ -231,13 +231,8 @@ interface UserRestrictions {
 
 interface SafetyAlert {
   id: string;
-  type:
-    | "content_warning"
-    | "screen_time"
-    | "location"
-    | "app_usage"
-    | "web_filter";
-  severity: "low" | "medium" | "high" | "critical";
+  type: 'content_warning' | 'screen_time' | 'location' | 'app_usage' | 'web_filter';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   description: string;
   userId: string;
@@ -248,7 +243,7 @@ interface SafetyAlert {
 
 interface ActivityReport {
   userId: string;
-  period: "daily" | "weekly" | "monthly";
+  period: 'daily' | 'weekly' | 'monthly';
   screenTime: number;
   appsUsed: string[];
   websitesVisited: string[];
@@ -260,7 +255,7 @@ interface ActivityReport {
 
 interface FamilySettings {
   familyName: string;
-  safetyLevel: "strict" | "moderate" | "relaxed";
+  safetyLevel: 'strict' | 'moderate' | 'relaxed';
   emergencyContacts: string[];
   locationSharing: boolean;
   contentFiltering: boolean;
@@ -278,10 +273,8 @@ interface FamilySettings {
 }
 
 export function FamilySafetyControls() {
-  const [activeTab, setActiveTab] = useState("overview");
-  const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(
-    null,
-  );
+  const [activeTab, setActiveTab] = useState('overview');
+  const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [showAddMember, setShowAddMember] = useState(false);
 
@@ -289,11 +282,11 @@ export function FamilySafetyControls() {
   const familyMembers: FamilyMember[] = useMemo(
     () => [
       {
-        id: "parent_1",
-        name: "Sarah Johnson",
+        id: 'parent_1',
+        name: 'Sarah Johnson',
         age: 35,
-        role: "parent",
-        avatar: "/api/placeholder/100/100",
+        role: 'parent',
+        avatar: '/api/placeholder/100/100',
         isOnline: true,
         lastActive: new Date(Date.now() - 1000 * 60 * 5),
         safetyScore: 98,
@@ -303,8 +296,8 @@ export function FamilySafetyControls() {
           screenTime: {
             enabled: false,
             dailyLimit: 0,
-            bedtimeStart: "22:00",
-            bedtimeEnd: "06:00",
+            bedtimeStart: '22:00',
+            bedtimeEnd: '06:00',
             allowedDays: [0, 1, 2, 3, 4, 5, 6],
           },
           appBlocking: [],
@@ -332,11 +325,11 @@ export function FamilySafetyControls() {
         },
       },
       {
-        id: "child_1",
-        name: "Emma Johnson",
+        id: 'child_1',
+        name: 'Emma Johnson',
         age: 8,
-        role: "child",
-        avatar: "/api/placeholder/100/100",
+        role: 'child',
+        avatar: '/api/placeholder/100/100',
         isOnline: true,
         lastActive: new Date(Date.now() - 1000 * 60 * 2),
         safetyScore: 95,
@@ -346,21 +339,21 @@ export function FamilySafetyControls() {
           screenTime: {
             enabled: true,
             dailyLimit: 120,
-            bedtimeStart: "20:00",
-            bedtimeEnd: "07:00",
+            bedtimeStart: '20:00',
+            bedtimeEnd: '07:00',
             allowedDays: [0, 1, 2, 3, 4, 5, 6],
           },
-          appBlocking: ["social-media", "games"],
+          appBlocking: ['social-media', 'games'],
           webFiltering: {
             enabled: true,
-            blockedCategories: ["social-media", "adult", "violence"],
-            customBlockedSites: ["youtube.com", "tiktok.com"],
+            blockedCategories: ['social-media', 'adult', 'violence'],
+            customBlockedSites: ['youtube.com', 'tiktok.com'],
           },
           locationTracking: true,
           socialMedia: {
             enabled: false,
             timeLimit: 0,
-            blockedPlatforms: ["facebook", "instagram", "tiktok"],
+            blockedPlatforms: ['facebook', 'instagram', 'tiktok'],
           },
           messaging: {
             enabled: true,
@@ -375,11 +368,11 @@ export function FamilySafetyControls() {
         },
       },
       {
-        id: "teen_1",
-        name: "Jake Johnson",
+        id: 'teen_1',
+        name: 'Jake Johnson',
         age: 14,
-        role: "teenager",
-        avatar: "/api/placeholder/100/100",
+        role: 'teenager',
+        avatar: '/api/placeholder/100/100',
         isOnline: false,
         lastActive: new Date(Date.now() - 1000 * 60 * 30),
         safetyScore: 85,
@@ -389,14 +382,14 @@ export function FamilySafetyControls() {
           screenTime: {
             enabled: true,
             dailyLimit: 240,
-            bedtimeStart: "22:00",
-            bedtimeEnd: "06:00",
+            bedtimeStart: '22:00',
+            bedtimeEnd: '06:00',
             allowedDays: [0, 1, 2, 3, 4, 5, 6],
           },
-          appBlocking: ["adult-content"],
+          appBlocking: ['adult-content'],
           webFiltering: {
             enabled: true,
-            blockedCategories: ["adult", "violence", "gambling"],
+            blockedCategories: ['adult', 'violence', 'gambling'],
             customBlockedSites: [],
           },
           locationTracking: true,
@@ -418,55 +411,55 @@ export function FamilySafetyControls() {
         },
       },
     ],
-    [],
+    []
   );
 
   // Mock safety alerts
   const safetyAlerts: SafetyAlert[] = useMemo(
     () => [
       {
-        id: "1",
-        type: "content_warning",
-        severity: "medium",
-        title: "Inappropriate Content Blocked",
-        description: "Attempted access to blocked website was prevented",
-        userId: "child_1",
+        id: '1',
+        type: 'content_warning',
+        severity: 'medium',
+        title: 'Inappropriate Content Blocked',
+        description: 'Attempted access to blocked website was prevented',
+        userId: 'child_1',
         timestamp: new Date(Date.now() - 1000 * 60 * 10),
         resolved: true,
-        actionTaken: "Content blocked and logged",
+        actionTaken: 'Content blocked and logged',
       },
       {
-        id: "2",
-        type: "screen_time",
-        severity: "low",
-        title: "Screen Time Limit Reached",
-        description: "Daily screen time limit has been reached",
-        userId: "child_1",
+        id: '2',
+        type: 'screen_time',
+        severity: 'low',
+        title: 'Screen Time Limit Reached',
+        description: 'Daily screen time limit has been reached',
+        userId: 'child_1',
         timestamp: new Date(Date.now() - 1000 * 60 * 60),
         resolved: true,
-        actionTaken: "Device locked until tomorrow",
+        actionTaken: 'Device locked until tomorrow',
       },
       {
-        id: "3",
-        type: "location",
-        severity: "high",
-        title: "Location Alert",
-        description: "Jake arrived at school safely",
-        userId: "teen_1",
+        id: '3',
+        type: 'location',
+        severity: 'high',
+        title: 'Location Alert',
+        description: 'Jake arrived at school safely',
+        userId: 'teen_1',
         timestamp: new Date(Date.now() - 1000 * 60 * 90),
         resolved: true,
-        actionTaken: "Location verified and logged",
+        actionTaken: 'Location verified and logged',
       },
     ],
-    [],
+    []
   );
 
   // Mock family settings
   const familySettings: FamilySettings = useMemo(
     () => ({
-      familyName: "Johnson Family",
-      safetyLevel: "moderate",
-      emergencyContacts: ["555-0123", "555-0456"],
+      familyName: 'Johnson Family',
+      safetyLevel: 'moderate',
+      emergencyContacts: ['555-0123', '555-0456'],
       locationSharing: true,
       contentFiltering: true,
       screenTimeLimits: true,
@@ -481,27 +474,27 @@ export function FamilySafetyControls() {
         screenTime: true,
       },
     }),
-    [],
+    []
   );
 
   const getSafetyScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-600";
-    if (score >= 70) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 90) return 'text-green-600';
+    if (score >= 70) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low":
-        return "bg-green-100 text-green-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "high":
-        return "bg-orange-100 text-orange-800";
-      case "critical":
-        return "bg-red-100 text-red-800";
+      case 'low':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'high':
+        return 'bg-orange-100 text-orange-800';
+      case 'critical':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -539,7 +532,7 @@ export function FamilySafetyControls() {
               className="flex items-center gap-2"
             >
               <Settings className="w-4 h-4" />
-              {isEditingSettings ? "Cancel" : "Settings"}
+              {isEditingSettings ? 'Cancel' : 'Settings'}
             </Button>
             <Button className="flex items-center gap-2">
               <UserPlus className="w-4 h-4" />
@@ -558,35 +551,25 @@ export function FamilySafetyControls() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {familyMembers.map((member) => (
+              {familyMembers.map(member => (
                 <div
                   key={member.id}
                   className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
                     selectedMember?.id === member.id
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'
                   }`}
                   onClick={() => setSelectedMember(member)}
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                      {member.role === "parent" && (
-                        <User className="w-6 h-6 text-white" />
-                      )}
-                      {member.role === "child" && (
-                        <Child className="w-6 h-6 text-white" />
-                      )}
-                      {member.role === "child" && (
-                        <Baby className="w-6 h-6 text-white" />
-                      )}
-                      {member.role === "teenager" && (
-                        <User className="w-6 h-6 text-white" />
-                      )}
+                      {member.role === 'parent' && <User className="w-6 h-6 text-white" />}
+                      {member.role === 'child' && <Child className="w-6 h-6 text-white" />}
+                      {member.role === 'child' && <Baby className="w-6 h-6 text-white" />}
+                      {member.role === 'teenager' && <User className="w-6 h-6 text-white" />}
                     </div>
                     <div>
-                      <h3 className="font-medium text-slate-900 dark:text-white">
-                        {member.name}
-                      </h3>
+                      <h3 className="font-medium text-slate-900 dark:text-white">{member.name}</h3>
                       <p className="text-sm text-slate-600 dark:text-slate-400">
                         {member.role} • {member.age} years old
                       </p>
@@ -598,35 +581,27 @@ export function FamilySafetyControls() {
                       <span className="text-sm text-slate-600 dark:text-slate-400">
                         Safety Score
                       </span>
-                      <span
-                        className={`font-semibold ${getSafetyScoreColor(member.safetyScore)}`}
-                      >
+                      <span className={`font-semibold ${getSafetyScoreColor(member.safetyScore)}`}>
                         {member.safetyScore}%
                       </span>
                     </div>
                     <Progress value={member.safetyScore} className="h-2" />
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-600 dark:text-slate-400">
-                        Status
-                      </span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Status</span>
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-2 h-2 rounded-full ${member.isOnline ? "bg-green-500" : "bg-gray-400"}`}
+                          className={`w-2 h-2 rounded-full ${member.isOnline ? 'bg-green-500' : 'bg-gray-400'}`}
                         />
                         <span className="text-sm text-slate-600 dark:text-slate-400">
-                          {member.isOnline ? "Online" : "Offline"}
+                          {member.isOnline ? 'Online' : 'Offline'}
                         </span>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-slate-600 dark:text-slate-400">
-                        Devices
-                      </span>
-                      <span className="text-sm font-medium">
-                        {member.deviceCount}
-                      </span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400">Devices</span>
+                      <span className="text-sm font-medium">{member.deviceCount}</span>
                     </div>
                   </div>
                 </div>
@@ -636,11 +611,7 @@ export function FamilySafetyControls() {
         </Card>
 
         {/* Main Content Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="space-y-6"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="controls">Safety Controls</TabsTrigger>
             <TabsTrigger value="alerts">Safety Alerts</TabsTrigger>
@@ -668,7 +639,7 @@ export function FamilySafetyControls() {
                       </div>
                       <Switch
                         checked={selectedMember.restrictions.contentFiltering}
-                        onCheckedChange={(checked) => {
+                        onCheckedChange={checked => {
                           // Update content filtering
                         }}
                       />
@@ -676,22 +647,14 @@ export function FamilySafetyControls() {
                     {selectedMember.restrictions.contentFiltering && (
                       <div className="ml-7 space-y-3">
                         <div className="text-sm text-slate-600 dark:text-slate-400">
-                          Automatically filters inappropriate content based on
-                          age and safety settings
+                          Automatically filters inappropriate content based on age and safety
+                          settings
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          <Badge className="bg-green-100 text-green-800">
-                            Violence
-                          </Badge>
-                          <Badge className="bg-green-100 text-green-800">
-                            Adult Content
-                          </Badge>
-                          <Badge className="bg-green-100 text-green-800">
-                            Hate Speech
-                          </Badge>
-                          <Badge className="bg-green-100 text-green-800">
-                            Drugs
-                          </Badge>
+                          <Badge className="bg-green-100 text-green-800">Violence</Badge>
+                          <Badge className="bg-green-100 text-green-800">Adult Content</Badge>
+                          <Badge className="bg-green-100 text-green-800">Hate Speech</Badge>
+                          <Badge className="bg-green-100 text-green-800">Drugs</Badge>
                         </div>
                       </div>
                     )}
@@ -706,7 +669,7 @@ export function FamilySafetyControls() {
                       </div>
                       <Switch
                         checked={selectedMember.restrictions.screenTime.enabled}
-                        onCheckedChange={(checked) => {
+                        onCheckedChange={checked => {
                           // Update screen time
                         }}
                       />
@@ -720,11 +683,8 @@ export function FamilySafetyControls() {
                             </Label>
                             <Input
                               type="number"
-                              value={
-                                selectedMember.restrictions.screenTime
-                                  .dailyLimit
-                              }
-                              onChange={(e) => {
+                              value={selectedMember.restrictions.screenTime.dailyLimit}
+                              onChange={e => {
                                 // Update daily limit
                               }}
                               className="mt-1"
@@ -736,11 +696,8 @@ export function FamilySafetyControls() {
                             </Label>
                             <Input
                               type="time"
-                              value={
-                                selectedMember.restrictions.screenTime
-                                  .bedtimeStart
-                              }
-                              onChange={(e) => {
+                              value={selectedMember.restrictions.screenTime.bedtimeStart}
+                              onChange={e => {
                                 // Update bedtime
                               }}
                               className="mt-1"
@@ -748,23 +705,16 @@ export function FamilySafetyControls() {
                           </div>
                         </div>
                         <div className="text-sm text-slate-600 dark:text-slate-400">
-                          Current usage:{" "}
+                          Current usage:{' '}
                           {formatScreenTime(
-                            selectedMember.restrictions.screenTime.dailyLimit *
-                              0.7,
-                          )}{" "}
-                          /{" "}
-                          {formatScreenTime(
-                            selectedMember.restrictions.screenTime.dailyLimit,
-                          )}
+                            selectedMember.restrictions.screenTime.dailyLimit * 0.7
+                          )}{' '}
+                          / {formatScreenTime(selectedMember.restrictions.screenTime.dailyLimit)}
                         </div>
                         <Progress
                           value={
-                            ((selectedMember.restrictions.screenTime
-                              .dailyLimit *
-                              0.7) /
-                              selectedMember.restrictions.screenTime
-                                .dailyLimit) *
+                            ((selectedMember.restrictions.screenTime.dailyLimit * 0.7) /
+                              selectedMember.restrictions.screenTime.dailyLimit) *
                             100
                           }
                           className="h-2"
@@ -781,10 +731,8 @@ export function FamilySafetyControls() {
                         <span className="font-medium">App Blocking</span>
                       </div>
                       <Switch
-                        checked={
-                          selectedMember.restrictions.appBlocking.length > 0
-                        }
-                        onCheckedChange={(checked) => {
+                        checked={selectedMember.restrictions.appBlocking.length > 0}
+                        onCheckedChange={checked => {
                           // Update app blocking
                         }}
                       />
@@ -795,16 +743,11 @@ export function FamilySafetyControls() {
                           Blocked apps and categories:
                         </div>
                         <div className="flex flex-wrap gap-2">
-                          {selectedMember.restrictions.appBlocking.map(
-                            (app, index) => (
-                              <Badge
-                                key={index}
-                                className="bg-red-100 text-red-800"
-                              >
-                                {app}
-                              </Badge>
-                            ),
-                          )}
+                          {selectedMember.restrictions.appBlocking.map((app, index) => (
+                            <Badge key={index} className="bg-red-100 text-red-800">
+                              {app}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
                     )}
@@ -819,7 +762,7 @@ export function FamilySafetyControls() {
                       </div>
                       <Switch
                         checked={selectedMember.restrictions.locationTracking}
-                        onCheckedChange={(checked) => {
+                        onCheckedChange={checked => {
                           // Update location tracking
                         }}
                       />
@@ -848,8 +791,7 @@ export function FamilySafetyControls() {
                     Select a Family Member
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400">
-                    Choose a family member to view and manage their safety
-                    controls
+                    Choose a family member to view and manage their safety controls
                   </p>
                 </CardContent>
               </Card>
@@ -867,10 +809,8 @@ export function FamilySafetyControls() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {safetyAlerts.map((alert) => {
-                    const user = familyMembers.find(
-                      (m) => m.id === alert.userId,
-                    );
+                  {safetyAlerts.map(alert => {
+                    const user = familyMembers.find(m => m.id === alert.userId);
                     return (
                       <div
                         key={alert.id}
@@ -886,13 +826,9 @@ export function FamilySafetyControls() {
                             </span>
                           </div>
                           {alert.resolved ? (
-                            <Badge className="bg-green-100 text-green-800">
-                              Resolved
-                            </Badge>
+                            <Badge className="bg-green-100 text-green-800">Resolved</Badge>
                           ) : (
-                            <Badge className="bg-red-100 text-red-800">
-                              Pending
-                            </Badge>
+                            <Badge className="bg-red-100 text-red-800">Pending</Badge>
                           )}
                         </div>
                         <h3 className="font-medium text-slate-900 dark:text-white mb-1">
@@ -902,12 +838,8 @@ export function FamilySafetyControls() {
                           {alert.description}
                         </p>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-slate-600 dark:text-slate-400">
-                            User:
-                          </span>
-                          <span className="text-sm font-medium">
-                            {user?.name}
-                          </span>
+                          <span className="text-sm text-slate-600 dark:text-slate-400">User:</span>
+                          <span className="text-sm font-medium">{user?.name}</span>
                         </div>
                         {alert.actionTaken && (
                           <div className="mt-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded">
@@ -935,25 +867,17 @@ export function FamilySafetyControls() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  {familyMembers.map((member) => (
+                  {familyMembers.map(member => (
                     <div
                       key={member.id}
                       className="border border-slate-200 dark:border-slate-700 rounded-lg p-4"
                     >
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                          {member.role === "parent" && (
-                            <User className="w-5 h-5 text-white" />
-                          )}
-                          {member.role === "child" && (
-                            <Child className="w-5 h-5 text-white" />
-                          )}
-                          {member.role === "child" && (
-                            <Baby className="w-5 h-5 text-white" />
-                          )}
-                          {member.role === "teenager" && (
-                            <User className="w-5 h-5 text-white" />
-                          )}
+                          {member.role === 'parent' && <User className="w-5 h-5 text-white" />}
+                          {member.role === 'child' && <Child className="w-5 h-5 text-white" />}
+                          {member.role === 'child' && <Baby className="w-5 h-5 text-white" />}
+                          {member.role === 'teenager' && <User className="w-5 h-5 text-white" />}
                         </div>
                         <div>
                           <h3 className="font-medium text-slate-900 dark:text-white">
@@ -969,30 +893,20 @@ export function FamilySafetyControls() {
                         <div className="text-center">
                           <p className="text-2xl font-bold text-slate-900 dark:text-white">
                             {member.restrictions.screenTime.enabled
-                              ? formatScreenTime(
-                                  member.restrictions.screenTime.dailyLimit *
-                                    0.7,
-                                )
-                              : "Unlimited"}
+                              ? formatScreenTime(member.restrictions.screenTime.dailyLimit * 0.7)
+                              : 'Unlimited'}
                           </p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Screen Time
-                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">Screen Time</p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-slate-900 dark:text-white">
                             {member.restrictions.appBlocking.length}
                           </p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Apps Blocked
-                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">Apps Blocked</p>
                         </div>
                         <div className="text-center">
                           <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                            {
-                              safetyAlerts.filter((a) => a.userId === member.id)
-                                .length
-                            }
+                            {safetyAlerts.filter(a => a.userId === member.id).length}
                           </p>
                           <p className="text-sm text-slate-600 dark:text-slate-400">
                             Safety Alerts
@@ -1004,9 +918,7 @@ export function FamilySafetyControls() {
                           >
                             {member.safetyScore}%
                           </p>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Safety Score
-                          </p>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">Safety Score</p>
                         </div>
                       </div>
                     </div>
@@ -1034,7 +946,7 @@ export function FamilySafetyControls() {
                       </Label>
                       <Input
                         value={familySettings.familyName}
-                        onChange={(e) => {
+                        onChange={e => {
                           // Update family name
                         }}
                         className="mt-1"
@@ -1046,24 +958,18 @@ export function FamilySafetyControls() {
                         Safety Level
                       </Label>
                       <div className="flex gap-2 mt-2">
-                        {(["strict", "moderate", "relaxed"] as const).map(
-                          (level) => (
-                            <Button
-                              key={level}
-                              variant={
-                                familySettings.safetyLevel === level
-                                  ? "default"
-                                  : "outline"
-                              }
-                              size="sm"
-                              onClick={() => {
-                                // Update safety level
-                              }}
-                            >
-                              {level.charAt(0).toUpperCase() + level.slice(1)}
-                            </Button>
-                          ),
-                        )}
+                        {(['strict', 'moderate', 'relaxed'] as const).map(level => (
+                          <Button
+                            key={level}
+                            variant={familySettings.safetyLevel === level ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => {
+                              // Update safety level
+                            }}
+                          >
+                            {level.charAt(0).toUpperCase() + level.slice(1)}
+                          </Button>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -1074,17 +980,15 @@ export function FamilySafetyControls() {
                         Emergency Contacts
                       </Label>
                       <div className="space-y-2 mt-2">
-                        {familySettings.emergencyContacts.map(
-                          (contact, index) => (
-                            <Input
-                              key={index}
-                              value={contact}
-                              onChange={(e) => {
-                                // Update emergency contact
-                              }}
-                            />
-                          ),
-                        )}
+                        {familySettings.emergencyContacts.map((contact, index) => (
+                          <Input
+                            key={index}
+                            value={contact}
+                            onChange={e => {
+                              // Update emergency contact
+                            }}
+                          />
+                        ))}
                         <Button variant="outline" size="sm" className="w-full">
                           Add Contact
                         </Button>
@@ -1100,58 +1004,52 @@ export function FamilySafetyControls() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[
                       {
-                        key: "locationSharing",
-                        label: "Location Sharing",
+                        key: 'locationSharing',
+                        label: 'Location Sharing',
                         icon: MapPin,
                       },
                       {
-                        key: "contentFiltering",
-                        label: "Content Filtering",
+                        key: 'contentFiltering',
+                        label: 'Content Filtering',
                         icon: Eye,
                       },
                       {
-                        key: "screenTimeLimits",
-                        label: "Screen Time Limits",
+                        key: 'screenTimeLimits',
+                        label: 'Screen Time Limits',
                         icon: Clock,
                       },
                       {
-                        key: "appBlocking",
-                        label: "App Blocking",
+                        key: 'appBlocking',
+                        label: 'App Blocking',
                         icon: Smartphone,
                       },
                       {
-                        key: "webFiltering",
-                        label: "Web Filtering",
+                        key: 'webFiltering',
+                        label: 'Web Filtering',
                         icon: Globe,
                       },
                       {
-                        key: "socialMediaMonitoring",
-                        label: "Social Media Monitoring",
+                        key: 'socialMediaMonitoring',
+                        label: 'Social Media Monitoring',
                         icon: MessageCircle,
                       },
                       {
-                        key: "purchaseControls",
-                        label: "Purchase Controls",
+                        key: 'purchaseControls',
+                        label: 'Purchase Controls',
                         icon: CreditCard,
                       },
-                    ].map((feature) => (
+                    ].map(feature => (
                       <div
                         key={feature.key}
                         className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg"
                       >
                         <div className="flex items-center gap-2">
                           <feature.icon className="w-4 h-4" />
-                          <span className="text-sm font-medium">
-                            {feature.label}
-                          </span>
+                          <span className="text-sm font-medium">{feature.label}</span>
                         </div>
                         <Switch
-                          checked={
-                            familySettings[
-                              feature.key as keyof FamilySettings
-                            ] as boolean
-                          }
-                          onCheckedChange={(checked) => {
+                          checked={familySettings[feature.key as keyof FamilySettings] as boolean}
+                          onCheckedChange={checked => {
                             // Update feature setting
                           }}
                         />
@@ -1165,24 +1063,22 @@ export function FamilySafetyControls() {
                     Notifications
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {Object.entries(familySettings.notifications).map(
-                      ([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg"
-                        >
-                          <span className="text-sm font-medium capitalize">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
-                          </span>
-                          <Switch
-                            checked={value}
-                            onCheckedChange={(checked) => {
-                              // Update notification setting
-                            }}
-                          />
-                        </div>
-                      ),
-                    )}
+                    {Object.entries(familySettings.notifications).map(([key, value]) => (
+                      <div
+                        key={key}
+                        className="flex items-center justify-between p-3 border border-slate-200 dark:border-slate-700 rounded-lg"
+                      >
+                        <span className="text-sm font-medium capitalize">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
+                        <Switch
+                          checked={value}
+                          onCheckedChange={checked => {
+                            // Update notification setting
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
 

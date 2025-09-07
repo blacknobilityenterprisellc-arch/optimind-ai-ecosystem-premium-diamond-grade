@@ -5,9 +5,9 @@
  * Decrypt quantum-secure data
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { quantumSecurityService } from "@/lib/v2/quantum-security-service";
+import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,25 +15,19 @@ export async function POST(request: NextRequest) {
 
     if (!secureMessage || !userId) {
       return NextResponse.json(
-        { error: "Secure message and user ID are required" },
-        { status: 400 },
+        { error: 'Secure message and user ID are required' },
+        { status: 400 }
       );
     }
 
     const { ciphertext, iv, tag, algorithm, keyId, timestamp } = secureMessage;
 
     if (!ciphertext || !iv || !tag || !algorithm || !keyId) {
-      return NextResponse.json(
-        { error: "Invalid secure message format" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Invalid secure message format' }, { status: 400 });
     }
 
     // Decrypt quantum-secure data
-    const decrypted = await quantumSecurityService.decryptData(
-      secureMessage,
-      userId,
-    );
+    const decrypted = await quantumSecurityService.decryptData(secureMessage, userId);
 
     return NextResponse.json({
       success: true,
@@ -41,16 +35,16 @@ export async function POST(request: NextRequest) {
         plaintext: decrypted,
         originalTimestamp: timestamp,
       },
-      message: "Quantum-secure data decrypted successfully",
+      message: 'Quantum-secure data decrypted successfully',
     });
   } catch (error) {
-    console.error("Quantum decryption failed:", error);
+    console.error('Quantum decryption failed:', error);
     return NextResponse.json(
       {
-        error: "Failed to decrypt quantum-secure data",
+        error: 'Failed to decrypt quantum-secure data',
         details: error.message,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

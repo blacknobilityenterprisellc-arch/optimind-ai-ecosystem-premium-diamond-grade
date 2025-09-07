@@ -1,16 +1,16 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
     // Mock settings data
     const settings = {
       general: {
-        siteName: "OptiMind AI Ecosystem",
-        siteDescription: "Premium Diamond Grade AI Platform",
-        adminEmail: "admin@optimind.ai",
+        siteName: 'OptiMind AI Ecosystem',
+        siteDescription: 'Premium Diamond Grade AI Platform',
+        adminEmail: 'admin@optimind.ai',
       },
       ai: {
-        defaultModel: "glm-45-flagship",
+        defaultModel: 'glm-45-flagship',
         enableAutoOptimization: true,
         maxTokens: 4000,
       },
@@ -23,11 +23,8 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(settings);
   } catch (error: any) {
-    console.error("Settings API error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 },
-    );
+    console.error('Settings API error:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }
 
@@ -45,10 +42,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(updatedSettings);
   } catch (error: any) {
-    console.error("Settings update error:", error);
+    console.error('Settings update error:', error);
     return NextResponse.json(
-      { error: error.message || "Failed to update settings" },
-      { status: 500 },
+      { error: error.message || 'Failed to update settings' },
+      { status: 500 }
     );
   }
 }

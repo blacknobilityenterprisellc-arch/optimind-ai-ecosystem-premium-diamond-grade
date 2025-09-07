@@ -6,20 +6,20 @@
  * predictive analytics, and comprehensive system diagnostics.
  */
 
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
-import { quantumSecurityV2 } from "@/lib/v2/quantum-security";
-import { predictiveAnalyticsV2 } from "@/lib/v2/predictive-analytics";
-import { mcpIntegrationV2 } from "@/lib/v2/mcp-integration";
-import DatabaseManagerV2 from "@/lib/v2/database-manager";
+import { quantumSecurityV2 } from '@/lib/v2/quantum-security';
+import { predictiveAnalyticsV2 } from '@/lib/v2/predictive-analytics';
+import { mcpIntegrationV2 } from '@/lib/v2/mcp-integration';
+import DatabaseManagerV2 from '@/lib/v2/database-manager';
 
 // Health status constants with enterprise-grade precision
 const HEALTH_STATUS = {
-  HEALTHY: "healthy" as const,
-  DEGRADED: "degraded" as const,
-  UNHEALTHY: "unhealthy" as const,
-  ERROR: "error" as const,
-  OPERATIONAL: "operational" as const,
+  HEALTHY: 'healthy' as const,
+  DEGRADED: 'degraded' as const,
+  UNHEALTHY: 'unhealthy' as const,
+  ERROR: 'error' as const,
+  OPERATIONAL: 'operational' as const,
 } as const;
 
 // Health threshold constants for enterprise monitoring
@@ -31,13 +31,13 @@ const HEALTH_THRESHOLDS = {
 
 // System capabilities for enterprise reporting
 const SYSTEM_CAPABILITIES = [
-  "quantum_security",
-  "predictive_analytics",
-  "mcp_integration",
-  "database_management",
-  "self_healing",
-  "real_time_monitoring",
-  "enterprise_grade",
+  'quantum_security',
+  'predictive_analytics',
+  'mcp_integration',
+  'database_management',
+  'self_healing',
+  'real_time_monitoring',
+  'enterprise_grade',
 ] as const;
 
 // Service status strings for consistent reporting
@@ -59,9 +59,9 @@ const COMPONENT_INDICES = {
 
 // Error messages for consistent reporting
 const ERROR_MESSAGES = {
-  SERVICE_UNAVAILABLE: "Service unavailable",
-  UNKNOWN_ERROR: "Unknown error",
-  HEALTH_CHECK_FAILED: "Health check failed",
+  SERVICE_UNAVAILABLE: 'Service unavailable',
+  UNKNOWN_ERROR: 'Unknown error',
+  HEALTH_CHECK_FAILED: 'Health check failed',
 } as const;
 
 interface ComponentHealth {
@@ -118,12 +118,10 @@ async function performComponentHealthChecks() {
 /**
  * Calculates component health status from health check results
  */
-function calculateComponentHealth(
-  healthChecks: PromiseSettledResult<unknown>[],
-): ComponentHealth {
+function calculateComponentHealth(healthChecks: PromiseSettledResult<unknown>[]): ComponentHealth {
   return {
     quantumSecurity:
-      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === 'fulfilled'
         ? (
             healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].value as {
               status: string;
@@ -131,8 +129,7 @@ function calculateComponentHealth(
           ).status
         : SERVICE_STATUS.ERROR,
     predictiveAnalytics:
-      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status ===
-      "fulfilled"
+      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status === 'fulfilled'
         ? (
             healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].value as {
               status: string;
@@ -140,7 +137,7 @@ function calculateComponentHealth(
           ).status
         : SERVICE_STATUS.ERROR,
     mcpIntegration:
-      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === 'fulfilled'
         ? (
             healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].value as {
               status: string;
@@ -148,7 +145,7 @@ function calculateComponentHealth(
           ).status
         : SERVICE_STATUS.ERROR,
     databaseManager:
-      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === 'fulfilled'
         ? (
             healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].value as {
               status: string;
@@ -163,7 +160,7 @@ function calculateComponentHealth(
  */
 function determineOverallHealth(componentHealth: ComponentHealth): string {
   const healthyComponents = Object.values(componentHealth).filter(
-    (status) => status === SERVICE_STATUS.HEALTHY,
+    status => status === SERVICE_STATUS.HEALTHY
   ).length;
   const totalComponents = Object.keys(componentHealth).length;
   const healthRatio = healthyComponents / totalComponents;
@@ -180,12 +177,10 @@ function determineOverallHealth(componentHealth: ComponentHealth): string {
 /**
  * Collects metrics from all components with graceful error handling
  */
-function collectComponentMetrics(
-  healthChecks: PromiseSettledResult<unknown>[],
-): HealthMetrics {
+function collectComponentMetrics(healthChecks: PromiseSettledResult<unknown>[]): HealthMetrics {
   return {
     quantum:
-      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === 'fulfilled'
         ? (
             healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].value as {
               metrics: unknown;
@@ -193,16 +188,15 @@ function collectComponentMetrics(
           ).metrics
         : null,
     predictive:
-      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status ===
-      "fulfilled"
+      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status === 'fulfilled'
         ? predictiveAnalyticsV2.getAnalyticsMetrics()
         : null,
     mcp:
-      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === 'fulfilled'
         ? mcpIntegrationV2.getStats()
         : null,
     database:
-      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === 'fulfilled'
         ? dbManager.getDatabaseMetrics()
         : null,
   };
@@ -212,24 +206,23 @@ function collectComponentMetrics(
  * Builds detailed health information for each component
  */
 function buildHealthDetails(
-  healthChecks: PromiseSettledResult<unknown>[],
+  healthChecks: PromiseSettledResult<unknown>[]
 ): Record<string, unknown> {
   return {
     quantumSecurity:
-      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].status === 'fulfilled'
         ? healthChecks[COMPONENT_INDICES.QUANTUM_SECURITY].value
         : { error: ERROR_MESSAGES.SERVICE_UNAVAILABLE },
     predictiveAnalytics:
-      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status ===
-      "fulfilled"
+      healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].status === 'fulfilled'
         ? healthChecks[COMPONENT_INDICES.PREDICTIVE_ANALYTICS].value
         : { error: ERROR_MESSAGES.SERVICE_UNAVAILABLE },
     mcpIntegration:
-      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].status === 'fulfilled'
         ? healthChecks[COMPONENT_INDICES.MCP_INTEGRATION].value
         : { error: ERROR_MESSAGES.SERVICE_UNAVAILABLE },
     databaseManager:
-      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === "fulfilled"
+      healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].status === 'fulfilled'
         ? healthChecks[COMPONENT_INDICES.DATABASE_MANAGER].value
         : { error: ERROR_MESSAGES.SERVICE_UNAVAILABLE },
   };
@@ -242,10 +235,10 @@ function buildHealthResponse(
   overallHealth: string,
   componentHealth: ComponentHealth,
   healthDetails: Record<string, unknown>,
-  metrics: HealthMetrics,
+  metrics: HealthMetrics
 ): HealthResponse {
   return {
-    service: "OptiMind AI Ecosystem v2.0",
+    service: 'OptiMind AI Ecosystem v2.0',
     overallHealth,
     componentHealth,
     healthDetails,
@@ -260,11 +253,10 @@ function buildHealthResponse(
  * Handles health check errors with enterprise-grade error reporting
  */
 function handleHealthError(error: unknown): NextResponse<HealthError> {
-  console.error("Comprehensive Health Check API error:", error);
+  console.error('Comprehensive Health Check API error:', error);
   const errorResponse: HealthError = {
     error: ERROR_MESSAGES.HEALTH_CHECK_FAILED,
-    message:
-      error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN_ERROR,
+    message: error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN_ERROR,
     overallHealth: SERVICE_STATUS.UNHEALTHY,
     timestamp: new Date().toISOString(),
   };
@@ -275,9 +267,7 @@ function handleHealthError(error: unknown): NextResponse<HealthError> {
 /**
  * Main health check endpoint with comprehensive system monitoring
  */
-export async function GET(): Promise<
-  NextResponse<HealthResponse | HealthError>
-> {
+export async function GET(): Promise<NextResponse<HealthResponse | HealthError>> {
   try {
     // Perform parallel health checks for optimal performance
     const healthChecks = await performComponentHealthChecks();
@@ -293,7 +283,7 @@ export async function GET(): Promise<
       overallHealth,
       componentHealth,
       healthDetails,
-      metrics,
+      metrics
     );
 
     return NextResponse.json(healthResponse);

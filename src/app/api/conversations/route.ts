@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-    const projectId = searchParams.get("projectId");
-    const page = Number.parseInt(searchParams.get("page") || "1");
-    const limit = Number.parseInt(searchParams.get("limit") || "10");
+    const userId = searchParams.get('userId');
+    const projectId = searchParams.get('projectId');
+    const page = Number.parseInt(searchParams.get('page') || '1');
+    const limit = Number.parseInt(searchParams.get('limit') || '10');
 
     const skip = (page - 1) * limit;
 
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        orderBy: { updatedAt: "desc" },
+        orderBy: { updatedAt: 'desc' },
         skip,
         take: limit,
       }),
@@ -59,23 +59,17 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error("Get conversations error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 },
-    );
+    console.error('Get conversations error:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const { title, userId, projectId, model = "gpt-4" } = await request.json();
+    const { title, userId, projectId, model = 'gpt-4' } = await request.json();
 
     if (!title || !userId) {
-      return NextResponse.json(
-        { error: "Title and userId are required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Title and userId are required' }, { status: 400 });
     }
 
     const conversation = await db.conversation.create({
@@ -105,10 +99,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(conversation, { status: 201 });
   } catch (error: any) {
-    console.error("Create conversation error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 },
-    );
+    console.error('Create conversation error:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }

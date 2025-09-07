@@ -1,13 +1,13 @@
 // src/lib/performance-optimizer.ts - Premium Diamond-Grade Performance Optimizer
 export async function initializePerformanceOptimizations() {
   console.log('⚡ Initializing premium performance optimizations');
-  
+
   // Enable premium caching strategies
   enablePremiumCaching();
-  
+
   // Optimize resource loading
   optimizeResourceLoading();
-  
+
   // Enable premium compression
   enablePremiumCompression();
 }
@@ -31,6 +31,6 @@ export function getPerformanceMetrics() {
   return {
     level: 'premium-diamond-grade',
     optimizations: ['caching', 'resource-loading', 'compression'],
-    performance: 'optimal'
+    performance: 'optimal',
   };
 }

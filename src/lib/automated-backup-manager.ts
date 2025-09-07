@@ -1,6 +1,6 @@
 /**
  * Automated Backup Manager for OptiMind AI Ecosystem
- * 
+ *
  * Provides comprehensive automated backup and recovery systems with encryption and compression
  * for all critical system data and configurations.
  */
@@ -69,10 +69,10 @@ export class AutomatedBackupManager {
     try {
       // Ensure backup directory exists
       await fs.mkdir(this.config.backupPath, { recursive: true });
-      
+
       // Load existing backup history
       await this.loadBackupHistory();
-      
+
       console.log('Automated Backup Manager initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Automated Backup Manager:', error);
@@ -90,7 +90,7 @@ export class AutomatedBackupManager {
     }
 
     this.isRunning = true;
-    
+
     // Schedule regular backups
     this.backupTimer = setInterval(async () => {
       try {
@@ -112,7 +112,7 @@ export class AutomatedBackupManager {
     }
 
     this.isRunning = false;
-    
+
     if (this.backupTimer) {
       clearInterval(this.backupTimer);
       this.backupTimer = undefined;
@@ -159,7 +159,7 @@ export class AutomatedBackupManager {
         type,
         description,
         tags,
-        version: '1.0.0'
+        version: '1.0.0',
       };
 
       // Save backup files
@@ -168,7 +168,7 @@ export class AutomatedBackupManager {
 
       await Promise.all([
         fs.writeFile(backupPath, processedData),
-        fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2))
+        fs.writeFile(metadataPath, JSON.stringify(metadata, null, 2)),
       ]);
 
       // Update backup history
@@ -176,26 +176,25 @@ export class AutomatedBackupManager {
       await this.cleanupOldBackups();
 
       const duration = Date.now() - startTime;
-      
+
       console.log(`✅ Backup created successfully: ${backupId} (${duration}ms)`);
-      
+
       return {
         success: true,
         backupId,
         metadata,
-        duration
+        duration,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       console.error(`❌ Backup creation failed: ${backupId}`, error);
-      
+
       return {
         success: false,
         error: errorMessage,
-        duration
+        duration,
       };
     }
   }
@@ -242,26 +241,27 @@ export class AutomatedBackupManager {
       const restoredFiles = await this.restoreBackupData(backupContent, restorePath);
 
       const duration = Date.now() - startTime;
-      
-      console.log(`✅ Backup restored successfully: ${backupId} (${restoredFiles.length} files, ${duration}ms)`);
-      
+
+      console.log(
+        `✅ Backup restored successfully: ${backupId} (${restoredFiles.length} files, ${duration}ms)`
+      );
+
       return {
         success: true,
         restoredFiles,
-        duration
+        duration,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       console.error(`❌ Backup restoration failed: ${backupId}`, error);
-      
+
       return {
         success: false,
         restoredFiles: [],
         error: errorMessage,
-        duration
+        duration,
       };
     }
   }
@@ -295,10 +295,7 @@ export class AutomatedBackupManager {
       const backupPath = path.join(this.config.backupPath, `${backupId}.backup`);
       const metadataPath = path.join(this.config.backupPath, `${backupId}.meta`);
 
-      await Promise.all([
-        fs.unlink(backupPath),
-        fs.unlink(metadataPath)
-      ]);
+      await Promise.all([fs.unlink(backupPath), fs.unlink(metadataPath)]);
 
       // Remove from history
       this.backupHistory = this.backupHistory.filter(b => b.id !== backupId);
@@ -319,7 +316,7 @@ export class AutomatedBackupManager {
       timestamp: new Date().toISOString(),
       type,
       version: '1.0.0',
-      data: {}
+      data: {},
     };
 
     if (type === 'full' || type === 'config') {
@@ -372,7 +369,6 @@ export class AutomatedBackupManager {
       // Collect next config
       const nextConfig = await fs.readFile('next.config.ts', 'utf-8');
       configs.nextConfig = nextConfig;
-
     } catch (error) {
       console.warn('Some configuration files could not be collected:', error);
     }
@@ -395,7 +391,6 @@ export class AutomatedBackupManager {
           env[key.trim()] = value.trim();
         }
       });
-
     } catch (error) {
       console.warn('Environment variables could not be collected:', error);
     }
@@ -419,7 +414,6 @@ export class AutomatedBackupManager {
           databases[file] = dbContent.toString('base64');
         }
       }
-
     } catch (error) {
       console.warn('Database backups could not be collected:', error);
     }
@@ -437,7 +431,6 @@ export class AutomatedBackupManager {
       // Collect dev.log
       const devLog = await fs.readFile('dev.log', 'utf-8');
       logs.devLog = devLog;
-
     } catch (error) {
       console.warn('Logs could not be collected:', error);
     }
@@ -459,7 +452,6 @@ export class AutomatedBackupManager {
       // Collect tsconfig
       const tsConfig = await fs.readFile('tsconfig.json', 'utf-8');
       system.tsConfig = tsConfig;
-
     } catch (error) {
       console.warn('System files could not be collected:', error);
     }
@@ -505,7 +497,6 @@ export class AutomatedBackupManager {
           restoredFiles.push(`prisma/db/${fileName}`);
         }
       }
-
     } catch (error) {
       console.error('Failed to restore backup data:', error);
       throw error;
@@ -531,7 +522,6 @@ export class AutomatedBackupManager {
 
       // Sort by timestamp
       this.backupHistory.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-
     } catch (error) {
       console.warn('Could not load backup history:', error);
     }
@@ -559,12 +549,14 @@ export class AutomatedBackupManager {
         return;
       }
 
-      const toRemove = this.backupHistory.splice(0, this.backupHistory.length - this.config.maxBackups);
-      
+      const toRemove = this.backupHistory.splice(
+        0,
+        this.backupHistory.length - this.config.maxBackups
+      );
+
       for (const backup of toRemove) {
         await this.deleteBackup(backup.id);
       }
-
     } catch (error) {
       console.error('Failed to cleanup old backups:', error);
     }
@@ -591,11 +583,11 @@ export class AutomatedBackupManager {
     const algorithm = 'aes-256-cbc';
     const key = crypto.randomBytes(32);
     const iv = crypto.randomBytes(16);
-    
+
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     let encrypted = cipher.update(data);
     encrypted = Buffer.concat([encrypted, cipher.final()]);
-    
+
     // Prepend iv and key for decryption
     return Buffer.concat([iv, key, encrypted]);
   }
@@ -608,11 +600,11 @@ export class AutomatedBackupManager {
     const iv = encryptedData.slice(0, 16);
     const key = encryptedData.slice(16, 48);
     const data = encryptedData.slice(48);
-    
+
     const decipher = crypto.createDecipheriv(algorithm, key, iv);
     let decrypted = decipher.update(data);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
-    
+
     return decrypted;
   }
 
@@ -626,8 +618,8 @@ export class AutomatedBackupManager {
       backupHistory: {
         total: this.backupHistory.length,
         latest: this.backupHistory[this.backupHistory.length - 1],
-        oldest: this.backupHistory[0]
-      }
+        oldest: this.backupHistory[0],
+      },
     };
   }
 
@@ -650,5 +642,5 @@ export const automatedBackupManager = new AutomatedBackupManager({
   backupPath: './database_backups',
   includeDatabases: true,
   includeConfigs: true,
-  includeLogs: true
+  includeLogs: true,
 });

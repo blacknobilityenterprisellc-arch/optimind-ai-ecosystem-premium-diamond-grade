@@ -137,8 +137,8 @@ export default function GLMOrchestratorDemo() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'comprehensive-test'
-        })
+          action: 'comprehensive-test',
+        }),
       });
       const data = await response.json();
       if (data.success) {
@@ -208,15 +208,15 @@ export default function GLMOrchestratorDemo() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Status</CardTitle>
-                <div className={`h-3 w-3 rounded-full ${status?.isInitialized ? 'bg-green-500' : 'bg-red-500'}`} />
+                <div
+                  className={`h-3 w-3 rounded-full ${status?.isInitialized ? 'bg-green-500' : 'bg-red-500'}`}
+                />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {status?.isInitialized ? 'Initialized' : 'Not Initialized'}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  GLM-4.5 Orchestrator
-                </p>
+                <p className="text-xs text-muted-foreground">GLM-4.5 Orchestrator</p>
               </CardContent>
             </Card>
 
@@ -227,9 +227,7 @@ export default function GLMOrchestratorDemo() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{status?.activeOperations || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  Currently running
-                </p>
+                <p className="text-xs text-muted-foreground">Currently running</p>
               </CardContent>
             </Card>
 
@@ -240,22 +238,20 @@ export default function GLMOrchestratorDemo() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{status?.completedOperations || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  Successfully completed
-                </p>
+                <p className="text-xs text-muted-foreground">Successfully completed</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">System Health</CardTitle>
-                <div className={`h-3 w-3 rounded-full ${health ? getHealthColor(health.overall) : 'bg-gray-500'}`} />
+                <div
+                  className={`h-3 w-3 rounded-full ${health ? getHealthColor(health.overall) : 'bg-gray-500'}`}
+                />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold capitalize">{health?.overall || 'Unknown'}</div>
-                <p className="text-xs text-muted-foreground">
-                  Overall system status
-                </p>
+                <p className="text-xs text-muted-foreground">Overall system status</p>
               </CardContent>
             </Card>
           </div>
@@ -307,7 +303,9 @@ export default function GLMOrchestratorDemo() {
                     <h4 className="font-medium">Component Status</h4>
                     {Object.entries(health.components).map(([component, status]) => (
                       <div key={component} className="flex items-center justify-between">
-                        <span className="capitalize">{component.replace(/([A-Z])/g, ' $1').trim()}</span>
+                        <span className="capitalize">
+                          {component.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
                         <Badge className={getHealthColor(status as string)}>
                           {(status as string).toUpperCase()}
                         </Badge>
@@ -350,7 +348,9 @@ export default function GLMOrchestratorDemo() {
                     <h4 className="font-medium mb-2">Key Insights</h4>
                     <ul className="list-disc list-inside space-y-1">
                       {health.insights.map((insight, index) => (
-                        <li key={index} className="text-sm">{insight}</li>
+                        <li key={index} className="text-sm">
+                          {insight}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -358,7 +358,9 @@ export default function GLMOrchestratorDemo() {
                     <h4 className="font-medium mb-2">Recommendations</h4>
                     <ul className="list-disc list-inside space-y-1">
                       {health.recommendations.map((recommendation, index) => (
-                        <li key={index} className="text-sm">{recommendation}</li>
+                        <li key={index} className="text-sm">
+                          {recommendation}
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -378,9 +380,7 @@ export default function GLMOrchestratorDemo() {
           <Card>
             <CardHeader>
               <CardTitle>Orchestrated Operations</CardTitle>
-              <CardDescription>
-                Operations executed by the GLM-4.5 Orchestrator
-              </CardDescription>
+              <CardDescription>Operations executed by the GLM-4.5 Orchestrator</CardDescription>
             </CardHeader>
             <CardContent>
               {results.length > 0 ? (
@@ -391,12 +391,10 @@ export default function GLMOrchestratorDemo() {
                         <div className="flex items-center justify-between">
                           <CardTitle className="text-lg">Operation #{index + 1}</CardTitle>
                           <div className="flex items-center gap-2">
-                            <Badge variant={result.success ? "default" : "destructive"}>
-                              {result.success ? "Success" : "Failed"}
+                            <Badge variant={result.success ? 'default' : 'destructive'}>
+                              {result.success ? 'Success' : 'Failed'}
                             </Badge>
-                            <Badge variant="outline">
-                              {result.orchestratedBy}
-                            </Badge>
+                            <Badge variant="outline">{result.orchestratedBy}</Badge>
                           </div>
                         </div>
                       </CardHeader>
@@ -459,9 +457,7 @@ export default function GLMOrchestratorDemo() {
           <Card>
             <CardHeader>
               <CardTitle>Technical Results</CardTitle>
-              <CardDescription>
-                Raw JSON results from orchestrated operations
-              </CardDescription>
+              <CardDescription>Raw JSON results from orchestrated operations</CardDescription>
             </CardHeader>
             <CardContent>
               {results.length > 0 ? (
@@ -469,7 +465,9 @@ export default function GLMOrchestratorDemo() {
                   {results.map((result, index) => (
                     <Card key={result.operationId}>
                       <CardHeader>
-                        <CardTitle className="text-lg">Operation #{index + 1} - {result.operationId}</CardTitle>
+                        <CardTitle className="text-lg">
+                          Operation #{index + 1} - {result.operationId}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <pre className="bg-muted p-4 rounded-md overflow-auto text-sm max-h-96">

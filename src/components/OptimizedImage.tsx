@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+import { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 interface OptimizedImageProps {
   src: string;
@@ -12,13 +12,13 @@ interface OptimizedImageProps {
   height?: number;
   className?: string;
   priority?: boolean;
-  placeholder?: "blur" | "empty";
+  placeholder?: 'blur' | 'empty';
   blurDataURL?: string;
   onLoad?: () => void;
   onError?: () => void;
   fallback?: React.ReactNode;
   aspectRatio?: number;
-  objectFit?: "contain" | "cover" | "fill" | "none" | "scale-down";
+  objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
 }
 
 export function OptimizedImage({
@@ -28,13 +28,13 @@ export function OptimizedImage({
   height,
   className,
   priority = false,
-  placeholder = "blur",
+  placeholder = 'blur',
   blurDataURL,
   onLoad,
   onError,
   fallback,
   aspectRatio,
-  objectFit = "cover",
+  objectFit = 'cover',
 }: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -45,7 +45,7 @@ export function OptimizedImage({
   const generateBlurDataURL = () => {
     if (blurDataURL) return blurDataURL;
     // Simple blur placeholder
-    return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJiIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsdGVyPSJ1cmwoI2IpIiBvcGFjaXR5PSIwLjEiLz48L3N2Zz4=";
+    return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJiIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgbnVtT2N0YXZlcz0iNCIgc3RpdGNoVGlsZXM9InN0aXRjaCIvPjwvZmlsdGVyPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsdGVyPSJ1cmwoI2IpIiBvcGFjaXR5PSIwLjEiLz48L3N2Zz4=';
   };
 
   // Intersection Observer for lazy loading
@@ -63,9 +63,9 @@ export function OptimizedImage({
         }
       },
       {
-        rootMargin: "50px",
+        rootMargin: '50px',
         threshold: 0.1,
-      },
+      }
     );
 
     if (imgRef.current) {
@@ -101,9 +101,9 @@ export function OptimizedImage({
     <div
       ref={imgRef}
       className={cn(
-        "relative overflow-hidden bg-gray-100",
-        isLoading && "animate-pulse",
-        className,
+        'relative overflow-hidden bg-gray-100',
+        isLoading && 'animate-pulse',
+        className
       )}
       style={{
         width: calculatedWidth || width,
@@ -117,16 +117,11 @@ export function OptimizedImage({
           alt={alt}
           width={calculatedWidth || width || 0}
           height={calculatedHeight || height || 0}
-          className={cn(
-            "transition-opacity duration-300",
-            isLoading ? "opacity-0" : "opacity-100",
-          )}
+          className={cn('transition-opacity duration-300', isLoading ? 'opacity-0' : 'opacity-100')}
           style={{ objectFit }}
           priority={priority}
           placeholder={placeholder}
-          blurDataURL={
-            placeholder === "blur" ? generateBlurDataURL() : undefined
-          }
+          blurDataURL={placeholder === 'blur' ? generateBlurDataURL() : undefined}
           onLoad={handleLoad}
           onError={handleError}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -171,7 +166,7 @@ interface PhotoGridProps {
     id: string;
     url: string;
     name: string;
-    status: "safe" | "flagged" | "pending" | "scanning";
+    status: 'safe' | 'flagged' | 'pending' | 'scanning';
   }>;
   onPhotoClick?: (photoId: string) => void;
   className?: string;
@@ -179,13 +174,8 @@ interface PhotoGridProps {
 
 export function PhotoGrid({ photos, onPhotoClick, className }: PhotoGridProps) {
   return (
-    <div
-      className={cn(
-        "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4",
-        className,
-      )}
-    >
-      {photos.map((photo) => (
+    <div className={cn('grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4', className)}>
+      {photos.map(photo => (
         <div
           key={photo.id}
           className="relative group cursor-pointer overflow-hidden rounded-lg"
@@ -205,11 +195,11 @@ export function PhotoGrid({ photos, onPhotoClick, className }: PhotoGridProps) {
             <div className="absolute top-2 right-2">
               <div
                 className={cn(
-                  "w-3 h-3 rounded-full",
-                  photo.status === "safe" && "bg-green-500",
-                  photo.status === "flagged" && "bg-red-500",
-                  photo.status === "pending" && "bg-yellow-500",
-                  photo.status === "scanning" && "bg-blue-500 animate-pulse",
+                  'w-3 h-3 rounded-full',
+                  photo.status === 'safe' && 'bg-green-500',
+                  photo.status === 'flagged' && 'bg-red-500',
+                  photo.status === 'pending' && 'bg-yellow-500',
+                  photo.status === 'scanning' && 'bg-blue-500 animate-pulse'
                 )}
               />
             </div>
@@ -232,12 +222,7 @@ interface LazyLoadProps {
   height?: number;
 }
 
-export function LazyLoad({
-  children,
-  placeholder,
-  className,
-  height = 200,
-}: LazyLoadProps) {
+export function LazyLoad({ children, placeholder, className, height = 200 }: LazyLoadProps) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -250,9 +235,9 @@ export function LazyLoad({
         }
       },
       {
-        rootMargin: "100px",
+        rootMargin: '100px',
         threshold: 0.1,
-      },
+      }
     );
 
     if (ref.current) {

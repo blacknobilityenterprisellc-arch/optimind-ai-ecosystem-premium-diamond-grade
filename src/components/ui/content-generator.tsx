@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Loader2, Wand2, Copy, Download } from "lucide-react";
+import { useState } from 'react';
+import { Loader2, Wand2, Copy, Download } from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ContentGeneratorProps {
   className?: string;
 }
 
 export function ContentGenerator({ className }: ContentGeneratorProps) {
-  const [topic, setTopic] = useState("");
-  const [contentType, setContentType] = useState("");
-  const [tone, setTone] = useState("professional");
-  const [length, setLength] = useState("medium");
-  const [keywords, setKeywords] = useState("");
-  const [targetAudience, setTargetAudience] = useState("");
-  const [generatedContent, setGeneratedContent] = useState("");
+  const [topic, setTopic] = useState('');
+  const [contentType, setContentType] = useState('');
+  const [tone, setTone] = useState('professional');
+  const [length, setLength] = useState('medium');
+  const [keywords, setKeywords] = useState('');
+  const [targetAudience, setTargetAudience] = useState('');
+  const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generationInfo, setGenerationInfo] = useState<{
     model: string;
@@ -41,48 +41,48 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
   } | null>(null);
 
   const contentTypes = [
-    { value: "blog", label: "Blog Post" },
-    { value: "article", label: "Article" },
-    { value: "product-description", label: "Product Description" },
-    { value: "social-media", label: "Social Media Post" },
-    { value: "email", label: "Email" },
-    { value: "documentation", label: "Documentation" },
+    { value: 'blog', label: 'Blog Post' },
+    { value: 'article', label: 'Article' },
+    { value: 'product-description', label: 'Product Description' },
+    { value: 'social-media', label: 'Social Media Post' },
+    { value: 'email', label: 'Email' },
+    { value: 'documentation', label: 'Documentation' },
   ];
 
   const tones = [
-    { value: "professional", label: "Professional" },
-    { value: "casual", label: "Casual" },
-    { value: "friendly", label: "Friendly" },
-    { value: "formal", label: "Formal" },
-    { value: "enthusiastic", label: "Enthusiastic" },
+    { value: 'professional', label: 'Professional' },
+    { value: 'casual', label: 'Casual' },
+    { value: 'friendly', label: 'Friendly' },
+    { value: 'formal', label: 'Formal' },
+    { value: 'enthusiastic', label: 'Enthusiastic' },
   ];
 
   const lengths = [
-    { value: "short", label: "Short (200-500 words)" },
-    { value: "medium", label: "Medium (500-1000 words)" },
-    { value: "long", label: "Long (1000+ words)" },
+    { value: 'short', label: 'Short (200-500 words)' },
+    { value: 'medium', label: 'Medium (500-1000 words)' },
+    { value: 'long', label: 'Long (1000+ words)' },
   ];
 
   const generateContent = async () => {
     if (!topic || !contentType) {
-      alert("Please fill in the topic and content type");
+      alert('Please fill in the topic and content type');
       return;
     }
 
     setIsGenerating(true);
     try {
-      const response = await fetch("/api/content/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/content/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           topic,
           contentType,
           tone,
           length,
           keywords: keywords
-            .split(",")
-            .map((k) => k.trim())
-            .filter((k) => k),
+            .split(',')
+            .map(k => k.trim())
+            .filter(k => k),
           targetAudience,
         }),
       });
@@ -97,11 +97,11 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
           usage: data.usage,
         });
       } else {
-        alert("Failed to generate content: " + data.error);
+        alert('Failed to generate content: ' + data.error);
       }
     } catch (error) {
-      console.error("Error generating content:", error);
-      alert("Error generating content");
+      console.error('Error generating content:', error);
+      alert('Error generating content');
     } finally {
       setIsGenerating(false);
     }
@@ -112,11 +112,11 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
   };
 
   const downloadContent = () => {
-    const blob = new Blob([generatedContent], { type: "text/plain" });
+    const blob = new Blob([generatedContent], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `${topic.replace(/\s+/g, "_")}_${contentType}.txt`;
+    a.download = `${topic.replace(/\s+/g, '_')}_${contentType}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -139,7 +139,7 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
               <Input
                 placeholder="Enter your topic..."
                 value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+                onChange={e => setTopic(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -149,7 +149,7 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
                   <SelectValue placeholder="Select content type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {contentTypes.map((type) => (
+                  {contentTypes.map(type => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -167,7 +167,7 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {tones.map((toneOption) => (
+                  {tones.map(toneOption => (
                     <SelectItem key={toneOption.value} value={toneOption.value}>
                       {toneOption.label}
                     </SelectItem>
@@ -182,11 +182,8 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {lengths.map((lengthOption) => (
-                    <SelectItem
-                      key={lengthOption.value}
-                      value={lengthOption.value}
-                    >
+                  {lengths.map(lengthOption => (
+                    <SelectItem key={lengthOption.value} value={lengthOption.value}>
                       {lengthOption.label}
                     </SelectItem>
                   ))}
@@ -198,19 +195,17 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
               <Input
                 placeholder="e.g., developers, marketers"
                 value={targetAudience}
-                onChange={(e) => setTargetAudience(e.target.value)}
+                onChange={e => setTargetAudience(e.target.value)}
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Keywords (comma-separated)
-            </label>
+            <label className="text-sm font-medium">Keywords (comma-separated)</label>
             <Input
               placeholder="e.g., AI, technology, innovation"
               value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
+              onChange={e => setKeywords(e.target.value)}
             />
           </div>
 
@@ -253,12 +248,8 @@ export function ContentGenerator({ className }: ContentGeneratorProps) {
             {generationInfo && (
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">Model: {generationInfo.model}</Badge>
-                <Badge variant="secondary">
-                  Cost: ${generationInfo.cost.toFixed(4)}
-                </Badge>
-                <Badge variant="secondary">
-                  Tokens: {generationInfo.usage.totalTokens}
-                </Badge>
+                <Badge variant="secondary">Cost: ${generationInfo.cost.toFixed(4)}</Badge>
+                <Badge variant="secondary">Tokens: {generationInfo.usage.totalTokens}</Badge>
               </div>
             )}
           </CardHeader>

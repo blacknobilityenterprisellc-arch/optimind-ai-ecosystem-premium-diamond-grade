@@ -11,7 +11,7 @@ export interface PhotoItem {
   id: string;
   name: string;
   url: string;
-  status: "safe" | "flagged" | "pending" | "scanning";
+  status: 'safe' | 'flagged' | 'pending' | 'scanning';
   scanDate?: Date;
   fileSize: number;
   file?: File;
@@ -42,7 +42,7 @@ interface ScanResponse {
 export async function scanMultiplePhotos(
   photos: PhotoItem[],
   files: File[],
-  onProgress?: ProgressCallback,
+  onProgress?: ProgressCallback
 ): Promise<ScanResult[]> {
   const results: ScanResult[] = [];
   const totalPhotos = photos.length;
@@ -67,10 +67,10 @@ export async function scanMultiplePhotos(
         const base64Image = await fileToBase64(file);
 
         // Call the scan API
-        const response = await fetch("/api/scan", {
-          method: "POST",
+        const response = await fetch('/api/scan', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             photoId: photo.id,
@@ -90,9 +90,7 @@ export async function scanMultiplePhotos(
           isNsfw: apiResult.isNsfw,
           confidence: apiResult.confidence,
           categories: apiResult.categories || [],
-          analysis: apiResult.error
-            ? `Error: ${apiResult.error}`
-            : "AI analysis completed",
+          analysis: apiResult.error ? `Error: ${apiResult.error}` : 'AI analysis completed',
         };
 
         results.push(scanResult);
@@ -104,16 +102,16 @@ export async function scanMultiplePhotos(
           photoId: photo.id,
           isNsfw: false,
           confidence: 0.5,
-          categories: ["error"],
-          analysis: "Scanning failed - please try again",
+          categories: ['error'],
+          analysis: 'Scanning failed - please try again',
         });
       }
     }
 
     return results;
   } catch (error) {
-    console.error("Error scanning photos:", error);
-    throw new Error("Failed to scan photos");
+    console.error('Error scanning photos:', error);
+    throw new Error('Failed to scan photos');
   }
 }
 
@@ -127,16 +125,16 @@ function fileToBase64(file: File): Promise<string> {
     reader.onload = () => {
       const result = reader.result as string;
       // Extract base64 part (remove data:image/type;base64, prefix)
-      const base64 = result.split(",")[1];
+      const base64 = result.split(',')[1];
       if (!base64) {
-        reject(new Error("Failed to convert file to base64"));
+        reject(new Error('Failed to convert file to base64'));
         return;
       }
       resolve(base64);
     };
 
     reader.onerror = () => {
-      reject(new Error("Failed to read file"));
+      reject(new Error('Failed to read file'));
     };
 
     reader.readAsDataURL(file);
@@ -146,10 +144,7 @@ function fileToBase64(file: File): Promise<string> {
 /**
  * Scan a single photo for NSFW content
  */
-export async function scanSinglePhoto(
-  photo: PhotoItem,
-  file: File,
-): Promise<ScanResult> {
+export async function scanSinglePhoto(photo: PhotoItem, file: File): Promise<ScanResult> {
   const results = await scanMultiplePhotos([photo], [file]);
   return results[0];
 }

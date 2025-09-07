@@ -1,19 +1,19 @@
 /**
  * Premium Diamond-Grade Professional Enterprise System Main Entry Point
- * 
+ *
  * This module provides the main entry point for initializing and running the enterprise system.
  * It coordinates all enterprise components and provides a unified interface for system management.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Architecture Standards
  */
 
-import { 
-  initializeEnterpriseSystem, 
-  getEnterpriseSystemState, 
+import {
+  initializeEnterpriseSystem,
+  getEnterpriseSystemState,
   isEnterpriseSystemHealthy,
-  getEnterpriseHealthSummary 
+  getEnterpriseHealthSummary,
 } from './index';
 
 // Enterprise system configuration
@@ -72,7 +72,7 @@ async function performEnterpriseInitialization(): Promise<void> {
     // Step 1: Initialize core enterprise system
     console.log('🔧 Step 1: Initializing Enterprise Core...');
     const state = await initializeEnterpriseSystem(enterpriseConfig);
-    
+
     console.log('✅ Enterprise Core Initialized');
     console.log(`📊 System Status: ${state.status}`);
     console.log(`🏗️  Services Registered: ${state.metrics.servicesCount}`);
@@ -81,7 +81,7 @@ async function performEnterpriseInitialization(): Promise<void> {
     // Step 2: Verify system health
     console.log('🏥 Step 2: Verifying System Health...');
     const isHealthy = isEnterpriseSystemHealthy();
-    
+
     if (isHealthy) {
       console.log('✅ System Health Verified');
     } else {
@@ -91,7 +91,7 @@ async function performEnterpriseInitialization(): Promise<void> {
     // Step 3: Display system summary
     console.log('📋 Step 3: Generating System Summary...');
     const healthSummary = getEnterpriseHealthSummary();
-    
+
     console.log('📊 Enterprise System Summary:');
     console.log(`   Status: ${healthSummary.status}`);
     console.log(`   Uptime: ${Math.round(healthSummary.uptime / 1000)}s`);
@@ -114,7 +114,6 @@ async function performEnterpriseInitialization(): Promise<void> {
     console.log('   ✅ API Management with Security');
     console.log('   ✅ Graceful Shutdown and Error Recovery');
     console.log('   ✅ Real-time Analytics and Reporting');
-
   } catch (error) {
     console.error('❌ Enterprise System Initialization Failed:', error);
     throw error;
@@ -127,7 +126,7 @@ async function performEnterpriseInitialization(): Promise<void> {
 async function setupSystemMonitoring(): Promise<void> {
   try {
     const state = getEnterpriseSystemState();
-    
+
     // Setup health check monitoring
     if (state.healthMonitor) {
       console.log('🏥 Health Monitor: Active');
@@ -142,14 +141,13 @@ async function setupSystemMonitoring(): Promise<void> {
     if (state.serviceContainer) {
       const runningServices = state.serviceContainer.getRunningServices();
       console.log(`🏗️  Running Services: ${runningServices.length}`);
-      
+
       runningServices.forEach(serviceName => {
         console.log(`   - ${serviceName}`);
       });
     }
 
     console.log('✅ System Monitoring Setup Complete');
-
   } catch (error) {
     console.error('❌ System Monitoring Setup Failed:', error);
     throw error;
@@ -165,15 +163,15 @@ async function registerEventHandlers(): Promise<void> {
     const container = state.serviceContainer;
 
     // Register service lifecycle event handlers
-    container.on('service:initialized', (descriptor) => {
+    container.on('service:initialized', descriptor => {
       console.log(`🔧 Service Initialized: ${descriptor.name}`);
     });
 
-    container.on('service:started', (instance) => {
+    container.on('service:started', instance => {
       console.log(`🚀 Service Started: ${instance.service.name}`);
     });
 
-    container.on('service:stopped', (instance) => {
+    container.on('service:stopped', instance => {
       console.log(`🛑 Service Stopped: ${instance.service.name}`);
     });
 
@@ -189,14 +187,14 @@ async function registerEventHandlers(): Promise<void> {
         }
       });
 
-      state.healthMonitor.on('alert:triggered', (alert) => {
+      state.healthMonitor.on('alert:triggered', alert => {
         console.log(`🚨 Alert Triggered: ${alert.title} - ${alert.message}`);
       });
     }
 
     // Register API management event handlers
     if (state.apiManager) {
-      state.apiManager.on('api:request', (request) => {
+      state.apiManager.on('api:request', request => {
         // Log API requests (could be enhanced with rate limiting)
         console.log(`📡 API Request: ${request.method} ${request.path}`);
       });
@@ -204,13 +202,14 @@ async function registerEventHandlers(): Promise<void> {
       state.apiManager.on('api:response', (response, request) => {
         // Log API responses
         if (response.status >= 400) {
-          console.warn(`⚠️  API Error Response: ${response.status} ${request.method} ${request.path}`);
+          console.warn(
+            `⚠️  API Error Response: ${response.status} ${request.method} ${request.path}`
+          );
         }
       });
     }
 
     console.log('✅ Event Handlers Registered');
-
   } catch (error) {
     console.error('❌ Event Handler Registration Failed:', error);
     throw error;
@@ -230,7 +229,7 @@ export function getEnterpriseSystemStatus(): {
 } {
   try {
     const summary = getEnterpriseHealthSummary();
-    
+
     return {
       initialized: enterpriseInitialized,
       healthy: summary.healthy,
@@ -264,7 +263,7 @@ export async function shutdownEnterpriseSystem(): Promise<void> {
     console.log('🛑 Initiating Enterprise System Shutdown...');
 
     const state = getEnterpriseSystemState();
-    
+
     // Stop API manager
     if (state.apiManager) {
       await state.apiManager.stop();
@@ -285,7 +284,6 @@ export async function shutdownEnterpriseSystem(): Promise<void> {
     initializationPromise = null;
 
     console.log('✅ Enterprise System Shutdown Complete');
-
   } catch (error) {
     console.error('❌ Enterprise System Shutdown Failed:', error);
     throw error;
@@ -297,12 +295,12 @@ export async function shutdownEnterpriseSystem(): Promise<void> {
  */
 export async function restartEnterpriseSystem(): Promise<void> {
   console.log('🔄 Restarting Enterprise System...');
-  
+
   try {
     await shutdownEnterpriseSystem();
     await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
     await initializeEnterpriseSystemMain();
-    
+
     console.log('✅ Enterprise System Restart Complete');
   } catch (error) {
     console.error('❌ Enterprise System Restart Failed:', error);
@@ -326,15 +324,15 @@ export function isEnterpriseSystemReady(): boolean {
  */
 export async function waitForEnterpriseSystem(timeout: number = 30000): Promise<boolean> {
   const startTime = Date.now();
-  
+
   while (Date.now() - startTime < timeout) {
     if (isEnterpriseSystemReady()) {
       return true;
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
-  
+
   return false;
 }
 

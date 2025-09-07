@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise API Management System
- * 
+ *
  * This module implements a comprehensive API management system with key rotation,
  * rate limiting, analytics, and enterprise-grade security features.
- * 
+ *
  * Features:
  * - API key management with automatic rotation
  * - Advanced rate limiting with multiple strategies
@@ -15,7 +15,7 @@
  * - Caching and performance optimization
  * - Integration with external API gateways
  * - Compliance and audit logging
- * 
+ *
  * @author: Enterprise API Team
  * @version: 2.0.0
  * @compliance: Enterprise API Standards
@@ -31,7 +31,7 @@ export enum APIKeyType {
   DEVELOPMENT = 'DEVELOPMENT',
   TESTING = 'TESTING',
   PARTNER = 'PARTNER',
-  INTERNAL = 'INTERNAL'
+  INTERNAL = 'INTERNAL',
 }
 
 // API key status
@@ -40,7 +40,7 @@ export enum APIKeyStatus {
   INACTIVE = 'INACTIVE',
   EXPIRED = 'EXPIRED',
   REVOKED = 'REVOKED',
-  PENDING_ROTATION = 'PENDING_ROTATION'
+  PENDING_ROTATION = 'PENDING_ROTATION',
 }
 
 // Rate limiting strategies
@@ -48,7 +48,7 @@ export enum RateLimitStrategy {
   FIXED_WINDOW = 'FIXED_WINDOW',
   SLIDING_WINDOW = 'SLIDING_WINDOW',
   TOKEN_BUCKET = 'TOKEN_BUCKET',
-  LEAKY_BUCKET = 'LEAKY_BUCKET'
+  LEAKY_BUCKET = 'LEAKY_BUCKET',
 }
 
 // API request methods
@@ -59,7 +59,7 @@ export enum APIMethod {
   DELETE = 'DELETE',
   PATCH = 'PATCH',
   HEAD = 'HEAD',
-  OPTIONS = 'OPTIONS'
+  OPTIONS = 'OPTIONS',
 }
 
 // API key interface
@@ -267,10 +267,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   private cleanupTimer?: NodeJS.Timeout;
   private analyticsTimer?: NodeJS.Timeout;
 
-  constructor(
-    environment: EnterpriseEnvironmentConfig,
-    config: Partial<APIManagerConfig> = {}
-  ) {
+  constructor(environment: EnterpriseEnvironmentConfig, config: Partial<APIManagerConfig> = {}) {
     super();
     this.environment = environment;
     this.config = {
@@ -425,7 +422,7 @@ export class EnterpriseAPIManager extends EventEmitter {
       method: APIMethod.GET,
       authRequired: false,
       permissions: [],
-      handler: async (request) => {
+      handler: async request => {
         return {
           id: this.generateId(),
           status: 200,
@@ -454,7 +451,7 @@ export class EnterpriseAPIManager extends EventEmitter {
       method: APIMethod.GET,
       authRequired: true,
       permissions: ['api_keys:read'],
-      handler: async (request) => {
+      handler: async request => {
         const keys = Array.from(this.apiKeys.values()).map(key => ({
           id: key.id,
           name: key.name,
@@ -490,9 +487,9 @@ export class EnterpriseAPIManager extends EventEmitter {
       method: APIMethod.GET,
       authRequired: true,
       permissions: ['analytics:read'],
-      handler: async (request) => {
+      handler: async request => {
         const analytics = this.getAnalyticsSummary();
-        
+
         return {
           id: this.generateId(),
           status: 200,
@@ -566,10 +563,11 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   private async rotateKeys(): Promise<void> {
     const now = Date.now();
-    const keysToRotate = Array.from(this.apiKeys.values()).filter(key => 
-      key.rotationConfig?.enabled && 
-      key.rotationConfig.nextRotation && 
-      key.rotationConfig.nextRotation <= now
+    const keysToRotate = Array.from(this.apiKeys.values()).filter(
+      key =>
+        key.rotationConfig?.enabled &&
+        key.rotationConfig.nextRotation &&
+        key.rotationConfig.nextRotation <= now
     );
 
     for (const key of keysToRotate) {
@@ -679,14 +677,14 @@ export class EnterpriseAPIManager extends EventEmitter {
   private calculateAverageResponseTime(events: APIAnalyticsEvent[]): number {
     const responseEvents = events.filter(e => e.eventType === 'response' && e.duration);
     if (responseEvents.length === 0) return 0;
-    
+
     const totalDuration = responseEvents.reduce((sum, e) => sum + (e.duration || 0), 0);
     return totalDuration / responseEvents.length;
   }
 
   private getTopEndpoints(events: APIAnalyticsEvent[]): Array<{ path: string; count: number }> {
     const endpointCounts = new Map<string, number>();
-    
+
     events.forEach(event => {
       const count = endpointCounts.get(event.path) || 0;
       endpointCounts.set(event.path, count + 1);
@@ -701,18 +699,20 @@ export class EnterpriseAPIManager extends EventEmitter {
   private calculateErrorRate(events: APIAnalyticsEvent[]): number {
     const totalRequests = events.filter(e => e.eventType === 'request').length;
     const totalErrors = events.filter(e => e.eventType === 'error').length;
-    
+
     if (totalRequests === 0) return 0;
     return (totalErrors / totalRequests) * 100;
   }
 
   private getStatusCodeDistribution(events: APIAnalyticsEvent[]): Record<number, number> {
     const distribution: Record<number, number> = {};
-    
-    events.filter(e => e.eventType === 'response' && e.status).forEach(event => {
-      const status = event.status!;
-      distribution[status] = (distribution[status] || 0) + 1;
-    });
+
+    events
+      .filter(e => e.eventType === 'response' && e.status)
+      .forEach(event => {
+        const status = event.status!;
+        distribution[status] = (distribution[status] || 0) + 1;
+      });
 
     return distribution;
   }
@@ -804,27 +804,27 @@ export class EnterpriseAPIManager extends EventEmitter {
   // Request Processing
   async processRequest(request: APIRequestContext): Promise<APIResponseContext> {
     const startTime = Date.now();
-    
+
     try {
       this.emit('api:request', request);
 
       // Authenticate request
-      if (!await this.authenticateRequest(request)) {
+      if (!(await this.authenticateRequest(request))) {
         return this.createErrorResponse(401, 'Unauthorized', request);
       }
 
       // Authorize request
-      if (!await this.authorizeRequest(request)) {
+      if (!(await this.authorizeRequest(request))) {
         return this.createErrorResponse(403, 'Forbidden', request);
       }
 
       // Check rate limits
-      if (!await this.checkRateLimits(request)) {
+      if (!(await this.checkRateLimits(request))) {
         return this.createErrorResponse(429, 'Too Many Requests', request);
       }
 
       // Check security
-      if (!await this.checkSecurity(request)) {
+      if (!(await this.checkSecurity(request))) {
         return this.createErrorResponse(403, 'Security Check Failed', request);
       }
 
@@ -879,7 +879,6 @@ export class EnterpriseAPIManager extends EventEmitter {
 
       this.emit('api:response', response, transformedRequest);
       return response;
-
     } catch (error) {
       const errorResponse = this.createErrorResponse(500, 'Internal Server Error', request);
       this.emit('api:error', error as Error, request);
@@ -892,7 +891,8 @@ export class EnterpriseAPIManager extends EventEmitter {
       return false;
     }
 
-    const apiKey = request.headers['x-api-key'] || request.headers['authorization']?.replace('Bearer ', '');
+    const apiKey =
+      request.headers['x-api-key'] || request.headers['authorization']?.replace('Bearer ', '');
     if (!apiKey) {
       return false;
     }
@@ -978,8 +978,8 @@ export class EnterpriseAPIManager extends EventEmitter {
         requestId: request.id,
         method: request.method,
         path: request.path,
-        details: { 
-          clientIP: request.clientIP, 
+        details: {
+          clientIP: request.clientIP,
           apiKeyId: request.apiKey.id,
           requests: state.requests,
           limit: this.config.rateLimiting.defaultLimit,
@@ -1003,8 +1003,8 @@ export class EnterpriseAPIManager extends EventEmitter {
     // Check suspicious activity
     if (this.suspiciousIPs.has(request.clientIP)) {
       const recentEvents = this.analyticsEvents.filter(
-        event => event.metadata?.clientIP === request.clientIP &&
-        event.timestamp > Date.now() - 3600000 // Last hour
+        event =>
+          event.metadata?.clientIP === request.clientIP && event.timestamp > Date.now() - 3600000 // Last hour
       ).length;
 
       if (recentEvents > this.config.security.suspiciousIPThreshold) {
@@ -1021,7 +1021,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   private getFromCache(request: APIRequestContext, route: APIRoute): APIResponseContext | null {
     if (!route.cacheConfig?.enabled) return null;
 
-    const cacheKey = route.cacheConfig.keyGenerator 
+    const cacheKey = route.cacheConfig.keyGenerator
       ? route.cacheConfig.keyGenerator(request)
       : `${request.method}:${request.path}:${JSON.stringify(request.query)}`;
 
@@ -1034,10 +1034,14 @@ export class EnterpriseAPIManager extends EventEmitter {
     return null;
   }
 
-  private setToCache(request: APIRequestContext, response: APIResponseContext, route: APIRoute): void {
+  private setToCache(
+    request: APIRequestContext,
+    response: APIResponseContext,
+    route: APIRoute
+  ): void {
     if (!route.cacheConfig?.enabled) return;
 
-    const cacheKey = route.cacheConfig.keyGenerator 
+    const cacheKey = route.cacheConfig.keyGenerator
       ? route.cacheConfig.keyGenerator(request)
       : `${request.method}:${request.path}:${JSON.stringify(request.query)}`;
 
@@ -1045,7 +1049,11 @@ export class EnterpriseAPIManager extends EventEmitter {
     this.cache.set(cacheKey, { data: response, expires });
   }
 
-  private createErrorResponse(status: number, message: string, request: APIRequestContext): APIResponseContext {
+  private createErrorResponse(
+    status: number,
+    message: string,
+    request: APIRequestContext
+  ): APIResponseContext {
     return {
       id: this.generateId(),
       status,
@@ -1060,7 +1068,7 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   private recordAnalyticsEvent(event: APIAnalyticsEvent): void {
     this.analyticsEvents.push(event);
-    
+
     // Keep only recent events
     const cutoff = Date.now() - this.config.analytics.retention;
     this.analyticsEvents = this.analyticsEvents.filter(e => e.timestamp > cutoff);
@@ -1082,14 +1090,15 @@ export class EnterpriseAPIManager extends EventEmitter {
   getAnalyticsSummary(): any {
     const now = Date.now();
     const last24Hours = this.analyticsEvents.filter(e => e.timestamp > now - 86400000);
-    
+
     return {
       totalRequests: last24Hours.filter(e => e.eventType === 'request').length,
       totalResponses: last24Hours.filter(e => e.eventType === 'response').length,
       totalErrors: last24Hours.filter(e => e.eventType === 'error').length,
       averageResponseTime: this.calculateAverageResponseTime(last24Hours),
       errorRate: this.calculateErrorRate(last24Hours),
-      activeKeys: Array.from(this.apiKeys.values()).filter(k => k.status === APIKeyStatus.ACTIVE).length,
+      activeKeys: Array.from(this.apiKeys.values()).filter(k => k.status === APIKeyStatus.ACTIVE)
+        .length,
       totalKeys: this.apiKeys.size,
       blockedIPs: this.blockedIPs.size,
       suspiciousIPs: this.suspiciousIPs.size,
@@ -1098,17 +1107,17 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   getAnalyticsEvents(eventType?: string, limit?: number): APIAnalyticsEvent[] {
     let events = this.analyticsEvents;
-    
+
     if (eventType) {
       events = events.filter(e => e.eventType === eventType);
     }
-    
+
     events = events.sort((a, b) => b.timestamp - a.timestamp);
-    
+
     if (limit) {
       events = events.slice(0, limit);
     }
-    
+
     return events;
   }
 
@@ -1118,8 +1127,10 @@ export class EnterpriseAPIManager extends EventEmitter {
 
   getCacheStats(): { size: number; hitRate: number } {
     const totalRequests = this.analyticsEvents.filter(e => e.eventType === 'response').length;
-    const cachedRequests = this.analyticsEvents.filter(e => e.eventType === 'response' && e.metadata?.cached).length;
-    
+    const cachedRequests = this.analyticsEvents.filter(
+      e => e.eventType === 'response' && e.metadata?.cached
+    ).length;
+
     return {
       size: this.cache.size,
       hitRate: totalRequests > 0 ? (cachedRequests / totalRequests) * 100 : 0,

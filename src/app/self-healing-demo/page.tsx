@@ -80,8 +80,8 @@ export default function SelfHealingDemo() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'trigger-healing'
-        })
+          action: 'trigger-healing',
+        }),
       });
       const data = await response.json();
       if (data.success) {
@@ -113,10 +113,10 @@ export default function SelfHealingDemo() {
             context: {
               component: 'system-core',
               operation: 'critical-process',
-              severity: 'critical'
-            }
-          }
-        })
+              severity: 'critical',
+            },
+          },
+        }),
       });
       const data = await response.json();
       if (data.success) {
@@ -161,8 +161,8 @@ export default function SelfHealingDemo() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'comprehensive-healing'
-        })
+          action: 'comprehensive-healing',
+        }),
       });
       const data = await response.json();
       if (data.success) {
@@ -181,7 +181,7 @@ export default function SelfHealingDemo() {
   useEffect(() => {
     fetchStatus();
     fetchHistory();
-    
+
     // Set up periodic status updates
     const interval = setInterval(() => {
       fetchStatus();
@@ -192,13 +192,20 @@ export default function SelfHealingDemo() {
 
   const getGradeColor = (grade: string) => {
     switch (grade) {
-      case 'A+': return 'bg-green-500 text-white';
-      case 'A': return 'bg-green-400 text-white';
-      case 'B': return 'bg-blue-400 text-white';
-      case 'C': return 'bg-yellow-400 text-white';
-      case 'D': return 'bg-orange-400 text-white';
-      case 'F': return 'bg-red-500 text-white';
-      default: return 'bg-gray-400 text-white';
+      case 'A+':
+        return 'bg-green-500 text-white';
+      case 'A':
+        return 'bg-green-400 text-white';
+      case 'B':
+        return 'bg-blue-400 text-white';
+      case 'C':
+        return 'bg-yellow-400 text-white';
+      case 'D':
+        return 'bg-orange-400 text-white';
+      case 'F':
+        return 'bg-red-500 text-white';
+      default:
+        return 'bg-gray-400 text-white';
     }
   };
 
@@ -234,15 +241,15 @@ export default function SelfHealingDemo() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">System Status</CardTitle>
-                <div className={`h-3 w-3 rounded-full ${systemStatus?.selfHealing.isInitialized ? 'bg-green-500' : 'bg-red-500'}`} />
+                <div
+                  className={`h-3 w-3 rounded-full ${systemStatus?.selfHealing.isInitialized ? 'bg-green-500' : 'bg-red-500'}`}
+                />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {systemStatus?.selfHealing.isInitialized ? 'Active' : 'Inactive'}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Self-Healing System
-                </p>
+                <p className="text-xs text-muted-foreground">Self-Healing System</p>
               </CardContent>
             </Card>
 
@@ -253,9 +260,7 @@ export default function SelfHealingDemo() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{systemStatus?.healingHistory.total || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  Healing cycles completed
-                </p>
+                <p className="text-xs text-muted-foreground">Healing cycles completed</p>
               </CardContent>
             </Card>
 
@@ -266,28 +271,34 @@ export default function SelfHealingDemo() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {systemStatus?.healingHistory.total ? 
-                    Math.round((systemStatus.healingHistory.successful / systemStatus.healingHistory.total) * 100) : 0}%
+                  {systemStatus?.healingHistory.total
+                    ? Math.round(
+                        (systemStatus.healingHistory.successful /
+                          systemStatus.healingHistory.total) *
+                          100
+                      )
+                    : 0}
+                  %
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Healing success rate
-                </p>
+                <p className="text-xs text-muted-foreground">Healing success rate</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Avg Score</CardTitle>
-                <div className={`h-3 w-3 rounded-full ${systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 80 ? 'bg-green-500' : systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 60 ? 'bg-yellow-500' : 'bg-red-500'}`} />
+                <div
+                  className={`h-3 w-3 rounded-full ${systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 80 ? 'bg-green-500' : systemStatus?.healingHistory.averageScore && systemStatus.healingHistory.averageScore > 60 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {systemStatus?.healingHistory.averageScore ? 
-                    Math.round(systemStatus.healingHistory.averageScore) : 0}/100
+                  {systemStatus?.healingHistory.averageScore
+                    ? Math.round(systemStatus.healingHistory.averageScore)
+                    : 0}
+                  /100
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Average healing score
-                </p>
+                <p className="text-xs text-muted-foreground">Average healing score</p>
               </CardContent>
             </Card>
           </div>
@@ -368,26 +379,50 @@ export default function SelfHealingDemo() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span>Auto Detection</span>
-                    <Badge variant={systemStatus.selfHealing.config.enableAutoDetection ? "default" : "secondary"}>
-                      {systemStatus.selfHealing.config.enableAutoDetection ? "Enabled" : "Disabled"}
+                    <Badge
+                      variant={
+                        systemStatus.selfHealing.config.enableAutoDetection
+                          ? 'default'
+                          : 'secondary'
+                      }
+                    >
+                      {systemStatus.selfHealing.config.enableAutoDetection ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Auto Fix</span>
-                    <Badge variant={systemStatus.selfHealing.config.enableAutoFix ? "default" : "secondary"}>
-                      {systemStatus.selfHealing.config.enableAutoFix ? "Enabled" : "Disabled"}
+                    <Badge
+                      variant={
+                        systemStatus.selfHealing.config.enableAutoFix ? 'default' : 'secondary'
+                      }
+                    >
+                      {systemStatus.selfHealing.config.enableAutoFix ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Real-time Monitoring</span>
-                    <Badge variant={systemStatus.selfHealing.config.enableRealTimeMonitoring ? "default" : "secondary"}>
-                      {systemStatus.selfHealing.config.enableRealTimeMonitoring ? "Enabled" : "Disabled"}
+                    <Badge
+                      variant={
+                        systemStatus.selfHealing.config.enableRealTimeMonitoring
+                          ? 'default'
+                          : 'secondary'
+                      }
+                    >
+                      {systemStatus.selfHealing.config.enableRealTimeMonitoring
+                        ? 'Enabled'
+                        : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Notifications</span>
-                    <Badge variant={systemStatus.selfHealing.config.notificationEnabled ? "default" : "secondary"}>
-                      {systemStatus.selfHealing.config.notificationEnabled ? "Enabled" : "Disabled"}
+                    <Badge
+                      variant={
+                        systemStatus.selfHealing.config.notificationEnabled
+                          ? 'default'
+                          : 'secondary'
+                      }
+                    >
+                      {systemStatus.selfHealing.config.notificationEnabled ? 'Enabled' : 'Disabled'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
@@ -416,9 +451,7 @@ export default function SelfHealingDemo() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Scanner Status</span>
-                    <Badge variant="outline">
-                      {systemStatus.scanner.scannerStatus || 'idle'}
-                    </Badge>
+                    <Badge variant="outline">{systemStatus.scanner.scannerStatus || 'idle'}</Badge>
                   </div>
                 </CardContent>
               </Card>
@@ -430,8 +463,10 @@ export default function SelfHealingDemo() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center justify-between">
                     <span>Monitoring Status</span>
-                    <Badge variant={systemStatus.errorHandler.isMonitoring ? "default" : "secondary"}>
-                      {systemStatus.errorHandler.isMonitoring ? "Active" : "Inactive"}
+                    <Badge
+                      variant={systemStatus.errorHandler.isMonitoring ? 'default' : 'secondary'}
+                    >
+                      {systemStatus.errorHandler.isMonitoring ? 'Active' : 'Inactive'}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
@@ -459,14 +494,14 @@ export default function SelfHealingDemo() {
         <TabsContent value="healing" className="space-y-4">
           {healingHistory.length > 0 ? (
             <div className="space-y-4">
-              {healingHistory.map((healing) => (
+              {healingHistory.map(healing => (
                 <Card key={healing.healingId}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg">Healing Cycle: {healing.healingId}</CardTitle>
                       <div className="flex items-center gap-2">
                         <Badge className={getStatusColor(healing.success)}>
-                          {healing.success ? "SUCCESS" : "FAILED"}
+                          {healing.success ? 'SUCCESS' : 'FAILED'}
                         </Badge>
                         <Badge className={getGradeColor(healing.scanGrade)}>
                           {healing.scanGrade}
@@ -486,7 +521,9 @@ export default function SelfHealingDemo() {
                       </div>
                       <div>
                         <span className="font-medium">Issues Fixed:</span>
-                        <span className="ml-2">{healing.issuesFixed}/{healing.issuesDetected}</span>
+                        <span className="ml-2">
+                          {healing.issuesFixed}/{healing.issuesDetected}
+                        </span>
                       </div>
                       <div>
                         <span className="font-medium">Remaining:</span>
@@ -507,9 +544,22 @@ export default function SelfHealingDemo() {
                         <div>
                           <div className="flex justify-between text-sm mb-1">
                             <span>Issues Fixed</span>
-                            <span>{healing.issuesFixed} ({healing.issuesDetected > 0 ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100) : 0}%)</span>
+                            <span>
+                              {healing.issuesFixed} (
+                              {healing.issuesDetected > 0
+                                ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100)
+                                : 0}
+                              %)
+                            </span>
                           </div>
-                          <Progress value={healing.issuesDetected > 0 ? (healing.issuesFixed / healing.issuesDetected) * 100 : 0} className="h-2" />
+                          <Progress
+                            value={
+                              healing.issuesDetected > 0
+                                ? (healing.issuesFixed / healing.issuesDetected) * 100
+                                : 0
+                            }
+                            className="h-2"
+                          />
                         </div>
                         <div>
                           <div className="flex justify-between text-sm mb-1">
@@ -548,7 +598,7 @@ export default function SelfHealingDemo() {
         <TabsContent value="details" className="space-y-4">
           {healingHistory.length > 0 ? (
             <div className="space-y-4">
-              {healingHistory.map((healing) => (
+              {healingHistory.map(healing => (
                 <Card key={healing.healingId}>
                   <CardHeader>
                     <CardTitle className="text-lg">Detailed Report - {healing.healingId}</CardTitle>
@@ -573,13 +623,22 @@ export default function SelfHealingDemo() {
                             </div>
                             <div className="flex justify-between">
                               <span>Issues Remaining:</span>
-                              <span className={healing.issuesRemaining > 0 ? "text-red-600" : "text-green-600"}>
+                              <span
+                                className={
+                                  healing.issuesRemaining > 0 ? 'text-red-600' : 'text-green-600'
+                                }
+                              >
                                 {healing.issuesRemaining}
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span>Success Rate:</span>
-                              <span>{healing.issuesDetected > 0 ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100) : 100}%</span>
+                              <span>
+                                {healing.issuesDetected > 0
+                                  ? Math.round((healing.issuesFixed / healing.issuesDetected) * 100)
+                                  : 100}
+                                %
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -588,13 +647,23 @@ export default function SelfHealingDemo() {
                           <div className="space-y-2 text-sm">
                             <div className="flex justify-between">
                               <span>Scan Score:</span>
-                              <span className={healing.scanScore > 80 ? "text-green-600" : healing.scanScore > 60 ? "text-yellow-600" : "text-red-600"}>
+                              <span
+                                className={
+                                  healing.scanScore > 80
+                                    ? 'text-green-600'
+                                    : healing.scanScore > 60
+                                      ? 'text-yellow-600'
+                                      : 'text-red-600'
+                                }
+                              >
                                 {healing.scanScore}/100
                               </span>
                             </div>
                             <div className="flex justify-between">
                               <span>Scan Grade:</span>
-                              <span className={`px-2 py-1 rounded ${getGradeColor(healing.scanGrade)}`}>
+                              <span
+                                className={`px-2 py-1 rounded ${getGradeColor(healing.scanGrade)}`}
+                              >
                                 {healing.scanGrade}
                               </span>
                             </div>
@@ -604,8 +673,8 @@ export default function SelfHealingDemo() {
                             </div>
                             <div className="flex justify-between">
                               <span>Overall Success:</span>
-                              <span className={healing.success ? "text-green-600" : "text-red-600"}>
-                                {healing.success ? "Successful" : "Failed"}
+                              <span className={healing.success ? 'text-green-600' : 'text-red-600'}>
+                                {healing.success ? 'Successful' : 'Failed'}
                               </span>
                             </div>
                           </div>
@@ -620,7 +689,9 @@ export default function SelfHealingDemo() {
                       <div>
                         <h4 className="font-medium mb-2">Technical Details</h4>
                         <details className="text-sm">
-                          <summary className="cursor-pointer text-blue-600">View Raw Healing Data</summary>
+                          <summary className="cursor-pointer text-blue-600">
+                            View Raw Healing Data
+                          </summary>
                           <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto max-h-96">
                             {JSON.stringify(healing, null, 2)}
                           </pre>

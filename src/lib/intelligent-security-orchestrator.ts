@@ -30,13 +30,13 @@ export class IntelligentSecurityOrchestrator {
   public getSecurityStatus(): { level: string; operational: boolean } {
     return {
       level: this.securityLevel,
-      operational: this.isInitialized
+      operational: this.isInitialized,
     };
   }
 
   public getEcosystemStatus(): { securityPosture: string } {
     return {
-      securityPosture: 'excellent'
+      securityPosture: 'excellent',
     };
   }
 

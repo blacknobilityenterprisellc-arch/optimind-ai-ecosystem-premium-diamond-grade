@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from './db';
 
 // Rate limiting interface
 interface RateLimitResult {
@@ -36,7 +36,7 @@ setInterval(() => {
 export async function checkRateLimit(
   userId: string,
   action: string,
-  config: RateLimitConfig,
+  config: RateLimitConfig
 ): Promise<RateLimitResult> {
   const key = `${userId}:${action}`;
   const now = Date.now();
@@ -84,15 +84,12 @@ export async function getUserCredits(userId: string): Promise<number> {
 
     return user?.credits || 0;
   } catch (error) {
-    console.error("Error getting user credits:", error);
+    console.error('Error getting user credits:', error);
     return 0;
   }
 }
 
-export async function deductUserCredits(
-  userId: string,
-  credits: number,
-): Promise<number> {
+export async function deductUserCredits(userId: string, credits: number): Promise<number> {
   try {
     const user = await db.user.findUnique({
       where: { id: userId },
@@ -100,7 +97,7 @@ export async function deductUserCredits(
     });
 
     if (!user || user.credits < credits) {
-      throw new Error("Insufficient credits");
+      throw new Error('Insufficient credits');
     }
 
     const updatedUser = await db.user.update({
@@ -118,14 +115,14 @@ export async function deductUserCredits(
       data: {
         userId,
         amount: -credits,
-        type: "CONTENT_GENERATION",
+        type: 'CONTENT_GENERATION',
         description: `Content generation cost: ${credits} credits`,
       },
     });
 
     return updatedUser.credits;
   } catch (error) {
-    console.error("Error deducting user credits:", error);
+    console.error('Error deducting user credits:', error);
     throw error;
   }
 }
@@ -133,7 +130,7 @@ export async function deductUserCredits(
 export async function addUserCredits(
   userId: string,
   credits: number,
-  description: string,
+  description: string
 ): Promise<number> {
   try {
     const updatedUser = await db.user.update({
@@ -151,14 +148,14 @@ export async function addUserCredits(
       data: {
         userId,
         amount: credits,
-        type: "CREDIT_PURCHASE",
+        type: 'CREDIT_PURCHASE',
         description,
       },
     });
 
     return updatedUser.credits;
   } catch (error) {
-    console.error("Error adding user credits:", error);
+    console.error('Error adding user credits:', error);
     throw error;
   }
 }
@@ -168,7 +165,7 @@ export async function getUserRateLimitStatus(userId: string): Promise<{
   contentGeneration: RateLimitResult;
   dailyLimit: { used: number; limit: number; resetTime: Date };
 }> {
-  const contentGeneration = await checkRateLimit(userId, "content_generation", {
+  const contentGeneration = await checkRateLimit(userId, 'content_generation', {
     requests: 100,
     window: 60 * 60 * 1000, // 1 hour
   });

@@ -9,7 +9,7 @@
  * @license MIT
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 import {
   ApplicationError,
   ValidationError,
@@ -17,9 +17,9 @@ import {
   AuthorizationError,
   NotFoundError,
   RateLimitError,
-} from "@/types";
-import { globalErrorHandler } from "@/lib/error-handler";
-import { ErrorSeverity, ErrorCategory } from "@/lib/error-handler";
+} from '@/types';
+import { globalErrorHandler } from '@/lib/error-handler';
+import { ErrorSeverity, ErrorCategory } from '@/lib/error-handler';
 
 // Error response interface
 export interface ErrorResponse {
@@ -89,17 +89,11 @@ export class ErrorHandlerMiddleware {
   }
 
   // Main error handling method
-  async handleError(
-    error: unknown,
-    request: NextRequest,
-  ): Promise<NextResponse> {
+  async handleError(error: unknown, request: NextRequest): Promise<NextResponse> {
     const enhancedError = this.enhanceError(error);
 
     // Log the error with context
-    await globalErrorHandler.handleError(
-      enhancedError,
-      this.getErrorContext(request),
-    );
+    await globalErrorHandler.handleError(enhancedError, this.getErrorContext(request));
 
     // Create standardized error response
     const errorResponse = this.createErrorResponse(enhancedError, request);
@@ -119,18 +113,15 @@ export class ErrorHandlerMiddleware {
 
     // Handle standard JavaScript errors
     if (error instanceof Error) {
-      return new ApplicationError(error.message, "INTERNAL_ERROR", 500, {
+      return new ApplicationError(error.message, 'INTERNAL_ERROR', 500, {
         stack: error.stack,
       });
     }
 
     // Handle unknown errors
-    return new ApplicationError(
-      "An unexpected error occurred",
-      "UNKNOWN_ERROR",
-      500,
-      { originalError: error },
-    );
+    return new ApplicationError('An unexpected error occurred', 'UNKNOWN_ERROR', 500, {
+      originalError: error,
+    });
   }
 
   // Get error context for logging
@@ -139,19 +130,15 @@ export class ErrorHandlerMiddleware {
       requestId: this.requestId,
       path: request.nextUrl.pathname,
       method: request.method,
-      userAgent: request.headers.get("user-agent") || "unknown",
+      userAgent: request.headers.get('user-agent') || 'unknown',
       ipAddress: this.getClientIP(request),
       timestamp: new Date().toISOString(),
     };
   }
 
   // Create standardized error response
-  private createErrorResponse(
-    error: ApplicationError,
-    request: NextRequest,
-  ): ErrorResponse {
-    const errorConfig =
-      ERROR_MAPPING[error.constructor.name] || DEFAULT_ERROR_CONFIG;
+  private createErrorResponse(error: ApplicationError, request: NextRequest): ErrorResponse {
+    const errorConfig = ERROR_MAPPING[error.constructor.name] || DEFAULT_ERROR_CONFIG;
 
     return {
       success: false,
@@ -173,40 +160,29 @@ export class ErrorHandlerMiddleware {
 
   // Get appropriate HTTP status code
   private getStatusCode(error: ApplicationError): number {
-    return (
-      error.statusCode ||
-      ERROR_MAPPING[error.constructor.name]?.statusCode ||
-      500
-    );
+    return error.statusCode || ERROR_MAPPING[error.constructor.name]?.statusCode || 500;
   }
 
   // Get appropriate headers
   private getHeaders(error: ApplicationError): Record<string, string> {
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      "X-Request-ID": this.requestId,
-      "X-Error-Code": error.code,
-      "X-Error-Severity":
-        ERROR_MAPPING[error.constructor.name]?.severity || ErrorSeverity.HIGH,
-      "X-Error-Category":
-        ERROR_MAPPING[error.constructor.name]?.category || ErrorCategory.SYSTEM,
+      'Content-Type': 'application/json',
+      'X-Request-ID': this.requestId,
+      'X-Error-Code': error.code,
+      'X-Error-Severity': ERROR_MAPPING[error.constructor.name]?.severity || ErrorSeverity.HIGH,
+      'X-Error-Category': ERROR_MAPPING[error.constructor.name]?.category || ErrorCategory.SYSTEM,
     };
 
     // Add security headers for certain error types
-    if (
-      error instanceof AuthenticationError ||
-      error instanceof AuthorizationError
-    ) {
-      headers["WWW-Authenticate"] = "Bearer";
+    if (error instanceof AuthenticationError || error instanceof AuthorizationError) {
+      headers['WWW-Authenticate'] = 'Bearer';
     }
 
     if (error instanceof RateLimitError) {
-      headers["Retry-After"] = "60";
-      headers["X-RateLimit-Limit"] = "100";
-      headers["X-RateLimit-Remaining"] = "0";
-      headers["X-RateLimit-Reset"] = Math.floor(
-        Date.now() / 1000 + 60,
-      ).toString();
+      headers['Retry-After'] = '60';
+      headers['X-RateLimit-Limit'] = '100';
+      headers['X-RateLimit-Remaining'] = '0';
+      headers['X-RateLimit-Reset'] = Math.floor(Date.now() / 1000 + 60).toString();
     }
 
     return headers;
@@ -215,20 +191,20 @@ export class ErrorHandlerMiddleware {
   // Get user-friendly error message
   private getUserMessage(error: ApplicationError): string {
     // In production, return generic messages for security
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === 'production') {
       switch (error.constructor.name) {
         case ValidationError.name:
-          return "Please check your input and try again.";
+          return 'Please check your input and try again.';
         case AuthenticationError.name:
-          return "Authentication failed. Please check your credentials.";
+          return 'Authentication failed. Please check your credentials.';
         case AuthorizationError.name:
           return "You don't have permission to perform this action.";
         case NotFoundError.name:
-          return "The requested resource was not found.";
+          return 'The requested resource was not found.';
         case RateLimitError.name:
-          return "Too many requests. Please try again later.";
+          return 'Too many requests. Please try again later.';
         default:
-          return "An unexpected error occurred. Please try again later.";
+          return 'An unexpected error occurred. Please try again later.';
       }
     }
 
@@ -237,16 +213,14 @@ export class ErrorHandlerMiddleware {
   }
 
   // Get error details (sanitized for production)
-  private getErrorDetails(
-    error: ApplicationError,
-  ): Record<string, any> | undefined {
-    if (process.env.NODE_ENV === "production") {
+  private getErrorDetails(error: ApplicationError): Record<string, any> | undefined {
+    if (process.env.NODE_ENV === 'production') {
       // In production, only include safe details
       const safeDetails: Record<string, any> = {};
 
       if (error.details) {
         // Only include non-sensitive details
-        Object.keys(error.details).forEach((key) => {
+        Object.keys(error.details).forEach(key => {
           if (!this.isSensitiveField(key)) {
             safeDetails[key] = error.details![key];
           }
@@ -263,33 +237,31 @@ export class ErrorHandlerMiddleware {
   // Check if a field is sensitive
   private isSensitiveField(field: string): boolean {
     const sensitiveFields = [
-      "password",
-      "token",
-      "secret",
-      "key",
-      "authorization",
-      "credit_card",
-      "ssn",
-      "social_security",
-      "api_key",
+      'password',
+      'token',
+      'secret',
+      'key',
+      'authorization',
+      'credit_card',
+      'ssn',
+      'social_security',
+      'api_key',
     ];
 
-    return sensitiveFields.some((sensitive) =>
-      field.toLowerCase().includes(sensitive),
-    );
+    return sensitiveFields.some(sensitive => field.toLowerCase().includes(sensitive));
   }
 
   // Get client IP address
   private getClientIP(request: NextRequest): string {
     return (
       (
-        request.headers.get("x-forwarded-for") ||
-        request.headers.get("x-real-ip") ||
-        request.headers.get("cf-connecting-ip") ||
-        "unknown"
+        request.headers.get('x-forwarded-for') ||
+        request.headers.get('x-real-ip') ||
+        request.headers.get('cf-connecting-ip') ||
+        'unknown'
       )
-        ?.split(",")[0]
-        ?.trim() || "unknown"
+        ?.split(',')[0]
+        ?.trim() || 'unknown'
     );
   }
 
@@ -309,9 +281,7 @@ export function createErrorHandler(requestId?: string) {
 }
 
 // Higher-order function for wrapping API route handlers
-export function withErrorHandling<T extends any[]>(
-  handler: (...args: T) => Promise<NextResponse>,
-) {
+export function withErrorHandling<T extends any[]>(handler: (...args: T) => Promise<NextResponse>) {
   return async (...args: T): Promise<NextResponse> => {
     try {
       return await handler(...args);
@@ -326,11 +296,7 @@ export function withErrorHandling<T extends any[]>(
 // Error handling utility functions
 export const errorUtils = {
   // Create validation error
-  createValidationError: (
-    message: string,
-    field?: string,
-    details?: Record<string, any>,
-  ) => {
+  createValidationError: (message: string, field?: string, details?: Record<string, any>) => {
     return new ValidationError(message, field);
   },
 
@@ -359,7 +325,7 @@ export const errorUtils = {
     message: string,
     code: string,
     statusCode?: number,
-    details?: Record<string, any>,
+    details?: Record<string, any>
   ) => {
     return new ApplicationError(message, code, statusCode, details);
   },
@@ -367,7 +333,7 @@ export const errorUtils = {
   // Wrap async function with error handling
   wrapAsync: <T extends any[], R>(
     fn: (...args: T) => Promise<R>,
-    errorHandler?: (error: unknown) => void,
+    errorHandler?: (error: unknown) => void
   ) => {
     return async (...args: T): Promise<R> => {
       try {
@@ -385,9 +351,9 @@ export const errorUtils = {
   isRetryableError: (error: unknown): boolean => {
     if (error instanceof ApplicationError) {
       return (
-        error.code === "NETWORK_ERROR" ||
-        error.code === "TIMEOUT_ERROR" ||
-        error.code === "SERVICE_UNAVAILABLE"
+        error.code === 'NETWORK_ERROR' ||
+        error.code === 'TIMEOUT_ERROR' ||
+        error.code === 'SERVICE_UNAVAILABLE'
       );
     }
     return false;
@@ -395,9 +361,4 @@ export const errorUtils = {
 };
 
 // Export all error handling utilities
-export {
-  ErrorHandlerMiddleware,
-  createErrorHandler,
-  withErrorHandling,
-  errorUtils,
-};
+export { ErrorHandlerMiddleware, createErrorHandler, withErrorHandling, errorUtils };

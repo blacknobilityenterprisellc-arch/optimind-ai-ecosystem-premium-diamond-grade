@@ -3,8 +3,8 @@
  * Validates developer access keys and returns access permissions
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { exclusiveDeveloperAccessService } from "@/lib/exclusive-developer-access";
+import { NextRequest, NextResponse } from 'next/server';
+import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,36 +17,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error:
-            "Missing required fields: keyId, endpoint, method, ipAddress, userAgent",
+          error: 'Missing required fields: keyId, endpoint, method, ipAddress, userAgent',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // Validate access key
-    const result = await exclusiveDeveloperAccessService.validateAccessKey(
-      keyId,
-      {
-        endpoint,
-        method,
-        ipAddress,
-        userAgent,
-      },
-    );
+    const result = await exclusiveDeveloperAccessService.validateAccessKey(keyId, {
+      endpoint,
+      method,
+      ipAddress,
+      userAgent,
+    });
 
     return NextResponse.json({
       success: true,
       validation: result,
     });
   } catch (error) {
-    console.error("Error validating developer access key:", error);
+    console.error('Error validating developer access key:', error);
     return NextResponse.json(
       {
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

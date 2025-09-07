@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from 'react';
 import {
   Eye,
   Download,
@@ -16,18 +16,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Loader2,
-} from "lucide-react";
+} from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import {
   VirtualList,
   ProgressiveImage,
@@ -35,13 +29,13 @@ import {
   useDebounce,
   useThrottle,
   useVirtualScroll,
-} from "@/lib/performance-optimization.tsx";
+} from '@/lib/performance-optimization.tsx';
 
 interface ModerationResult {
   id: string;
   imageId: string;
   filename: string;
-  status: "safe" | "flagged" | "pending" | "quarantined";
+  status: 'safe' | 'flagged' | 'pending' | 'quarantined';
   category: string;
   confidence: number;
   recommendedAction: string;
@@ -72,13 +66,10 @@ export function OptimizedModerationResults({
   containerHeight = 600,
 }: OptimizedModerationResultsProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortField, setSortField] =
-    useState<keyof ModerationResult>("createdAt");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [selectedResults, setSelectedResults] = useState<Set<string>>(
-    new Set(),
-  );
-  const [searchTerm, setSearchTerm] = useState("");
+  const [sortField, setSortField] = useState<keyof ModerationResult>('createdAt');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [selectedResults, setSelectedResults] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState({
     status: [] as string[],
     categories: [] as string[],
@@ -95,25 +86,21 @@ export function OptimizedModerationResults({
     if (debouncedSearchTerm) {
       const searchLower = debouncedSearchTerm.toLowerCase();
       filtered = filtered.filter(
-        (result) =>
+        result =>
           result.imageId.toLowerCase().includes(searchLower) ||
           result.filename.toLowerCase().includes(searchLower) ||
-          result.reviewer?.toLowerCase().includes(searchLower),
+          result.reviewer?.toLowerCase().includes(searchLower)
       );
     }
 
     // Status filter
     if (filters.status.length > 0) {
-      filtered = filtered.filter((result) =>
-        filters.status.includes(result.status),
-      );
+      filtered = filtered.filter(result => filters.status.includes(result.status));
     }
 
     // Category filter
     if (filters.categories.length > 0) {
-      filtered = filtered.filter((result) =>
-        filters.categories.includes(result.category),
-      );
+      filtered = filtered.filter(result => filters.categories.includes(result.category));
     }
 
     // Sort results
@@ -121,12 +108,12 @@ export function OptimizedModerationResults({
       let aValue = a[sortField];
       let bValue = b[sortField];
 
-      if (sortField === "createdAt") {
+      if (sortField === 'createdAt') {
         aValue = new Date(aValue as string).getTime();
         bValue = new Date(bValue as string).getTime();
       }
 
-      if (sortDirection === "asc") {
+      if (sortDirection === 'asc') {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
@@ -145,15 +132,15 @@ export function OptimizedModerationResults({
   // Throttled handlers
   const handleSort = useThrottle((field: keyof ModerationResult) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
-      setSortDirection("desc");
+      setSortDirection('desc');
     }
   }, 300);
 
   const toggleResultSelection = useCallback((id: string) => {
-    setSelectedResults((prev) => {
+    setSelectedResults(prev => {
       const newSelected = new Set(prev);
       if (newSelected.has(id)) {
         newSelected.delete(id);
@@ -165,34 +152,34 @@ export function OptimizedModerationResults({
   }, []);
 
   const exportSelected = useCallback(() => {
-    const selectedData = results.filter((r) => selectedResults.has(r.id));
+    const selectedData = results.filter(r => selectedResults.has(r.id));
     onExport(selectedData);
   }, [results, selectedResults, onExport]);
 
   const getStatusBadge = useCallback((status: string) => {
     switch (status) {
-      case "safe":
+      case 'safe':
         return (
           <Badge className="bg-green-100 text-green-800">
             <CheckCircle className="h-3 w-3 mr-1" />
             Safe
           </Badge>
         );
-      case "flagged":
+      case 'flagged':
         return (
           <Badge className="bg-red-100 text-red-800">
             <AlertTriangle className="h-3 w-3 mr-1" />
             Flagged
           </Badge>
         );
-      case "pending":
+      case 'pending':
         return (
           <Badge className="bg-yellow-100 text-yellow-800">
             <Clock className="h-3 w-3 mr-1" />
             Pending
           </Badge>
         );
-      case "quarantined":
+      case 'quarantined':
         return (
           <Badge className="bg-orange-100 text-orange-800">
             <Shield className="h-3 w-3 mr-1" />
@@ -206,15 +193,15 @@ export function OptimizedModerationResults({
 
   const getActionBadge = useCallback((action: string) => {
     const colors: Record<string, string> = {
-      allow: "bg-green-100 text-green-800",
-      monitor: "bg-blue-100 text-blue-800",
-      quarantine: "bg-red-100 text-red-800",
-      hold_for_review: "bg-yellow-100 text-yellow-800",
+      allow: 'bg-green-100 text-green-800',
+      monitor: 'bg-blue-100 text-blue-800',
+      quarantine: 'bg-red-100 text-red-800',
+      hold_for_review: 'bg-yellow-100 text-yellow-800',
     };
 
     return (
-      <Badge className={colors[action] || "bg-gray-100 text-gray-800"}>
-        {action.replace("_", " ")}
+      <Badge className={colors[action] || 'bg-gray-100 text-gray-800'}>
+        {action.replace('_', ' ')}
       </Badge>
     );
   }, []);
@@ -241,7 +228,7 @@ export function OptimizedModerationResults({
               src={result.thumbnail}
               alt={result.filename}
               className="w-full h-full object-cover rounded"
-              strategy={{ type: "lazy" }}
+              strategy={{ type: 'lazy' }}
               placeholderSrc="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%23f3f4f6'/%3E%3C/svg%3E"
             />
           ) : (
@@ -260,7 +247,7 @@ export function OptimizedModerationResults({
           <p className="text-sm text-gray-600 truncate">{result.filename}</p>
           <div className="flex items-center gap-2 mt-1">
             <Badge variant="outline" className="text-xs">
-              {result.category.replace("_", " ")}
+              {result.category.replace('_', ' ')}
             </Badge>
             {getActionBadge(result.recommendedAction)}
           </div>
@@ -293,30 +280,18 @@ export function OptimizedModerationResults({
         {/* Date */}
         <div className="w-32 text-sm">
           <div>{new Date(result.createdAt).toLocaleDateString()}</div>
-          <div className="text-gray-500">
-            {new Date(result.createdAt).toLocaleTimeString()}
-          </div>
+          <div className="text-gray-500">{new Date(result.createdAt).toLocaleTimeString()}</div>
         </div>
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onViewDetails(result)}
-          >
+          <Button variant="ghost" size="sm" onClick={() => onViewDetails(result)}>
             <Eye className="h-4 w-4" />
           </Button>
         </div>
       </div>
     ),
-    [
-      selectedResults,
-      toggleResultSelection,
-      getStatusBadge,
-      getActionBadge,
-      onViewDetails,
-    ],
+    [selectedResults, toggleResultSelection, getStatusBadge, getActionBadge, onViewDetails]
   );
 
   if (loading) {
@@ -340,9 +315,7 @@ export function OptimizedModerationResults({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Optimized Results</CardTitle>
-              <CardDescription>
-                {filteredAndSortedResults.length} results found
-              </CardDescription>
+              <CardDescription>{filteredAndSortedResults.length} results found</CardDescription>
             </div>
             <div className="flex items-center gap-2">
               {selectedResults.size > 0 && (
@@ -351,10 +324,7 @@ export function OptimizedModerationResults({
                   Export Selected ({selectedResults.size})
                 </Button>
               )}
-              <Button
-                variant="outline"
-                onClick={() => onExport(filteredAndSortedResults)}
-              >
+              <Button variant="outline" onClick={() => onExport(filteredAndSortedResults)}>
                 <Download className="h-4 w-4 mr-2" />
                 Export All
               </Button>
@@ -369,7 +339,7 @@ export function OptimizedModerationResults({
                 type="text"
                 placeholder="Search by image ID, filename, or reviewer..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -378,12 +348,9 @@ export function OptimizedModerationResults({
             <select
               multiple
               value={filters.status}
-              onChange={(e) => {
-                const selected = Array.from(
-                  e.target.selectedOptions,
-                  (option) => option.value,
-                );
-                setFilters((prev) => ({ ...prev, status: selected }));
+              onChange={e => {
+                const selected = Array.from(e.target.selectedOptions, option => option.value);
+                setFilters(prev => ({ ...prev, status: selected }));
               }}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
@@ -399,7 +366,7 @@ export function OptimizedModerationResults({
       {/* Virtual List for Results */}
       <Card>
         <CardContent className="p-0">
-          <LazyLoadComponent strategy={{ type: "eager" }}>
+          <LazyLoadComponent strategy={{ type: 'eager' }}>
             <VirtualList
               items={paginatedResults}
               itemHeight={itemHeight}
@@ -418,17 +385,14 @@ export function OptimizedModerationResults({
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                Showing {startIndex + 1} to{" "}
-                {Math.min(endIndex, filteredAndSortedResults.length)} of{" "}
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredAndSortedResults.length)} of{' '}
                 {filteredAndSortedResults.length} results
               </div>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -450,9 +414,7 @@ export function OptimizedModerationResults({
                     return (
                       <Button
                         key={pageNum}
-                        variant={
-                          currentPage === pageNum ? "default" : "outline"
-                        }
+                        variant={currentPage === pageNum ? 'default' : 'outline'}
                         size="sm"
                         onClick={() => setCurrentPage(pageNum)}
                         className="w-8 h-8"
@@ -466,9 +428,7 @@ export function OptimizedModerationResults({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
                   <ChevronRight className="h-4 w-4" />

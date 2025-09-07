@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise Health Monitoring System
- * 
+ *
  * This module implements a comprehensive health monitoring system with metrics collection,
  * alert management, SLA tracking, and enterprise-grade observability features.
- * 
+ *
  * Features:
  * - Real-time health monitoring of all services and components
  * - Advanced metrics collection and aggregation
@@ -15,7 +15,7 @@
  * - Historical data analysis and trend reporting
  * - Custom health check definitions and thresholds
  * - Integration with external monitoring systems
- * 
+ *
  * @author: Enterprise Monitoring Team
  * @version: 2.0.0
  * @compliance: Enterprise Monitoring Standards
@@ -31,7 +31,7 @@ export enum HealthStatus {
   DEGRADED = 'DEGRADED',
   UNHEALTHY = 'UNHEALTHY',
   UNKNOWN = 'UNKNOWN',
-  MAINTENANCE = 'MAINTENANCE'
+  MAINTENANCE = 'MAINTENANCE',
 }
 
 // Alert severity levels
@@ -39,7 +39,7 @@ export enum AlertSeverity {
   INFO = 'INFO',
   WARNING = 'WARNING',
   ERROR = 'ERROR',
-  CRITICAL = 'CRITICAL'
+  CRITICAL = 'CRITICAL',
 }
 
 // Alert types
@@ -49,7 +49,7 @@ export enum AlertType {
   PERFORMANCE_DEGRADED = 'PERFORMANCE_DEGRADED',
   SECURITY_BREACH = 'SECURITY_BREACH',
   RESOURCE_EXHAUSTED = 'RESOURCE_EXHAUSTED',
-  CUSTOM = 'CUSTOM'
+  CUSTOM = 'CUSTOM',
 }
 
 // Metric types
@@ -57,7 +57,7 @@ export enum MetricType {
   COUNTER = 'COUNTER',
   GAUGE = 'GAUGE',
   HISTOGRAM = 'HISTOGRAM',
-  SUMMARY = 'SUMMARY'
+  SUMMARY = 'SUMMARY',
 }
 
 // SLA compliance status
@@ -65,7 +65,7 @@ export enum SLAStatus {
   COMPLIANT = 'COMPLIANT',
   WARNING = 'WARNING',
   VIOLATION = 'VIOLATION',
-  UNKNOWN = 'UNKNOWN'
+  UNKNOWN = 'UNKNOWN',
 }
 
 // Health check interface
@@ -381,10 +381,10 @@ export class EnterpriseHealthMonitor extends EventEmitter {
         try {
           // This would be implemented with actual database check
           const startTime = Date.now();
-          
+
           // Simulate database query
           await new Promise(resolve => setTimeout(resolve, 100));
-          
+
           const duration = Date.now() - startTime;
           let status = HealthStatus.HEALTHY;
           let message = 'Database is healthy';
@@ -423,7 +423,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     if (!this.serviceContainer) return;
 
     // Service health checks will be dynamically added based on registered services
-    this.serviceContainer.on('service:registered', (descriptor) => {
+    this.serviceContainer.on('service:registered', descriptor => {
       this.registerHealthCheck({
         id: `service-${descriptor.name}`,
         name: `Service: ${descriptor.name}`,
@@ -436,7 +436,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
           try {
             const service = await this.serviceContainer!.getService(descriptor.name);
             const health = await this.serviceContainer!.getServiceHealth(descriptor.name);
-            
+
             return {
               id: `service-${descriptor.name}`,
               status: this.mapServiceHealthStatus(health.status),
@@ -463,10 +463,14 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   private mapServiceHealthStatus(serviceStatus: string): HealthStatus {
     switch (serviceStatus) {
-      case 'HEALTHY': return HealthStatus.HEALTHY;
-      case 'DEGRADED': return HealthStatus.DEGRADED;
-      case 'UNHEALTHY': return HealthStatus.UNHEALTHY;
-      default: return HealthStatus.UNKNOWN;
+      case 'HEALTHY':
+        return HealthStatus.HEALTHY;
+      case 'DEGRADED':
+        return HealthStatus.DEGRADED;
+      case 'UNHEALTHY':
+        return HealthStatus.UNHEALTHY;
+      default:
+        return HealthStatus.UNKNOWN;
     }
   }
 
@@ -676,7 +680,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
         await this.executeHealthCheck(check);
       } finally {
         this.activeChecks--;
-        
+
         // Process next check in queue
         if (this.checkQueue.length > 0) {
           const nextCheck = this.checkQueue.shift();
@@ -697,28 +701,31 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   private async executeHealthCheck(check: HealthCheck): Promise<void> {
     const startTime = Date.now();
-    
+
     try {
       const result = await Promise.race([
         check.checkFunction(),
-        new Promise<HealthCheckResult>((_, reject) => 
+        new Promise<HealthCheckResult>((_, reject) =>
           setTimeout(() => reject(new Error('Health check timeout')), check.timeout)
         ),
       ]);
 
       result.duration = Date.now() - startTime;
-      
+
       // Store result
       if (!this.healthCheckResults.has(check.id)) {
         this.healthCheckResults.set(check.id, []);
       }
-      
+
       const results = this.healthCheckResults.get(check.id)!;
       results.push(result);
-      
+
       // Keep only recent results
       const cutoff = Date.now() - this.config.metricsRetention;
-      results.splice(0, results.findIndex(r => r.timestamp > cutoff));
+      results.splice(
+        0,
+        results.findIndex(r => r.timestamp > cutoff)
+      );
 
       // Record metrics
       if (result.metrics) {
@@ -732,7 +739,6 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
       // Emit event
       this.emit('healthCheck:completed', check, result);
-
     } catch (error) {
       const result: HealthCheckResult = {
         id: check.id,
@@ -775,7 +781,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   ): Promise<boolean> {
     // This is a simplified alert evaluation
     // In a real implementation, this would be much more sophisticated
-    
+
     if (alert.condition.metric === 'health_status') {
       const statusValue = this.getStatusValue(result.status);
       return this.evaluateCondition(
@@ -787,11 +793,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     if (result.metrics && alert.condition.metric in result.metrics) {
       const value = result.metrics[alert.condition.metric];
-      return this.evaluateCondition(
-        value,
-        alert.condition.operator,
-        alert.condition.threshold
-      );
+      return this.evaluateCondition(value, alert.condition.operator, alert.condition.threshold);
     }
 
     return false;
@@ -799,28 +801,37 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
   private getStatusValue(status: HealthStatus): number {
     switch (status) {
-      case HealthStatus.HEALTHY: return 0;
-      case HealthStatus.DEGRADED: return 1;
-      case HealthStatus.UNHEALTHY: return 2;
-      case HealthStatus.UNKNOWN: return 3;
-      case HealthStatus.MAINTENANCE: return 4;
-      default: return 3;
+      case HealthStatus.HEALTHY:
+        return 0;
+      case HealthStatus.DEGRADED:
+        return 1;
+      case HealthStatus.UNHEALTHY:
+        return 2;
+      case HealthStatus.UNKNOWN:
+        return 3;
+      case HealthStatus.MAINTENANCE:
+        return 4;
+      default:
+        return 3;
     }
   }
 
-  private evaluateCondition(
-    value: number,
-    operator: string,
-    threshold: number
-  ): boolean {
+  private evaluateCondition(value: number, operator: string, threshold: number): boolean {
     switch (operator) {
-      case 'gt': return value > threshold;
-      case 'lt': return value < threshold;
-      case 'eq': return value === threshold;
-      case 'ne': return value !== threshold;
-      case 'gte': return value >= threshold;
-      case 'lte': return value <= threshold;
-      default: return false;
+      case 'gt':
+        return value > threshold;
+      case 'lt':
+        return value < threshold;
+      case 'eq':
+        return value === threshold;
+      case 'ne':
+        return value !== threshold;
+      case 'gte':
+        return value >= threshold;
+      case 'lte':
+        return value <= threshold;
+      default:
+        return false;
     }
   }
 
@@ -922,7 +933,10 @@ export class EnterpriseHealthMonitor extends EventEmitter {
 
     // Keep only recent metrics
     const cutoff = Date.now() - this.config.metricsRetention;
-    this.metricValues.splice(0, this.metricValues.findIndex(m => m.timestamp > cutoff));
+    this.metricValues.splice(
+      0,
+      this.metricValues.findIndex(m => m.timestamp > cutoff)
+    );
 
     // Emit event
     this.emit('metric:recorded', metric);
@@ -957,7 +971,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private generateSLAReport(sla: SLADefinition): void {
     const now = Date.now();
     const windowStart = now - sla.window;
-    
+
     // Calculate SLA metrics based on health check results
     const availability = this.calculateAvailability(windowStart, now);
     const performance = this.calculatePerformance(windowStart, now);
@@ -992,11 +1006,14 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // Store report
     const reports = this.slaReports.get(sla.id) || [];
     reports.push(report);
-    
+
     // Keep only recent reports
     const cutoff = Date.now() - this.config.slaRetention;
-    reports.splice(0, reports.findIndex(r => r.window.end > cutoff));
-    
+    reports.splice(
+      0,
+      reports.findIndex(r => r.window.end > cutoff)
+    );
+
     this.slaReports.set(sla.id, reports);
 
     // Emit event
@@ -1008,15 +1025,15 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // In a real implementation, this would be based on actual service uptime
     const totalChecks = Array.from(this.healthCheckResults.values())
       .flat()
-      .filter(r => r.timestamp >= start && r.timestamp <= end)
-      .length;
+      .filter(r => r.timestamp >= start && r.timestamp <= end).length;
 
     if (totalChecks === 0) return 100;
 
     const healthyChecks = Array.from(this.healthCheckResults.values())
       .flat()
-      .filter(r => r.timestamp >= start && r.timestamp <= end && r.status === HealthStatus.HEALTHY)
-      .length;
+      .filter(
+        r => r.timestamp >= start && r.timestamp <= end && r.status === HealthStatus.HEALTHY
+      ).length;
 
     return (healthyChecks / totalChecks) * 100;
   }
@@ -1025,13 +1042,15 @@ export class EnterpriseHealthMonitor extends EventEmitter {
     // Simplified performance calculation
     // In a real implementation, this would be based on response times and throughput
     const responseTimes = this.metricValues
-      .filter(m => m.name === 'app_request_duration_seconds' && m.timestamp >= start && m.timestamp <= end)
+      .filter(
+        m => m.name === 'app_request_duration_seconds' && m.timestamp >= start && m.timestamp <= end
+      )
       .map(m => m.value);
 
     if (responseTimes.length === 0) return 100;
 
     const avgResponseTime = responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length;
-    
+
     // Assume target response time is 1 second
     return Math.max(0, 100 - (avgResponseTime - 1) * 10);
   }
@@ -1054,7 +1073,7 @@ export class EnterpriseHealthMonitor extends EventEmitter {
   private calculateSLAViolations(sla: SLADefinition, start: number, end: number): SLAViolation[] {
     // Simplified violation calculation
     const violations: SLAViolation[] = [];
-    
+
     // This would be implemented with actual violation detection logic
     // For now, return empty array
     return violations;

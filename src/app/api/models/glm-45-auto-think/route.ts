@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { zaiApiService } from "@/lib/zai-api-service";
+import { zaiApiService } from '@/lib/zai-api-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,11 +12,9 @@ export async function POST(request: NextRequest) {
       const lastMessage = messages[messages.length - 1];
       const prompt = lastMessage.content;
 
-      const result = await zaiApiService.generateCompletion(
-        prompt,
-        "glm-45-auto-think",
-        { customPrompt },
-      );
+      const result = await zaiApiService.generateCompletion(prompt, 'glm-45-auto-think', {
+        customPrompt,
+      });
 
       return NextResponse.json({
         id: result.id,
@@ -32,7 +30,7 @@ export async function POST(request: NextRequest) {
       const result = await zaiApiService.analyzeWithModel({
         imageBase64,
         analysisType,
-        modelId: "glm-45-auto-think",
+        modelId: 'glm-45-auto-think',
         customPrompt,
       });
 
@@ -45,13 +43,10 @@ export async function POST(request: NextRequest) {
         error:
           'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.',
       },
-      { status: 400 },
+      { status: 400 }
     );
   } catch (error) {
-    console.error("GLM-4.5 Auto Think analysis failed:", error);
-    return NextResponse.json(
-      { error: "GLM-4.5 Auto Think analysis failed" },
-      { status: 500 },
-    );
+    console.error('GLM-4.5 Auto Think analysis failed:', error);
+    return NextResponse.json({ error: 'GLM-4.5 Auto Think analysis failed' }, { status: 500 });
   }
 }

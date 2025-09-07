@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Loader2, Download, Sparkles, Wand2, Edit3, Save } from "lucide-react";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Loader2, Download, Sparkles, Wand2, Edit3, Save } from 'lucide-react';
 
 export function AIPremiumEditor() {
-  const [content, setContent] = useState("");
-  const [prompt, setPrompt] = useState("");
+  const [content, setContent] = useState('');
+  const [prompt, setPrompt] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [enhancedContent, setEnhancedContent] = useState("");
+  const [enhancedContent, setEnhancedContent] = useState('');
 
   const enhancementOptions = [
-    { value: "grammar", label: "Grammar & Spelling" },
-    { value: "style", label: "Style & Tone" },
-    { value: "clarity", label: "Clarity & Readability" },
-    { value: "creativity", label: "Creativity & Engagement" },
-    { value: "professional", label: "Professional Polish" },
-    { value: "concise", label: "Make More Concise" },
-    { value: "detailed", label: "Add More Detail" },
-    { value: "seo", label: "SEO Optimization" },
+    { value: 'grammar', label: 'Grammar & Spelling' },
+    { value: 'style', label: 'Style & Tone' },
+    { value: 'clarity', label: 'Clarity & Readability' },
+    { value: 'creativity', label: 'Creativity & Engagement' },
+    { value: 'professional', label: 'Professional Polish' },
+    { value: 'concise', label: 'Make More Concise' },
+    { value: 'detailed', label: 'Add More Detail' },
+    { value: 'seo', label: 'SEO Optimization' },
   ];
 
   const handleEnhance = async () => {
     if (!content.trim()) {
-      toast.error("Please enter some content to enhance");
+      toast.error('Please enter some content to enhance');
       return;
     }
 
@@ -51,9 +51,9 @@ export function AIPremiumEditor() {
 
       // Simulate AI processing
       await new Promise(resolve => setTimeout(resolve, 2500));
-      
+
       setProgress(100);
-      
+
       // Simple enhancement simulation
       const enhanced = content
         .split('. ')
@@ -65,9 +65,9 @@ export function AIPremiumEditor() {
         .trim();
 
       setEnhancedContent(enhanced);
-      toast.success("Content enhanced successfully!");
+      toast.success('Content enhanced successfully!');
     } catch {
-      toast.error("Failed to enhance content");
+      toast.error('Failed to enhance content');
     } finally {
       setIsProcessing(false);
       if (progressInterval) {
@@ -79,7 +79,7 @@ export function AIPremiumEditor() {
   const handleSave = () => {
     if (enhancedContent) {
       // Simulate saving
-      toast.success("Content saved successfully!");
+      toast.success('Content saved successfully!');
     }
   };
 
@@ -92,7 +92,7 @@ export function AIPremiumEditor() {
       link.download = 'enhanced-content.txt';
       link.click();
       URL.revokeObjectURL(url);
-      toast.success("Content downloaded!");
+      toast.success('Content downloaded!');
     }
   };
 
@@ -103,24 +103,26 @@ export function AIPremiumEditor() {
           <CardTitle className="flex items-center space-x-2">
             <Edit3 className="w-5 h-5" />
             <span>AI Premium Editor</span>
-            <Badge variant="secondary" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+            <Badge
+              variant="secondary"
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            >
               <Sparkles className="w-3 h-3 mr-1" />
               Premium
             </Badge>
           </CardTitle>
           <CardDescription>
-            Enhance your content with advanced AI editing capabilities. Improve grammar, style, clarity, and more.
+            Enhance your content with advanced AI editing capabilities. Improve grammar, style,
+            clarity, and more.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">
-              Your Content
-            </label>
+            <label className="text-sm font-medium mb-2 block">Your Content</label>
             <Textarea
               placeholder="Enter your content here to enhance..."
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={e => setContent(e.target.value)}
               className="min-h-[150px]"
             />
           </div>
@@ -132,13 +134,13 @@ export function AIPremiumEditor() {
             <Textarea
               placeholder="e.g., Make this more professional and engaging..."
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={e => setPrompt(e.target.value)}
               className="min-h-[80px]"
             />
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {enhancementOptions.map((option) => (
+            {enhancementOptions.map(option => (
               <Badge
                 key={option.value}
                 variant="outline"
@@ -188,7 +190,7 @@ export function AIPremiumEditor() {
           <CardContent className="space-y-4">
             <Textarea
               value={enhancedContent}
-              onChange={(e) => setEnhancedContent(e.target.value)}
+              onChange={e => setEnhancedContent(e.target.value)}
               className="min-h-[200px]"
             />
             <div className="flex justify-center space-x-2">
@@ -200,7 +202,7 @@ export function AIPremiumEditor() {
                 <Download className="w-4 h-4 mr-2" />
                 Download
               </Button>
-              <Button variant="outline" onClick={() => setEnhancedContent("")}>
+              <Button variant="outline" onClick={() => setEnhancedContent('')}>
                 Clear
               </Button>
             </div>

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { zaiApiService } from "@/lib/zai-api-service";
+import { zaiApiService } from '@/lib/zai-api-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       const lastMessage = messages[messages.length - 1];
       const prompt = lastMessage.content;
 
-      const result = await zaiApiService.generateCompletion(prompt, "air", {
+      const result = await zaiApiService.generateCompletion(prompt, 'air', {
         customPrompt,
       });
 
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       const result = await zaiApiService.analyzeWithModel({
         imageBase64,
         analysisType,
-        modelId: "air",
+        modelId: 'air',
         customPrompt,
       });
 
@@ -43,10 +43,10 @@ export async function POST(request: NextRequest) {
         error:
           'Invalid request format. Provide either "messages" for chat or "imageBase64" and "analysisType" for image analysis.',
       },
-      { status: 400 },
+      { status: 400 }
     );
   } catch (error) {
-    console.error("AIR analysis failed:", error);
-    return NextResponse.json({ error: "AIR analysis failed" }, { status: 500 });
+    console.error('AIR analysis failed:', error);
+    return NextResponse.json({ error: 'AIR analysis failed' }, { status: 500 });
   }
 }

@@ -9,15 +9,15 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AnalyticsChart from "@/components/AnalyticsChart";
-import AICapabilitiesGrid from "@/components/dashboard/AICapabilitiesGrid";
-import SystemAlerts from "@/components/dashboard/SystemAlerts";
-import ActivityFeed from "@/components/dashboard/ActivityFeed";
-import { AICapability } from "./DashboardDataHooks";
+import React from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AnalyticsChart from '@/components/AnalyticsChart';
+import AICapabilitiesGrid from '@/components/dashboard/AICapabilitiesGrid';
+import SystemAlerts from '@/components/dashboard/SystemAlerts';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import { AICapability } from './DashboardDataHooks';
 
 interface DashboardContentProps {
   metrics: any;

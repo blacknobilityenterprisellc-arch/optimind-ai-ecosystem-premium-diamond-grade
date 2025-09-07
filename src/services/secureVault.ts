@@ -4,19 +4,19 @@
  *
  * NOTE: This is an infra-agnostic starter. Replace wrapKey/unwrapKey with your cloud KMS/HSM calls.
  */
-import crypto from "crypto";
+import crypto from 'crypto';
 
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
-import { debug } from "@/lib/debug";
+import { debug } from '@/lib/debug';
 
-import { SecureStorageResult, DeletionCertificate } from "../types/index";
+import { SecureStorageResult, DeletionCertificate } from '../types/index';
 
 // ---------- Configuration ----------
 // Set these in your environment in production
-const SIGNING_KEY_PEM = process.env.PRIVATE_SIGNING_KEY_PEM || ""; // PEM string of RSA/EC key or empty for dev
-const KMS_KEY_ID = process.env.KEK_KEY_ID || "kms-key-placeholder"; // for production HSM/KMS key id
-const DEFAULT_BUCKET = process.env.STORAGE_BUCKET || "ai-premium-staging";
+const SIGNING_KEY_PEM = process.env.PRIVATE_SIGNING_KEY_PEM || ''; // PEM string of RSA/EC key or empty for dev
+const KMS_KEY_ID = process.env.KEK_KEY_ID || 'kms-key-placeholder'; // for production HSM/KMS key id
+const DEFAULT_BUCKET = process.env.STORAGE_BUCKET || 'ai-premium-staging';
 
 // ---------- Helpers ----------
 function nowISO(): string {
@@ -24,15 +24,12 @@ function nowISO(): string {
 }
 
 function base64(b: Buffer | string) {
-  return Buffer.from(b).toString("base64");
+  return Buffer.from(b).toString('base64');
 }
 
 // ---------- Abstract KMS/HSM wrappers (TODO: implement with real KMS) ----------
 export interface KmsClient {
-  wrapKey(
-    kekId: string,
-    dek: Buffer,
-  ): Promise<{ wrappedKey: string; dekId?: string }>;
+  wrapKey(kekId: string, dek: Buffer): Promise<{ wrappedKey: string; dekId?: string }>;
   unwrapKey(kekId: string, wrappedKeyB64: string): Promise<Buffer>;
   signPayload(payload: Buffer): Promise<string>; // returns base64 signature
 }
@@ -47,26 +44,23 @@ export class DevKmsClient implements KmsClient {
     this.privateKeyPem = privateKeyPem;
   }
 
-  async wrapKey(
-    _kekId: string,
-    dek: Buffer,
-  ): Promise<{ wrappedKey: string; dekId?: string }> {
+  async wrapKey(_kekId: string, dek: Buffer): Promise<{ wrappedKey: string; dekId?: string }> {
     // For dev: "wrap" = base64(dek) — DO NOT use in production
     return { wrappedKey: base64(dek), dekId: `dev-dek-${uuidv4()}` };
   }
 
   async unwrapKey(_kekId: string, wrappedKeyB64: string): Promise<Buffer> {
-    return Buffer.from(wrappedKeyB64, "base64");
+    return Buffer.from(wrappedKeyB64, 'base64');
   }
 
   async signPayload(payload: Buffer): Promise<string> {
     if (!this.privateKeyPem) {
       // HMAC fallback in dev (not secure)
-      const h = crypto.createHmac("sha256", "dev-signing-key");
+      const h = crypto.createHmac('sha256', 'dev-signing-key');
       h.update(payload);
       return base64(h.digest());
     }
-    const sign = crypto.createSign("SHA256");
+    const sign = crypto.createSign('SHA256');
     sign.update(payload);
     sign.end();
     const signature = sign.sign(this.privateKeyPem);
@@ -78,7 +72,7 @@ export class DevKmsClient implements KmsClient {
 export class SecureVault {
   constructor(
     private kmsClient: KmsClient,
-    private bucket = DEFAULT_BUCKET,
+    private bucket = DEFAULT_BUCKET
   ) {}
 
   /**
@@ -99,16 +93,10 @@ export class SecureVault {
    * Encrypt a buffer with AES-256-GCM using a provided dek.
    * Returns ciphertext, iv, tag as base64 strings
    */
-  encryptWithDEK(
-    dek: Buffer,
-    plaintext: Buffer,
-  ): { ciphertext: string; iv: string; tag: string } {
+  encryptWithDEK(dek: Buffer, plaintext: Buffer): { ciphertext: string; iv: string; tag: string } {
     const iv = crypto.randomBytes(12); // 96-bit recommended
-    const cipher = crypto.createCipheriv("aes-256-gcm", dek, iv);
-    const ciphertext = Buffer.concat([
-      cipher.update(plaintext),
-      cipher.final(),
-    ]);
+    const cipher = crypto.createCipheriv('aes-256-gcm', dek, iv);
+    const ciphertext = Buffer.concat([cipher.update(plaintext), cipher.final()]);
     const tag = cipher.getAuthTag();
     return { ciphertext: base64(ciphertext), iv: base64(iv), tag: base64(tag) };
   }
@@ -116,21 +104,13 @@ export class SecureVault {
   /**
    * Decrypt ciphertext using DEK (assumes base64 inputs)
    */
-  decryptWithDEK(
-    dek: Buffer,
-    ciphertextB64: string,
-    ivB64: string,
-    tagB64: string,
-  ): Buffer {
-    const iv = Buffer.from(ivB64, "base64");
-    const tag = Buffer.from(tagB64, "base64");
-    const ciphertext = Buffer.from(ciphertextB64, "base64");
-    const decipher = crypto.createDecipheriv("aes-256-gcm", dek, iv);
+  decryptWithDEK(dek: Buffer, ciphertextB64: string, ivB64: string, tagB64: string): Buffer {
+    const iv = Buffer.from(ivB64, 'base64');
+    const tag = Buffer.from(tagB64, 'base64');
+    const ciphertext = Buffer.from(ciphertextB64, 'base64');
+    const decipher = crypto.createDecipheriv('aes-256-gcm', dek, iv);
     decipher.setAuthTag(tag);
-    const plaintext = Buffer.concat([
-      decipher.update(ciphertext),
-      decipher.final(),
-    ]);
+    const plaintext = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
     return plaintext;
   }
 
@@ -179,13 +159,13 @@ export class SecureVault {
   async generateDeletionCertificate(
     imageId: string,
     deletedBy: string,
-    reason?: string,
+    reason?: string
   ): Promise<DeletionCertificate> {
     const payload = {
       imageId,
       deletedBy,
       deletedAt: nowISO(),
-      reason: reason || "crypto-erase",
+      reason: reason || 'crypto-erase',
     };
     const payloadBuf = Buffer.from(JSON.stringify(payload));
     const signature = await this.kmsClient.signPayload(payloadBuf);
