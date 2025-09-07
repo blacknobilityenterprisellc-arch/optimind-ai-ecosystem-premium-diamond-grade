@@ -25,7 +25,7 @@ async function main() {
     create: {
       email: 'admin@optimind.ai',
       password: adminPassword,
-      name: 'Jocely Honore - CEO',
+      name: 'Jocely P. Honore - CEO',
       role: 'ADMIN',
       apiKey: 'admin-api-key-123',
       lastLoginAt: new Date(),
