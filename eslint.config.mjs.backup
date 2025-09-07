@@ -21,32 +21,27 @@ export default [
       '@typescript-eslint': typescript,
     },
     rules: {
-      // TypeScript rules - optimized for CI/CD performance
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-empty-interface': 'off',
       
-      // General rules - essential only for CI/CD speed
+      // General rules
       'no-console': 'warn',
       'no-debugger': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
       'object-shorthand': 'error',
       
-      // Security rules - critical for enterprise
+      // Security rules
       'no-eval': 'error',
       'no-implied-eval': 'error',
       'no-new-func': 'error',
       
-      // Next.js specific - optimized
+      // Next.js specific
       '@next/next/no-img-element': 'off',
-      
-      // Performance optimizations for CI/CD
-      'complexity': ['warn', 15],
-      'max-lines-per-function': ['warn', 100],
-      'max-depth': ['warn', 5],
     },
   },
   {
@@ -59,14 +54,6 @@ export default [
       'no-console': 'warn',
       'no-var': 'error',
       'prefer-const': 'error',
-    },
-  },
-  // CI/CD specific optimizations
-  {
-    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
-    rules: {
-      'no-console': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];

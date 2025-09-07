@@ -1,1 +1,1 @@
-TypeScript analysis completed for ultra-fast mode
+Simulated TypeScript analysis completed
