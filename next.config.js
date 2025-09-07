@@ -2,7 +2,6 @@
 const nextConfig = {
   // Premium diamond-grade optimizations
   reactStrictMode: true,
-  swcMinify: false, // Disabled for compatibility
   experimental: {
     swcPlugins: []
     // Removed serverActions as it's now available by default

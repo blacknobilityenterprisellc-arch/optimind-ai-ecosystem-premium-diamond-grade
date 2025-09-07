@@ -454,5 +454,5 @@ export const advanceEcosystemCapabilities = () => optiMindEcosystem.advanceEcosy
 export const getEcosystemIntelligence = () => optiMindEcosystem.getEcosystemIntelligence();
 export const createHarmoniousEnvironment = () => optiMindEcosystem.createHarmoniousEnvironment();
 export const enableIntelligentSecurity = () => optiMindEcosystem.enableIntelligentSecurity();
-export const enhanceAmbientIntelligence = () => optiMindEcosystem enhanceAmbientIntelligence();
+export const enhanceAmbientIntelligence = () => optiMindEcosystem.enhanceAmbientIntelligence();
 export const getOperationalMetrics = () => optiMindEcosystem.getOperationalMetrics();

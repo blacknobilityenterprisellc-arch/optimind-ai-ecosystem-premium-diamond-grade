@@ -164,7 +164,6 @@ import {
   Sharp,
   Soft,
   Hard,
-  Soft,
   Rough,
   Smooth,
   Textured,
