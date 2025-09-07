@@ -53,6 +53,17 @@ interface AIChatProps {
   className?: string;
 }
 
+interface AIModel {
+  name: string;
+  provider: string;
+  cost: number;
+  category: string;
+}
+
+interface AvailableModels {
+  [key: string]: AIModel;
+}
+
 export function AIChat({ className }: AIChatProps) {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [currentSession, setCurrentSession] = useState<ChatSession | null>(null);
@@ -61,7 +72,7 @@ export function AIChat({ className }: AIChatProps) {
   const [selectedModel, setSelectedModel] = useState('openai/gpt-4-turbo');
   const [temperature, setTemperature] = useState([0.7]);
   const [maxTokens, setMaxTokens] = useState([1000]);
-  const [availableModels, setAvailableModels] = useState<any>({});
+  const [availableModels, setAvailableModels] = useState<AvailableModels>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Load available models on component mount
@@ -330,7 +341,7 @@ export function AIChat({ className }: AIChatProps) {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.entries(availableModels).map(([key, model]: [string, any]) => (
+                        {Object.entries(availableModels).map(([key, model]: [string, AIModel]) => (
                           <SelectItem key={key} value={key}>
                             <div className="flex items-center gap-2">
                               {getModelIcon(key)}
