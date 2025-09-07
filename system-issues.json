@@ -1,0 +1,72 @@
+[
+  {
+    "id": "issue_1757218069544_135u6clax",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:07:49.544Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:08:49.624Z"
+  },
+  {
+    "id": "issue_1757218099570_3je3z5ui8",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:08:19.570Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:09:19.902Z"
+  },
+  {
+    "id": "issue_1757218129507_iseg1aq61",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:08:49.507Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:09:49.705Z"
+  },
+  {
+    "id": "issue_1757218159775_2eodlxgoo",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:09:19.775Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:10:20.008Z"
+  },
+  {
+    "id": "issue_1757218189575_ckckrtga8",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:09:49.575Z",
+    "resolved": false,
+    "resolutionAttempts": 3,
+    "lastAttempt": "2025-09-07T04:10:50.102Z"
+  },
+  {
+    "id": "issue_1757218219609_65vrt5jun",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:10:19.609Z",
+    "resolved": false,
+    "resolutionAttempts": 2,
+    "lastAttempt": "2025-09-07T04:10:50.103Z"
+  },
+  {
+    "id": "issue_1757218249691_qumvx2lig",
+    "type": "aiServices",
+    "severity": "medium",
+    "description": "Z.AI API key not configured",
+    "timestamp": "2025-09-07T04:10:49.691Z",
+    "resolved": false,
+    "resolutionAttempts": 1,
+    "lastAttempt": "2025-09-07T04:10:50.103Z"
+  }
+]
