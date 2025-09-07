@@ -1,6 +1,6 @@
 /**
  * Self-Healing Integration for OptiMind AI Ecosystem
- * 
+ *
  * Integrates the Premium Diamond-Grade Scanner with existing systems
  * to provide seamless self-healing capabilities
  */
@@ -115,7 +115,7 @@ export class SelfHealingIntegration {
           description: 'Comprehensive system health check initiated',
           detectedAt: new Date(),
           autoFixable: true,
-          fixApplied: false
+          fixApplied: false,
         };
       }
 
@@ -134,7 +134,7 @@ export class SelfHealingIntegration {
         scanGrade: scanResult.grade,
         healingTime: Date.now() - startTime,
         success: scanResult.status === 'completed',
-        summary: this.generateHealingSummary(scanResult)
+        summary: this.generateHealingSummary(scanResult),
       };
 
       // Add to history
@@ -147,7 +147,6 @@ export class SelfHealingIntegration {
 
       console.log(`✅ Self-Healing Cycle completed: ${healingReport.summary}`);
       return healingReport;
-
     } catch (error) {
       const healingReport: HealingReport = {
         healingId,
@@ -160,12 +159,12 @@ export class SelfHealingIntegration {
         scanGrade: 'F',
         healingTime: Date.now() - startTime,
         success: false,
-        summary: `Self-Healing Cycle failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+        summary: `Self-Healing Cycle failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
       };
 
       this.healingHistory.push(healingReport);
       console.error('❌ Self-Healing Cycle failed:', error);
-      
+
       return healingReport;
     }
   }
@@ -188,7 +187,7 @@ export class SelfHealingIntegration {
       description: `System error: ${error.message}`,
       detectedAt: new Date(),
       autoFixable: true,
-      fixApplied: false
+      fixApplied: false,
     });
 
     return healingReport;
@@ -213,7 +212,7 @@ export class SelfHealingIntegration {
         description: `System health degraded to ${healthStatus.overall}`,
         detectedAt: new Date(),
         autoFixable: true,
-        fixApplied: false
+        fixApplied: false,
       };
 
       return await this.triggerHealingCycle(issue);
@@ -231,7 +230,7 @@ export class SelfHealingIntegration {
       scanGrade: 'A',
       healingTime: 0,
       success: true,
-      summary: 'System health is optimal - no issues detected'
+      summary: 'System health is optimal - no issues detected',
     };
 
     this.healingHistory.push(healingReport);
@@ -255,16 +254,19 @@ export class SelfHealingIntegration {
     return {
       selfHealing: {
         isInitialized: this.isInitialized,
-        config: this.config
+        config: this.config,
       },
       scanner: scannerStatus,
       errorHandler: errorHandlerStatus,
       healingHistory: {
         total: this.healingHistory.length,
         successful: this.healingHistory.filter(h => h.success).length,
-        averageScore: this.healingHistory.length > 0 ? 
-          this.healingHistory.reduce((sum, h) => sum + h.scanScore, 0) / this.healingHistory.length : 0
-      }
+        averageScore:
+          this.healingHistory.length > 0
+            ? this.healingHistory.reduce((sum, h) => sum + h.scanScore, 0) /
+              this.healingHistory.length
+            : 0,
+      },
     };
   }
 
@@ -280,7 +282,7 @@ export class SelfHealingIntegration {
    */
   private generateHealingSummary(scanResult: any): string {
     const { grade, score, summary, issues, fixesApplied } = scanResult;
-    
+
     if (grade === 'A+' || grade === 'A') {
       return `Excellent system health (${grade}, ${score}/100). All checks passed successfully.`;
     } else if (grade === 'B' || grade === 'C') {
@@ -295,7 +297,7 @@ export class SelfHealingIntegration {
    */
   private sendNotifications(report: HealingReport): void {
     console.log('📧 Sending healing notifications:', report.summary);
-    
+
     this.notificationCallbacks.forEach(callback => {
       try {
         callback(report);
@@ -332,5 +334,5 @@ export const selfHealingIntegration = new SelfHealingIntegration({
   enableRealTimeMonitoring: true,
   scanInterval: 30000, // 30 seconds
   errorThreshold: 5, // 5% error rate threshold
-  notificationEnabled: true
+  notificationEnabled: true,
 });

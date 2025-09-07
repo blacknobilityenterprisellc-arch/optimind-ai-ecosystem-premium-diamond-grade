@@ -3,24 +3,24 @@
  * Provides access events for monitoring and tracking
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { exclusiveDeveloperAccessService } from "@/lib/exclusive-developer-access";
+import { NextRequest, NextResponse } from 'next/server';
+import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-    const limit = parseInt(searchParams.get("limit") || "100");
-    const offset = parseInt(searchParams.get("offset") || "0");
+    const userId = searchParams.get('userId');
+    const limit = parseInt(searchParams.get('limit') || '100');
+    const offset = parseInt(searchParams.get('offset') || '0');
 
     // Validate parameters
     if (isNaN(limit) || limit < 1 || limit > 1000) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid limit parameter. Must be between 1 and 1000",
+          error: 'Invalid limit parameter. Must be between 1 and 1000',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -28,9 +28,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: "Invalid offset parameter. Must be a positive number",
+          error: 'Invalid offset parameter. Must be a positive number',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
     const result = await exclusiveDeveloperAccessService.getAccessEvents(
       userId || undefined,
       limit,
-      offset,
+      offset
     );
 
     if (!result.success) {
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
           success: false,
           error: result.error,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -62,13 +62,13 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Error getting developer access events:", error);
+    console.error('Error getting developer access events:', error);
     return NextResponse.json(
       {
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

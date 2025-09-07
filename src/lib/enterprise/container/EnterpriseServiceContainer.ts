@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise Service Container
- * 
+ *
  * This module implements a comprehensive service container with dependency injection,
  * lifecycle management, and enterprise-grade features for robust service management.
- * 
+ *
  * Features:
  * - Dependency injection with automatic resolution
  * - Service lifecycle management (singleton, transient, scoped)
@@ -15,7 +15,7 @@
  * - Performance monitoring and optimization
  * - Thread-safe service access
  * - Configuration-driven service initialization
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Service Standards
@@ -35,14 +35,14 @@ export enum ServiceLifecycle {
   STOPPED = 'STOPPED',
   DISPOSING = 'DISPOSING',
   DISPOSED = 'DISPOSED',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
 }
 
 // Service scope types
 export enum ServiceScope {
-  SINGLETON = 'SINGLETON',    // Single instance for entire application
-  TRANSIENT = 'TRANSIENT',    // New instance for each request
-  SCOPED = 'SCOPED',          // Single instance per scope
+  SINGLETON = 'SINGLETON', // Single instance for entire application
+  TRANSIENT = 'TRANSIENT', // New instance for each request
+  SCOPED = 'SCOPED', // Single instance per scope
 }
 
 // Service metadata
@@ -91,8 +91,9 @@ export interface IService {
 }
 
 // Service factory function
-export type ServiceFactory<T extends IService = IService> = 
-  (container: EnterpriseServiceContainer) => Promise<T> | T;
+export type ServiceFactory<T extends IService = IService> = (
+  container: EnterpriseServiceContainer
+) => Promise<T> | T;
 
 // Service descriptor
 export interface ServiceDescriptor<T extends IService = IService> {
@@ -156,10 +157,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
   private dependencyGraph: Map<string, Set<string>> = new Map();
   private eventBus: EventEmitter;
 
-  constructor(
-    environment: EnterpriseEnvironmentConfig,
-    config: Partial<ContainerConfig> = {}
-  ) {
+  constructor(environment: EnterpriseEnvironmentConfig, config: Partial<ContainerConfig> = {}) {
     super();
     this.environment = environment;
     this.config = {
@@ -225,21 +223,16 @@ export class EnterpriseServiceContainer extends EventEmitter {
 
     try {
       this.emit('initializing');
-      
+
       // Initialize all registered services
-      const initializationPromises = Array.from(this.services.values()).map(
-        async (descriptor) => {
-          try {
-            await this.initializeService(descriptor.name);
-          } catch (error) {
-            console.error(`Failed to initialize service ${descriptor.name}:`, error);
-            this.eventBus.emit('service:error', 
-              this.instances.get(descriptor.name), 
-              error as Error
-            );
-          }
+      const initializationPromises = Array.from(this.services.values()).map(async descriptor => {
+        try {
+          await this.initializeService(descriptor.name);
+        } catch (error) {
+          console.error(`Failed to initialize service ${descriptor.name}:`, error);
+          this.eventBus.emit('service:error', this.instances.get(descriptor.name), error as Error);
         }
-      );
+      });
 
       await Promise.all(initializationPromises);
 
@@ -255,7 +248,6 @@ export class EnterpriseServiceContainer extends EventEmitter {
 
       this.isInitialized = true;
       this.emit('initialized');
-      
     } catch (error) {
       this.emit('error', error);
       throw error;
@@ -290,10 +282,10 @@ export class EnterpriseServiceContainer extends EventEmitter {
     };
 
     this.services.set(descriptor.name, completeDescriptor);
-    
+
     // Update dependency graph
     this.updateDependencyGraph(descriptor.name, metadata.dependencies);
-    
+
     // Check for circular dependencies
     if (this.config.enableCircularDependencyCheck) {
       this.checkCircularDependencies(descriptor.name);
@@ -391,7 +383,6 @@ export class EnterpriseServiceContainer extends EventEmitter {
       if (this.isInitialized) {
         await this.startService(descriptor.name);
       }
-
     } catch (error) {
       const instance = this.instances.get(descriptor.name);
       if (instance) {
@@ -424,7 +415,6 @@ export class EnterpriseServiceContainer extends EventEmitter {
       instance.lifecycle = ServiceLifecycle.RUNNING;
       instance.startedAt = Date.now();
       this.eventBus.emit('service:started', instance);
-
     } catch (error) {
       instance.lifecycle = ServiceLifecycle.ERROR;
       instance.lastError = error as Error;
@@ -454,7 +444,6 @@ export class EnterpriseServiceContainer extends EventEmitter {
       instance.lifecycle = ServiceLifecycle.STOPPED;
       instance.stoppedAt = Date.now();
       this.eventBus.emit('service:stopped', instance);
-
     } catch (error) {
       instance.lifecycle = ServiceLifecycle.ERROR;
       instance.lastError = error as Error;
@@ -562,12 +551,14 @@ export class EnterpriseServiceContainer extends EventEmitter {
           memoryUsage: process.memoryUsage().heapUsed,
           lastError: error as Error,
           metrics: instance.metrics,
-          checks: [{
-            name: 'health_check',
-            status: 'FAIL',
-            message: (error as Error).message,
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: 'health_check',
+              status: 'FAIL',
+              message: (error as Error).message,
+              timestamp: Date.now(),
+            },
+          ],
         };
       }
     }
@@ -580,18 +571,20 @@ export class EnterpriseServiceContainer extends EventEmitter {
       uptime,
       memoryUsage: process.memoryUsage().heapUsed,
       metrics: instance.metrics,
-      checks: [{
-        name: 'lifecycle',
-        status: instance.lifecycle === ServiceLifecycle.RUNNING ? 'PASS' : 'FAIL',
-        message: `Service is ${instance.lifecycle}`,
-        timestamp: Date.now(),
-      }],
+      checks: [
+        {
+          name: 'lifecycle',
+          status: instance.lifecycle === ServiceLifecycle.RUNNING ? 'PASS' : 'FAIL',
+          message: `Service is ${instance.lifecycle}`,
+          timestamp: Date.now(),
+        },
+      ],
     };
   }
 
   async getAllServicesHealth(): Promise<Record<string, ServiceHealth>> {
     const health: Record<string, ServiceHealth> = {};
-    
+
     for (const serviceName of this.services.keys()) {
       try {
         health[serviceName] = await this.getServiceHealth(serviceName);
@@ -603,12 +596,14 @@ export class EnterpriseServiceContainer extends EventEmitter {
           memoryUsage: 0,
           lastError: error as Error,
           metrics: {},
-          checks: [{
-            name: 'health_check',
-            status: 'FAIL',
-            message: (error as Error).message,
-            timestamp: Date.now(),
-          }],
+          checks: [
+            {
+              name: 'health_check',
+              status: 'FAIL',
+              message: (error as Error).message,
+              timestamp: Date.now(),
+            },
+          ],
         };
       }
     }
@@ -621,7 +616,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
       try {
         const healthStatus = await this.getAllServicesHealth();
         this.emit('health:check', healthStatus);
-        
+
         // Check for unhealthy services
         for (const [serviceName, health] of Object.entries(healthStatus)) {
           const instance = this.instances.get(serviceName);
@@ -640,7 +635,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
     this.metricsTimer = setInterval(async () => {
       try {
         const metrics: Record<string, Record<string, number>> = {};
-        
+
         for (const [serviceName, instance] of this.instances) {
           if (instance.service.getMetrics) {
             try {
@@ -676,10 +671,11 @@ export class EnterpriseServiceContainer extends EventEmitter {
       }
 
       // Stop all services in reverse priority order
-      const services = Array.from(this.instances.values())
-        .sort((a, b) => b.metadata.priority - a.metadata.priority);
+      const services = Array.from(this.instances.values()).sort(
+        (a, b) => b.metadata.priority - a.metadata.priority
+      );
 
-      const stopPromises = services.map(async (instance) => {
+      const stopPromises = services.map(async instance => {
         try {
           await this.stopService(instance.service.name);
         } catch (error) {
@@ -690,7 +686,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
       await Promise.all(stopPromises);
 
       // Dispose all services
-      const disposePromises = services.map(async (instance) => {
+      const disposePromises = services.map(async instance => {
         try {
           if (instance.service.dispose) {
             await instance.service.dispose();
@@ -709,7 +705,6 @@ export class EnterpriseServiceContainer extends EventEmitter {
       }
 
       this.emit('shutdown_complete');
-
     } catch (error) {
       this.emit('shutdown_error', error);
       throw error;
@@ -782,7 +777,7 @@ export function setGlobalContainer(container: EnterpriseServiceContainer): void 
 export function Service(options: Partial<ServiceMetadata> = {}) {
   return function <T extends { new (...args: any[]): IService }>(constructor: T) {
     const serviceName = options.name || constructor.name.toLowerCase();
-    
+
     return class extends constructor {
       static readonly serviceName = serviceName;
       static readonly metadata = {
@@ -798,13 +793,13 @@ export function Service(options: Partial<ServiceMetadata> = {}) {
 export function Inject(serviceName: string) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
-    
+
     descriptor.value = async function (...args: any[]) {
       const container = getGlobalContainer();
       const service = await container.getService(serviceName);
       return originalMethod.apply(this, [service, ...args]);
     };
-    
+
     return descriptor;
   };
 }

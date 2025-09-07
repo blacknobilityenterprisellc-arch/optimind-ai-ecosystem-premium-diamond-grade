@@ -1,6 +1,6 @@
 // AI Image Organizer Service for Premium Features
-import { useState, useEffect, useCallback } from "react";
-import ZAI from "z-ai-web-dev-sdk";
+import { useState, useEffect, useCallback } from 'react';
+import ZAI from 'z-ai-web-dev-sdk';
 
 export interface OrganizationResult {
   success: boolean;
@@ -21,7 +21,7 @@ export interface SmartAlbum {
   id: string;
   name: string;
   description: string;
-  type: "people" | "location" | "event" | "time" | "quality" | "subject";
+  type: 'people' | 'location' | 'event' | 'time' | 'quality' | 'subject';
   criteria: {
     people?: string[];
     location?: string;
@@ -69,7 +69,7 @@ class AIImageOrganizerService {
       this.isInitialized = true;
       return true;
     } catch (error) {
-      console.error("Failed to initialize AI Image Organizer:", error);
+      console.error('Failed to initialize AI Image Organizer:', error);
       return false;
     }
   }
@@ -88,7 +88,7 @@ class AIImageOrganizerService {
       enableQualityAssessment?: boolean;
       createSmartAlbums?: boolean;
       autoTag?: boolean;
-    } = {},
+    } = {}
   ): Promise<OrganizationResult> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -167,8 +167,7 @@ class AIImageOrganizerService {
         albumsCreated: 0,
         tagsAdded: 0,
         processingTime: 0,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        error: error instanceof Error ? error.message : 'Unknown error occurred',
       };
     }
   }
@@ -181,7 +180,7 @@ class AIImageOrganizerService {
       enableEventDetection?: boolean;
       enableQualityAssessment?: boolean;
       autoTag?: boolean;
-    } = {},
+    } = {}
   ): Promise<PhotoAnalysis | null> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -217,14 +216,14 @@ class AIImageOrganizerService {
       const response = await this.zai.chat.completions.create({
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: [
               {
-                type: "text",
+                type: 'text',
                 text: analysisPrompt,
               },
               {
-                type: "image_url",
+                type: 'image_url',
                 image_url: {
                   url: imageUrl,
                 },
@@ -232,7 +231,7 @@ class AIImageOrganizerService {
             ],
           },
         ],
-        model: "glm-45v", // Use vision model for image analysis
+        model: 'glm-45v', // Use vision model for image analysis
         max_tokens: 1000,
       });
 
@@ -247,8 +246,8 @@ class AIImageOrganizerService {
         objects: analysis.objects || [],
         people: analysis.people || [],
         location: analysis.location,
-        scene: analysis.scene || "",
-        mood: analysis.mood || "",
+        scene: analysis.scene || '',
+        mood: analysis.mood || '',
         quality: analysis.quality || 50,
         tags: analysis.tags || [],
         colors: analysis.colors || [],
@@ -256,13 +255,13 @@ class AIImageOrganizerService {
         duplicates: [], // Will be implemented with duplicate detection
       };
     } catch (error) {
-      console.error("Failed to analyze photo:", error);
+      console.error('Failed to analyze photo:', error);
       return null;
     }
   }
 
   async createSmartAlbums(
-    photos: Array<{ id: string; url: string; name: string }>,
+    photos: Array<{ id: string; url: string; name: string }>
   ): Promise<SmartAlbum[]> {
     if (!this.isInitialized) {
       await this.initialize();
@@ -270,13 +269,9 @@ class AIImageOrganizerService {
 
     try {
       // Analyze all photos to find patterns
-      const analyses = await Promise.all(
-        photos.map((photo) => this.analyzePhoto(photo.url)),
-      );
+      const analyses = await Promise.all(photos.map(photo => this.analyzePhoto(photo.url)));
 
-      const validAnalyses = analyses.filter(
-        (a) => a !== null,
-      ) as PhotoAnalysis[];
+      const validAnalyses = analyses.filter(a => a !== null) as PhotoAnalysis[];
 
       // Create smart albums based on patterns
       const smartAlbums: SmartAlbum[] = [];
@@ -296,10 +291,10 @@ class AIImageOrganizerService {
         if (photoIds.length >= 3) {
           // Only create albums for people appearing in 3+ photos
           smartAlbums.push({
-            id: `people-${personName.toLowerCase().replace(/\s+/g, "-")}`,
+            id: `people-${personName.toLowerCase().replace(/\s+/g, '-')}`,
             name: `${personName}`,
             description: `Photos featuring ${personName}`,
-            type: "people",
+            type: 'people',
             criteria: { people: [personName] },
             photoCount: photoIds.length,
             autoUpdate: true,
@@ -323,10 +318,10 @@ class AIImageOrganizerService {
       for (const [locationName, photoIds] of locationMap.entries()) {
         if (photoIds.length >= 2) {
           smartAlbums.push({
-            id: `location-${locationName.toLowerCase().replace(/\s+/g, "-")}`,
+            id: `location-${locationName.toLowerCase().replace(/\s+/g, '-')}`,
             name: locationName,
             description: `Photos taken at ${locationName}`,
-            type: "location",
+            type: 'location',
             criteria: { location: locationName },
             photoCount: photoIds.length,
             autoUpdate: true,
@@ -336,16 +331,14 @@ class AIImageOrganizerService {
       }
 
       // Quality-based albums
-      const highQualityPhotos = validAnalyses
-        .filter((a) => a.quality >= 85)
-        .map((a) => a.id);
+      const highQualityPhotos = validAnalyses.filter(a => a.quality >= 85).map(a => a.id);
 
       if (highQualityPhotos.length >= 5) {
         smartAlbums.push({
-          id: "quality-high",
-          name: "Best Quality",
-          description: "Highest quality photos in your collection",
-          type: "quality",
+          id: 'quality-high',
+          name: 'Best Quality',
+          description: 'Highest quality photos in your collection',
+          type: 'quality',
           criteria: { quality: { min: 85, max: 100 } },
           photoCount: highQualityPhotos.length,
           autoUpdate: true,
@@ -355,24 +348,23 @@ class AIImageOrganizerService {
 
       // Time-based albums (recent photos)
       const recentPhotos = photos
-        .filter((photo) => {
+        .filter(photo => {
           const uploadDate = new Date(
-            photo.name.includes("_")
-              ? photo.name.split("_")[1].split(".")[0]
-              : Date.now().toString(),
+            photo.name.includes('_')
+              ? photo.name.split('_')[1].split('.')[0]
+              : Date.now().toString()
           );
-          const daysDiff =
-            (Date.now() - uploadDate.getTime()) / (1000 * 60 * 60 * 24);
+          const daysDiff = (Date.now() - uploadDate.getTime()) / (1000 * 60 * 60 * 24);
           return daysDiff <= 30; // Photos from last 30 days
         })
-        .map((p) => p.id);
+        .map(p => p.id);
 
       if (recentPhotos.length >= 5) {
         smartAlbums.push({
-          id: "time-recent",
-          name: "Recent Photos",
-          description: "Photos from the last 30 days",
-          type: "time",
+          id: 'time-recent',
+          name: 'Recent Photos',
+          description: 'Photos from the last 30 days',
+          type: 'time',
           criteria: {
             dateRange: {
               start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
@@ -387,14 +379,12 @@ class AIImageOrganizerService {
 
       return smartAlbums;
     } catch (error) {
-      console.error("Failed to create smart albums:", error);
+      console.error('Failed to create smart albums:', error);
       return [];
     }
   }
 
-  async detectDuplicates(
-    photos: Array<{ id: string; url: string; name: string }>,
-  ): Promise<
+  async detectDuplicates(photos: Array<{ id: string; url: string; name: string }>): Promise<
     Array<{
       photoId: string;
       duplicates: Array<{ photoId: string; similarity: number }>;
@@ -433,20 +423,20 @@ class AIImageOrganizerService {
           const response = await this.zai.chat.completions.create({
             messages: [
               {
-                role: "user",
+                role: 'user',
                 content: [
                   {
-                    type: "text",
+                    type: 'text',
                     text: comparisonPrompt,
                   },
                   {
-                    type: "image_url",
+                    type: 'image_url',
                     image_url: {
                       url: photo1.url,
                     },
                   },
                   {
-                    type: "image_url",
+                    type: 'image_url',
                     image_url: {
                       url: photo2.url,
                     },
@@ -454,7 +444,7 @@ class AIImageOrganizerService {
                 ],
               },
             ],
-            model: "glm-45v",
+            model: 'glm-45v',
             max_tokens: 500,
           });
 
@@ -482,15 +472,12 @@ class AIImageOrganizerService {
 
       return duplicateResults;
     } catch (error) {
-      console.error("Failed to detect duplicates:", error);
+      console.error('Failed to detect duplicates:', error);
       return [];
     }
   }
 
-  async suggestTags(
-    imageUrl: string,
-    existingTags: string[] = [],
-  ): Promise<string[]> {
+  async suggestTags(imageUrl: string, existingTags: string[] = []): Promise<string[]> {
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -499,7 +486,7 @@ class AIImageOrganizerService {
       const prompt = `
         Analyze this image and suggest relevant tags for organization and search.
         Consider objects, people, locations, events, moods, colors, and styles.
-        Avoid duplicating these existing tags: ${existingTags.join(", ")}
+        Avoid duplicating these existing tags: ${existingTags.join(', ')}
         
         Provide 10-15 relevant tags in JSON array format:
         ["tag1", "tag2", "tag3"]
@@ -508,14 +495,14 @@ class AIImageOrganizerService {
       const response = await this.zai.chat.completions.create({
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: [
               {
-                type: "text",
+                type: 'text',
                 text: prompt,
               },
               {
-                type: "image_url",
+                type: 'image_url',
                 image_url: {
                   url: imageUrl,
                 },
@@ -523,7 +510,7 @@ class AIImageOrganizerService {
             ],
           },
         ],
-        model: "glm-45v",
+        model: 'glm-45v',
         max_tokens: 200,
       });
 
@@ -534,7 +521,7 @@ class AIImageOrganizerService {
 
       return [];
     } catch (error) {
-      console.error("Failed to suggest tags:", error);
+      console.error('Failed to suggest tags:', error);
       return [];
     }
   }
@@ -572,10 +559,7 @@ class AIImageOrganizerService {
       }
 
       // Get additional tag suggestions
-      const suggestedTags = await this.suggestTags(
-        photo.url,
-        photo.existingTags || [],
-      );
+      const suggestedTags = await this.suggestTags(photo.url, photo.existingTags || []);
 
       // Combine and deduplicate tags
       const allTags = [...new Set([...analysis.tags, ...suggestedTags])];
@@ -585,10 +569,10 @@ class AIImageOrganizerService {
         improvedQuality: analysis.quality,
         suggestedAlbums: analysis.suggestedAlbums,
         location: analysis.location?.name,
-        people: analysis.people.map((p) => p.name),
+        people: analysis.people.map(p => p.name),
       };
     } catch (error) {
-      console.error("Failed to enhance photo metadata:", error);
+      console.error('Failed to enhance photo metadata:', error);
       return {
         enhancedTags: [],
         improvedQuality: 50,
@@ -631,7 +615,7 @@ export function useAIImageOrganizer() {
         enableQualityAssessment?: boolean;
         createSmartAlbums?: boolean;
         autoTag?: boolean;
-      },
+      }
     ) => {
       try {
         setIsProcessing(true);
@@ -640,20 +624,19 @@ export function useAIImageOrganizer() {
         const result = await service.organizePhotos(photos, options);
 
         if (!result.success) {
-          setError(result.error || "Organization failed");
+          setError(result.error || 'Organization failed');
         }
 
         return result;
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Unknown error";
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error';
         setError(errorMessage);
         throw err;
       } finally {
         setIsProcessing(false);
       }
     },
-    [service],
+    [service]
   );
 
   const createSmartAlbum = useCallback(
@@ -663,19 +646,18 @@ export function useAIImageOrganizer() {
         setError(null);
 
         const smartAlbums = await service.createSmartAlbums(photos);
-        setSuggestions((prev) => ({ ...prev, smartAlbums }));
+        setSuggestions(prev => ({ ...prev, smartAlbums }));
 
         return smartAlbums;
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Smart album creation failed";
+        const errorMessage = err instanceof Error ? err.message : 'Smart album creation failed';
         setError(errorMessage);
         throw err;
       } finally {
         setIsProcessing(false);
       }
     },
-    [service],
+    [service]
   );
 
   const analyzePhoto = useCallback(
@@ -683,11 +665,11 @@ export function useAIImageOrganizer() {
       try {
         return await service.analyzePhoto(imageUrl);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Photo analysis failed");
+        setError(err instanceof Error ? err.message : 'Photo analysis failed');
         throw err;
       }
     },
-    [service],
+    [service]
   );
 
   const detectDuplicates = useCallback(
@@ -697,19 +679,18 @@ export function useAIImageOrganizer() {
         setError(null);
 
         const duplicates = await service.detectDuplicates(photos);
-        setSuggestions((prev) => ({ ...prev, duplicateGroups: duplicates }));
+        setSuggestions(prev => ({ ...prev, duplicateGroups: duplicates }));
 
         return duplicates;
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Duplicate detection failed";
+        const errorMessage = err instanceof Error ? err.message : 'Duplicate detection failed';
         setError(errorMessage);
         throw err;
       } finally {
         setIsProcessing(false);
       }
     },
-    [service],
+    [service]
   );
 
   const suggestTags = useCallback(
@@ -718,30 +699,23 @@ export function useAIImageOrganizer() {
         const tags = await service.suggestTags(imageUrl, existingTags);
         return tags;
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Tag suggestion failed");
+        setError(err instanceof Error ? err.message : 'Tag suggestion failed');
         throw err;
       }
     },
-    [service],
+    [service]
   );
 
   const enhancePhotoMetadata = useCallback(
-    async (photo: {
-      id: string;
-      url: string;
-      name: string;
-      existingTags?: string[];
-    }) => {
+    async (photo: { id: string; url: string; name: string; existingTags?: string[] }) => {
       try {
         return await service.enhancePhotoMetadata(photo);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Metadata enhancement failed",
-        );
+        setError(err instanceof Error ? err.message : 'Metadata enhancement failed');
         throw err;
       }
     },
-    [service],
+    [service]
   );
 
   return {

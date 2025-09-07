@@ -1,6 +1,6 @@
 /**
  * Self-Healing Integration API
- * 
+ *
  * API endpoints for the OptiMind AI Self-Healing System
  * Provides automatic error detection, healing cycles, and system monitoring
  */
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
           action: 'status',
           system: 'Self-Healing Integration',
           data: systemStatus,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'history':
@@ -37,9 +37,9 @@ export async function GET(request: NextRequest) {
           system: 'Self-Healing Integration',
           data: {
             healingReports: healingHistory,
-            totalReports: healingHistory.length
+            totalReports: healingHistory.length,
           },
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'monitor-health':
@@ -49,26 +49,31 @@ export async function GET(request: NextRequest) {
           action: 'monitor-health',
           system: 'Self-Healing Integration',
           data: healthReport,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['status', 'history', 'monitor-health'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: ['status', 'history', 'monitor-health'],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('Self-Healing API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      system: 'Self-Healing Integration',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        system: 'Self-Healing Integration',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -90,16 +95,19 @@ export async function POST(request: NextRequest) {
           action: 'trigger-healing',
           system: 'Self-Healing Integration',
           data: healingReport,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'handle-error':
         if (!error) {
-          return NextResponse.json({
-            success: false,
-            error: 'Error data is required',
-            timestamp: new Date().toISOString()
-          }, { status: 400 });
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Error data is required',
+              timestamp: new Date().toISOString(),
+            },
+            { status: 400 }
+          );
         }
 
         const errorReport = await selfHealingIntegration.handleSystemError(
@@ -111,7 +119,7 @@ export async function POST(request: NextRequest) {
           action: 'handle-error',
           system: 'Self-Healing Integration',
           data: errorReport,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'start-system':
@@ -121,7 +129,7 @@ export async function POST(request: NextRequest) {
           action: 'start-system',
           system: 'Self-Healing Integration',
           message: 'Self-Healing system started successfully',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'stop-system':
@@ -131,41 +139,54 @@ export async function POST(request: NextRequest) {
           action: 'stop-system',
           system: 'Self-Healing Integration',
           message: 'Self-Healing system stopped successfully',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'comprehensive-healing':
         // Simulate a critical system error to trigger comprehensive healing
-        const criticalError = new Error('Critical system failure detected - requiring comprehensive healing');
+        const criticalError = new Error(
+          'Critical system failure detected - requiring comprehensive healing'
+        );
         const comprehensiveReport = await selfHealingIntegration.handleSystemError(criticalError, {
           component: 'system-core',
           operation: 'comprehensive-analysis',
-          severity: 'critical'
+          severity: 'critical',
         });
         return NextResponse.json({
           success: true,
           action: 'comprehensive-healing',
           system: 'Self-Healing Integration',
           data: comprehensiveReport,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['trigger-healing', 'handle-error', 'start-system', 'stop-system', 'comprehensive-healing'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: [
+              'trigger-healing',
+              'handle-error',
+              'start-system',
+              'stop-system',
+              'comprehensive-healing',
+            ],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('Self-Healing API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      system: 'Self-Healing Integration',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        system: 'Self-Healing Integration',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }

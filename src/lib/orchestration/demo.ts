@@ -1,6 +1,6 @@
 /**
  * Simple demonstration of the Agent Orchestrator System
- * 
+ *
  * This script provides a quick demo of the enhanced agent coordination system
  * with real-time monitoring and interactive features.
  */
@@ -12,20 +12,20 @@ const demoAgents = [
     id: 'text-agent',
     name: 'Text Generation Agent',
     type: 'primary' as const,
-    capabilities: ['text-generation', 'content-creation']
+    capabilities: ['text-generation', 'content-creation'],
   },
   {
     id: 'analysis-agent',
     name: 'Data Analysis Agent',
     type: 'specialized' as const,
-    capabilities: ['data-analysis', 'pattern-recognition']
+    capabilities: ['data-analysis', 'pattern-recognition'],
   },
   {
     id: 'search-agent',
     name: 'Web Search Agent',
     type: 'specialized' as const,
-    capabilities: ['web-search', 'research']
-  }
+    capabilities: ['web-search', 'research'],
+  },
 ];
 
 // Demo configuration
@@ -35,10 +35,10 @@ const demoConfig = {
   maxRetries: 2,
   loadBalancer: {
     strategy: 'weighted' as const,
-    healthCheckInterval: 5000
+    healthCheckInterval: 5000,
   },
   enableFaultTolerance: true,
-  enableMonitoring: true
+  enableMonitoring: true,
 };
 
 export class OrchestratorDemo {
@@ -68,7 +68,6 @@ export class OrchestratorDemo {
 
       // Run demo scenarios
       await this.runDemoScenarios();
-
     } catch (error) {
       console.error('❌ Demo failed:', error);
     }
@@ -111,24 +110,24 @@ export class OrchestratorDemo {
         type: 'text-generation',
         priority: 'medium' as const,
         capabilities: ['text-generation'],
-        payload: { prompt: 'Hello, world!' }
+        payload: { prompt: 'Hello, world!' },
       },
       {
         type: 'data-analysis',
         priority: 'medium' as const,
         capabilities: ['data-analysis'],
-        payload: { data: [1, 2, 3, 4, 5] }
+        payload: { data: [1, 2, 3, 4, 5] },
       },
       {
         type: 'web-search',
         priority: 'medium' as const,
         capabilities: ['web-search'],
-        payload: { query: 'AI technology' }
-      }
+        payload: { query: 'AI technology' },
+      },
     ];
 
     const taskIds: string[] = [];
-    
+
     for (const task of tasks) {
       const taskId = await this.orchestrator.submitTask(task);
       taskIds.push(taskId);
@@ -149,11 +148,11 @@ export class OrchestratorDemo {
       type: 'text-generation' as const,
       priority: 'medium' as const,
       capabilities: ['text-generation'],
-      payload: { prompt: `Test prompt ${i + 1}` }
+      payload: { prompt: `Test prompt ${i + 1}` },
     }));
 
     const taskIds: string[] = [];
-    
+
     for (const task of tasks) {
       const taskId = await this.orchestrator.submitTask(task);
       taskIds.push(taskId);
@@ -163,7 +162,7 @@ export class OrchestratorDemo {
     // Monitor load balancing in action
     console.log('📊 Monitoring load balancing...');
     await this.waitForTasks(taskIds);
-    
+
     // Show load balancer statistics
     const stats = this.orchestrator.getStatus().loadBalancerStats;
     console.log('📈 Load Balancer Stats:');
@@ -171,7 +170,7 @@ export class OrchestratorDemo {
     console.log(`   Successful: ${stats.successfulRequests}`);
     console.log(`   Failed: ${stats.failedRequests}`);
     console.log(`   Avg Response Time: ${stats.averageResponseTime}ms`);
-    
+
     console.log('✅ Scenario 2 completed');
   }
 
@@ -184,7 +183,7 @@ export class OrchestratorDemo {
       type: 'invalid-task',
       priority: 'medium' as const,
       capabilities: ['invalid-capability'],
-      payload: { test: 'data' }
+      payload: { test: 'data' },
     };
 
     const failingTaskId = await this.orchestrator.submitTask(failingTask);
@@ -195,7 +194,7 @@ export class OrchestratorDemo {
       type: 'text-generation',
       priority: 'medium' as const,
       capabilities: ['text-generation'],
-      payload: { prompt: 'This should work' }
+      payload: { prompt: 'This should work' },
     };
 
     const validTaskId = await this.orchestrator.submitTask(validTask);
@@ -209,7 +208,9 @@ export class OrchestratorDemo {
     const validResult = await this.orchestrator.getTaskResult(validTaskId);
 
     console.log('📊 Results:');
-    console.log(`   Failing task: ${failingResult?.success ? '❌ Unexpected success' : '✅ Failed as expected'}`);
+    console.log(
+      `   Failing task: ${failingResult?.success ? '❌ Unexpected success' : '✅ Failed as expected'}`
+    );
     console.log(`   Valid task: ${validResult?.success ? '✅ Success' : '❌ Unexpected failure'}`);
 
     console.log('✅ Scenario 3 completed');
@@ -225,14 +226,14 @@ export class OrchestratorDemo {
       type: ['text-generation', 'data-analysis', 'web-search'][i % 3] as const,
       priority: ['high', 'medium', 'low'][i % 3] as const,
       capabilities: [['text-generation'], ['data-analysis'], ['web-search']][i % 3],
-      payload: { prompt: `Performance test ${i + 1}` }
+      payload: { prompt: `Performance test ${i + 1}` },
     }));
 
     console.log(`📋 Submitting ${taskCount} tasks...`);
-    
+
     const taskIds: string[] = [];
     const startTime = Date.now();
-    
+
     for (const task of tasks) {
       const taskId = await this.orchestrator.submitTask(task);
       taskIds.push(taskId);
@@ -240,14 +241,16 @@ export class OrchestratorDemo {
 
     console.log('⏳ Waiting for completion...');
     await this.waitForTasks(taskIds);
-    
+
     const totalTime = Date.now() - startTime;
     const stats = this.orchestrator.getStatus().loadBalancerStats;
-    
+
     console.log('📊 Performance Results:');
     console.log(`   Total Time: ${totalTime}ms`);
     console.log(`   Tasks/Second: ${(taskCount / (totalTime / 1000)).toFixed(2)}`);
-    console.log(`   Success Rate: ${((stats.successfulRequests / stats.totalRequests) * 100).toFixed(2)}%`);
+    console.log(
+      `   Success Rate: ${((stats.successfulRequests / stats.totalRequests) * 100).toFixed(2)}%`
+    );
     console.log(`   Avg Response Time: ${stats.averageResponseTime}ms`);
 
     console.log('✅ Scenario 4 completed');
@@ -256,9 +259,9 @@ export class OrchestratorDemo {
   private async waitForTasks(taskIds: string[]): Promise<void> {
     const maxWaitTime = 30000; // 30 seconds
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < maxWaitTime) {
-      const completedCount = taskIds.filter(async (taskId) => {
+      const completedCount = taskIds.filter(async taskId => {
         const result = await this.orchestrator.getTaskResult(taskId);
         return result !== null;
       }).length;
@@ -275,7 +278,9 @@ export class OrchestratorDemo {
     setInterval(() => {
       if (this.isRunning) {
         const status = this.orchestrator.getStatus();
-        console.log(`📊 Status: ${status.runningTasks} running, ${status.queueLength} queued, ${status.completedTasks} completed`);
+        console.log(
+          `📊 Status: ${status.runningTasks} running, ${status.queueLength} queued, ${status.completedTasks} completed`
+        );
       }
     }, 5000);
   }
@@ -285,10 +290,10 @@ export class OrchestratorDemo {
 export async function quickDemo(): Promise<void> {
   const demo = new OrchestratorDemo();
   await demo.start();
-  
+
   // Let it run for a bit
   await new Promise(resolve => setTimeout(resolve, 10000));
-  
+
   await demo.stop();
 }
 

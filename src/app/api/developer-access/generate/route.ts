@@ -3,8 +3,8 @@
  * Generates exclusive access keys for developers with monitoring and tracking
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { exclusiveDeveloperAccessService } from "@/lib/exclusive-developer-access";
+import { NextRequest, NextResponse } from 'next/server';
+import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,51 +21,45 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (
-      !userId ||
-      !keyType ||
-      !accessLevel ||
-      !permissions ||
-      !allowedEndpoints
-    ) {
+    if (!userId || !keyType || !accessLevel || !permissions || !allowedEndpoints) {
       return NextResponse.json(
         {
           success: false,
           error:
-            "Missing required fields: userId, keyType, accessLevel, permissions, allowedEndpoints",
+            'Missing required fields: userId, keyType, accessLevel, permissions, allowedEndpoints',
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // Validate key type
-    const validKeyTypes = ["EXCLUSIVE", "STANDARD", "TEMPORARY"];
+    const validKeyTypes = ['EXCLUSIVE', 'STANDARD', 'TEMPORARY'];
     if (!validKeyTypes.includes(keyType)) {
       return NextResponse.json(
         {
           success: false,
-          error: `Invalid key type. Must be one of: ${validKeyTypes.join(", ")}`,
+          error: `Invalid key type. Must be one of: ${validKeyTypes.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // Validate access level
     const validAccessLevels = [
-      "PUBLIC",
-      "INTERNAL",
-      "RESTRICTED",
-      "CONFIDENTIAL",
-      "SECRET",
-      "TOP_SECRET",
+      'PUBLIC',
+      'INTERNAL',
+      'RESTRICTED',
+      'CONFIDENTIAL',
+      'SECRET',
+      'TOP_SECRET',
     ];
     if (!validAccessLevels.includes(accessLevel)) {
       return NextResponse.json(
         {
           success: false,
-          error: `Invalid access level. Must be one of: ${validAccessLevels.join(", ")}`,
+          error: `Invalid access level. Must be one of: ${validAccessLevels.join(', ')}`,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -86,23 +80,23 @@ export async function POST(request: NextRequest) {
           success: false,
           error: result.error,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     return NextResponse.json({
       success: true,
       key: result.key,
-      message: "Developer access key generated successfully",
+      message: 'Developer access key generated successfully',
     });
   } catch (error) {
-    console.error("Error generating developer access key:", error);
+    console.error('Error generating developer access key:', error);
     return NextResponse.json(
       {
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

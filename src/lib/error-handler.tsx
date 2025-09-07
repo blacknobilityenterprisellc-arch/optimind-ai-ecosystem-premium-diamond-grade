@@ -16,27 +16,27 @@ import {
   AuthorizationError,
   NotFoundError,
   RateLimitError,
-} from "@/types";
+} from '@/types';
 
 // Error severity levels
 export enum ErrorSeverity {
-  LOW = "low",
-  MEDIUM = "medium",
-  HIGH = "high",
-  CRITICAL = "critical",
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  CRITICAL = 'critical',
 }
 
 // Error categories
 export enum ErrorCategory {
-  VALIDATION = "validation",
-  AUTHENTICATION = "authentication",
-  AUTHORIZATION = "authorization",
-  BUSINESS_LOGIC = "business_logic",
-  EXTERNAL_SERVICE = "external_service",
-  DATABASE = "database",
-  NETWORK = "network",
-  SECURITY = "security",
-  SYSTEM = "system",
+  VALIDATION = 'validation',
+  AUTHENTICATION = 'authentication',
+  AUTHORIZATION = 'authorization',
+  BUSINESS_LOGIC = 'business_logic',
+  EXTERNAL_SERVICE = 'external_service',
+  DATABASE = 'database',
+  NETWORK = 'network',
+  SECURITY = 'security',
+  SYSTEM = 'system',
 }
 
 // Enhanced error interface
@@ -83,11 +83,7 @@ export interface ErrorLogger {
 // Error monitoring interface
 export interface ErrorMonitor {
   trackError: (error: EnhancedError, context?: ErrorContext) => Promise<void>;
-  trackPerformance: (
-    metric: string,
-    value: number,
-    context?: ErrorContext,
-  ) => Promise<void>;
+  trackPerformance: (metric: string, value: number, context?: ErrorContext) => Promise<void>;
   trackUserAction: (action: string, context?: ErrorContext) => Promise<void>;
 }
 
@@ -106,58 +102,46 @@ export class ErrorHandler {
 
   private initializeRecoveryStrategies(): void {
     // Network errors retry strategy
-    this.recoveryStrategies.set("network", {
-      shouldRetry: (error) => error.category === ErrorCategory.NETWORK,
+    this.recoveryStrategies.set('network', {
+      shouldRetry: error => error.category === ErrorCategory.NETWORK,
       maxRetries: 3,
       retryDelay: 1000,
       backoffMultiplier: 2,
       onRetry: (error, attempt) => {
-        console.log(
-          `Retrying network error (attempt ${attempt}):`,
-          error.message,
-        );
+        console.log(`Retrying network error (attempt ${attempt}):`, error.message);
       },
     });
 
     // External service errors retry strategy
-    this.recoveryStrategies.set("external_service", {
-      shouldRetry: (error) => error.category === ErrorCategory.EXTERNAL_SERVICE,
+    this.recoveryStrategies.set('external_service', {
+      shouldRetry: error => error.category === ErrorCategory.EXTERNAL_SERVICE,
       maxRetries: 2,
       retryDelay: 2000,
       backoffMultiplier: 1.5,
       onRetry: (error, attempt) => {
-        console.log(
-          `Retrying external service error (attempt ${attempt}):`,
-          error.message,
-        );
+        console.log(`Retrying external service error (attempt ${attempt}):`, error.message);
       },
     });
 
     // Database errors retry strategy
-    this.recoveryStrategies.set("database", {
-      shouldRetry: (error) => error.category === ErrorCategory.DATABASE,
+    this.recoveryStrategies.set('database', {
+      shouldRetry: error => error.category === ErrorCategory.DATABASE,
       maxRetries: 1,
       retryDelay: 500,
       backoffMultiplier: 2,
       onRetry: (error, attempt) => {
-        console.log(
-          `Retrying database error (attempt ${attempt}):`,
-          error.message,
-        );
+        console.log(`Retrying database error (attempt ${attempt}):`, error.message);
       },
     });
   }
 
   // Convert standard errors to enhanced errors
-  public enhanceError(
-    error: Error | ApplicationError,
-    context?: ErrorContext,
-  ): EnhancedError {
+  public enhanceError(error: Error | ApplicationError, context?: ErrorContext): EnhancedError {
     const enhancedError: EnhancedError = error as EnhancedError;
 
     // Set default values if not already set
     if (!enhancedError.code) {
-      enhancedError.code = "UNKNOWN_ERROR";
+      enhancedError.code = 'UNKNOWN_ERROR';
     }
 
     if (!enhancedError.severity) {
@@ -194,10 +178,7 @@ export class ErrorHandler {
   }
 
   // Handle error with logging and monitoring
-  public async handleError(
-    error: Error | ApplicationError,
-    context?: ErrorContext,
-  ): Promise<void> {
+  public async handleError(error: Error | ApplicationError, context?: ErrorContext): Promise<void> {
     const enhancedError = this.enhanceError(error, context);
 
     // Log the error
@@ -207,8 +188,8 @@ export class ErrorHandler {
     await this.monitor.trackError(enhancedError, context);
 
     // Log to console in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("Error:", enhancedError);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error:', enhancedError);
     }
   }
 
@@ -216,7 +197,7 @@ export class ErrorHandler {
   public async executeWithRetry<T>(
     fn: () => Promise<T>,
     errorContext?: ErrorContext,
-    customStrategy?: ErrorRecoveryStrategy,
+    customStrategy?: ErrorRecoveryStrategy
   ): Promise<T> {
     let lastError: EnhancedError | null = null;
     let attempt = 0;
@@ -231,10 +212,7 @@ export class ErrorHandler {
         lastError = enhancedError;
 
         // Check if we should retry
-        if (
-          !strategy.shouldRetry(enhancedError) ||
-          attempt === strategy.maxRetries
-        ) {
+        if (!strategy.shouldRetry(enhancedError) || attempt === strategy.maxRetries) {
           throw enhancedError;
         }
 
@@ -244,18 +222,17 @@ export class ErrorHandler {
         }
 
         // Calculate delay with exponential backoff
-        const delay =
-          strategy.retryDelay * Math.pow(strategy.backoffMultiplier, attempt);
+        const delay = strategy.retryDelay * Math.pow(strategy.backoffMultiplier, attempt);
 
         // Wait before retrying
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await new Promise(resolve => setTimeout(resolve, delay));
 
         attempt++;
       }
     }
 
     // If we get here, all retries failed
-    throw lastError || new ApplicationError("Unknown error occurred");
+    throw lastError || new ApplicationError('Unknown error occurred');
   }
 
   // Create error boundaries for React components
@@ -324,17 +301,17 @@ export class ErrorHandler {
   private getUserMessage(error: EnhancedError): string {
     switch (error.category) {
       case ErrorCategory.VALIDATION:
-        return "Please check your input and try again.";
+        return 'Please check your input and try again.';
       case ErrorCategory.AUTHENTICATION:
-        return "Please sign in to continue.";
+        return 'Please sign in to continue.';
       case ErrorCategory.AUTHORIZATION:
         return "You don't have permission to perform this action.";
       case ErrorCategory.NETWORK:
-        return "Network connection error. Please check your internet connection.";
+        return 'Network connection error. Please check your internet connection.';
       case ErrorCategory.EXTERNAL_SERVICE:
-        return "Service temporarily unavailable. Please try again later.";
+        return 'Service temporarily unavailable. Please try again later.';
       default:
-        return "An unexpected error occurred. Please try again.";
+        return 'An unexpected error occurred. Please try again.';
     }
   }
 
@@ -367,37 +344,30 @@ export class ConsoleErrorLogger implements ErrorLogger {
 
 // Mock error monitor implementation
 export class MockErrorMonitor implements ErrorMonitor {
-  async trackError(
-    error: EnhancedError,
-    context?: ErrorContext,
-  ): Promise<void> {
+  async trackError(error: EnhancedError, context?: ErrorContext): Promise<void> {
     // In a real implementation, this would send to monitoring service
-    console.log("Tracking error:", { error, context });
+    console.log('Tracking error:', { error, context });
   }
 
-  async trackPerformance(
-    metric: string,
-    value: number,
-    context?: ErrorContext,
-  ): Promise<void> {
-    console.log("Tracking performance:", { metric, value, context });
+  async trackPerformance(metric: string, value: number, context?: ErrorContext): Promise<void> {
+    console.log('Tracking performance:', { metric, value, context });
   }
 
   async trackUserAction(action: string, context?: ErrorContext): Promise<void> {
-    console.log("Tracking user action:", { action, context });
+    console.log('Tracking user action:', { action, context });
   }
 }
 
 // Global error handler instance
 export const globalErrorHandler = new ErrorHandler(
   new ConsoleErrorLogger(),
-  new MockErrorMonitor(),
+  new MockErrorMonitor()
 );
 
 // Utility functions for error handling
 export const withErrorHandling = <T extends any[], R>(
   fn: (...args: T) => Promise<R>,
-  context?: ErrorContext,
+  context?: ErrorContext
 ) => {
   return async (...args: T): Promise<R> => {
     try {
@@ -412,14 +382,10 @@ export const withErrorHandling = <T extends any[], R>(
 export const withRetry = <T extends any[], R>(
   fn: (...args: T) => Promise<R>,
   strategy?: ErrorRecoveryStrategy,
-  context?: ErrorContext,
+  context?: ErrorContext
 ) => {
   return async (...args: T): Promise<R> => {
-    return await globalErrorHandler.executeWithRetry(
-      () => fn(...args),
-      context,
-      strategy,
-    );
+    return await globalErrorHandler.executeWithRetry(() => fn(...args), context, strategy);
   };
 };
 
@@ -428,15 +394,11 @@ export const isValidationError = (error: any): error is ValidationError => {
   return error instanceof ValidationError;
 };
 
-export const isAuthenticationError = (
-  error: any,
-): error is AuthenticationError => {
+export const isAuthenticationError = (error: any): error is AuthenticationError => {
   return error instanceof AuthenticationError;
 };
 
-export const isAuthorizationError = (
-  error: any,
-): error is AuthorizationError => {
+export const isAuthorizationError = (error: any): error is AuthorizationError => {
   return error instanceof AuthorizationError;
 };
 

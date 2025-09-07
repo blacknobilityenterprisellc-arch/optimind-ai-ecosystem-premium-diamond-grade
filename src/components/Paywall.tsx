@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   X,
   Shield,
@@ -14,23 +14,23 @@ import {
   Cloud,
   Brain,
   Palette,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { PremiumBadge, PremiumButton } from "@/components/PremiumBadge";
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { PremiumBadge, PremiumButton } from '@/components/PremiumBadge';
 
 interface PaywallProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubscribe: (plan: "monthly" | "annual" | "lifetime") => void;
+  onSubscribe: (plan: 'monthly' | 'annual' | 'lifetime') => void;
   hasFreeTrial?: boolean;
 }
 
 interface SubscriptionPlan {
-  id: "monthly" | "annual" | "lifetime";
+  id: 'monthly' | 'annual' | 'lifetime';
   name: string;
   price: string;
   period: string;
@@ -41,62 +41,55 @@ interface SubscriptionPlan {
   highlighted?: boolean;
 }
 
-export function Paywall({
-  isOpen,
-  onClose,
-  onSubscribe,
-  hasFreeTrial = true,
-}: PaywallProps) {
-  const [selectedPlan, setSelectedPlan] = useState<
-    "monthly" | "annual" | "lifetime"
-  >("annual");
+export function Paywall({ isOpen, onClose, onSubscribe, hasFreeTrial = true }: PaywallProps) {
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual' | 'lifetime'>('annual');
 
   const plans: SubscriptionPlan[] = [
     {
-      id: "monthly",
-      name: "Monthly",
-      price: "$9.99",
-      period: "/month",
+      id: 'monthly',
+      name: 'Monthly',
+      price: '$9.99',
+      period: '/month',
       features: [
-        "Unlimited encrypted cloud storage",
-        "AI-powered smart organization",
-        "Advanced editing suite",
-        "Secure vault with biometric auth",
-        "Premium themes & customization",
-        "Priority customer support",
+        'Unlimited encrypted cloud storage',
+        'AI-powered smart organization',
+        'Advanced editing suite',
+        'Secure vault with biometric auth',
+        'Premium themes & customization',
+        'Priority customer support',
       ],
     },
     {
-      id: "annual",
-      name: "Annual",
-      price: "$4.99",
-      period: "/month",
-      originalPrice: "$9.99",
-      savings: "Save 50%",
+      id: 'annual',
+      name: 'Annual',
+      price: '$4.99',
+      period: '/month',
+      originalPrice: '$9.99',
+      savings: 'Save 50%',
       features: [
-        "Everything in Monthly",
-        "2 months FREE",
-        "Advanced AI emotion recognition",
-        "Private sharing links",
-        "Custom AI model training",
-        "Early access to new features",
+        'Everything in Monthly',
+        '2 months FREE',
+        'Advanced AI emotion recognition',
+        'Private sharing links',
+        'Custom AI model training',
+        'Early access to new features',
       ],
       popular: true,
       highlighted: true,
     },
     {
-      id: "lifetime",
-      name: "Lifetime",
-      price: "$199",
-      period: "one-time",
-      savings: "Best value",
+      id: 'lifetime',
+      name: 'Lifetime',
+      price: '$199',
+      period: 'one-time',
+      savings: 'Best value',
       features: [
-        "Everything in Annual",
-        "Lifetime access to all features",
-        "All future updates included",
-        "Exclusive premium themes",
-        "VIP customer support",
-        "Special lifetime-only features",
+        'Everything in Annual',
+        'Lifetime access to all features',
+        'All future updates included',
+        'Exclusive premium themes',
+        'VIP customer support',
+        'Special lifetime-only features',
       ],
     },
   ];
@@ -133,16 +126,14 @@ export function Paywall({
                 </h1>
 
                 <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto">
-                  Experience infinite space, intelligent control, and
-                  unbreakable security for your precious memories
+                  Experience infinite space, intelligent control, and unbreakable security for your
+                  precious memories
                 </p>
 
                 {hasFreeTrial && (
                   <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 border border-green-500/50 rounded-full">
                     <Sparkles className="w-4 h-4 text-green-400" />
-                    <span className="text-green-400 font-medium">
-                      30-day free trial included
-                    </span>
+                    <span className="text-green-400 font-medium">30-day free trial included</span>
                   </div>
                 )}
               </div>
@@ -196,20 +187,18 @@ export function Paywall({
 
               {/* Subscription Plans */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                {plans.map((plan) => (
+                {plans.map(plan => (
                   <Card
                     key={plan.id}
                     className={`relative overflow-hidden transition-all duration-300 ${
                       plan.highlighted
-                        ? "border-yellow-500 bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl shadow-yellow-500/20 transform scale-105"
-                        : "border-gray-700 bg-gray-800/50 hover:border-gray-600"
+                        ? 'border-yellow-500 bg-gradient-to-b from-gray-800 to-gray-900 shadow-2xl shadow-yellow-500/20 transform scale-105'
+                        : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
                     }`}
                   >
                     {plan.popular && (
                       <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-yellow-400 to-orange-500 text-center py-2">
-                        <span className="text-sm font-bold text-white">
-                          MOST POPULAR
-                        </span>
+                        <span className="text-sm font-bold text-white">MOST POPULAR</span>
                       </div>
                     )}
 
@@ -217,9 +206,7 @@ export function Paywall({
                       <div className="text-center mb-6">
                         <h3 className="text-xl font-bold mb-2">{plan.name}</h3>
                         <div className="flex items-baseline justify-center gap-1">
-                          <span className="text-3xl font-bold">
-                            {plan.price}
-                          </span>
+                          <span className="text-3xl font-bold">{plan.price}</span>
                           <span className="text-gray-400">{plan.period}</span>
                         </div>
                         {plan.originalPrice && (
@@ -239,26 +226,22 @@ export function Paywall({
                         {plan.features.map((feature, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm text-gray-300">
-                              {feature}
-                            </span>
+                            <span className="text-sm text-gray-300">{feature}</span>
                           </li>
                         ))}
                       </ul>
 
                       <PremiumButton
                         onClick={() => onSubscribe(plan.id)}
-                        variant={plan.highlighted ? "glow" : "default"}
+                        variant={plan.highlighted ? 'glow' : 'default'}
                         className="w-full"
-                        requireAuth={plan.id === "lifetime"}
+                        requireAuth={plan.id === 'lifetime'}
                         onAuthSuccess={() => {
                           // Additional auth success handling for lifetime plan
-                          console.log(
-                            "Lifetime plan authentication successful",
-                          );
+                          console.log('Lifetime plan authentication successful');
                         }}
                       >
-                        {hasFreeTrial ? "Start Free Trial" : "Subscribe Now"}
+                        {hasFreeTrial ? 'Start Free Trial' : 'Subscribe Now'}
                       </PremiumButton>
                     </CardContent>
                   </Card>
@@ -283,9 +266,9 @@ export function Paywall({
                 </div>
 
                 <p className="text-xs text-gray-500">
-                  By subscribing, you agree to our Terms of Service and Privacy
-                  Policy. Subscription will automatically renew unless canceled
-                  at least 24 hours before the end of the current period.
+                  By subscribing, you agree to our Terms of Service and Privacy Policy. Subscription
+                  will automatically renew unless canceled at least 24 hours before the end of the
+                  current period.
                 </p>
               </div>
             </div>

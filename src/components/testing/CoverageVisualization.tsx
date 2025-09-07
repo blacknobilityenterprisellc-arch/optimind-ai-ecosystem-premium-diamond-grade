@@ -10,27 +10,17 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Skeleton } from "@/components/ui/skeleton";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import {
   LineChart,
   Line,
@@ -46,7 +36,7 @@ import {
   AreaChart,
   Area,
   ComposedChart,
-} from "recharts";
+} from 'recharts';
 
 interface CoverageData {
   overall: number;
@@ -79,7 +69,7 @@ interface CoverageData {
     coverage: number;
     lines: number;
     uncovered: number;
-    risk: "low" | "medium" | "high";
+    risk: 'low' | 'medium' | 'high';
   }[];
 }
 
@@ -97,9 +87,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
   const [data, setData] = useState<CoverageData | null>(initialData || null);
   const [isLoading, setIsLoading] = useState(!initialData);
   const [error, setError] = useState<string | null>(null);
-  const [selectedView, setSelectedView] = useState<
-    "overview" | "detailed" | "trends"
-  >("overview");
+  const [selectedView, setSelectedView] = useState<'overview' | 'detailed' | 'trends'>('overview');
 
   // Generate realistic mock data for demonstration
   const generateMockData = useCallback((): CoverageData => {
@@ -114,7 +102,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
       },
       byModule: [
         {
-          name: "Authentication",
+          name: 'Authentication',
           coverage: 96.5,
           lines: 245,
           functions: 18,
@@ -122,7 +110,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           statements: 89,
         },
         {
-          name: "Database",
+          name: 'Database',
           coverage: 91.2,
           lines: 387,
           functions: 32,
@@ -130,7 +118,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           statements: 156,
         },
         {
-          name: "API Gateway",
+          name: 'API Gateway',
           coverage: 87.8,
           lines: 523,
           functions: 45,
@@ -138,7 +126,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           statements: 201,
         },
         {
-          name: "UI Components",
+          name: 'UI Components',
           coverage: 82.4,
           lines: 678,
           functions: 67,
@@ -146,7 +134,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           statements: 289,
         },
         {
-          name: "Security",
+          name: 'Security',
           coverage: 94.7,
           lines: 234,
           functions: 21,
@@ -156,7 +144,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
       ],
       trends: [
         {
-          date: "2024-01-01",
+          date: '2024-01-01',
           overall: 82.1,
           unit: 89.3,
           integration: 85.2,
@@ -165,7 +153,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           performance: 76.3,
         },
         {
-          date: "2024-01-02",
+          date: '2024-01-02',
           overall: 83.5,
           unit: 90.1,
           integration: 86.7,
@@ -174,7 +162,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           performance: 77.8,
         },
         {
-          date: "2024-01-03",
+          date: '2024-01-03',
           overall: 84.8,
           unit: 91.5,
           integration: 87.9,
@@ -183,7 +171,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           performance: 79.2,
         },
         {
-          date: "2024-01-04",
+          date: '2024-01-04',
           overall: 86.2,
           unit: 92.8,
           integration: 89.1,
@@ -192,7 +180,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           performance: 81.5,
         },
         {
-          date: "2024-01-05",
+          date: '2024-01-05',
           overall: 87.3,
           unit: 95.2,
           integration: 88.7,
@@ -203,39 +191,39 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
       ],
       fileLevel: [
         {
-          path: "src/auth/service.ts",
+          path: 'src/auth/service.ts',
           coverage: 98.2,
           lines: 156,
           uncovered: 3,
-          risk: "low",
+          risk: 'low',
         },
         {
-          path: "src/database/connector.ts",
+          path: 'src/database/connector.ts',
           coverage: 94.7,
           lines: 234,
           uncovered: 12,
-          risk: "low",
+          risk: 'low',
         },
         {
-          path: "src/api/gateway.ts",
+          path: 'src/api/gateway.ts',
           coverage: 89.3,
           lines: 345,
           uncovered: 37,
-          risk: "medium",
+          risk: 'medium',
         },
         {
-          path: "src/components/dashboard.tsx",
+          path: 'src/components/dashboard.tsx',
           coverage: 76.8,
           lines: 289,
           uncovered: 67,
-          risk: "high",
+          risk: 'high',
         },
         {
-          path: "src/security/validator.ts",
+          path: 'src/security/validator.ts',
           coverage: 96.1,
           lines: 178,
           uncovered: 7,
-          risk: "low",
+          risk: 'low',
         },
       ],
     };
@@ -250,13 +238,11 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
 
         try {
           // Simulate API call
-          await new Promise((resolve) => setTimeout(resolve, 1500));
+          await new Promise(resolve => setTimeout(resolve, 1500));
           const mockData = generateMockData();
           setData(mockData);
         } catch (err) {
-          setError(
-            err instanceof Error ? err.message : "Failed to load coverage data",
-          );
+          setError(err instanceof Error ? err.message : 'Failed to load coverage data');
         } finally {
           setIsLoading(false);
         }
@@ -271,14 +257,14 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
     if (!isRealTime || !data) return;
 
     const interval = setInterval(() => {
-      setData((prevData) => {
+      setData(prevData => {
         if (!prevData) return null;
 
         // Simulate small changes in coverage
         const updatedData = { ...prevData };
         updatedData.overall = Math.max(
           0,
-          Math.min(100, updatedData.overall + (Math.random() - 0.5) * 0.5),
+          Math.min(100, updatedData.overall + (Math.random() - 0.5) * 0.5)
         );
 
         return updatedData;
@@ -290,34 +276,31 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
 
   // Utility functions
   const getCoverageColor = useCallback((coverage: number): string => {
-    if (coverage >= 90) return "#10b981"; // Green
-    if (coverage >= 80) return "#84cc16"; // Lime
-    if (coverage >= 70) return "#eab308"; // Yellow
-    if (coverage >= 60) return "#f97316"; // Orange
-    return "#ef4444"; // Red
+    if (coverage >= 90) return '#10b981'; // Green
+    if (coverage >= 80) return '#84cc16'; // Lime
+    if (coverage >= 70) return '#eab308'; // Yellow
+    if (coverage >= 60) return '#f97316'; // Orange
+    return '#ef4444'; // Red
   }, []);
 
   const getRiskColor = useCallback((risk: string): string => {
     switch (risk) {
-      case "low":
-        return "bg-green-100 text-green-800";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800";
-      case "high":
-        return "bg-red-100 text-red-800";
+      case 'low':
+        return 'bg-green-100 text-green-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'high':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   }, []);
 
-  const getRiskLevel = useCallback(
-    (coverage: number): "low" | "medium" | "high" => {
-      if (coverage >= 90) return "low";
-      if (coverage >= 80) return "medium";
-      return "high";
-    },
-    [],
-  );
+  const getRiskLevel = useCallback((coverage: number): 'low' | 'medium' | 'high' => {
+    if (coverage >= 90) return 'low';
+    if (coverage >= 80) return 'medium';
+    return 'high';
+  }, []);
 
   // Prepare chart data
   const typeData = useMemo(() => {
@@ -331,11 +314,11 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
 
   const coverageTrendData = useMemo(() => {
     if (!data) return [];
-    return data.trends.map((trend) => ({
+    return data.trends.map(trend => ({
       ...trend,
-      date: new Date(trend.date).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
+      date: new Date(trend.date).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
       }),
     }));
   }, [data]);
@@ -374,12 +357,8 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
         <AlertDescription>
           <div className="flex items-center justify-between">
             <div>
-              <span className="font-semibold text-red-600">
-                Coverage Data Error
-              </span>
-              <p className="text-red-700 mt-1">
-                {error || "No coverage data available"}
-              </p>
+              <span className="font-semibold text-red-600">Coverage Data Error</span>
+              <p className="text-red-700 mt-1">{error || 'No coverage data available'}</p>
             </div>
             <Button onClick={onRefresh || (() => {})} variant="outline">
               Retry
@@ -395,16 +374,14 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Coverage Analytics
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Coverage Analytics</h1>
           <p className="text-gray-600 mt-1">
             Comprehensive test coverage visualization and analysis
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <Badge variant={isRealTime ? "default" : "secondary"}>
-            {isRealTime ? "Real-Time" : "Static"}
+          <Badge variant={isRealTime ? 'default' : 'secondary'}>
+            {isRealTime ? 'Real-Time' : 'Static'}
           </Badge>
           <Button onClick={onRefresh || (() => {})}>Refresh Data</Button>
         </div>
@@ -417,10 +394,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
             <CardTitle className="text-sm font-medium">Overall</CardTitle>
           </CardHeader>
           <CardContent>
-            <div
-              className="text-2xl font-bold"
-              style={{ color: getCoverageColor(data.overall) }}
-            >
+            <div className="text-2xl font-bold" style={{ color: getCoverageColor(data.overall) }}>
               {data.overall.toFixed(1)}%
             </div>
             <Progress value={data.overall} className="mt-2" />
@@ -430,15 +404,10 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
         {Object.entries(data.byType).map(([type, coverage]) => (
           <Card key={type}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium capitalize">
-                {type}
-              </CardTitle>
+              <CardTitle className="text-sm font-medium capitalize">{type}</CardTitle>
             </CardHeader>
             <CardContent>
-              <div
-                className="text-2xl font-bold"
-                style={{ color: getCoverageColor(coverage) }}
-              >
+              <div className="text-2xl font-bold" style={{ color: getCoverageColor(coverage) }}>
                 {coverage.toFixed(1)}%
               </div>
               <Progress value={coverage} className="mt-2" />
@@ -450,11 +419,11 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
       {/* Risk Assessment Alert */}
       <Alert
         className={`border-l-4 ${
-          getRiskLevel(data.overall) === "high"
-            ? "border-red-500 bg-red-50"
-            : getRiskLevel(data.overall) === "medium"
-              ? "border-yellow-500 bg-yellow-50"
-              : "border-green-500 bg-green-50"
+          getRiskLevel(data.overall) === 'high'
+            ? 'border-red-500 bg-red-50'
+            : getRiskLevel(data.overall) === 'medium'
+              ? 'border-yellow-500 bg-yellow-50'
+              : 'border-green-500 bg-green-50'
         }`}
       >
         <AlertDescription>
@@ -463,20 +432,18 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
               <span className="font-semibold">
                 Overall Risk Level: {getRiskLevel(data.overall).toUpperCase()}
               </span>
-              <span className="text-gray-600 ml-2">
-                Coverage: {data.overall.toFixed(1)}%
-              </span>
+              <span className="text-gray-600 ml-2">Coverage: {data.overall.toFixed(1)}%</span>
             </div>
             <Badge variant="outline">Assessment</Badge>
           </div>
           <div className="mt-2">
             <p className="text-sm">
-              {getRiskLevel(data.overall) === "high" &&
-                "Immediate attention required. Focus on increasing test coverage."}
-              {getRiskLevel(data.overall) === "medium" &&
-                "Moderate risk. Consider improving test coverage in critical areas."}
-              {getRiskLevel(data.overall) === "low" &&
-                "Good coverage. Maintain current testing standards."}
+              {getRiskLevel(data.overall) === 'high' &&
+                'Immediate attention required. Focus on increasing test coverage.'}
+              {getRiskLevel(data.overall) === 'medium' &&
+                'Moderate risk. Consider improving test coverage in critical areas.'}
+              {getRiskLevel(data.overall) === 'low' &&
+                'Good coverage. Maintain current testing standards.'}
             </p>
           </div>
         </AlertDescription>
@@ -500,9 +467,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
             <Card>
               <CardHeader>
                 <CardTitle>Coverage by Type</CardTitle>
-                <CardDescription>
-                  Distribution across different test types
-                </CardDescription>
+                <CardDescription>Distribution across different test types</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
@@ -515,9 +480,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
                       innerRadius={40}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, value }) =>
-                        `${name}: ${value.toFixed(1)}%`
-                      }
+                      label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
                     >
                       {typeData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -533,28 +496,18 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
             <Card>
               <CardHeader>
                 <CardTitle>Module Coverage</CardTitle>
-                <CardDescription>
-                  Coverage breakdown by system module
-                </CardDescription>
+                <CardDescription>Coverage breakdown by system module</CardDescription>
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={data.byModule}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                      dataKey="name"
-                      angle={-45}
-                      textAnchor="end"
-                      height={80}
-                    />
+                    <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <Bar dataKey="coverage" fill="#3B82F6">
                       {data.byModule.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={getCoverageColor(entry.coverage)}
-                        />
+                        <Cell key={`cell-${index}`} fill={getCoverageColor(entry.coverage)} />
                       ))}
                     </Bar>
                   </BarChart>
@@ -568,9 +521,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           <Card>
             <CardHeader>
               <CardTitle>File-Level Analysis</CardTitle>
-              <CardDescription>
-                Detailed coverage metrics for individual files
-              </CardDescription>
+              <CardDescription>Detailed coverage metrics for individual files</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -589,10 +540,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
                       <div>
                         <h3 className="font-medium">{file.path}</h3>
                         <div className="flex items-center space-x-2 mt-1">
-                          <Badge
-                            className={getRiskColor(file.risk)}
-                            variant="outline"
-                          >
+                          <Badge className={getRiskColor(file.risk)} variant="outline">
                             {file.risk.toUpperCase()} RISK
                           </Badge>
                           <span className="text-sm text-gray-500">
@@ -621,9 +569,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
           <Card>
             <CardHeader>
               <CardTitle>Coverage Trends</CardTitle>
-              <CardDescription>
-                Historical coverage trends over time
-              </CardDescription>
+              <CardDescription>Historical coverage trends over time</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={400}>
@@ -640,24 +586,9 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
                     stroke="#3B82F6"
                     strokeWidth={2}
                   />
-                  <Line
-                    type="monotone"
-                    dataKey="unit"
-                    stroke="#10B981"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="integration"
-                    stroke="#8B5CF6"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="e2e"
-                    stroke="#F59E0B"
-                    strokeWidth={2}
-                  />
+                  <Line type="monotone" dataKey="unit" stroke="#10B981" strokeWidth={2} />
+                  <Line type="monotone" dataKey="integration" stroke="#8B5CF6" strokeWidth={2} />
+                  <Line type="monotone" dataKey="e2e" stroke="#F59E0B" strokeWidth={2} />
                 </ComposedChart>
               </ResponsiveContainer>
             </CardContent>

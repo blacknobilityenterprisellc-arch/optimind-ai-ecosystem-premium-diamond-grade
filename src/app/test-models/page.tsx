@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Brain,
   Network,
@@ -13,14 +13,14 @@ import {
   Shield,
   Crown,
   Lightbulb,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { multiModelAIUtils } from "@/lib/multi-model-ai";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { multiModelAIUtils } from '@/lib/multi-model-ai';
 
 interface ModelStatus {
   id: string;
@@ -56,11 +56,11 @@ export default function TestModelsPage() {
     const loadModels = async () => {
       try {
         const models = await multiModelAIUtils.getAvailableModels(
-          multiModelAIUtils.DEFAULT_OPTIONS,
+          multiModelAIUtils.DEFAULT_OPTIONS
         );
         setAvailableModels(models);
       } catch (err) {
-        console.error("Failed to load models:", err);
+        console.error('Failed to load models:', err);
       }
     };
     loadModels();
@@ -68,15 +68,15 @@ export default function TestModelsPage() {
 
   const getModelIcon = (modelId: string) => {
     switch (modelId) {
-      case "glm-45v":
+      case 'glm-45v':
         return <Target className="w-5 h-5" />;
-      case "glm-45-auto-think":
+      case 'glm-45-auto-think':
         return <Lightbulb className="w-5 h-5" />;
-      case "glm-45-flagship":
+      case 'glm-45-flagship':
         return <Crown className="w-5 h-5" />;
-      case "air":
+      case 'air':
         return <Cpu className="w-5 h-5" />;
-      case "glm-45-full-stack":
+      case 'glm-45-full-stack':
         return <Network className="w-5 h-5" />;
       default:
         return <Brain className="w-5 h-5" />;
@@ -85,18 +85,18 @@ export default function TestModelsPage() {
 
   const getModelColor = (modelId: string) => {
     switch (modelId) {
-      case "glm-45v":
-        return "text-blue-600";
-      case "glm-45-auto-think":
-        return "text-orange-600";
-      case "glm-45-flagship":
-        return "text-yellow-600";
-      case "air":
-        return "text-purple-600";
-      case "glm-45-full-stack":
-        return "text-green-600";
+      case 'glm-45v':
+        return 'text-blue-600';
+      case 'glm-45-auto-think':
+        return 'text-orange-600';
+      case 'glm-45-flagship':
+        return 'text-yellow-600';
+      case 'air':
+        return 'text-purple-600';
+      case 'glm-45-full-stack':
+        return 'text-green-600';
       default:
-        return "text-gray-600";
+        return 'text-gray-600';
     }
   };
 
@@ -105,17 +105,17 @@ export default function TestModelsPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/test-models");
+      const response = await fetch('/api/test-models');
       const data = await response.json();
 
       if (data.success) {
         setModelStatuses(data.models);
       } else {
-        setError(data.message || "Failed to check model status");
+        setError(data.message || 'Failed to check model status');
       }
     } catch (error) {
-      setError("Network error while checking model status");
-      console.error("Model status check failed:", error);
+      setError('Network error while checking model status');
+      console.error('Model status check failed:', error);
     } finally {
       setLoading(false);
     }
@@ -126,31 +126,30 @@ export default function TestModelsPage() {
     setError(null);
 
     try {
-      const response = await fetch("/api/test-models", {
-        method: "POST",
+      const response = await fetch('/api/test-models', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           modelId,
-          testPrompt:
-            "Test advanced AI capabilities for image analysis and security scanning",
+          testPrompt: 'Test advanced AI capabilities for image analysis and security scanning',
         }),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setTestResults((prev) => {
-          const filtered = prev.filter((r) => r.modelId !== modelId);
+        setTestResults(prev => {
+          const filtered = prev.filter(r => r.modelId !== modelId);
           return [...filtered, data.result];
         });
       } else {
-        setError(data.message || "Failed to test model");
+        setError(data.message || 'Failed to test model');
       }
     } catch (error) {
-      setError("Network error while testing model");
-      console.error("Model test failed:", error);
+      setError('Network error while testing model');
+      console.error('Model test failed:', error);
     } finally {
       setTesting(false);
     }
@@ -160,7 +159,7 @@ export default function TestModelsPage() {
     setTesting(true);
     setError(null);
 
-    const promises = availableModels.map((model) => testModel(model.id));
+    const promises = availableModels.map(model => testModel(model.id));
     await Promise.all(promises);
     setTesting(false);
   };
@@ -179,8 +178,8 @@ export default function TestModelsPage() {
             <h1 className="text-3xl font-bold">Multi-Model AI Test Center</h1>
           </div>
           <p className="text-muted-foreground">
-            Test and validate GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship,
-            AIR, and Base AI models
+            Test and validate GLM-4.5V, GLM-4.5 Auto Think, GLM-4.5 Flagship, AIR, and Base AI
+            models
           </p>
         </div>
 
@@ -194,14 +193,8 @@ export default function TestModelsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-wrap gap-4">
-              <Button
-                onClick={checkModelStatus}
-                disabled={loading}
-                variant="outline"
-              >
-                <RefreshCw
-                  className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`}
-                />
+              <Button onClick={checkModelStatus} disabled={loading} variant="outline">
+                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 Check Status
               </Button>
               <Button onClick={testAllModels} disabled={testing}>
@@ -229,8 +222,8 @@ export default function TestModelsPage() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availableModels.map((model) => {
-                const status = modelStatuses.find((s) => s.id === model.id);
+              {availableModels.map(model => {
+                const status = modelStatuses.find(s => s.id === model.id);
                 const isAvailable = status?.isAvailable || false;
 
                 return (
@@ -239,9 +232,7 @@ export default function TestModelsPage() {
                       {getModelIcon(model.id)}
                       <div>
                         <h3 className="font-medium">{model.name}</h3>
-                        <p className="text-xs text-muted-foreground">
-                          {model.version}
-                        </p>
+                        <p className="text-xs text-muted-foreground">{model.version}</p>
                       </div>
                       <div className="ml-auto">
                         {isAvailable ? (
@@ -256,29 +247,21 @@ export default function TestModelsPage() {
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-medium">Status:</span>
                         <Badge
-                          variant={isAvailable ? "default" : "secondary"}
-                          className={
-                            isAvailable ? "bg-green-100 text-green-800" : ""
-                          }
+                          variant={isAvailable ? 'default' : 'secondary'}
+                          className={isAvailable ? 'bg-green-100 text-green-800' : ''}
                         >
-                          {isAvailable ? "Operational" : "Unavailable"}
+                          {isAvailable ? 'Operational' : 'Unavailable'}
                         </Badge>
                       </div>
 
                       <div className="text-xs text-muted-foreground">
                         <div className="font-medium mb-1">Capabilities:</div>
                         <div className="flex flex-wrap gap-1">
-                          {model.capabilities
-                            .slice(0, 3)
-                            .map((capability, idx) => (
-                              <Badge
-                                key={idx}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                {capability}
-                              </Badge>
-                            ))}
+                          {model.capabilities.slice(0, 3).map((capability, idx) => (
+                            <Badge key={idx} variant="outline" className="text-xs">
+                              {capability}
+                            </Badge>
+                          ))}
                           {model.capabilities.length > 3 && (
                             <Badge variant="outline" className="text-xs">
                               +{model.capabilities.length - 3}
@@ -337,18 +320,12 @@ export default function TestModelsPage() {
                       </div>
 
                       <div>
-                        <span className="text-xs font-medium text-muted-foreground">
-                          Response:
-                        </span>
-                        <p className="text-sm bg-gray-50 p-2 rounded">
-                          {result.response}
-                        </p>
+                        <span className="text-xs font-medium text-muted-foreground">Response:</span>
+                        <p className="text-sm bg-gray-50 p-2 rounded">{result.response}</p>
                       </div>
 
                       <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span>
-                          Confidence: {Math.round(result.confidence * 100)}%
-                        </span>
+                        <span>Confidence: {Math.round(result.confidence * 100)}%</span>
                         <span>Processing Time: {result.processingTime}ms</span>
                         <span>Status: {result.status}</span>
                       </div>
@@ -373,7 +350,7 @@ export default function TestModelsPage() {
               <div className="space-y-2">
                 <h4 className="font-medium">Available Models</h4>
                 <ul className="space-y-1 text-sm">
-                  {availableModels.map((model) => (
+                  {availableModels.map(model => (
                     <li key={model.id} className="flex items-center gap-2">
                       {getModelIcon(model.id)}
                       <span>
@@ -391,30 +368,28 @@ export default function TestModelsPage() {
                 <h4 className="font-medium">Model Capabilities</h4>
                 <div className="space-y-2 text-sm">
                   <div>
-                    <strong>GLM-4.5V:</strong> Advanced visual understanding,
-                    multimodal reasoning, scene understanding
+                    <strong>GLM-4.5V:</strong> Advanced visual understanding, multimodal reasoning,
+                    scene understanding
                   </div>
                   <div>
-                    <strong>GLM-4.5 Auto Think:</strong> Automatic thinking,
-                    self-reflection, step-by-step reasoning, meta-cognition
+                    <strong>GLM-4.5 Auto Think:</strong> Automatic thinking, self-reflection,
+                    step-by-step reasoning, meta-cognition
                   </div>
                   <div>
-                    <strong>GLM-4.5 Flagship:</strong> Quantum reasoning,
-                    universal comprehension, superintelligence, ultimate
-                    accuracy
+                    <strong>GLM-4.5 Flagship:</strong> Quantum reasoning, universal comprehension,
+                    superintelligence, ultimate accuracy
                   </div>
                   <div>
-                    <strong>AIR:</strong> Logical reasoning, causal inference,
-                    predictive analysis, risk assessment
+                    <strong>AIR:</strong> Logical reasoning, causal inference, predictive analysis,
+                    risk assessment
                   </div>
                   <div>
-                    <strong>GLM-4.5 Full Stack:</strong> Full-stack analysis,
-                    comprehensive reasoning, multi-domain expertise, integrated
-                    intelligence
+                    <strong>GLM-4.5 Full Stack:</strong> Full-stack analysis, comprehensive
+                    reasoning, multi-domain expertise, integrated intelligence
                   </div>
                   <div>
-                    <strong>Base Model:</strong> Comprehensive analysis with
-                    safety detection and quality assessment
+                    <strong>Base Model:</strong> Comprehensive analysis with safety detection and
+                    quality assessment
                   </div>
                 </div>
               </div>

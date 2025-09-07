@@ -1,6 +1,6 @@
 /**
  * OptiMind AI Ecosystem - Simple Initialization
- * 
+ *
  * A simple entry point that demonstrates the power and sophistication
  * of the OptiMind AI Ecosystem with minimal setup.
  */
@@ -71,7 +71,6 @@ export async function initializeOptiMindEcosystem(): Promise<void> {
     console.log('   Where security enables freedom');
     console.log('   Where harmony drives innovation');
     console.log('   Where your vision becomes reality');
-
   } catch (error) {
     console.error('❌ Failed to initialize OptiMind AI Ecosystem:', error);
     throw error;

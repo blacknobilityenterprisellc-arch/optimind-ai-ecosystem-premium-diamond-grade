@@ -1,32 +1,32 @@
 /**
  * OptiMind AI Ecosystem - Main UI Component
- * 
+ *
  * The primary React component that displays the OptiMind AI Ecosystem
  * interface with all its capabilities and features.
- * 
+ *
  * This component showcases the premium diamond grade AI solutions
  * for enterprise transformation.
  */
 
-"use client";
+'use client';
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Brain, 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Image as ImageIcon, 
-  MessageSquare, 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import {
+  Brain,
+  Shield,
+  Zap,
+  BarChart3,
+  Image as ImageIcon,
+  MessageSquare,
   Search,
   Eye,
   Sparkles,
   Cpu,
-  Rocket
-} from "lucide-react";
+  Rocket,
+} from 'lucide-react';
 
 interface EcosystemFeature {
   id: string;
@@ -35,131 +35,160 @@ interface EcosystemFeature {
   icon: React.ComponentType<any>;
   color: string;
   category: string;
-  status: "active" | "beta" | "coming-soon";
+  status: 'active' | 'beta' | 'coming-soon';
   stats: string;
 }
 
 const OptiMindEcosystem: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
   const ecosystemFeatures: EcosystemFeature[] = [
     {
-      id: "glm-orchestrator",
-      title: "GLM Orchestrator",
-      description: "Advanced AI model orchestration with intelligent routing and optimization",
+      id: 'glm-orchestrator',
+      title: 'GLM Orchestrator',
+      description: 'Advanced AI model orchestration with intelligent routing and optimization',
       icon: Brain,
-      color: "text-purple-500",
-      category: "core-ai",
-      status: "active",
-      stats: "45+ Models Integrated"
+      color: 'text-purple-500',
+      category: 'core-ai',
+      status: 'active',
+      stats: '45+ Models Integrated',
     },
     {
-      id: "intelligent-security",
-      title: "Intelligent Security",
-      description: "AI-powered security monitoring and threat detection",
+      id: 'intelligent-security',
+      title: 'Intelligent Security',
+      description: 'AI-powered security monitoring and threat detection',
       icon: Shield,
-      color: "text-green-500",
-      category: "security",
-      status: "active",
-      stats: "99.9% Uptime"
+      color: 'text-green-500',
+      category: 'security',
+      status: 'active',
+      stats: '99.9% Uptime',
     },
     {
-      id: "content-creation",
-      title: "Content Creation",
-      description: "AI-driven content generation and optimization",
+      id: 'content-creation',
+      title: 'Content Creation',
+      description: 'AI-driven content generation and optimization',
       icon: MessageSquare,
-      color: "text-blue-500",
-      category: "content",
-      status: "active",
-      stats: "1M+ Words Generated"
+      color: 'text-blue-500',
+      category: 'content',
+      status: 'active',
+      stats: '1M+ Words Generated',
     },
     {
-      id: "image-analysis",
-      title: "Image Analysis",
-      description: "Advanced computer vision and image processing",
+      id: 'image-analysis',
+      title: 'Image Analysis',
+      description: 'Advanced computer vision and image processing',
       icon: ImageIcon,
-      color: "text-orange-500",
-      category: "vision",
-      status: "active",
-      stats: "50K+ Images Processed"
+      color: 'text-orange-500',
+      category: 'vision',
+      status: 'active',
+      stats: '50K+ Images Processed',
     },
     {
-      id: "research-analysis",
-      title: "Research Analysis",
-      description: "Intelligent research and data analysis capabilities",
+      id: 'research-analysis',
+      title: 'Research Analysis',
+      description: 'Intelligent research and data analysis capabilities',
       icon: Search,
-      color: "text-indigo-500",
-      category: "analytics",
-      status: "active",
-      stats: "10K+ Research Papers"
+      color: 'text-indigo-500',
+      category: 'analytics',
+      status: 'active',
+      stats: '10K+ Research Papers',
     },
     {
-      id: "moderation",
-      title: "Content Moderation",
-      description: "AI-powered content moderation and filtering",
+      id: 'moderation',
+      title: 'Content Moderation',
+      description: 'AI-powered content moderation and filtering',
       icon: Eye,
-      color: "text-red-500",
-      category: "security",
-      status: "active",
-      stats: "99.5% Accuracy"
+      color: 'text-red-500',
+      category: 'security',
+      status: 'active',
+      stats: '99.5% Accuracy',
     },
     {
-      id: "optimization",
-      title: "Performance Optimization",
-      description: "Continuous optimization and performance enhancement",
+      id: 'optimization',
+      title: 'Performance Optimization',
+      description: 'Continuous optimization and performance enhancement',
       icon: Zap,
-      color: "text-yellow-500",
-      category: "optimization",
-      status: "active",
-      stats: "87% Avg. Improvement"
+      color: 'text-yellow-500',
+      category: 'optimization',
+      status: 'active',
+      stats: '87% Avg. Improvement',
     },
     {
-      id: "developer-access",
-      title: "Developer Access",
-      description: "Secure API access and developer tools",
+      id: 'developer-access',
+      title: 'Developer Access',
+      description: 'Secure API access and developer tools',
       icon: Cpu,
-      color: "text-cyan-500",
-      category: "development",
-      status: "beta",
-      stats: "100+ APIs Available"
+      color: 'text-cyan-500',
+      category: 'development',
+      status: 'beta',
+      stats: '100+ APIs Available',
     },
     {
-      id: "analytics-dashboard",
-      title: "Analytics Dashboard",
-      description: "Comprehensive analytics and insights",
+      id: 'analytics-dashboard',
+      title: 'Analytics Dashboard',
+      description: 'Comprehensive analytics and insights',
       icon: BarChart3,
-      color: "text-pink-500",
-      category: "analytics",
-      status: "active",
-      stats: "Real-time Insights"
-    }
+      color: 'text-pink-500',
+      category: 'analytics',
+      status: 'active',
+      stats: 'Real-time Insights',
+    },
   ];
 
   const categories = [
-    { id: "all", label: "All Features", count: ecosystemFeatures.length },
-    { id: "core-ai", label: "Core AI", count: ecosystemFeatures.filter(f => f.category === "core-ai").length },
-    { id: "security", label: "Security", count: ecosystemFeatures.filter(f => f.category === "security").length },
-    { id: "content", label: "Content", count: ecosystemFeatures.filter(f => f.category === "content").length },
-    { id: "vision", label: "Vision", count: ecosystemFeatures.filter(f => f.category === "vision").length },
-    { id: "analytics", label: "Analytics", count: ecosystemFeatures.filter(f => f.category === "analytics").length },
-    { id: "optimization", label: "Optimization", count: ecosystemFeatures.filter(f => f.category === "optimization").length },
-    { id: "development", label: "Development", count: ecosystemFeatures.filter(f => f.category === "development").length }
+    { id: 'all', label: 'All Features', count: ecosystemFeatures.length },
+    {
+      id: 'core-ai',
+      label: 'Core AI',
+      count: ecosystemFeatures.filter(f => f.category === 'core-ai').length,
+    },
+    {
+      id: 'security',
+      label: 'Security',
+      count: ecosystemFeatures.filter(f => f.category === 'security').length,
+    },
+    {
+      id: 'content',
+      label: 'Content',
+      count: ecosystemFeatures.filter(f => f.category === 'content').length,
+    },
+    {
+      id: 'vision',
+      label: 'Vision',
+      count: ecosystemFeatures.filter(f => f.category === 'vision').length,
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      count: ecosystemFeatures.filter(f => f.category === 'analytics').length,
+    },
+    {
+      id: 'optimization',
+      label: 'Optimization',
+      count: ecosystemFeatures.filter(f => f.category === 'optimization').length,
+    },
+    {
+      id: 'development',
+      label: 'Development',
+      count: ecosystemFeatures.filter(f => f.category === 'development').length,
+    },
   ];
 
-  const filteredFeatures = selectedCategory === "all" 
-    ? ecosystemFeatures 
-    : ecosystemFeatures.filter(feature => feature.category === selectedCategory);
+  const filteredFeatures =
+    selectedCategory === 'all'
+      ? ecosystemFeatures
+      : ecosystemFeatures.filter(feature => feature.category === selectedCategory);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
-        return "bg-green-500";
-      case "beta":
-        return "bg-yellow-500";
-      case "coming-soon":
-        return "bg-gray-500";
+      case 'active':
+        return 'bg-green-500';
+      case 'beta':
+        return 'bg-yellow-500';
+      case 'coming-soon':
+        return 'bg-gray-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
@@ -172,16 +201,17 @@ const OptiMindEcosystem: React.FC = () => {
           <h2 className="text-2xl font-bold">Ecosystem Capabilities</h2>
         </div>
         <p className="text-gray-400 max-w-2xl mx-auto">
-          Explore our comprehensive suite of AI-powered tools and services designed for enterprise transformation
+          Explore our comprehensive suite of AI-powered tools and services designed for enterprise
+          transformation
         </p>
       </div>
 
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2 justify-center">
-        {categories.map((category) => (
+        {categories.map(category => (
           <Button
             key={category.id}
-            variant={selectedCategory === category.id ? "default" : "outline"}
+            variant={selectedCategory === category.id ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedCategory(category.id)}
             className="flex items-center gap-2"
@@ -196,8 +226,11 @@ const OptiMindEcosystem: React.FC = () => {
 
       {/* Features Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredFeatures.map((feature) => (
-          <Card key={feature.id} className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50">
+        {filteredFeatures.map(feature => (
+          <Card
+            key={feature.id}
+            className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50"
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <feature.icon className={`h-6 w-6 ${feature.color}`} />
@@ -206,20 +239,16 @@ const OptiMindEcosystem: React.FC = () => {
                     variant="outline"
                     className={`text-xs ${getStatusColor(feature.status)} text-white border-none`}
                   >
-                    {feature.status.replace("-", " ")}
+                    {feature.status.replace('-', ' ')}
                   </Badge>
                 </div>
               </div>
               <CardTitle className="text-lg text-white">{feature.title}</CardTitle>
-              <CardDescription className="text-gray-400">
-                {feature.description}
-              </CardDescription>
+              <CardDescription className="text-gray-400">{feature.description}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-500">
-                  {feature.stats}
-                </span>
+                <span className="text-sm text-gray-500">{feature.stats}</span>
                 <Button variant="outline" size="sm" className="text-xs">
                   Explore
                   <Rocket className="h-3 w-3 ml-1" />

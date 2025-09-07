@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from 'react';
 import {
   Brain,
   Shield,
@@ -18,16 +18,16 @@ import {
   Tag,
   Lock,
   Sparkles,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useAIEnhancement, AIAnalysisResult } from "@/lib/ai-enhancement";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAIEnhancement, AIAnalysisResult } from '@/lib/ai-enhancement';
+import { useSecureSubscription } from '@/lib/secure-subscription-manager';
 
 interface AIEnhancedAnalyzerProps {
   photoId: string;
@@ -40,11 +40,11 @@ export function AIEnhancedAnalyzer({
   photoId,
   file,
   onAnalysisComplete,
-  className = "",
+  className = '',
 }: AIEnhancedAnalyzerProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
-  const [description, setDescription] = useState("");
+  const [activeTab, setActiveTab] = useState('overview');
+  const [description, setDescription] = useState('');
   const [privacyConcerns, setPrivacyConcerns] = useState<string[]>([]);
   const [privacySuggestions, setPrivacySuggestions] = useState<string[]>([]);
 
@@ -84,7 +84,7 @@ export function AIEnhancedAnalyzer({
       const suggestions = await getPrivacySuggestions(photoId);
       setPrivacySuggestions(suggestions);
     } catch (error) {
-      console.error("AI analysis failed:", error);
+      console.error('AI analysis failed:', error);
     }
   }, [
     photoId,
@@ -98,21 +98,21 @@ export function AIEnhancedAnalyzer({
   ]);
 
   const getSafetyColor = (score: number) => {
-    if (score >= 0.8) return "text-green-600";
-    if (score >= 0.6) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 0.8) return 'text-green-600';
+    if (score >= 0.6) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const getQualityColor = (score: number) => {
-    if (score >= 0.8) return "text-green-600";
-    if (score >= 0.6) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 0.8) return 'text-green-600';
+    if (score >= 0.6) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const getAestheticColor = (score: number) => {
-    if (score >= 0.8) return "text-purple-600";
-    if (score >= 0.6) return "text-blue-600";
-    return "text-gray-600";
+    if (score >= 0.8) return 'text-purple-600';
+    if (score >= 0.6) return 'text-blue-600';
+    return 'text-gray-600';
   };
 
   if (!isPremium) {
@@ -143,21 +143,14 @@ export function AIEnhancedAnalyzer({
             <Brain className="w-5 h-5 text-purple-600" />
             AI Analysis
             {analysisResult && (
-              <Badge
-                variant="outline"
-                className="text-green-600 border-green-600"
-              >
+              <Badge variant="outline" className="text-green-600 border-green-600">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Complete
               </Badge>
             )}
           </CardTitle>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            {isExpanded ? "Collapse" : "Expand"}
+          <Button variant="outline" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
+            {isExpanded ? 'Collapse' : 'Expand'}
           </Button>
         </div>
       </CardHeader>
@@ -167,24 +160,17 @@ export function AIEnhancedAnalyzer({
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin" />
-              <span className="text-sm font-medium">
-                AI Analysis in Progress...
-              </span>
+              <span className="text-sm font-medium">AI Analysis in Progress...</span>
             </div>
             <Progress value={75} className="w-full" />
             <p className="text-xs text-muted-foreground">
-              Analyzing content, detecting objects, recognizing emotions, and
-              assessing quality...
+              Analyzing content, detecting objects, recognizing emotions, and assessing quality...
             </p>
           </div>
         )}
 
         {analysisResult && isExpanded && (
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4 gap-1">
               <TabsTrigger value="overview" className="text-xs">
                 <Eye className="w-3 h-3 mr-1" />
@@ -213,16 +199,11 @@ export function AIEnhancedAnalyzer({
                     <span className="text-sm font-medium">Safety Score</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <span
-                      className={getSafetyColor(analysisResult.safetyScore)}
-                    >
+                    <span className={getSafetyColor(analysisResult.safetyScore)}>
                       {Math.round(analysisResult.safetyScore * 100)}%
                     </span>
                   </div>
-                  <Progress
-                    value={analysisResult.safetyScore * 100}
-                    className="w-full"
-                  />
+                  <Progress value={analysisResult.safetyScore * 100} className="w-full" />
                 </div>
 
                 <div className="space-y-2">
@@ -231,18 +212,11 @@ export function AIEnhancedAnalyzer({
                     <span className="text-sm font-medium">Aesthetic Score</span>
                   </div>
                   <div className="text-2xl font-bold">
-                    <span
-                      className={getAestheticColor(
-                        analysisResult.aestheticScore,
-                      )}
-                    >
+                    <span className={getAestheticColor(analysisResult.aestheticScore)}>
                       {Math.round(analysisResult.aestheticScore * 100)}%
                     </span>
                   </div>
-                  <Progress
-                    value={analysisResult.aestheticScore * 100}
-                    className="w-full"
-                  />
+                  <Progress value={analysisResult.aestheticScore * 100} className="w-full" />
                 </div>
               </div>
 
@@ -273,9 +247,7 @@ export function AIEnhancedAnalyzer({
               {description && (
                 <div className="space-y-2">
                   <h4 className="font-medium">AI Description</h4>
-                  <p className="text-sm text-muted-foreground italic">
-                    {description}
-                  </p>
+                  <p className="text-sm text-muted-foreground italic">{description}</p>
                 </div>
               )}
             </TabsContent>
@@ -287,11 +259,7 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">Detected Objects</h4>
                   <div className="flex flex-wrap gap-2">
                     {analysisResult.objects.map((obj, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="text-xs"
-                      >
+                      <Badge key={index} variant="secondary" className="text-xs">
                         {obj}
                       </Badge>
                     ))}
@@ -320,10 +288,7 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">Text Content</h4>
                   <div className="space-y-1">
                     {analysisResult.text.map((text, index) => (
-                      <div
-                        key={index}
-                        className="text-sm bg-gray-50 p-2 rounded"
-                      >
+                      <div key={index} className="text-sm bg-gray-50 p-2 rounded">
                         {text}
                       </div>
                     ))}
@@ -374,49 +339,34 @@ export function AIEnhancedAnalyzer({
                       {Math.round(analysisResult.quality * 100)}%
                     </span>
                   </div>
-                  <Progress
-                    value={analysisResult.quality * 100}
-                    className="w-full"
-                  />
+                  <Progress value={analysisResult.quality * 100} className="w-full" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Brightness</span>
-                    <Progress
-                      value={analysisResult.metadata.brightness * 100}
-                      className="w-full"
-                    />
+                    <Progress value={analysisResult.metadata.brightness * 100} className="w-full" />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.brightness * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Contrast</span>
-                    <Progress
-                      value={analysisResult.metadata.contrast * 100}
-                      className="w-full"
-                    />
+                    <Progress value={analysisResult.metadata.contrast * 100} className="w-full" />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.contrast * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Saturation</span>
-                    <Progress
-                      value={analysisResult.metadata.saturation * 100}
-                      className="w-full"
-                    />
+                    <Progress value={analysisResult.metadata.saturation * 100} className="w-full" />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.saturation * 100)}%
                     </span>
                   </div>
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Sharpness</span>
-                    <Progress
-                      value={analysisResult.metadata.sharpness * 100}
-                      className="w-full"
-                    />
+                    <Progress value={analysisResult.metadata.sharpness * 100} className="w-full" />
                     <span className="text-xs text-muted-foreground">
                       {Math.round(analysisResult.metadata.sharpness * 100)}%
                     </span>
@@ -430,10 +380,7 @@ export function AIEnhancedAnalyzer({
                   <h4 className="font-medium">AI Suggestions</h4>
                   <div className="space-y-2">
                     {analysisResult.suggestions.map((suggestion, index) => (
-                      <div
-                        key={index}
-                        className="flex items-start gap-2 text-sm"
-                      >
+                      <div key={index} className="flex items-start gap-2 text-sm">
                         <Lightbulb className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
                         <span>{suggestion}</span>
                       </div>
@@ -471,9 +418,7 @@ export function AIEnhancedAnalyzer({
               {/* Privacy Suggestions */}
               {privacySuggestions.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="font-medium">
-                    Privacy Protection Suggestions
-                  </h4>
+                  <h4 className="font-medium">Privacy Protection Suggestions</h4>
                   <div className="space-y-2">
                     {privacySuggestions.map((suggestion, index) => (
                       <div
@@ -494,8 +439,7 @@ export function AIEnhancedAnalyzer({
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-green-600" />
                   <span className="text-sm">
-                    This image is marked as{" "}
-                    {analysisResult.isNsfw ? "sensitive" : "safe"} content
+                    This image is marked as {analysisResult.isNsfw ? 'sensitive' : 'safe'} content
                   </span>
                 </div>
                 <div className="text-xs text-muted-foreground">

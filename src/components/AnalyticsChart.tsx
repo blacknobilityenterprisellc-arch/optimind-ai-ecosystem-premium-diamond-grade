@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   BarChart3,
   TrendingUp,
@@ -16,19 +16,13 @@ import {
   Clock,
   Award,
   Star,
-} from "lucide-react";
+} from 'lucide-react';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 
 interface ChartData {
   labels: string[];
@@ -45,7 +39,7 @@ interface MetricCard {
   title: string;
   value: string;
   change: string;
-  trend: "up" | "down" | "stable";
+  trend: 'up' | 'down' | 'stable';
   icon: any;
   color: string;
 }
@@ -55,63 +49,62 @@ interface AnalyticsChartProps {
 }
 
 export default function AnalyticsChart({ className }: AnalyticsChartProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const [selectedPeriod, setSelectedPeriod] = useState('7d');
   const [isLoading, setIsLoading] = useState(false);
   const [chartData, setChartData] = useState<ChartData | null>(null);
 
   const periods = [
-    { value: "24h", label: "24 Hours" },
-    { value: "7d", label: "7 Days" },
-    { value: "30d", label: "30 Days" },
-    { value: "90d", label: "90 Days" },
+    { value: '24h', label: '24 Hours' },
+    { value: '7d', label: '7 Days' },
+    { value: '30d', label: '30 Days' },
+    { value: '90d', label: '90 Days' },
   ];
 
   const metricCards: MetricCard[] = [
     {
-      title: "Total Content",
-      value: "1,247",
-      change: "+12.5%",
-      trend: "up",
+      title: 'Total Content',
+      value: '1,247',
+      change: '+12.5%',
+      trend: 'up',
       icon: FileText,
-      color: "text-blue-600",
+      color: 'text-blue-600',
     },
     {
-      title: "Optimization Score",
-      value: "87%",
-      change: "+5.2%",
-      trend: "up",
+      title: 'Optimization Score',
+      value: '87%',
+      change: '+5.2%',
+      trend: 'up',
       icon: Target,
-      color: "text-green-600",
+      color: 'text-green-600',
     },
     {
-      title: "Active Projects",
-      value: "23",
-      change: "+8.1%",
-      trend: "up",
+      title: 'Active Projects',
+      value: '23',
+      change: '+8.1%',
+      trend: 'up',
       icon: Brain,
-      color: "text-purple-600",
+      color: 'text-purple-600',
     },
     {
-      title: "System Health",
-      value: "96%",
-      change: "Stable",
-      trend: "stable",
+      title: 'System Health',
+      value: '96%',
+      change: 'Stable',
+      trend: 'stable',
       icon: Activity,
-      color: "text-green-600",
+      color: 'text-green-600',
     },
   ];
 
   // Generate mock chart data based on selected period
   const generateChartData = (period: string): ChartData => {
-    const dataPoints =
-      period === "24h" ? 24 : period === "7d" ? 7 : period === "30d" ? 30 : 90;
+    const dataPoints = period === '24h' ? 24 : period === '7d' ? 7 : period === '30d' ? 30 : 90;
     const labels = [];
     const contentData = [];
     const optimizationData = [];
     const projectsData = [];
 
     for (let i = 0; i < dataPoints; i++) {
-      if (period === "24h") {
+      if (period === '24h') {
         labels.push(`${i}:00`);
       } else {
         labels.push(`Day ${i + 1}`);
@@ -126,24 +119,24 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
       labels,
       datasets: [
         {
-          label: "Content Generated",
+          label: 'Content Generated',
           data: contentData,
-          backgroundColor: "rgba(59, 130, 246, 0.5)",
-          borderColor: "rgb(59, 130, 246)",
+          backgroundColor: 'rgba(59, 130, 246, 0.5)',
+          borderColor: 'rgb(59, 130, 246)',
           borderWidth: 2,
         },
         {
-          label: "Optimization Score",
+          label: 'Optimization Score',
           data: optimizationData,
-          backgroundColor: "rgba(16, 185, 129, 0.5)",
-          borderColor: "rgb(16, 185, 129)",
+          backgroundColor: 'rgba(16, 185, 129, 0.5)',
+          borderColor: 'rgb(16, 185, 129)',
           borderWidth: 2,
         },
         {
-          label: "Active Projects",
+          label: 'Active Projects',
           data: projectsData,
-          backgroundColor: "rgba(139, 92, 246, 0.5)",
-          borderColor: "rgb(139, 92, 246)",
+          backgroundColor: 'rgba(139, 92, 246, 0.5)',
+          borderColor: 'rgb(139, 92, 246)',
           borderWidth: 2,
         },
       ],
@@ -154,11 +147,11 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 500));
       const data = generateChartData(period);
       setChartData(data);
     } catch (error) {
-      console.error("Failed to load chart data:", error);
+      console.error('Failed to load chart data:', error);
     } finally {
       setIsLoading(false);
     }
@@ -174,7 +167,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
 
   // Simple bar chart rendering using CSS
   const renderBarChart = (data: ChartData) => {
-    const maxValue = Math.max(...data.datasets.flatMap((d) => d.data));
+    const maxValue = Math.max(...data.datasets.flatMap(d => d.data));
 
     return (
       <div className="space-y-4">
@@ -189,9 +182,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
             <div className="space-y-1">
               {data.labels.map((label, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                  <span className="text-xs text-muted-foreground w-12">
-                    {label}
-                  </span>
+                  <span className="text-xs text-muted-foreground w-12">{label}</span>
                   <div className="flex-1 bg-muted rounded-full h-2 relative overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-300"
@@ -201,9 +192,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                       }}
                     />
                   </div>
-                  <span className="text-xs font-medium w-8 text-right">
-                    {dataset.data[index]}
-                  </span>
+                  <span className="text-xs font-medium w-8 text-right">{dataset.data[index]}</span>
                 </div>
               ))}
             </div>
@@ -222,29 +211,20 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
               <BarChart3 className="w-5 h-5" />
               <span>Analytics & Performance</span>
             </CardTitle>
-            <CardDescription>
-              Real-time metrics and performance insights
-            </CardDescription>
+            <CardDescription>Real-time metrics and performance insights</CardDescription>
           </div>
           <div className="flex items-center space-x-2">
             <Tabs value={selectedPeriod} onValueChange={setSelectedPeriod}>
               <TabsList>
-                {periods.map((period) => (
+                {periods.map(period => (
                   <TabsTrigger key={period.value} value={period.value}>
                     {period.label}
                   </TabsTrigger>
                 ))}
               </TabsList>
             </Tabs>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={isLoading}
-            >
-              <RefreshCw
-                className={`w-4 h-4 mr-2 ${isLoading ? "animate-spin" : ""}`}
-              />
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
+              <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
@@ -260,9 +240,9 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                   <metric.icon className={`w-4 h-4 ${metric.color}`} />
                   <span className="text-sm font-medium">{metric.title}</span>
                 </div>
-                {metric.trend === "up" ? (
+                {metric.trend === 'up' ? (
                   <TrendingUp className="w-3 h-3 text-green-500" />
-                ) : metric.trend === "down" ? (
+                ) : metric.trend === 'down' ? (
                   <TrendingDown className="w-3 h-3 text-red-500" />
                 ) : (
                   <Activity className="w-3 h-3 text-gray-500" />
@@ -272,11 +252,11 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
                 <p className="text-xl font-bold">{metric.value}</p>
                 <p
                   className={`text-xs ${
-                    metric.trend === "up"
-                      ? "text-green-600"
-                      : metric.trend === "down"
-                        ? "text-red-600"
-                        : "text-gray-600"
+                    metric.trend === 'up'
+                      ? 'text-green-600'
+                      : metric.trend === 'down'
+                        ? 'text-red-600'
+                        : 'text-gray-600'
                   }`}
                 >
                   {metric.change}
@@ -306,15 +286,11 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
             <div className="flex items-center justify-center h-64">
               <div className="text-center space-y-4">
                 <RefreshCw className="w-8 h-8 animate-spin mx-auto text-muted-foreground" />
-                <p className="text-muted-foreground">
-                  Loading analytics data...
-                </p>
+                <p className="text-muted-foreground">Loading analytics data...</p>
               </div>
             </div>
           ) : chartData ? (
-            <div className="border rounded-lg p-4 bg-muted/20">
-              {renderBarChart(chartData)}
-            </div>
+            <div className="border rounded-lg p-4 bg-muted/20">{renderBarChart(chartData)}</div>
           ) : (
             <div className="flex items-center justify-center h-64 text-muted-foreground">
               <div className="text-center space-y-4">
@@ -333,9 +309,7 @@ export default function AnalyticsChart({ className }: AnalyticsChartProps) {
               <span className="text-sm font-medium">Top Performer</span>
             </div>
             <p className="text-lg font-bold">Content Generation</p>
-            <p className="text-xs text-muted-foreground">
-              +12.5% growth this period
-            </p>
+            <p className="text-xs text-muted-foreground">+12.5% growth this period</p>
           </Card>
 
           <Card className="p-4">

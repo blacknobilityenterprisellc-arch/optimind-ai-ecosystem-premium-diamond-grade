@@ -1,6 +1,6 @@
 /**
  * Premium Diamond-Grade Scanner API
- * 
+ *
  * API endpoints for the OptiMind AI Premium Diamond-Grade Scanner
  * Provides automatic issue detection, scanning, and fixing capabilities
  */
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
       case 'status':
         const activeScans = premiumDiamondGradeScanner.getActiveScans();
         const scanHistory = premiumDiamondGradeScanner.getScanHistory();
-        
+
         return NextResponse.json({
           success: true,
           action: 'status',
@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
             activeScans: activeScans.length,
             scanHistory: scanHistory.length,
             latestScan: scanHistory[scanHistory.length - 1] || null,
-            activeScanDetails: activeScans
+            activeScanDetails: activeScans,
           },
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'history':
@@ -44,9 +44,9 @@ export async function GET(request: NextRequest) {
           scanner: 'Premium Diamond-Grade',
           data: {
             scans: history,
-            totalScans: history.length
+            totalScans: history.length,
           },
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'trigger-scan':
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
           description: 'Manually triggered scan for system health assessment',
           detectedAt: new Date(),
           autoFixable: true,
-          fixApplied: false
+          fixApplied: false,
         };
 
         const scanResult = await premiumDiamondGradeScanner.triggerScan(mockIssue);
@@ -68,26 +68,31 @@ export async function GET(request: NextRequest) {
           action: 'trigger-scan',
           scanner: 'Premium Diamond-Grade',
           data: scanResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['status', 'history', 'trigger-scan'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: ['status', 'history', 'trigger-scan'],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('Premium Scanner API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      scanner: 'Premium Diamond-Grade',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        scanner: 'Premium Diamond-Grade',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -104,11 +109,14 @@ export async function POST(request: NextRequest) {
     switch (action) {
       case 'report-issue':
         if (!issue) {
-          return NextResponse.json({
-            success: false,
-            error: 'Issue data is required',
-            timestamp: new Date().toISOString()
-          }, { status: 400 });
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Issue data is required',
+              timestamp: new Date().toISOString(),
+            },
+            { status: 400 }
+          );
         }
 
         const scanResult = await premiumDiamondGradeScanner.triggerScan(issue);
@@ -117,7 +125,7 @@ export async function POST(request: NextRequest) {
           action: 'report-issue',
           scanner: 'Premium Diamond-Grade',
           data: scanResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'start-scanner':
@@ -127,7 +135,7 @@ export async function POST(request: NextRequest) {
           action: 'start-scanner',
           scanner: 'Premium Diamond-Grade',
           message: 'Scanner started successfully',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'stop-scanner':
@@ -137,7 +145,7 @@ export async function POST(request: NextRequest) {
           action: 'stop-scanner',
           scanner: 'Premium Diamond-Grade',
           message: 'Scanner stopped successfully',
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       case 'comprehensive-scan':
@@ -150,34 +158,45 @@ export async function POST(request: NextRequest) {
           description: 'Comprehensive system assessment for all components',
           detectedAt: new Date(),
           autoFixable: true,
-          fixApplied: false
+          fixApplied: false,
         };
 
-        const comprehensiveResult = await premiumDiamondGradeScanner.triggerScan(comprehensiveIssue);
+        const comprehensiveResult =
+          await premiumDiamondGradeScanner.triggerScan(comprehensiveIssue);
         return NextResponse.json({
           success: true,
           action: 'comprehensive-scan',
           scanner: 'Premium Diamond-Grade',
           data: comprehensiveResult,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
       default:
-        return NextResponse.json({
-          success: false,
-          error: 'Unknown action',
-          availableActions: ['report-issue', 'start-scanner', 'stop-scanner', 'comprehensive-scan'],
-          timestamp: new Date().toISOString()
-        }, { status: 400 });
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Unknown action',
+            availableActions: [
+              'report-issue',
+              'start-scanner',
+              'stop-scanner',
+              'comprehensive-scan',
+            ],
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
     }
-
   } catch (error) {
     console.error('Premium Scanner API Error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      scanner: 'Premium Diamond-Grade',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        scanner: 'Premium Diamond-Grade',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
   }
 }

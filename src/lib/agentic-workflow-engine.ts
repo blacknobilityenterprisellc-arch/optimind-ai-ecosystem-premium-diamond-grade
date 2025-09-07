@@ -1,30 +1,21 @@
 // Agentic Workflow Engine
 // Implements thinking/non-thinking modes with GLM-4.5 and OpenRouter integration
 
-import {
-  zaiApiService,
-  ZAIAnalysisRequest,
-  ZAIAnalysisResponse,
-} from "./zai-api-service";
+import { zaiApiService, ZAIAnalysisRequest, ZAIAnalysisResponse } from './zai-api-service';
 import {
   openRouterService,
   OpenRouterAnalysisRequest,
   OpenRouterAnalysisResponse,
-} from "./openrouter-service";
-import {
-  mcpService,
-  MCPToolRequest,
-  MCPToolResponse,
-  MCPAgentConfig,
-} from "./mcp-service";
+} from './openrouter-service';
+import { mcpService, MCPToolRequest, MCPToolResponse, MCPAgentConfig } from './mcp-service';
 
 export interface AgenticTask {
   id: string;
   name: string;
   description: string;
-  type: "analysis" | "generation" | "transformation" | "validation";
-  priority: "low" | "medium" | "high" | "critical";
-  complexity: "simple" | "moderate" | "complex" | "expert";
+  type: 'analysis' | 'generation' | 'transformation' | 'validation';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  complexity: 'simple' | 'moderate' | 'complex' | 'expert';
   input: any;
   expectedOutput: any;
   constraints?: any;
@@ -37,7 +28,7 @@ export interface AgenticWorkflow {
   description: string;
   tasks: AgenticTask[];
   agentConfig: MCPAgentConfig;
-  reasoningMode: "thinking" | "non-thinking" | "hybrid";
+  reasoningMode: 'thinking' | 'non-thinking' | 'hybrid';
   autoRouting: boolean;
   budget?: {
     maxCost: number;
@@ -49,7 +40,7 @@ export interface AgenticWorkflow {
 export interface AgenticExecution {
   id: string;
   workflowId: string;
-  status: "pending" | "running" | "completed" | "failed" | "paused";
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'paused';
   currentTaskId?: string;
   results: Map<string, any>;
   errors: string[];
@@ -66,7 +57,7 @@ export interface AgenticExecution {
 
 export interface ReasoningStep {
   id: string;
-  type: "analysis" | "planning" | "tool-selection" | "validation" | "synthesis";
+  type: 'analysis' | 'planning' | 'tool-selection' | 'validation' | 'synthesis';
   content: string;
   confidence: number;
   timestamp: Date;
@@ -114,95 +105,89 @@ class AgenticWorkflowEngine {
   private initializeDefaultWorkflows(): void {
     const defaultWorkflows: AgenticWorkflow[] = [
       {
-        id: "customer-support-summary",
-        name: "Customer Support Summary Generation",
-        description:
-          "Generate structured summaries from customer interaction transcripts",
+        id: 'customer-support-summary',
+        name: 'Customer Support Summary Generation',
+        description: 'Generate structured summaries from customer interaction transcripts',
         tasks: [
           {
-            id: "transcript-analysis",
-            name: "Transcript Analysis",
-            description: "Analyze customer transcript for key information",
-            type: "analysis",
-            priority: "high",
-            complexity: "moderate",
-            input: { transcript: "" },
-            expectedOutput: { entities: [], sentiment: "", topics: [] },
+            id: 'transcript-analysis',
+            name: 'Transcript Analysis',
+            description: 'Analyze customer transcript for key information',
+            type: 'analysis',
+            priority: 'high',
+            complexity: 'moderate',
+            input: { transcript: '' },
+            expectedOutput: { entities: [], sentiment: '', topics: [] },
           },
           {
-            id: "action-item-extraction",
-            name: "Action Item Extraction",
-            description: "Extract action items from the conversation",
-            type: "analysis",
-            priority: "medium",
-            complexity: "simple",
+            id: 'action-item-extraction',
+            name: 'Action Item Extraction',
+            description: 'Extract action items from the conversation',
+            type: 'analysis',
+            priority: 'medium',
+            complexity: 'simple',
             input: { analysisResult: null },
             expectedOutput: { actionItems: [], priorities: [] },
           },
           {
-            id: "summary-generation",
-            name: "Summary Generation",
-            description: "Generate final structured summary",
-            type: "generation",
-            priority: "high",
-            complexity: "moderate",
+            id: 'summary-generation',
+            name: 'Summary Generation',
+            description: 'Generate final structured summary',
+            type: 'generation',
+            priority: 'high',
+            complexity: 'moderate',
             input: { analysisResult: null, actionItems: null },
-            expectedOutput: { summary: "", actionItems: [], priority: "" },
+            expectedOutput: { summary: '', actionItems: [], priority: '' },
           },
         ],
         agentConfig: {
-          id: "customer-service-agent",
-          name: "Customer Service AI Agent",
-          description: "Specialized agent for customer interaction analysis",
-          domain: "customer-service",
-          capabilities: [
-            "sentiment-analysis",
-            "ticket-classification",
-            "response-generation",
-          ],
-          tools: ["sentiment-analysis", "crm-sync", "knowledge-base-search"],
+          id: 'customer-service-agent',
+          name: 'Customer Service AI Agent',
+          description: 'Specialized agent for customer interaction analysis',
+          domain: 'customer-service',
+          capabilities: ['sentiment-analysis', 'ticket-classification', 'response-generation'],
+          tools: ['sentiment-analysis', 'crm-sync', 'knowledge-base-search'],
           compliance: { gdpr: true },
-          reasoningMode: "hybrid",
-          modelPreference: "openrouter-auto",
+          reasoningMode: 'hybrid',
+          modelPreference: 'openrouter-auto',
         },
-        reasoningMode: "hybrid",
+        reasoningMode: 'hybrid',
         autoRouting: true,
-        budget: { maxCost: 0.1, currency: "USD" },
+        budget: { maxCost: 0.1, currency: 'USD' },
         compliance: { gdpr: true },
       },
       {
-        id: "legal-document-analysis",
-        name: "Legal Document Analysis",
-        description:
-          "Comprehensive analysis of legal documents with clause extraction",
+        id: 'legal-document-analysis',
+        name: 'Legal Document Analysis',
+        description: 'Comprehensive analysis of legal documents with clause extraction',
         tasks: [
           {
-            id: "document-preprocessing",
-            name: "Document Preprocessing",
-            description: "Preprocess and clean the legal document",
-            type: "transformation",
-            priority: "medium",
-            complexity: "simple",
-            input: { document: "" },
-            expectedOutput: { cleanedText: "", metadata: {} },
+            id: 'document-preprocessing',
+            name: 'Document Preprocessing',
+            description: 'Preprocess and clean the legal document',
+            type: 'transformation',
+            priority: 'medium',
+            complexity: 'simple',
+            input: { document: '' },
+            expectedOutput: { cleanedText: '', metadata: {} },
           },
           {
-            id: "clause-extraction",
-            name: "Legal Clause Extraction",
-            description: "Extract and categorize legal clauses",
-            type: "analysis",
-            priority: "high",
-            complexity: "complex",
-            input: { cleanedText: "" },
+            id: 'clause-extraction',
+            name: 'Legal Clause Extraction',
+            description: 'Extract and categorize legal clauses',
+            type: 'analysis',
+            priority: 'high',
+            complexity: 'complex',
+            input: { cleanedText: '' },
             expectedOutput: { clauses: [], categories: [], risks: [] },
           },
           {
-            id: "compliance-validation",
-            name: "Compliance Validation",
-            description: "Validate document against compliance requirements",
-            type: "validation",
-            priority: "high",
-            complexity: "expert",
+            id: 'compliance-validation',
+            name: 'Compliance Validation',
+            description: 'Validate document against compliance requirements',
+            type: 'validation',
+            priority: 'high',
+            complexity: 'expert',
             input: { clauses: [] },
             expectedOutput: {
               compliant: boolean,
@@ -211,63 +196,54 @@ class AgenticWorkflowEngine {
             },
           },
           {
-            id: "risk-assessment",
-            name: "Risk Assessment",
-            description: "Assess legal and business risks",
-            type: "analysis",
-            priority: "high",
-            complexity: "expert",
+            id: 'risk-assessment',
+            name: 'Risk Assessment',
+            description: 'Assess legal and business risks',
+            type: 'analysis',
+            priority: 'high',
+            complexity: 'expert',
             input: { clauses: [], compliance: null },
-            expectedOutput: { risks: [], mitigation: [], overallRisk: "" },
+            expectedOutput: { risks: [], mitigation: [], overallRisk: '' },
           },
         ],
         agentConfig: {
-          id: "legal-agent",
-          name: "Legal AI Agent",
-          description: "Specialized agent for legal document analysis",
-          domain: "legal",
-          capabilities: [
-            "legal-clause-extraction",
-            "contract-analysis",
-            "compliance-monitoring",
-          ],
-          tools: [
-            "legal-clause-extractor",
-            "gdpr-compliance-check",
-            "knowledge-base-search",
-          ],
+          id: 'legal-agent',
+          name: 'Legal AI Agent',
+          description: 'Specialized agent for legal document analysis',
+          domain: 'legal',
+          capabilities: ['legal-clause-extraction', 'contract-analysis', 'compliance-monitoring'],
+          tools: ['legal-clause-extractor', 'gdpr-compliance-check', 'knowledge-base-search'],
           compliance: { gdpr: true, soc2: true },
-          reasoningMode: "thinking",
-          modelPreference: "glm-45-auto-think",
+          reasoningMode: 'thinking',
+          modelPreference: 'glm-45-auto-think',
         },
-        reasoningMode: "thinking",
+        reasoningMode: 'thinking',
         autoRouting: false,
-        budget: { maxCost: 0.5, currency: "USD" },
+        budget: { maxCost: 0.5, currency: 'USD' },
         compliance: { gdpr: true, soc2: true },
       },
       {
-        id: "medical-data-analysis",
-        name: "Medical Data Analysis",
-        description:
-          "Analysis of medical data with terminology extraction and compliance checking",
+        id: 'medical-data-analysis',
+        name: 'Medical Data Analysis',
+        description: 'Analysis of medical data with terminology extraction and compliance checking',
         tasks: [
           {
-            id: "data-ingestion",
-            name: "Data Ingestion",
-            description: "Ingest and validate medical data",
-            type: "transformation",
-            priority: "high",
-            complexity: "moderate",
-            input: { rawData: "" },
+            id: 'data-ingestion',
+            name: 'Data Ingestion',
+            description: 'Ingest and validate medical data',
+            type: 'transformation',
+            priority: 'high',
+            complexity: 'moderate',
+            input: { rawData: '' },
             expectedOutput: { validatedData: [], validationErrors: [] },
           },
           {
-            id: "terminology-extraction",
-            name: "Medical Terminology Extraction",
-            description: "Extract medical terminology and conditions",
-            type: "analysis",
-            priority: "high",
-            complexity: "complex",
+            id: 'terminology-extraction',
+            name: 'Medical Terminology Extraction',
+            description: 'Extract medical terminology and conditions',
+            type: 'analysis',
+            priority: 'high',
+            complexity: 'complex',
             input: { validatedData: [] },
             expectedOutput: {
               terminology: [],
@@ -276,12 +252,12 @@ class AgenticWorkflowEngine {
             },
           },
           {
-            id: "hipaa-compliance",
-            name: "HIPAA Compliance Check",
-            description: "Ensure data meets HIPAA compliance requirements",
-            type: "validation",
-            priority: "critical",
-            complexity: "expert",
+            id: 'hipaa-compliance',
+            name: 'HIPAA Compliance Check',
+            description: 'Ensure data meets HIPAA compliance requirements',
+            type: 'validation',
+            priority: 'critical',
+            complexity: 'expert',
             input: { extractedData: null },
             expectedOutput: {
               compliant: boolean,
@@ -290,38 +266,34 @@ class AgenticWorkflowEngine {
             },
           },
           {
-            id: "clinical-analysis",
-            name: "Clinical Analysis",
-            description: "Perform clinical analysis and insights generation",
-            type: "analysis",
-            priority: "high",
-            complexity: "expert",
+            id: 'clinical-analysis',
+            name: 'Clinical Analysis',
+            description: 'Perform clinical analysis and insights generation',
+            type: 'analysis',
+            priority: 'high',
+            complexity: 'expert',
             input: { terminology: [], compliance: null },
             expectedOutput: { insights: [], patterns: [], recommendations: [] },
           },
         ],
         agentConfig: {
-          id: "healthcare-agent",
-          name: "Healthcare AI Agent",
-          description: "Specialized agent for healthcare data processing",
-          domain: "healthcare",
+          id: 'healthcare-agent',
+          name: 'Healthcare AI Agent',
+          description: 'Specialized agent for healthcare data processing',
+          domain: 'healthcare',
           capabilities: [
-            "medical-terminology-extraction",
-            "patient-data-analysis",
-            "compliance-checking",
+            'medical-terminology-extraction',
+            'patient-data-analysis',
+            'compliance-checking',
           ],
-          tools: [
-            "medical-terminology-extractor",
-            "hipaa-compliance-check",
-            "data-analysis",
-          ],
+          tools: ['medical-terminology-extractor', 'hipaa-compliance-check', 'data-analysis'],
           compliance: { hipaa: true, gdpr: true },
-          reasoningMode: "thinking",
-          modelPreference: "glm-45-flagship",
+          reasoningMode: 'thinking',
+          modelPreference: 'glm-45-flagship',
         },
-        reasoningMode: "thinking",
+        reasoningMode: 'thinking',
         autoRouting: false,
-        budget: { maxCost: 1, currency: "USD" },
+        budget: { maxCost: 1, currency: 'USD' },
         compliance: { hipaa: true, gdpr: true },
       },
     ];
@@ -349,10 +321,10 @@ class AgenticWorkflowEngine {
     workflowId: string,
     inputData: any,
     options?: {
-      reasoningMode?: "thinking" | "non-thinking" | "hybrid";
+      reasoningMode?: 'thinking' | 'non-thinking' | 'hybrid';
       forceModel?: string;
       budget?: number;
-    },
+    }
   ): Promise<AgenticExecution> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
@@ -363,7 +335,7 @@ class AgenticWorkflowEngine {
     const execution: AgenticExecution = {
       id: executionId,
       workflowId,
-      status: "pending",
+      status: 'pending',
       results: new Map(),
       errors: [],
       startTime: new Date(),
@@ -379,7 +351,7 @@ class AgenticWorkflowEngine {
     this.executions.set(executionId, execution);
 
     try {
-      execution.status = "running";
+      execution.status = 'running';
 
       const reasoningMode = options?.reasoningMode || workflow.reasoningMode;
       const context = {
@@ -404,10 +376,10 @@ class AgenticWorkflowEngine {
         }
       }
 
-      execution.status = "completed";
+      execution.status = 'completed';
       execution.endTime = new Date();
     } catch (error: any) {
-      execution.status = "failed";
+      execution.status = 'failed';
       execution.endTime = new Date();
       execution.errors.push(error.message);
     }
@@ -422,19 +394,11 @@ class AgenticWorkflowEngine {
     const approach = this.determineReasoningApproach(task, reasoningMode);
 
     switch (approach.mode) {
-      case "thinking":
-        return await this.executeWithThinkingMode(
-          task,
-          context,
-          approach.config,
-        );
-      case "non-thinking":
-        return await this.executeWithNonThinkingMode(
-          task,
-          context,
-          approach.config,
-        );
-      case "hybrid":
+      case 'thinking':
+        return await this.executeWithThinkingMode(task, context, approach.config);
+      case 'non-thinking':
+        return await this.executeWithNonThinkingMode(task, context, approach.config);
+      case 'hybrid':
         return await this.executeWithHybridMode(task, context, approach.config);
       default:
         throw new Error(`Unknown reasoning mode: ${approach.mode}`);
@@ -443,9 +407,9 @@ class AgenticWorkflowEngine {
 
   private determineReasoningApproach(
     task: AgenticTask,
-    workflowMode: string,
+    workflowMode: string
   ): {
-    mode: "thinking" | "non-thinking" | "hybrid";
+    mode: 'thinking' | 'non-thinking' | 'hybrid';
     config: any;
   } {
     const complexityScore = this.getComplexityScore(task.complexity);
@@ -480,19 +444,19 @@ class AgenticWorkflowEngine {
     };
 
     switch (workflowMode) {
-      case "thinking":
-        return { mode: "thinking", config: thinkingConfig };
-      case "non-thinking":
-        return { mode: "non-thinking", config: nonThinkingConfig };
-      case "hybrid":
+      case 'thinking':
+        return { mode: 'thinking', config: thinkingConfig };
+      case 'non-thinking':
+        return { mode: 'non-thinking', config: nonThinkingConfig };
+      case 'hybrid':
         // Auto-switch based on task complexity
         if (complexityScore >= hybridConfig.complexityThreshold) {
-          return { mode: "thinking", config: thinkingConfig };
+          return { mode: 'thinking', config: thinkingConfig };
         } else {
-          return { mode: "non-thinking", config: nonThinkingConfig };
+          return { mode: 'non-thinking', config: nonThinkingConfig };
         }
       default:
-        return { mode: "hybrid", config: hybridConfig };
+        return { mode: 'hybrid', config: hybridConfig };
     }
   }
 
@@ -519,7 +483,7 @@ class AgenticWorkflowEngine {
   private async executeWithThinkingMode(
     task: AgenticTask,
     context: any,
-    config: ThinkingModeConfig,
+    config: ThinkingModeConfig
   ): Promise<any> {
     const { execution, workflow } = context;
     const reasoningSteps: ReasoningStep[] = [];
@@ -527,7 +491,7 @@ class AgenticWorkflowEngine {
     // Step 1: Task Analysis
     const analysisStep: ReasoningStep = {
       id: `${task.id}-analysis`,
-      type: "analysis",
+      type: 'analysis',
       content: `Analyzing task: ${task.name}. Complexity: ${task.complexity}, Priority: ${task.priority}`,
       confidence: 0.9,
       timestamp: new Date(),
@@ -538,7 +502,7 @@ class AgenticWorkflowEngine {
     const plan = this.createTaskPlan(task, config);
     const planningStep: ReasoningStep = {
       id: `${task.id}-planning`,
-      type: "planning",
+      type: 'planning',
       content: `Created execution plan with ${plan.steps.length} steps`,
       confidence: 0.85,
       timestamp: new Date(),
@@ -551,12 +515,12 @@ class AgenticWorkflowEngine {
     const tools = await this.selectToolsForTask(task, workflow.agentConfig);
     const toolSelectionStep: ReasoningStep = {
       id: `${task.id}-tool-selection`,
-      type: "tool-selection",
+      type: 'tool-selection',
       content: `Selected ${tools.length} tools for task execution`,
       confidence: 0.8,
       timestamp: new Date(),
       dependencies: [planningStep.id],
-      output: { tools: tools.map((t) => t.id) },
+      output: { tools: tools.map(t => t.id) },
     };
     reasoningSteps.push(toolSelectionStep);
 
@@ -569,7 +533,7 @@ class AgenticWorkflowEngine {
 
     // Step 5: AI Model Reasoning
     const aiResult = await this.performAIReasoning(task, context, {
-      mode: "thinking",
+      mode: 'thinking',
       context: {
         task,
         plan,
@@ -581,14 +545,10 @@ class AgenticWorkflowEngine {
 
     // Step 6: Validation and Self-Reflection
     if (config.selfReflection) {
-      const validationResult = await this.validateAndReflect(
-        task,
-        aiResult,
-        context,
-      );
+      const validationResult = await this.validateAndReflect(task, aiResult, context);
       const validationStep: ReasoningStep = {
         id: `${task.id}-validation`,
-        type: "validation",
+        type: 'validation',
         content: `Validated result with confidence ${validationResult.confidence}`,
         confidence: validationResult.confidence,
         timestamp: new Date(),
@@ -599,29 +559,19 @@ class AgenticWorkflowEngine {
 
       if (validationResult.confidence < config.confidenceThreshold) {
         // Retry with refined approach
-        return await this.retryWithRefinedApproach(
-          task,
-          context,
-          validationResult,
-          reasoningSteps,
-        );
+        return await this.retryWithRefinedApproach(task, context, validationResult, reasoningSteps);
       }
     }
 
     // Step 7: Synthesis
-    const finalResult = this.synthesizeResults(
-      task,
-      aiResult,
-      toolResults,
-      reasoningSteps,
-    );
+    const finalResult = this.synthesizeResults(task, aiResult, toolResults, reasoningSteps);
     const synthesisStep: ReasoningStep = {
       id: `${task.id}-synthesis`,
-      type: "synthesis",
-      content: "Synthesized final result from all reasoning steps",
+      type: 'synthesis',
+      content: 'Synthesized final result from all reasoning steps',
       confidence: this.calculateResultConfidence(finalResult, reasoningSteps),
       timestamp: new Date(),
-      dependencies: reasoningSteps.map((s) => s.id),
+      dependencies: reasoningSteps.map(s => s.id),
       output: finalResult,
     };
     reasoningSteps.push(synthesisStep);
@@ -630,7 +580,7 @@ class AgenticWorkflowEngine {
     this.reasoningHistory.set(`${execution.id}-${task.id}`, reasoningSteps);
     execution.metadata.reasoningDepth = Math.max(
       execution.metadata.reasoningDepth,
-      reasoningSteps.length,
+      reasoningSteps.length
     );
 
     return finalResult;
@@ -639,7 +589,7 @@ class AgenticWorkflowEngine {
   private async executeWithNonThinkingMode(
     task: AgenticTask,
     context: any,
-    config: NonThinkingModeConfig,
+    config: NonThinkingModeConfig
   ): Promise<any> {
     const { execution } = context;
 
@@ -656,7 +606,7 @@ class AgenticWorkflowEngine {
 
     // Execute with AI model directly
     const result = await this.performAIReasoning(task, context, {
-      mode: "non-thinking",
+      mode: 'non-thinking',
       config,
     });
 
@@ -675,7 +625,7 @@ class AgenticWorkflowEngine {
   private async executeWithHybridMode(
     task: AgenticTask,
     context: any,
-    config: HybridModeConfig,
+    config: HybridModeConfig
   ): Promise<any> {
     const complexityScore = this.getComplexityScore(task.complexity);
     const { execution } = context;
@@ -684,7 +634,7 @@ class AgenticWorkflowEngine {
     const quickResult = await this.executeWithNonThinkingMode(
       task,
       context,
-      config.nonThinkingConfig,
+      config.nonThinkingConfig
     );
     const quickAssessment = await this.assessResultQuality(task, quickResult);
 
@@ -699,7 +649,7 @@ class AgenticWorkflowEngine {
       const detailedResult = await this.executeWithThinkingMode(
         task,
         context,
-        config.thinkingConfig,
+        config.thinkingConfig
       );
       execution.metadata.modelSwitches++;
 
@@ -708,7 +658,7 @@ class AgenticWorkflowEngine {
         hybrid: {
           quickAssessment,
           detailedAnalysis: detailedResult,
-          switchReason: "complexity-or-quality-threshold",
+          switchReason: 'complexity-or-quality-threshold',
         },
       };
     }
@@ -718,23 +668,23 @@ class AgenticWorkflowEngine {
       ...quickResult,
       hybrid: {
         quickAssessment,
-        mode: "non-thinking",
-        reason: "sufficient-quality-and-speed",
+        mode: 'non-thinking',
+        reason: 'sufficient-quality-and-speed',
       },
     };
   }
 
   private createTaskPlan(task: AgenticTask, config: ThinkingModeConfig): any {
     const steps = [
-      "analyze-input",
-      "select-approach",
-      "execute-tools",
-      "validate-results",
-      "synthesize-output",
+      'analyze-input',
+      'select-approach',
+      'execute-tools',
+      'validate-results',
+      'synthesize-output',
     ];
 
     if (config.stepByStepAnalysis) {
-      steps.splice(2, 0, "step-by-step-reasoning");
+      steps.splice(2, 0, 'step-by-step-reasoning');
     }
 
     return {
@@ -744,35 +694,30 @@ class AgenticWorkflowEngine {
     };
   }
 
-  private async selectToolsForTask(
-    task: AgenticTask,
-    agentConfig: MCPAgentConfig,
-  ): Promise<any[]> {
+  private async selectToolsForTask(task: AgenticTask, agentConfig: MCPAgentConfig): Promise<any[]> {
     const availableTools = mcpService.getAvailableTools();
     const relevantTools = availableTools.filter(
-      (tool) =>
-        agentConfig.tools.includes(tool.id) ||
-        this.isToolRelevantForTask(tool, task),
+      tool => agentConfig.tools.includes(tool.id) || this.isToolRelevantForTask(tool, task)
     );
 
     // Prioritize tools based on task type and complexity
     return relevantTools
-      .map((tool) => ({
+      .map(tool => ({
         tool,
         relevance: this.calculateToolRelevance(tool, task),
       }))
-      .filter((item) => item.relevance > 0.5)
+      .filter(item => item.relevance > 0.5)
       .sort((a, b) => b.relevance - a.relevance)
       .slice(0, 3) // Limit to top 3 tools
-      .map((item) => item.tool);
+      .map(item => item.tool);
   }
 
   private isToolRelevantForTask(tool: any, task: AgenticTask): boolean {
     const relevanceMap = {
-      analysis: ["analysis", "search", "domain"],
-      generation: ["system", "analysis"],
-      transformation: ["system", "analysis"],
-      validation: ["compliance", "analysis"],
+      analysis: ['analysis', 'search', 'domain'],
+      generation: ['system', 'analysis'],
+      transformation: ['system', 'analysis'],
+      validation: ['compliance', 'analysis'],
     };
 
     return relevanceMap[task.type]?.includes(tool.category) || false;
@@ -782,21 +727,14 @@ class AgenticWorkflowEngine {
     let relevance = 0.5; // Base relevance
 
     // Boost relevance based on task type and tool category
-    if (task.type === "analysis" && tool.category === "analysis")
-      relevance += 0.3;
-    if (task.type === "validation" && tool.category === "compliance")
-      relevance += 0.3;
-    if (task.complexity === "expert" && tool.category === "domain")
-      relevance += 0.2;
+    if (task.type === 'analysis' && tool.category === 'analysis') relevance += 0.3;
+    if (task.type === 'validation' && tool.category === 'compliance') relevance += 0.3;
+    if (task.complexity === 'expert' && tool.category === 'domain') relevance += 0.2;
 
     return Math.min(relevance, 1);
   }
 
-  private async orchestrateTools(
-    task: AgenticTask,
-    tools: any[],
-    context: any,
-  ): Promise<any[]> {
+  private async orchestrateTools(task: AgenticTask, tools: any[], context: any): Promise<any[]> {
     const results: any[] = [];
 
     for (const tool of tools) {
@@ -828,11 +766,7 @@ class AgenticWorkflowEngine {
     return results;
   }
 
-  private prepareToolParameters(
-    tool: any,
-    task: AgenticTask,
-    context: any,
-  ): any {
+  private prepareToolParameters(tool: any, task: AgenticTask, context: any): any {
     // This would be customized based on the specific tool and task
     const baseParams = {
       taskId: task.id,
@@ -843,22 +777,18 @@ class AgenticWorkflowEngine {
 
     // Add tool-specific parameters
     switch (tool.id) {
-      case "sentiment-analysis":
-        return { ...baseParams, text: task.input.text || "" };
-      case "data-analysis":
+      case 'sentiment-analysis':
+        return { ...baseParams, text: task.input.text || '' };
+      case 'data-analysis':
         return { ...baseParams, dataset: task.input.data || [] };
-      case "hipaa-compliance-check":
+      case 'hipaa-compliance-check':
         return { ...baseParams, data: task.input.data || {} };
       default:
         return baseParams;
     }
   }
 
-  private async performAIReasoning(
-    task: AgenticTask,
-    context: any,
-    options: any,
-  ): Promise<any> {
+  private async performAIReasoning(task: AgenticTask, context: any, options: any): Promise<any> {
     const { workflow, execution, forceModel } = context;
     const agentConfig = workflow.agentConfig;
 
@@ -867,10 +797,10 @@ class AgenticWorkflowEngine {
 
     try {
       // Determine which AI service to use
-      if (forceModel || agentConfig.modelPreference.startsWith("glm-45")) {
+      if (forceModel || agentConfig.modelPreference.startsWith('glm-45')) {
         // Use Z.AI service
         const zaiRequest: ZAIAnalysisRequest = {
-          imageBase64: "", // Would be populated if image input
+          imageBase64: '', // Would be populated if image input
           analysisType: task.type,
           modelId: forceModel || agentConfig.modelPreference,
           customPrompt: prompt,
@@ -878,10 +808,7 @@ class AgenticWorkflowEngine {
 
         const zaiResponse = await zaiApiService.analyzeWithModel(zaiRequest);
         execution.metadata.totalCost += this.estimateZAICost(zaiResponse);
-        execution.metadata.tokensUsed += this.estimateTokensUsed(
-          prompt,
-          zaiResponse.result,
-        );
+        execution.metadata.tokensUsed += this.estimateTokensUsed(prompt, zaiResponse.result);
 
         return zaiResponse.result;
       } else {
@@ -893,10 +820,8 @@ class AgenticWorkflowEngine {
           maxTokens: options.config?.maxTokens || 1000,
         };
 
-        const openRouterResponse =
-          await openRouterService.analyzeWithModel(openRouterRequest);
-        execution.metadata.totalCost +=
-          this.estimateOpenRouterCost(openRouterResponse);
+        const openRouterResponse = await openRouterService.analyzeWithModel(openRouterRequest);
+        execution.metadata.totalCost += this.estimateOpenRouterCost(openRouterResponse);
         execution.metadata.tokensUsed += openRouterResponse.usage.totalTokens;
 
         return openRouterResponse.result;
@@ -917,7 +842,7 @@ class AgenticWorkflowEngine {
 
     prompt += `Input Data:\n${JSON.stringify(task.input, null, 2)}\n\n`;
 
-    if (mode === "thinking") {
+    if (mode === 'thinking') {
       prompt += `Reasoning Mode: Thinking\n`;
       prompt += `Please provide step-by-step analysis with deep reasoning.\n`;
       prompt += `Include self-reflection and confidence assessment.\n`;
@@ -927,7 +852,7 @@ class AgenticWorkflowEngine {
       }
 
       if (context?.tools?.length > 0) {
-        prompt += `\nAvailable Tools: ${context.tools.map((t: any) => t.name).join(", ")}\n`;
+        prompt += `\nAvailable Tools: ${context.tools.map((t: any) => t.name).join(', ')}\n`;
       }
     } else {
       prompt += `Reasoning Mode: Non-Thinking\n`;
@@ -939,25 +864,18 @@ class AgenticWorkflowEngine {
     return prompt;
   }
 
-  private selectOpenRouterModel(
-    task: AgenticTask,
-    agentConfig: MCPAgentConfig,
-  ): string {
+  private selectOpenRouterModel(task: AgenticTask, agentConfig: MCPAgentConfig): string {
     // Model selection logic based on task and agent preferences
-    if (task.complexity === "expert" || task.priority === "critical") {
-      return "gpt-4o"; // Use most capable model
-    } else if (task.complexity === "simple") {
-      return "gpt-4o-mini"; // Use faster, cheaper model
+    if (task.complexity === 'expert' || task.priority === 'critical') {
+      return 'gpt-4o'; // Use most capable model
+    } else if (task.complexity === 'simple') {
+      return 'gpt-4o-mini'; // Use faster, cheaper model
     } else {
-      return "claude-3.5-sonnet"; // Balanced model
+      return 'claude-3.5-sonnet'; // Balanced model
     }
   }
 
-  private async validateAndReflect(
-    task: AgenticTask,
-    result: any,
-    context: any,
-  ): Promise<any> {
+  private async validateAndReflect(task: AgenticTask, result: any, context: any): Promise<any> {
     // Validate result against expected output format
     const validation = this.validateResultFormat(result, task.expectedOutput);
 
@@ -979,7 +897,7 @@ class AgenticWorkflowEngine {
     let valid = true;
 
     if (typeof result !== typeof expectedFormat) {
-      errors.push("Result type does not match expected format");
+      errors.push('Result type does not match expected format');
       valid = false;
     }
 
@@ -987,11 +905,7 @@ class AgenticWorkflowEngine {
     return { valid, errors };
   }
 
-  private async performSelfReflection(
-    task: AgenticTask,
-    result: any,
-    context: any,
-  ): Promise<any> {
+  private async performSelfReflection(task: AgenticTask, result: any, context: any): Promise<any> {
     // Use AI to reflect on the result quality
     const reflectionPrompt = `
     Task: ${task.name}
@@ -1005,7 +919,7 @@ class AgenticWorkflowEngine {
 
     try {
       const reflectionResult = await this.performAIReasoning(task, context, {
-        mode: "non-thinking",
+        mode: 'non-thinking',
         config: { maxTokens: 500, temperature: 0.3 },
       });
 
@@ -1018,7 +932,7 @@ class AgenticWorkflowEngine {
       return {
         confidence: 0.7,
         improvements: [],
-        issues: ["Reflection failed"],
+        issues: ['Reflection failed'],
       };
     }
   }
@@ -1027,7 +941,7 @@ class AgenticWorkflowEngine {
     task: AgenticTask,
     context: any,
     validationResult: any,
-    reasoningSteps: ReasoningStep[],
+    reasoningSteps: ReasoningStep[]
   ): Promise<any> {
     // Refine approach based on validation results
     const refinedContext = {
@@ -1038,7 +952,7 @@ class AgenticWorkflowEngine {
 
     // Retry with refined prompt or parameters
     return await this.performAIReasoning(task, refinedContext, {
-      mode: "thinking",
+      mode: 'thinking',
       context: {
         ...refinedContext,
         reasoningSteps,
@@ -1051,53 +965,42 @@ class AgenticWorkflowEngine {
     task: AgenticTask,
     aiResult: any,
     toolResults: any[],
-    reasoningSteps: ReasoningStep[],
+    reasoningSteps: ReasoningStep[]
   ): any {
     // Combine AI reasoning results with tool results
     const synthesis = {
       aiResult,
-      toolResults: toolResults.filter((r) => r.success),
-      reasoningSummary: reasoningSteps.map((s) => ({
+      toolResults: toolResults.filter(r => r.success),
+      reasoningSummary: reasoningSteps.map(s => ({
         type: s.type,
         confidence: s.confidence,
-        content: s.content.slice(0, 100) + "...",
+        content: s.content.slice(0, 100) + '...',
       })),
       metadata: {
         totalSteps: reasoningSteps.length,
-        successfulToolCalls: toolResults.filter((r) => r.success).length,
-        failedToolCalls: toolResults.filter((r) => !r.success).length,
-        overallConfidence: this.calculateResultConfidence(
-          aiResult,
-          reasoningSteps,
-        ),
+        successfulToolCalls: toolResults.filter(r => r.success).length,
+        failedToolCalls: toolResults.filter(r => !r.success).length,
+        overallConfidence: this.calculateResultConfidence(aiResult, reasoningSteps),
       },
     };
 
     return synthesis;
   }
 
-  private calculateResultConfidence(
-    result: any,
-    reasoningSteps: ReasoningStep[],
-  ): number {
+  private calculateResultConfidence(result: any, reasoningSteps: ReasoningStep[]): number {
     if (reasoningSteps.length === 0) return 0.5;
 
-    const confidences = reasoningSteps.map((s) => s.confidence);
-    const avgConfidence =
-      confidences.reduce((sum, c) => sum + c, 0) / confidences.length;
+    const confidences = reasoningSteps.map(s => s.confidence);
+    const avgConfidence = confidences.reduce((sum, c) => sum + c, 0) / confidences.length;
 
     // Weight later steps more heavily
     const weightedSum = confidences.reduce((sum, c, i) => sum + c * (i + 1), 0);
-    const weightedAvg =
-      weightedSum / confidences.reduce((sum, _, i) => sum + (i + 1), 0);
+    const weightedAvg = weightedSum / confidences.reduce((sum, _, i) => sum + (i + 1), 0);
 
     return (avgConfidence + weightedAvg) / 2;
   }
 
-  private async assessResultQuality(
-    task: AgenticTask,
-    result: any,
-  ): Promise<any> {
+  private async assessResultQuality(task: AgenticTask, result: any): Promise<any> {
     // Quick quality assessment for hybrid mode decision making
     return {
       confidence: 0.8, // Would be calculated based on result analysis
@@ -1106,10 +1009,7 @@ class AgenticWorkflowEngine {
     };
   }
 
-  private estimateTaskDuration(
-    task: AgenticTask,
-    config: ThinkingModeConfig,
-  ): number {
+  private estimateTaskDuration(task: AgenticTask, config: ThinkingModeConfig): number {
     // Estimate task duration based on complexity and configuration
     const baseTime = {
       simple: 1000,
@@ -1118,9 +1018,7 @@ class AgenticWorkflowEngine {
       expert: 15000,
     };
 
-    return (
-      baseTime[task.complexity as keyof typeof baseTime] * (config.maxDepth / 3)
-    );
+    return baseTime[task.complexity as keyof typeof baseTime] * (config.maxDepth / 3);
   }
 
   private estimateTokensUsed(input: any, output: any): number {
@@ -1163,7 +1061,7 @@ class AgenticWorkflowEngine {
 
   getReasoningHistory(
     executionId: string,
-    taskId?: string,
+    taskId?: string
   ): ReasoningStep[] | Map<string, ReasoningStep[]> {
     if (taskId) {
       return this.reasoningHistory.get(`${executionId}-${taskId}`) || [];
@@ -1179,10 +1077,7 @@ class AgenticWorkflowEngine {
     return Object.fromEntries(this.performanceMetrics);
   }
 
-  updatePerformanceMetrics(
-    workflowId: string,
-    execution: AgenticExecution,
-  ): void {
+  updatePerformanceMetrics(workflowId: string, execution: AgenticExecution): void {
     const existing = this.performanceMetrics.get(workflowId) || {
       totalExecutions: 0,
       successfulExecutions: 0,
@@ -1198,19 +1093,15 @@ class AgenticWorkflowEngine {
     const updated = {
       totalExecutions: existing.totalExecutions + 1,
       successfulExecutions:
-        existing.successfulExecutions +
-        (execution.status === "completed" ? 1 : 0),
+        existing.successfulExecutions + (execution.status === 'completed' ? 1 : 0),
       averageExecutionTime:
-        (existing.averageExecutionTime * existing.totalExecutions +
-          executionTime) /
+        (existing.averageExecutionTime * existing.totalExecutions + executionTime) /
         (existing.totalExecutions + 1),
       averageCost:
-        (existing.averageCost * existing.totalExecutions +
-          execution.metadata.totalCost) /
+        (existing.averageCost * existing.totalExecutions + execution.metadata.totalCost) /
         (existing.totalExecutions + 1),
       averageTokensUsed:
-        (existing.averageTokensUsed * existing.totalExecutions +
-          execution.metadata.tokensUsed) /
+        (existing.averageTokensUsed * existing.totalExecutions + execution.metadata.tokensUsed) /
         (existing.totalExecutions + 1),
     };
 

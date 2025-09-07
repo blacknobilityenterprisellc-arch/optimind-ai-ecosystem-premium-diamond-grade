@@ -1,15 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 export async function POST(request: NextRequest) {
   try {
     const { brandName, timeRange } = await request.json();
 
     if (!brandName) {
-      return NextResponse.json(
-        { error: "Brand name is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Brand name is required' }, { status: 400 });
     }
 
     const zai = await ZAI.create();
@@ -17,7 +14,7 @@ export async function POST(request: NextRequest) {
     // Use web search to find brand mentions
     const searchQuery = `${brandName} brand mentions AI overview featured snippets`;
 
-    const searchResult = await zai.functions.invoke("web_search", {
+    const searchResult = await zai.functions.invoke('web_search', {
       query: searchQuery,
       num: 20,
     });
@@ -76,12 +73,12 @@ export async function POST(request: NextRequest) {
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are an expert in brand monitoring and social listening. Analyze search results to extract brand mentions and provide comprehensive metrics.",
+            'You are an expert in brand monitoring and social listening. Analyze search results to extract brand mentions and provide comprehensive metrics.',
         },
         {
-          role: "user",
+          role: 'user',
           content: analysisPrompt,
         },
       ],
@@ -92,7 +89,7 @@ export async function POST(request: NextRequest) {
     const analysisContent = completion.choices[0]?.message?.content;
 
     if (!analysisContent) {
-      throw new Error("No analysis content received from AI");
+      throw new Error('No analysis content received from AI');
     }
 
     // Parse the JSON response
@@ -100,7 +97,7 @@ export async function POST(request: NextRequest) {
     try {
       trackingResult = JSON.parse(analysisContent);
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       // Fallback response if JSON parsing fails
       trackingResult = {
         metrics: {
@@ -122,14 +119,14 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error("Brand tracking error:", error);
+    console.error('Brand tracking error:', error);
     return NextResponse.json(
-      { error: "Failed to track brand mentions", details: error.message },
+      { error: 'Failed to track brand mentions', details: error.message },
       {
-        error: "Failed to track brand mentions",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: 'Failed to track brand mentions',
+        details: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

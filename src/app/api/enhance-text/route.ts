@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { aiService } from "@/lib/ai";
+import { aiService } from '@/lib/ai';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!text || !enhancement) {
       return NextResponse.json(
-        { error: "Text and enhancement type are required" },
-        { status: 400 },
+        { error: 'Text and enhancement type are required' },
+        { status: 400 }
       );
     }
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const result = await aiService.enhanceText({
       text,
       enhancement,
-      context: context || "",
+      context: context || '',
     });
 
     return NextResponse.json({
@@ -30,10 +30,7 @@ export async function POST(request: NextRequest) {
       cost: result.cost,
     });
   } catch (error) {
-    console.error("Text enhancement error:", error);
-    return NextResponse.json(
-      { error: "Failed to enhance text" },
-      { status: 500 },
-    );
+    console.error('Text enhancement error:', error);
+    return NextResponse.json({ error: 'Failed to enhance text' }, { status: 500 });
   }
 }

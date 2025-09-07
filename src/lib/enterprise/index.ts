@@ -1,9 +1,9 @@
 /**
  * Premium Diamond-Grade Professional Enterprise System Entry Point
- * 
+ *
  * This module provides the main entry point for the enterprise system,
  * coordinating all enterprise components and providing a unified interface.
- * 
+ *
  * @author: Enterprise Architecture Team
  * @version: 2.0.0
  * @compliance: Enterprise Architecture Standards
@@ -70,13 +70,9 @@ export {
   Inject,
 } from './container/EnterpriseServiceContainer';
 
-export {
-  createEnterpriseHealthMonitor,
-} from './monitoring/EnterpriseHealthMonitor';
+export { createEnterpriseHealthMonitor } from './monitoring/EnterpriseHealthMonitor';
 
-export {
-  createEnterpriseAPIManager,
-} from './api/EnterpriseAPIManager';
+export { createEnterpriseAPIManager } from './api/EnterpriseAPIManager';
 
 export {
   createEnterpriseInitializer,
@@ -234,7 +230,7 @@ export function getEnterpriseHealthSummary(): {
   try {
     const state = getEnterpriseSystemState();
     const metrics = state.metrics;
-    
+
     return {
       status: state.status,
       uptime: metrics.uptime,

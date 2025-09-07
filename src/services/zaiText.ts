@@ -7,12 +7,12 @@
  *
  * Returns a ModelResult compatible with ModelResult type.
  */
-import Ajv from "ajv";
-import addFormats from "ajv-formats";
+import Ajv from 'ajv';
+import addFormats from 'ajv-formats';
 
-import { ModelResult, ModelLabel } from "../types/index";
+import { ModelResult, ModelLabel } from '../types/index';
 
-import { ZaiClient } from "./zaiClient";
+import { ZaiClient } from './zaiClient';
 
 addFormats(Ajv);
 
@@ -27,27 +27,27 @@ export interface TextOptions {
 
 /** JSON schema for text reasoning output */
 const textSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     labels: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          label: { type: "string" },
-          score: { type: "number" },
+          label: { type: 'string' },
+          score: { type: 'number' },
         },
-        required: ["label", "score"],
+        required: ['label', 'score'],
       },
     },
-    reasons: { type: "array", items: { type: "string" } },
+    reasons: { type: 'array', items: { type: 'string' } },
     provenance: {
-      type: "object",
-      properties: { model: { type: "string" }, version: { type: "string" } },
-      required: ["model"],
+      type: 'object',
+      properties: { model: { type: 'string' }, version: { type: 'string' } },
+      required: ['model'],
     },
   },
-  required: ["labels", "provenance"],
+  required: ['labels', 'provenance'],
 };
 
 const validateText = ajv.compile(textSchema);
@@ -73,10 +73,10 @@ Return the JSON as specified. Prioritize accuracy; use score 0.0-1.0.
 export async function zaiTextReasoning(
   client: ZaiClient,
   contextDescription: string,
-  opts?: TextOptions,
+  opts?: TextOptions
 ): Promise<ModelResult> {
   const options: TextOptions = {
-    model: process.env.ZAI_TEXT_MODEL || "GLM-4.5",
+    model: process.env.ZAI_TEXT_MODEL || 'GLM-4.5',
     temperature: 0,
     max_tokens: 800,
     allowLenientParse: false,
@@ -89,14 +89,14 @@ export async function zaiTextReasoning(
     model: options.model,
     inputs: [
       {
-        modality: "text",
+        modality: 'text',
         content: prompt,
       },
     ],
     parameters: {
       temperature: options.temperature,
       max_tokens: options.max_tokens,
-      output_format: "json",
+      output_format: 'json',
     },
   };
 
@@ -123,9 +123,7 @@ export async function zaiTextReasoning(
           provenance: { model: options.model },
         };
       } else {
-        throw new Error(
-          "[zaiTextReasoning] Could not parse model output to JSON",
-        );
+        throw new Error('[zaiTextReasoning] Could not parse model output to JSON');
       }
     } else {
       parsed = JSON.parse(m[0]);
@@ -136,13 +134,10 @@ export async function zaiTextReasoning(
   if (!valid) {
     if (!options.allowLenientParse) {
       throw new Error(
-        `[zaiTextReasoning] Schema validation failed: ${JSON.stringify(validateText.errors)}`,
+        `[zaiTextReasoning] Schema validation failed: ${JSON.stringify(validateText.errors)}`
       );
     } else {
-      console.warn(
-        "[zaiTextReasoning] schema failed but continue (lenient).",
-        validateText.errors,
-      );
+      console.warn('[zaiTextReasoning] schema failed but continue (lenient).', validateText.errors);
     }
   }
 
@@ -156,7 +151,7 @@ export async function zaiTextReasoning(
     modelVersion: parsed.provenance?.version || undefined,
     labels,
     rawOutput: parsed,
-    latencyMs: typeof resp?.latencyMs === "number" ? resp.latencyMs : undefined,
+    latencyMs: typeof resp?.latencyMs === 'number' ? resp.latencyMs : undefined,
   };
 
   return result;

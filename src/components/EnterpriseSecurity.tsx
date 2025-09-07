@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 import {
   Shield,
   Lock,
@@ -30,25 +30,19 @@ import {
   Cpu,
   HardDrive,
   Zap,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface SecurityEvent {
   id: string;
-  type:
-    | "login"
-    | "file_access"
-    | "scan"
-    | "vault_access"
-    | "settings_change"
-    | "threat_detected";
-  severity: "low" | "medium" | "high" | "critical";
+  type: 'login' | 'file_access' | 'scan' | 'vault_access' | 'settings_change' | 'threat_detected';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   timestamp: Date;
   description: string;
   ipAddress?: string;
@@ -69,7 +63,7 @@ interface SecurityMetrics {
 interface DeviceInfo {
   id: string;
   name: string;
-  type: "mobile" | "desktop" | "tablet";
+  type: 'mobile' | 'desktop' | 'tablet';
   lastActive: Date;
   isCurrentDevice: boolean;
   location?: string;
@@ -82,7 +76,7 @@ export function EnterpriseSecurity() {
     scansPerformed: 0,
     threatsDetected: 0,
     dataEncrypted: true,
-    authMethods: ["PIN", "Biometric"],
+    authMethods: ['PIN', 'Biometric'],
     lastSecurityUpdate: new Date(),
     systemHealth: 100,
   });
@@ -109,7 +103,7 @@ export function EnterpriseSecurity() {
       scansPerformed: 1247,
       threatsDetected: 3,
       dataEncrypted: true,
-      authMethods: ["PIN", "Biometric", "Two-Factor"],
+      authMethods: ['PIN', 'Biometric', 'Two-Factor'],
       lastSecurityUpdate: new Date(),
       systemHealth: 98,
     });
@@ -117,38 +111,38 @@ export function EnterpriseSecurity() {
     // Simulate security events
     const mockEvents: SecurityEvent[] = [
       {
-        id: "1",
-        type: "login",
-        severity: "low",
+        id: '1',
+        type: 'login',
+        severity: 'low',
         timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-        description: "Successful login from trusted device",
-        ipAddress: "192.168.1.100",
-        userAgent: "Chrome/91.0",
-        location: "New York, US",
+        description: 'Successful login from trusted device',
+        ipAddress: '192.168.1.100',
+        userAgent: 'Chrome/91.0',
+        location: 'New York, US',
       },
       {
-        id: "2",
-        type: "scan",
-        severity: "low",
+        id: '2',
+        type: 'scan',
+        severity: 'low',
         timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-        description: "AI photo scan completed - 25 photos analyzed",
+        description: 'AI photo scan completed - 25 photos analyzed',
       },
       {
-        id: "3",
-        type: "vault_access",
-        severity: "medium",
+        id: '3',
+        type: 'vault_access',
+        severity: 'medium',
         timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-        description: "Encrypted vault accessed",
-        ipAddress: "192.168.1.100",
+        description: 'Encrypted vault accessed',
+        ipAddress: '192.168.1.100',
       },
       {
-        id: "4",
-        type: "threat_detected",
-        severity: "high",
+        id: '4',
+        type: 'threat_detected',
+        severity: 'high',
         timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
-        description: "Suspicious activity detected - unusual login pattern",
-        ipAddress: "203.0.113.1",
-        location: "Unknown Location",
+        description: 'Suspicious activity detected - unusual login pattern',
+        ipAddress: '203.0.113.1',
+        location: 'Unknown Location',
       },
     ];
 
@@ -157,31 +151,31 @@ export function EnterpriseSecurity() {
     // Simulate connected devices
     const mockDevices: DeviceInfo[] = [
       {
-        id: "1",
-        name: "Samsung Galaxy A16 5G",
-        type: "mobile",
+        id: '1',
+        name: 'Samsung Galaxy A16 5G',
+        type: 'mobile',
         lastActive: new Date(),
         isCurrentDevice: true,
-        location: "New York, US",
-        ipAddress: "192.168.1.100",
+        location: 'New York, US',
+        ipAddress: '192.168.1.100',
       },
       {
-        id: "2",
-        name: "MacBook Pro",
-        type: "desktop",
+        id: '2',
+        name: 'MacBook Pro',
+        type: 'desktop',
         lastActive: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
         isCurrentDevice: false,
-        location: "San Francisco, US",
-        ipAddress: "192.168.1.101",
+        location: 'San Francisco, US',
+        ipAddress: '192.168.1.101',
       },
       {
-        id: "3",
-        name: "iPad Pro",
-        type: "tablet",
+        id: '3',
+        name: 'iPad Pro',
+        type: 'tablet',
         lastActive: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
         isCurrentDevice: false,
-        location: "London, UK",
-        ipAddress: "192.168.1.102",
+        location: 'London, UK',
+        ipAddress: '192.168.1.102',
       },
     ];
 
@@ -193,16 +187,10 @@ export function EnterpriseSecurity() {
 
     const interval = setInterval(() => {
       // Simulate real-time security updates
-      setSecurityMetrics((prev) => ({
+      setSecurityMetrics(prev => ({
         ...prev,
-        threatLevel: Math.max(
-          0,
-          Math.min(100, prev.threatLevel + (Math.random() - 0.5) * 2),
-        ),
-        systemHealth: Math.max(
-          0,
-          Math.min(100, prev.systemHealth + (Math.random() - 0.5) * 1),
-        ),
+        threatLevel: Math.max(0, Math.min(100, prev.threatLevel + (Math.random() - 0.5) * 2)),
+        systemHealth: Math.max(0, Math.min(100, prev.systemHealth + (Math.random() - 0.5) * 1)),
       }));
 
       // Occasionally add new security events
@@ -210,17 +198,15 @@ export function EnterpriseSecurity() {
         // 10% chance every interval
         const newEvent: SecurityEvent = {
           id: Date.now().toString(),
-          type: ["scan", "login", "file_access"][
+          type: ['scan', 'login', 'file_access'][
             Math.floor(Math.random() * 3)
-          ] as SecurityEvent["type"],
-          severity: ["low", "medium"][
-            Math.floor(Math.random() * 2)
-          ] as SecurityEvent["severity"],
+          ] as SecurityEvent['type'],
+          severity: ['low', 'medium'][Math.floor(Math.random() * 2)] as SecurityEvent['severity'],
           timestamp: new Date(),
-          description: "Real-time security event detected",
+          description: 'Real-time security event detected',
         };
 
-        setSecurityEvents((prev) => [newEvent, ...prev.slice(0, 9)]); // Keep only last 10 events
+        setSecurityEvents(prev => [newEvent, ...prev.slice(0, 9)]); // Keep only last 10 events
       }
     }, 5000); // Update every 5 seconds
 
@@ -231,28 +217,28 @@ export function EnterpriseSecurity() {
     // Cleanup any monitoring intervals
   }, []);
 
-  const getSeverityColor = (severity: SecurityEvent["severity"]) => {
+  const getSeverityColor = (severity: SecurityEvent['severity']) => {
     switch (severity) {
-      case "low":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "high":
-        return "bg-orange-100 text-orange-800 border-orange-200";
-      case "critical":
-        return "bg-red-100 text-red-800 border-red-200";
+      case 'low':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'high':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
+      case 'critical':
+        return 'bg-red-100 text-red-800 border-red-200';
     }
   };
 
-  const getSeverityIcon = (severity: SecurityEvent["severity"]) => {
+  const getSeverityIcon = (severity: SecurityEvent['severity']) => {
     switch (severity) {
-      case "low":
+      case 'low':
         return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case "medium":
+      case 'medium':
         return <Clock className="w-4 h-4 text-yellow-600" />;
-      case "high":
+      case 'high':
         return <AlertTriangle className="w-4 h-4 text-orange-600" />;
-      case "critical":
+      case 'critical':
         return <AlertTriangle className="w-4 h-4 text-red-600" />;
     }
   };
@@ -264,7 +250,7 @@ export function EnterpriseSecurity() {
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (minutes < 1) return "Just now";
+    if (minutes < 1) return 'Just now';
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;
@@ -272,7 +258,7 @@ export function EnterpriseSecurity() {
 
   const runSecurityScan = useCallback(() => {
     // Simulate security scan
-    setSecurityMetrics((prev) => ({
+    setSecurityMetrics(prev => ({
       ...prev,
       scansPerformed: prev.scansPerformed + 1,
       systemHealth: Math.min(100, prev.systemHealth + 2),
@@ -281,13 +267,13 @@ export function EnterpriseSecurity() {
     // Add scan event
     const scanEvent: SecurityEvent = {
       id: Date.now().toString(),
-      type: "scan",
-      severity: "low",
+      type: 'scan',
+      severity: 'low',
       timestamp: new Date(),
-      description: "Manual security scan completed - all systems secure",
+      description: 'Manual security scan completed - all systems secure',
     };
 
-    setSecurityEvents((prev) => [scanEvent, ...prev]);
+    setSecurityEvents(prev => [scanEvent, ...prev]);
   }, []);
 
   const toggleRealTimeMonitoring = useCallback(() => {
@@ -307,16 +293,13 @@ export function EnterpriseSecurity() {
               </Badge>
             </div>
             <h3 className="text-lg font-semibold">Threat Level</h3>
-            <Progress
-              value={securityMetrics.threatLevel}
-              className="h-2 mt-2"
-            />
+            <Progress value={securityMetrics.threatLevel} className="h-2 mt-2" />
             <p className="text-xs text-muted-foreground mt-1">
               {securityMetrics.threatLevel < 10
-                ? "Low Risk"
+                ? 'Low Risk'
                 : securityMetrics.threatLevel < 30
-                  ? "Moderate Risk"
-                  : "High Risk"}
+                  ? 'Moderate Risk'
+                  : 'High Risk'}
             </p>
           </CardContent>
         </Card>
@@ -330,13 +313,8 @@ export function EnterpriseSecurity() {
               </Badge>
             </div>
             <h3 className="text-lg font-semibold">System Health</h3>
-            <Progress
-              value={securityMetrics.systemHealth}
-              className="h-2 mt-2"
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              All systems operational
-            </p>
+            <Progress value={securityMetrics.systemHealth} className="h-2 mt-2" />
+            <p className="text-xs text-muted-foreground mt-1">All systems operational</p>
           </CardContent>
         </Card>
 
@@ -361,19 +339,13 @@ export function EnterpriseSecurity() {
               <Lock className="w-5 h-5 text-orange-600" />
               <Badge
                 variant="outline"
-                className={
-                  securityMetrics.dataEncrypted
-                    ? "text-green-600"
-                    : "text-red-600"
-                }
+                className={securityMetrics.dataEncrypted ? 'text-green-600' : 'text-red-600'}
               >
-                {securityMetrics.dataEncrypted ? "Encrypted" : "Not Encrypted"}
+                {securityMetrics.dataEncrypted ? 'Encrypted' : 'Not Encrypted'}
               </Badge>
             </div>
             <h3 className="text-lg font-semibold">Data Protection</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              AES-256 encryption active
-            </p>
+            <p className="text-xs text-muted-foreground mt-1">AES-256 encryption active</p>
           </CardContent>
         </Card>
       </div>
@@ -393,7 +365,7 @@ export function EnterpriseSecurity() {
               Run Security Scan
             </Button>
             <Button
-              variant={isRealTimeMonitoring ? "default" : "outline"}
+              variant={isRealTimeMonitoring ? 'default' : 'outline'}
               onClick={toggleRealTimeMonitoring}
             >
               {isRealTimeMonitoring ? (
@@ -444,11 +416,8 @@ export function EnterpriseSecurity() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {securityEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg"
-                  >
+                {securityEvents.map(event => (
+                  <div key={event.id} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
                     {getSeverityIcon(event.severity)}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
@@ -459,13 +428,10 @@ export function EnterpriseSecurity() {
                           {formatTimeAgo(event.timestamp)}
                         </span>
                       </div>
-                      <p className="text-sm font-medium truncate">
-                        {event.description}
-                      </p>
+                      <p className="text-sm font-medium truncate">{event.description}</p>
                       {showSensitiveData && event.ipAddress && (
                         <div className="text-xs text-muted-foreground mt-1">
-                          IP: {event.ipAddress}{" "}
-                          {event.location && `• ${event.location}`}
+                          IP: {event.ipAddress} {event.location && `• ${event.location}`}
                         </div>
                       )}
                     </div>
@@ -484,9 +450,7 @@ export function EnterpriseSecurity() {
                   ) : (
                     <Eye className="w-4 h-4 mr-2" />
                   )}
-                  {showSensitiveData
-                    ? "Hide Sensitive Data"
-                    : "Show Sensitive Data"}
+                  {showSensitiveData ? 'Hide Sensitive Data' : 'Show Sensitive Data'}
                 </Button>
                 <Button variant="outline" size="sm">
                   View All Events
@@ -503,15 +467,15 @@ export function EnterpriseSecurity() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {connectedDevices.map((device) => (
+                {connectedDevices.map(device => (
                   <div
                     key={device.id}
                     className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg"
                   >
                     <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      {device.type === "mobile" ? (
+                      {device.type === 'mobile' ? (
                         <Smartphone className="w-5 h-5" />
-                      ) : device.type === "tablet" ? (
+                      ) : device.type === 'tablet' ? (
                         <Monitor className="w-5 h-5" />
                       ) : (
                         <Monitor className="w-5 h-5" />
@@ -530,8 +494,7 @@ export function EnterpriseSecurity() {
                         <p>Last active: {formatTimeAgo(device.lastActive)}</p>
                         {showSensitiveData && device.ipAddress && (
                           <p>
-                            IP: {device.ipAddress}{" "}
-                            {device.location && `• ${device.location}`}
+                            IP: {device.ipAddress} {device.location && `• ${device.location}`}
                           </p>
                         )}
                       </div>
@@ -546,14 +509,11 @@ export function EnterpriseSecurity() {
               <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <Shield className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-800">
-                    Security Tip
-                  </span>
+                  <span className="text-sm font-medium text-blue-800">Security Tip</span>
                 </div>
                 <p className="text-xs text-blue-700">
-                  Regularly review your connected devices and remove any you
-                  don't recognize. Enable two-factor authentication for added
-                  security.
+                  Regularly review your connected devices and remove any you don't recognize. Enable
+                  two-factor authentication for added security.
                 </p>
               </div>
             </CardContent>
@@ -592,8 +552,8 @@ export function EnterpriseSecurity() {
                 <Alert>
                   <CheckCircle className="w-4 h-4" />
                   <AlertDescription>
-                    All data is encrypted with industry-standard algorithms.
-                    Encryption keys are managed securely and rotated regularly.
+                    All data is encrypted with industry-standard algorithms. Encryption keys are
+                    managed securely and rotated regularly.
                   </AlertDescription>
                 </Alert>
               </CardContent>
@@ -649,10 +609,7 @@ export function EnterpriseSecurity() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {securityMetrics.authMethods.map((method, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 p-2 bg-muted/30 rounded"
-                  >
+                  <div key={index} className="flex items-center gap-3 p-2 bg-muted/30 rounded">
                     <Key className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium">{method}</span>
                     <Badge variant="outline" className="text-green-600 ml-auto">
@@ -697,8 +654,7 @@ export function EnterpriseSecurity() {
                 <Alert>
                   <CheckCircle className="w-4 h-4" />
                   <AlertDescription>
-                    Network security measures are active and protecting your
-                    data.
+                    Network security measures are active and protecting your data.
                   </AlertDescription>
                 </Alert>
               </CardContent>

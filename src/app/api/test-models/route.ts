@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { zaiApiService } from "@/lib/zai-api-service";
+import { zaiApiService } from '@/lib/zai-api-service';
 
 export async function GET() {
   try {
@@ -21,7 +21,7 @@ export async function GET() {
           modelId: model.id,
           modelName: model.name,
           isConnected: false,
-          error: error?.message || "Unknown error",
+          error: error?.message || 'Unknown error',
           capabilities: model.capabilities,
         });
       }
@@ -29,10 +29,10 @@ export async function GET() {
 
     return NextResponse.json({ testResults });
   } catch (error: any) {
-    console.error("Model testing failed:", error);
+    console.error('Model testing failed:', error);
     return NextResponse.json(
-      { error: "Model testing failed", details: error?.message },
-      { status: 500 },
+      { error: 'Model testing failed', details: error?.message },
+      { status: 500 }
     );
   }
 }

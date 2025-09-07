@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import * as ort from "onnxruntime-web";
+import React, { useState, useEffect } from 'react';
+import * as ort from 'onnxruntime-web';
 import {
   LucideImage,
   LucideUpload,
@@ -11,12 +11,12 @@ import {
   LucideBrain,
   LucideCheckCircle,
   LucideAlertCircle,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 interface OnDeviceAnalyzerProps {
   onAnalysisComplete?: (result: string, confidence: number) => void;
@@ -35,20 +35,18 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
   const [modelLoaded, setModelLoaded] = useState(false);
   const [session, setSession] = useState<ort.InferenceSession | null>(null);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState<string>('');
   const [confidence, setConfidence] = useState<number>(0);
   const [image, setImage] = useState<string | null>(null);
-  const [modelStatus, setModelStatus] = useState<"loading" | "ready" | "error">(
-    "loading",
-  );
+  const [modelStatus, setModelStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [progress, setProgress] = useState(0);
 
   // Load the ONNX model when component mounts
   useEffect(() => {
     async function loadModel() {
       try {
-        console.log("Loading V.AI GLM 4.5 ONNX model...");
-        setModelStatus("loading");
+        console.log('Loading V.AI GLM 4.5 ONNX model...');
+        setModelStatus('loading');
         setProgress(10);
         setLoading(true);
 
@@ -57,26 +55,26 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
         // const newSession = await ort.InferenceSession.create('./model/vibe_analyzer.onnx');
 
         // Simulate loading progress
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
         setProgress(30);
 
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
         setProgress(60);
 
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 500));
         setProgress(90);
 
         // Mock session for demo
         setSession({} as ort.InferenceSession);
         setModelLoaded(true);
-        setModelStatus("ready");
+        setModelStatus('ready');
         setProgress(100);
         setLoading(false);
 
-        console.log("V.AI GLM 4.5 model loaded successfully!");
+        console.log('V.AI GLM 4.5 model loaded successfully!');
       } catch (error) {
-        console.error("Failed to load ONNX model:", error);
-        setModelStatus("error");
+        console.error('Failed to load ONNX model:', error);
+        setModelStatus('error');
         setLoading(false);
       }
     }
@@ -88,7 +86,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
   useEffect(() => {
     if (photo) {
       setImage(photo.url);
-      setResult("");
+      setResult('');
       setConfidence(0);
     }
   }, [photo]);
@@ -100,7 +98,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result as string);
-        setResult("");
+        setResult('');
         setConfidence(0);
       };
       reader.readAsDataURL(file);
@@ -114,15 +112,15 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
     }
 
     setLoading(true);
-    setResult("");
+    setResult('');
     setConfidence(0);
-    console.log("Running V.AI GLM 4.5 inference...");
+    console.log('Running V.AI GLM 4.5 inference...');
 
     try {
       // Simulate inference progress
       setProgress(0);
       const progressInterval = setInterval(() => {
-        setProgress((prev) => {
+        setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -132,7 +130,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
       }, 100);
 
       // Simulate processing time
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
       clearInterval(progressInterval);
       setProgress(100);
@@ -146,23 +144,22 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
 
       const mockResults = [
         {
-          text: "This image contains a friendly animal with high confidence",
+          text: 'This image contains a friendly animal with high confidence',
           confidence: 0.95,
         },
         {
-          text: "This image shows a natural landscape with good lighting",
+          text: 'This image shows a natural landscape with good lighting',
           confidence: 0.87,
         },
         {
-          text: "This image contains people in a social setting",
+          text: 'This image contains people in a social setting',
           confidence: 0.92,
         },
-        { text: "This image shows architectural structures", confidence: 0.78 },
-        { text: "This image contains text or documents", confidence: 0.83 },
+        { text: 'This image shows architectural structures', confidence: 0.78 },
+        { text: 'This image contains text or documents', confidence: 0.83 },
       ];
 
-      const selectedResult =
-        mockResults[Math.floor(Math.random() * mockResults.length)];
+      const selectedResult = mockResults[Math.floor(Math.random() * mockResults.length)];
 
       setResult(selectedResult.text);
       setConfidence(selectedResult.confidence);
@@ -172,10 +169,10 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
         onAnalysisComplete(selectedResult.text, selectedResult.confidence);
       }
 
-      console.log("V.AI GLM 4.5 inference complete.");
+      console.log('V.AI GLM 4.5 inference complete.');
     } catch (error) {
-      console.error("Inference failed:", error);
-      setResult("An error occurred during analysis.");
+      console.error('Inference failed:', error);
+      setResult('An error occurred during analysis.');
       setConfidence(0);
     } finally {
       setLoading(false);
@@ -189,26 +186,24 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
     }
 
     switch (modelStatus) {
-      case "ready":
+      case 'ready':
         return <LucideSparkles size={20} className="text-emerald-500" />;
-      case "error":
+      case 'error':
         return <LucideAlertCircle size={20} className="text-red-500" />;
       default:
-        return (
-          <LucideLoader size={20} className="animate-spin text-gray-500" />
-        );
+        return <LucideLoader size={20} className="animate-spin text-gray-500" />;
     }
   };
 
   const getStatusText = () => {
-    if (loading) return "Analyzing...";
+    if (loading) return 'Analyzing...';
     switch (modelStatus) {
-      case "ready":
-        return "Model Ready!";
-      case "error":
-        return "Model Error";
+      case 'ready':
+        return 'Model Ready!';
+      case 'error':
+        return 'Model Error';
       default:
-        return "Initializing...";
+        return 'Initializing...';
     }
   };
 
@@ -222,23 +217,16 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
         <CardTitle className="text-2xl font-bold text-gray-800">
           V.AI GLM 4.5 On-Device Analyzer
         </CardTitle>
-        <p className="text-gray-600">
-          Secure, private photo analysis directly on your device
-        </p>
+        <p className="text-gray-600">Secure, private photo analysis directly on your device</p>
       </CardHeader>
 
       <CardContent className="space-y-6">
         {/* Model Status */}
         <div className="flex items-center justify-center space-x-2 p-3 bg-gray-50 rounded-lg">
           {getStatusIcon()}
-          <span className="text-sm font-medium text-gray-700">
-            {getStatusText()}
-          </span>
-          {modelStatus === "ready" && (
-            <Badge
-              variant="outline"
-              className="text-emerald-600 border-emerald-200"
-            >
+          <span className="text-sm font-medium text-gray-700">{getStatusText()}</span>
+          {modelStatus === 'ready' && (
+            <Badge variant="outline" className="text-emerald-600 border-emerald-200">
               On-Device
             </Badge>
           )}
@@ -258,18 +246,12 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
         {/* Image Upload and Display */}
         <div className="relative w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden transition-colors hover:border-gray-400">
           {image ? (
-            <img
-              src={image}
-              alt="Preview"
-              className="object-contain w-full h-full p-2"
-            />
+            <img src={image} alt="Preview" className="object-contain w-full h-full p-2" />
           ) : (
             <div className="flex flex-col items-center space-y-2 text-gray-400 p-6 text-center">
               <LucideImage size={48} />
               <p className="text-sm font-medium">Select an image to analyze</p>
-              <p className="text-xs text-gray-500">
-                Click or drag a photo here
-              </p>
+              <p className="text-xs text-gray-500">Click or drag a photo here</p>
             </div>
           )}
           <input
@@ -286,7 +268,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
           onClick={runInference}
           disabled={!modelLoaded || !image || loading}
           className="w-full py-3 text-lg font-semibold transition-all duration-200"
-          variant={modelLoaded && image && !loading ? "default" : "secondary"}
+          variant={modelLoaded && image && !loading ? 'default' : 'secondary'}
         >
           {loading ? (
             <div className="flex items-center space-x-2">
@@ -308,15 +290,11 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
               <div className="flex items-start space-x-3">
                 <LucideCheckCircle className="w-5 h-5 text-emerald-600 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-emerald-800 mb-1">
-                    Analysis Result:
-                  </p>
+                  <p className="text-sm font-medium text-emerald-800 mb-1">Analysis Result:</p>
                   <p className="text-emerald-700">{result}</p>
                   {confidence > 0 && (
                     <div className="mt-2 flex items-center space-x-2">
-                      <span className="text-xs text-emerald-600">
-                        Confidence:
-                      </span>
+                      <span className="text-xs text-emerald-600">Confidence:</span>
                       <div className="flex-1 bg-emerald-200 rounded-full h-2">
                         <div
                           className="bg-emerald-600 h-2 rounded-full transition-all duration-500"
@@ -336,8 +314,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
               <div className="flex items-center space-x-2 text-blue-700">
                 <LucideShield size={16} />
                 <span className="text-xs font-medium">
-                  Analysis performed locally - your data never leaves your
-                  device
+                  Analysis performed locally - your data never leaves your device
                 </span>
               </div>
             </div>
@@ -345,7 +322,7 @@ export const OnDeviceAnalyzer: React.FC<OnDeviceAnalyzerProps> = ({
         )}
 
         {/* Error State */}
-        {modelStatus === "error" && (
+        {modelStatus === 'error' && (
           <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
             <div className="flex items-center space-x-2 text-red-700">
               <LucideAlertCircle size={20} />

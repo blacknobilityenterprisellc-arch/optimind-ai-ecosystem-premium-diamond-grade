@@ -9,18 +9,12 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { FileText, TrendingUp, Users, Activity } from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { FileText, TrendingUp, Users, Activity } from 'lucide-react';
 
 interface DashboardMetrics {
   totalContent: number;
@@ -38,27 +32,27 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
 
   const metricCards = [
     {
-      title: "Total Content",
+      title: 'Total Content',
       value: metrics.totalContent.toLocaleString(),
-      change: "+12% from last month",
+      change: '+12% from last month',
       icon: FileText,
     },
     {
-      title: "Avg. Optimization",
+      title: 'Avg. Optimization',
       value: `${metrics.avgOptimizationScore}%`,
-      change: "+5% from last week",
+      change: '+5% from last week',
       icon: TrendingUp,
     },
     {
-      title: "Active Projects",
+      title: 'Active Projects',
       value: metrics.activeProjects.toString(),
-      change: "+3 new this week",
+      change: '+3 new this week',
       icon: Users,
     },
     {
-      title: "System Health",
+      title: 'System Health',
       value: `${metrics.systemHealth}%`,
-      change: "",
+      change: '',
       icon: Activity,
       showProgress: true,
       progressValue: metrics.systemHealth,
@@ -75,12 +69,8 @@ const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{card.value}</div>
-            {card.change && (
-              <p className="text-xs text-muted-foreground">{card.change}</p>
-            )}
-            {card.showProgress && (
-              <Progress value={card.progressValue} className="mt-2" />
-            )}
+            {card.change && <p className="text-xs text-muted-foreground">{card.change}</p>}
+            {card.showProgress && <Progress value={card.progressValue} className="mt-2" />}
           </CardContent>
         </Card>
       ))}

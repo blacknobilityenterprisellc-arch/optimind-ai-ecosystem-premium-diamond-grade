@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Search,
   Loader2,
@@ -14,22 +14,22 @@ import {
   BookOpen,
   Code,
   Globe,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface SmartSearchProps {
   className?: string;
@@ -58,73 +58,70 @@ interface Recommendation {
 }
 
 export function SmartSearch({ className }: SmartSearchProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchContext, setSearchContext] = useState("");
-  const [searchType, setSearchType] = useState("general");
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchContext, setSearchContext] = useState('');
+  const [searchType, setSearchType] = useState('general');
   const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
   const [isSearching, setIsSearching] = useState(false);
 
-  const [recommendationContext, setRecommendationContext] = useState("");
-  const [recommendationType, setRecommendationType] = useState("content");
-  const [recommendations, setRecommendations] = useState<Recommendation | null>(
-    null,
-  );
-  const [isGettingRecommendations, setIsGettingRecommendations] =
-    useState(false);
+  const [recommendationContext, setRecommendationContext] = useState('');
+  const [recommendationType, setRecommendationType] = useState('content');
+  const [recommendations, setRecommendations] = useState<Recommendation | null>(null);
+  const [isGettingRecommendations, setIsGettingRecommendations] = useState(false);
 
   const searchTypes = [
     {
-      value: "general",
-      label: "General Search",
+      value: 'general',
+      label: 'General Search',
       icon: <Search className="h-4 w-4" />,
     },
-    { value: "code", label: "Code Search", icon: <Code className="h-4 w-4" /> },
+    { value: 'code', label: 'Code Search', icon: <Code className="h-4 w-4" /> },
     {
-      value: "research",
-      label: "Research",
+      value: 'research',
+      label: 'Research',
       icon: <BookOpen className="h-4 w-4" />,
     },
     {
-      value: "creative",
-      label: "Creative Ideas",
+      value: 'creative',
+      label: 'Creative Ideas',
       icon: <Lightbulb className="h-4 w-4" />,
     },
   ];
 
   const recommendationTypes = [
     {
-      value: "content",
-      label: "Content Ideas",
+      value: 'content',
+      label: 'Content Ideas',
       icon: <BookOpen className="h-4 w-4" />,
     },
     {
-      value: "products",
-      label: "Product Recommendations",
+      value: 'products',
+      label: 'Product Recommendations',
       icon: <Target className="h-4 w-4" />,
     },
     {
-      value: "actions",
-      label: "Action Items",
+      value: 'actions',
+      label: 'Action Items',
       icon: <TrendingUp className="h-4 w-4" />,
     },
     {
-      value: "strategies",
-      label: "Strategies",
+      value: 'strategies',
+      label: 'Strategies',
       icon: <Star className="h-4 w-4" />,
     },
   ];
 
   const performSearch = async () => {
     if (!searchQuery.trim()) {
-      alert("Please enter a search query");
+      alert('Please enter a search query');
       return;
     }
 
     setIsSearching(true);
     try {
-      const response = await fetch("/api/smart-search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/smart-search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           query: searchQuery,
           context: searchContext,
@@ -142,11 +139,11 @@ export function SmartSearch({ className }: SmartSearchProps) {
           usage: data.usage,
         });
       } else {
-        alert("Failed to search: " + data.error);
+        alert('Failed to search: ' + data.error);
       }
     } catch (error) {
-      console.error("Error searching:", error);
-      alert("Error performing search");
+      console.error('Error searching:', error);
+      alert('Error performing search');
     } finally {
       setIsSearching(false);
     }
@@ -154,15 +151,15 @@ export function SmartSearch({ className }: SmartSearchProps) {
 
   const getRecommendations = async () => {
     if (!recommendationContext.trim()) {
-      alert("Please provide context for recommendations");
+      alert('Please provide context for recommendations');
       return;
     }
 
     setIsGettingRecommendations(true);
     try {
-      const response = await fetch("/api/recommendations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/recommendations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           context: recommendationContext,
           type: recommendationType,
@@ -179,11 +176,11 @@ export function SmartSearch({ className }: SmartSearchProps) {
           usage: data.usage,
         });
       } else {
-        alert("Failed to get recommendations: " + data.error);
+        alert('Failed to get recommendations: ' + data.error);
       }
     } catch (error) {
-      console.error("Error getting recommendations:", error);
-      alert("Error getting recommendations");
+      console.error('Error getting recommendations:', error);
+      alert('Error getting recommendations');
     } finally {
       setIsGettingRecommendations(false);
     }
@@ -195,52 +192,52 @@ export function SmartSearch({ className }: SmartSearchProps) {
 
   const searchExamples = {
     general: [
-      "What are the latest trends in web development?",
-      "How to improve user experience design?",
-      "Best practices for project management",
+      'What are the latest trends in web development?',
+      'How to improve user experience design?',
+      'Best practices for project management',
     ],
     code: [
-      "How to implement authentication in React?",
-      "Python decorators explained with examples",
-      "Optimize SQL query for large datasets",
+      'How to implement authentication in React?',
+      'Python decorators explained with examples',
+      'Optimize SQL query for large datasets',
     ],
     research: [
-      "Impact of AI on software development industry",
-      "Case studies of successful tech startups",
-      "Latest research in machine learning",
+      'Impact of AI on software development industry',
+      'Case studies of successful tech startups',
+      'Latest research in machine learning',
     ],
     creative: [
-      "Innovative features for a mobile app",
-      "Creative marketing campaign ideas",
-      "Unique approaches to team building",
+      'Innovative features for a mobile app',
+      'Creative marketing campaign ideas',
+      'Unique approaches to team building',
     ],
   };
 
   const recommendationExamples = {
     content: [
-      "Tech blog targeting developers interested in AI and web development",
-      "Social media content for a SaaS product launch",
-      "Newsletter content for a programming community",
+      'Tech blog targeting developers interested in AI and web development',
+      'Social media content for a SaaS product launch',
+      'Newsletter content for a programming community',
     ],
     products: [
-      "E-commerce platform selling electronics and gadgets",
-      "Software tools for remote team collaboration",
-      "Educational platform for learning programming",
+      'E-commerce platform selling electronics and gadgets',
+      'Software tools for remote team collaboration',
+      'Educational platform for learning programming',
     ],
     actions: [
-      "Startup looking to improve user acquisition and retention",
-      "Development team wanting to improve code quality",
-      "Marketing team planning to increase brand awareness",
+      'Startup looking to improve user acquisition and retention',
+      'Development team wanting to improve code quality',
+      'Marketing team planning to increase brand awareness',
     ],
     strategies: [
-      "Business expanding into new markets",
-      "Company undergoing digital transformation",
-      "Team adopting agile development practices",
+      'Business expanding into new markets',
+      'Company undergoing digital transformation',
+      'Team adopting agile development practices',
     ],
   };
 
-  const loadExample = (type: "search" | "recommendation", example: string) => {
-    if (type === "search") {
+  const loadExample = (type: 'search' | 'recommendation', example: string) => {
+    if (type === 'search') {
       setSearchQuery(example);
     } else {
       setRecommendationContext(example);
@@ -272,7 +269,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {searchTypes.map((type) => (
+                      {searchTypes.map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           <div className="flex items-center gap-2">
                             {type.icon}
@@ -284,13 +281,11 @@ export function SmartSearch({ className }: SmartSearchProps) {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    Context (Optional)
-                  </label>
+                  <label className="text-sm font-medium">Context (Optional)</label>
                   <Input
                     placeholder="Provide context for better results..."
                     value={searchContext}
-                    onChange={(e) => setSearchContext(e.target.value)}
+                    onChange={e => setSearchContext(e.target.value)}
                   />
                 </div>
               </div>
@@ -301,14 +296,11 @@ export function SmartSearch({ className }: SmartSearchProps) {
                   <Input
                     placeholder="What would you like to search for?"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && performSearch()}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    onKeyPress={e => e.key === 'Enter' && performSearch()}
                     className="flex-1"
                   />
-                  <Button
-                    onClick={performSearch}
-                    disabled={isSearching || !searchQuery.trim()}
-                  >
+                  <Button onClick={performSearch} disabled={isSearching || !searchQuery.trim()}>
                     {isSearching ? (
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : (
@@ -321,19 +313,19 @@ export function SmartSearch({ className }: SmartSearchProps) {
               <div className="space-y-2">
                 <label className="text-sm font-medium">Quick Examples</label>
                 <div className="flex flex-wrap gap-2">
-                  {searchExamples[
-                    searchType as keyof typeof searchExamples
-                  ].map((example, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => loadExample("search", example)}
-                      className="text-xs"
-                    >
-                      {example}
-                    </Button>
-                  ))}
+                  {searchExamples[searchType as keyof typeof searchExamples].map(
+                    (example, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => loadExample('search', example)}
+                        className="text-xs"
+                      >
+                        {example}
+                      </Button>
+                    )
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -344,7 +336,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {searchTypes.find((t) => t.value === searchType)?.icon}
+                    {searchTypes.find(t => t.value === searchType)?.icon}
                     Search Results
                   </div>
                   <div className="flex gap-2">
@@ -360,10 +352,10 @@ export function SmartSearch({ className }: SmartSearchProps) {
                       size="sm"
                       onClick={() => {
                         const blob = new Blob([searchResults.content], {
-                          type: "text/plain",
+                          type: 'text/plain',
                         });
                         const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
+                        const a = document.createElement('a');
                         a.href = url;
                         a.download = `search_results_${searchType}.txt`;
                         document.body.appendChild(a);
@@ -377,23 +369,15 @@ export function SmartSearch({ className }: SmartSearchProps) {
                   </div>
                 </CardTitle>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">
-                    Model: {searchResults.model}
-                  </Badge>
-                  <Badge variant="secondary">
-                    Cost: ${searchResults.cost.toFixed(4)}
-                  </Badge>
-                  <Badge variant="secondary">
-                    Tokens: {searchResults.usage.totalTokens}
-                  </Badge>
+                  <Badge variant="secondary">Model: {searchResults.model}</Badge>
+                  <Badge variant="secondary">Cost: ${searchResults.cost.toFixed(4)}</Badge>
+                  <Badge variant="secondary">Tokens: {searchResults.usage.totalTokens}</Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[400px] w-full">
                   <div className="prose prose-sm max-w-none">
-                    <div className="whitespace-pre-wrap">
-                      {searchResults.content}
-                    </div>
+                    <div className="whitespace-pre-wrap">{searchResults.content}</div>
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -412,18 +396,13 @@ export function SmartSearch({ className }: SmartSearchProps) {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    Recommendation Type
-                  </label>
-                  <Select
-                    value={recommendationType}
-                    onValueChange={setRecommendationType}
-                  >
+                  <label className="text-sm font-medium">Recommendation Type</label>
+                  <Select value={recommendationType} onValueChange={setRecommendationType}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {recommendationTypes.map((type) => (
+                      {recommendationTypes.map(type => (
                         <SelectItem key={type.value} value={type.value}>
                           <div className="flex items-center gap-2">
                             {type.icon}
@@ -441,7 +420,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
                 <Textarea
                   placeholder="Describe your situation, project, or needs to get personalized recommendations..."
                   value={recommendationContext}
-                  onChange={(e) => setRecommendationContext(e.target.value)}
+                  onChange={e => setRecommendationContext(e.target.value)}
                   rows={4}
                 />
               </div>
@@ -456,7 +435,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
                       key={index}
                       variant="outline"
                       size="sm"
-                      onClick={() => loadExample("recommendation", example)}
+                      onClick={() => loadExample('recommendation', example)}
                       className="text-xs"
                     >
                       {example}
@@ -467,9 +446,7 @@ export function SmartSearch({ className }: SmartSearchProps) {
 
               <Button
                 onClick={getRecommendations}
-                disabled={
-                  isGettingRecommendations || !recommendationContext.trim()
-                }
+                disabled={isGettingRecommendations || !recommendationContext.trim()}
                 className="w-full"
               >
                 {isGettingRecommendations ? (
@@ -479,18 +456,9 @@ export function SmartSearch({ className }: SmartSearchProps) {
                   </>
                 ) : (
                   <>
-                    {
-                      recommendationTypes.find(
-                        (t) => t.value === recommendationType,
-                      )?.icon
-                    }
+                    {recommendationTypes.find(t => t.value === recommendationType)?.icon}
                     <span className="ml-2">
-                      Get{" "}
-                      {
-                        recommendationTypes.find(
-                          (t) => t.value === recommendationType,
-                        )?.label
-                      }
+                      Get {recommendationTypes.find(t => t.value === recommendationType)?.label}
                     </span>
                   </>
                 )}
@@ -503,16 +471,8 @@ export function SmartSearch({ className }: SmartSearchProps) {
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {
-                      recommendationTypes.find(
-                        (t) => t.value === recommendationType,
-                      )?.icon
-                    }
-                    {
-                      recommendationTypes.find(
-                        (t) => t.value === recommendationType,
-                      )?.label
-                    }
+                    {recommendationTypes.find(t => t.value === recommendationType)?.icon}
+                    {recommendationTypes.find(t => t.value === recommendationType)?.label}
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -527,10 +487,10 @@ export function SmartSearch({ className }: SmartSearchProps) {
                       size="sm"
                       onClick={() => {
                         const blob = new Blob([recommendations.content], {
-                          type: "text/plain",
+                          type: 'text/plain',
                         });
                         const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
+                        const a = document.createElement('a');
                         a.href = url;
                         a.download = `recommendations_${recommendationType}.txt`;
                         document.body.appendChild(a);
@@ -544,23 +504,15 @@ export function SmartSearch({ className }: SmartSearchProps) {
                   </div>
                 </CardTitle>
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">
-                    Model: {recommendations.model}
-                  </Badge>
-                  <Badge variant="secondary">
-                    Cost: ${recommendations.cost.toFixed(4)}
-                  </Badge>
-                  <Badge variant="secondary">
-                    Tokens: {recommendations.usage.totalTokens}
-                  </Badge>
+                  <Badge variant="secondary">Model: {recommendations.model}</Badge>
+                  <Badge variant="secondary">Cost: ${recommendations.cost.toFixed(4)}</Badge>
+                  <Badge variant="secondary">Tokens: {recommendations.usage.totalTokens}</Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[400px] w-full">
                   <div className="prose prose-sm max-w-none">
-                    <div className="whitespace-pre-wrap">
-                      {recommendations.content}
-                    </div>
+                    <div className="whitespace-pre-wrap">{recommendations.content}</div>
                   </div>
                 </ScrollArea>
               </CardContent>

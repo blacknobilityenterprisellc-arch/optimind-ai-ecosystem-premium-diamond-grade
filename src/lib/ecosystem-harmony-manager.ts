@@ -30,7 +30,7 @@ export class EcosystemHarmonyManager {
   public getHarmonyStatus(): { level: string; operational: boolean } {
     return {
       level: this.harmonyLevel,
-      operational: this.isInitialized
+      operational: this.isInitialized,
     };
   }
 

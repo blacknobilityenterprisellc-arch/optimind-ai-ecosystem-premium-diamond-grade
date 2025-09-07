@@ -1,20 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import Link from "next/link";
-import {
-  Menu,
-  X,
-  Search,
-  Target,
-  Globe,
-  Zap,
-  ChevronDown,
-  ArrowRight,
-} from "lucide-react";
+import { useState } from 'react';
+import Link from 'next/link';
+import { Menu, X, Search, Target, Globe, Zap, ChevronDown, ArrowRight } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,22 +13,22 @@ export default function Header() {
 
   const products = [
     {
-      name: "SEO Optimization",
-      description: "Advanced search engine optimization with AI",
+      name: 'SEO Optimization',
+      description: 'Advanced search engine optimization with AI',
       icon: Search,
-      href: "#seo",
+      href: '#seo',
     },
     {
-      name: "AEO Enhancement",
-      description: "Answer Engine Optimization for voice search",
+      name: 'AEO Enhancement',
+      description: 'Answer Engine Optimization for voice search',
       icon: Target,
-      href: "#aeo",
+      href: '#aeo',
     },
     {
-      name: "GEO Targeting",
-      description: "Geographic optimization for local markets",
+      name: 'GEO Targeting',
+      description: 'Geographic optimization for local markets',
       icon: Globe,
-      href: "#geo",
+      href: '#geo',
     },
   ];
 
@@ -84,12 +75,8 @@ export default function Header() {
                         <product.icon className="w-5 h-5 text-primary" />
                       </div>
                       <div className="flex-1">
-                        <div className="font-medium text-sm">
-                          {product.name}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {product.description}
-                        </div>
+                        <div className="font-medium text-sm">{product.name}</div>
+                        <div className="text-xs text-muted-foreground">{product.description}</div>
                       </div>
                     </Link>
                   ))}
@@ -144,11 +131,7 @@ export default function Header() {
             className="md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
+            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
         </div>
 
@@ -157,9 +140,7 @@ export default function Header() {
           <div className="md:hidden border-t bg-background">
             <nav className="p-4 space-y-4">
               <div className="space-y-2">
-                <div className="font-medium text-sm text-muted-foreground">
-                  Products
-                </div>
+                <div className="font-medium text-sm text-muted-foreground">Products</div>
                 {products.map((product, index) => (
                   <Link
                     key={index}
@@ -170,9 +151,7 @@ export default function Header() {
                     <product.icon className="w-5 h-5 text-primary" />
                     <div>
                       <div className="font-medium text-sm">{product.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {product.description}
-                      </div>
+                      <div className="text-xs text-muted-foreground">{product.description}</div>
                     </div>
                   </Link>
                 ))}

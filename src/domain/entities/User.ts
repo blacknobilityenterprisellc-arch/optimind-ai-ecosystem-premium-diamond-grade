@@ -9,10 +9,10 @@
  * @license MIT
  */
 
-import { AuditEntity } from "@/types";
-import { Email } from "../value-objects/Email";
-import { Money } from "../value-objects/Money";
-import { ValidationError } from "@/lib/error-handler";
+import { AuditEntity } from '@/types';
+import { Email } from '../value-objects/Email';
+import { Money } from '../value-objects/Money';
+import { ValidationError } from '@/lib/error-handler';
 
 export interface UserProps {
   email: string;
@@ -27,15 +27,15 @@ export interface UserProps {
 }
 
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user",
-  MODERATOR = "moderator",
-  ANALYST = "analyst",
+  ADMIN = 'admin',
+  USER = 'user',
+  MODERATOR = 'moderator',
+  ANALYST = 'analyst',
 }
 
 export interface Permission {
   resource: string;
-  action: "create" | "read" | "update" | "delete" | "execute";
+  action: 'create' | 'read' | 'update' | 'delete' | 'execute';
   conditions?: Record<string, any>;
 }
 
@@ -47,7 +47,7 @@ export interface UserProfile {
 }
 
 export interface UserPreferences {
-  theme: "light" | "dark" | "auto";
+  theme: 'light' | 'dark' | 'auto';
   language: string;
   timezone: string;
   notifications: NotificationPreferences;
@@ -65,11 +65,11 @@ export interface NotificationPreferences {
   email: boolean;
   push: boolean;
   sms: boolean;
-  frequency: "immediate" | "daily" | "weekly" | "monthly";
+  frequency: 'immediate' | 'daily' | 'weekly' | 'monthly';
 }
 
 export interface PrivacySettings {
-  profileVisibility: "public" | "private" | "friends";
+  profileVisibility: 'public' | 'private' | 'friends';
   dataCollection: boolean;
   analytics: boolean;
   marketing: boolean;
@@ -105,9 +105,9 @@ export interface AnalyticsSettings {
 
 export interface Subscription {
   id: string;
-  plan: "free" | "basic" | "premium" | "enterprise";
-  status: "active" | "cancelled" | "expired" | "suspended";
-  billingCycle: "monthly" | "yearly";
+  plan: 'free' | 'basic' | 'premium' | 'enterprise';
+  status: 'active' | 'cancelled' | 'expired' | 'suspended';
+  billingCycle: 'monthly' | 'yearly';
   currentPeriod: {
     start: Date;
     end: Date;
@@ -137,7 +137,7 @@ export interface SubscriptionUsage {
 
 export interface PaymentMethod {
   id: string;
-  type: "credit_card" | "paypal" | "bank_transfer";
+  type: 'credit_card' | 'paypal' | 'bank_transfer';
   last4?: string;
   expiryMonth?: number;
   expiryYear?: number;
@@ -167,20 +167,15 @@ export class User extends AuditEntity {
     super();
 
     // Validate required fields
-    if (
-      !props.email ||
-      !props.username ||
-      !props.firstName ||
-      !props.lastName
-    ) {
-      throw new ValidationError("All user fields are required");
+    if (!props.email || !props.username || !props.firstName || !props.lastName) {
+      throw new ValidationError('All user fields are required');
     }
 
     // Create value objects
     this._email = new Email(props.email);
     this._username = this.validateUsername(props.username);
-    this._firstName = this.validateName(props.firstName, "First name");
-    this._lastName = this.validateName(props.lastName, "Last name");
+    this._firstName = this.validateName(props.firstName, 'First name');
+    this._lastName = this.validateName(props.lastName, 'Last name');
     this._role = props.role;
     this._permissions = this.validatePermissions(props.permissions);
     this._profile = this.validateProfile(props.profile);
@@ -232,8 +227,7 @@ export class User extends AuditEntity {
   // Business methods
   hasPermission(resource: string, action: string): boolean {
     return this._permissions.some(
-      (permission) =>
-        permission.resource === resource && permission.action === action,
+      permission => permission.resource === resource && permission.action === action
     );
   }
 
@@ -250,23 +244,19 @@ export class User extends AuditEntity {
   }
 
   isLocked(): boolean {
-    return this._security.lockedUntil
-      ? new Date() < this._security.lockedUntil
-      : false;
+    return this._security.lockedUntil ? new Date() < this._security.lockedUntil : false;
   }
 
   canUseAI(model: string): boolean {
     if (this.isAdmin()) return true;
 
     const subscription = this._subscription;
-    if (!subscription || subscription.status !== "active") {
+    if (!subscription || subscription.status !== 'active') {
       return false;
     }
 
     // Check if model is allowed by subscription plan
-    const modelLimits = subscription.features.find(
-      (f) => f.name === "ai_models",
-    )?.limits;
+    const modelLimits = subscription.features.find(f => f.name === 'ai_models')?.limits;
     if (!modelLimits) return false;
 
     return modelLimits[model] > 0;
@@ -276,13 +266,11 @@ export class User extends AuditEntity {
     if (this.isAdmin()) return true;
 
     const subscription = this._subscription;
-    if (!subscription || subscription.status !== "active") {
+    if (!subscription || subscription.status !== 'active') {
       return false;
     }
 
-    return (
-      subscription.usage.storageUsed + size <= subscription.usage.storageLimit
-    );
+    return subscription.usage.storageUsed + size <= subscription.usage.storageLimit;
   }
 
   updateProfile(profile: Partial<UserProfile>): void {
@@ -327,13 +315,11 @@ export class User extends AuditEntity {
   // Validation methods
   private validateUsername(username: string): string {
     if (username.length < 3 || username.length > 20) {
-      throw new ValidationError("Username must be between 3 and 20 characters");
+      throw new ValidationError('Username must be between 3 and 20 characters');
     }
 
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      throw new ValidationError(
-        "Username can only contain letters, numbers, and underscores",
-      );
+      throw new ValidationError('Username can only contain letters, numbers, and underscores');
     }
 
     return username;
@@ -341,14 +327,12 @@ export class User extends AuditEntity {
 
   private validateName(name: string, fieldName: string): string {
     if (name.length < 1 || name.length > 50) {
-      throw new ValidationError(
-        `${fieldName} must be between 1 and 50 characters`,
-      );
+      throw new ValidationError(`${fieldName} must be between 1 and 50 characters`);
     }
 
     if (!/^[a-zA-Z\s'-]+$/.test(name)) {
       throw new ValidationError(
-        `${fieldName} can only contain letters, spaces, hyphens, and apostrophes`,
+        `${fieldName} can only contain letters, spaces, hyphens, and apostrophes`
       );
     }
 
@@ -357,10 +341,10 @@ export class User extends AuditEntity {
 
   private validatePermissions(permissions: Permission[]): Permission[] {
     if (!permissions || permissions.length === 0) {
-      throw new ValidationError("User must have at least one permission");
+      throw new ValidationError('User must have at least one permission');
     }
 
-    return permissions.map((permission) => ({
+    return permissions.map(permission => ({
       resource: permission.resource,
       action: permission.action,
       conditions: permission.conditions || {},
@@ -369,11 +353,11 @@ export class User extends AuditEntity {
 
   private validateProfile(profile: UserProfile): UserProfile {
     if (!profile.preferences) {
-      throw new ValidationError("User profile must include preferences");
+      throw new ValidationError('User profile must include preferences');
     }
 
     if (!profile.settings) {
-      throw new ValidationError("User profile must include settings");
+      throw new ValidationError('User profile must include settings');
     }
 
     return {
@@ -386,11 +370,11 @@ export class User extends AuditEntity {
 
   private validateSecurity(security: UserSecurity): UserSecurity {
     if (!security.lastLogin) {
-      throw new ValidationError("User security must include last login date");
+      throw new ValidationError('User security must include last login date');
     }
 
     if (security.loginAttempts < 0) {
-      throw new ValidationError("Login attempts cannot be negative");
+      throw new ValidationError('Login attempts cannot be negative');
     }
 
     return {

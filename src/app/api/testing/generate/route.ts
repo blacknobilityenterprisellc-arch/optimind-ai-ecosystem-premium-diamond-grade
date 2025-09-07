@@ -10,8 +10,8 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 interface TestGenerationRequest {
   codebase: {
@@ -22,7 +22,7 @@ interface TestGenerationRequest {
   requirements: {
     coverage: number;
     testTypes: string[];
-    priority: "low" | "medium" | "high" | "critical";
+    priority: 'low' | 'medium' | 'high' | 'critical';
   };
   context: {
     projectType: string;
@@ -32,11 +32,11 @@ interface TestGenerationRequest {
 }
 
 interface TestGenerationResponse {
-  status: "success" | "error" | "partial";
+  status: 'success' | 'error' | 'partial';
   generatedTests: {
     id: string;
     name: string;
-    type: "unit" | "integration" | "e2e" | "security" | "performance";
+    type: 'unit' | 'integration' | 'e2e' | 'security' | 'performance';
     code: string;
     coverage: number;
     estimatedDuration: number;
@@ -63,8 +63,8 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!body.codebase || !body.requirements || !body.context) {
       return NextResponse.json(
-        { error: "Missing required fields: codebase, requirements, context" },
-        { status: 400 },
+        { error: 'Missing required fields: codebase, requirements, context' },
+        { status: 400 }
       );
     }
 
@@ -90,7 +90,7 @@ ${JSON.stringify(body.codebase.changeHistory.slice(-10), null, 2)}
 
 REQUIREMENTS:
 - Coverage Target: ${body.requirements.coverage}%
-- Test Types: ${body.requirements.testTypes.join(", ")}
+- Test Types: ${body.requirements.testTypes.join(', ')}
 - Priority: ${body.requirements.priority}
 
 CONTEXT:
@@ -100,7 +100,7 @@ CONTEXT:
 
 Generate tests that:
 1. Achieve ${body.requirements.coverage}%+ code coverage
-2. Include all specified test types: ${body.requirements.testTypes.join(", ")}
+2. Include all specified test types: ${body.requirements.testTypes.join(', ')}
 3. Implement self-healing capabilities
 4. Include intelligent mocking and dependency injection
 5. Provide comprehensive error handling
@@ -119,12 +119,12 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are the OptiTest AI Controller, an expert in autonomous testing framework development and comprehensive test generation.",
+            'You are the OptiTest AI Controller, an expert in autonomous testing framework development and comprehensive test generation.',
         },
         {
-          role: "user",
+          role: 'user',
           content: analysisPrompt,
         },
       ],
@@ -137,9 +137,9 @@ Respond with a JSON structure containing:
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       aiResponse = {
         generatedTests: [],
         metrics: {
@@ -148,21 +148,17 @@ Respond with a JSON structure containing:
           generationTime,
           confidence: 0,
         },
-        recommendations: [
-          "AI response parsing failed - manual review required",
-        ],
+        recommendations: ['AI response parsing failed - manual review required'],
         predictions: {
           potentialFailures: 0,
-          riskAreas: ["AI generation process"],
-          optimizationSuggestions: [
-            "Retry generation with different parameters",
-          ],
+          riskAreas: ['AI generation process'],
+          optimizationSuggestions: ['Retry generation with different parameters'],
         },
       };
     }
 
     const response: TestGenerationResponse = {
-      status: aiResponse.generatedTests?.length > 0 ? "success" : "partial",
+      status: aiResponse.generatedTests?.length > 0 ? 'success' : 'partial',
       generatedTests: aiResponse.generatedTests || [],
       metrics: {
         ...aiResponse.metrics,
@@ -178,32 +174,32 @@ Respond with a JSON structure containing:
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Test generation error:", error);
+    console.error('Test generation error:', error);
     return NextResponse.json(
       {
-        error: "Failed to generate tests",
-        details: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
+        error: 'Failed to generate tests',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        status: 'error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: "OptiTest AI Test Generation API",
-    version: "1.0.0",
+    message: 'OptiTest AI Test Generation API',
+    version: '1.0.0',
     endpoints: {
-      "POST /api/testing/generate": "Generate comprehensive test suites",
-      "GET /api/testing/generate/status": "Get generation status and metrics",
+      'POST /api/testing/generate': 'Generate comprehensive test suites',
+      'GET /api/testing/generate/status': 'Get generation status and metrics',
     },
     capabilities: [
-      "Autonomous test generation",
-      "Multi-dimensional testing",
-      "Self-healing test maintenance",
-      "Predictive quality assurance",
-      "Real-time analytics",
+      'Autonomous test generation',
+      'Multi-dimensional testing',
+      'Self-healing test maintenance',
+      'Predictive quality assurance',
+      'Real-time analytics',
     ],
   });
 }

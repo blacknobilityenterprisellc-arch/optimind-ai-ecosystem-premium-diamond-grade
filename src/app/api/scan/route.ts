@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,11 +10,11 @@ export async function POST(request: NextRequest) {
       id: Math.random().toString(36).slice(2, 11),
       target,
       type,
-      status: "completed",
+      status: 'completed',
       results: {
         vulnerabilities: [],
         issues: [],
-        recommendations: ["No security issues found", "System is secure"],
+        recommendations: ['No security issues found', 'System is secure'],
         score: 100,
         timestamp: new Date().toISOString(),
       },
@@ -28,10 +28,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(scanResult);
   } catch (error: any) {
-    console.error("Scan API error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to perform scan" },
-      { status: 500 },
-    );
+    console.error('Scan API error:', error);
+    return NextResponse.json({ error: error.message || 'Failed to perform scan' }, { status: 500 });
   }
 }

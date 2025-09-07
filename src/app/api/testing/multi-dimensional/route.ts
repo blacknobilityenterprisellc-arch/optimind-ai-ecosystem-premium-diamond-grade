@@ -10,23 +10,23 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import ZAI from "z-ai-web-dev-sdk";
+import { NextRequest, NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 interface MultiDimensionalTestRequest {
   testSuite: {
     name: string;
     description: string;
-    dimensions: ("unit" | "integration" | "e2e" | "security" | "performance")[];
+    dimensions: ('unit' | 'integration' | 'e2e' | 'security' | 'performance')[];
     targetCoverage: number;
-    priority: "low" | "medium" | "high" | "critical";
+    priority: 'low' | 'medium' | 'high' | 'critical';
   };
   configuration: {
     environment: string;
     parallelExecution: boolean;
     timeout: number;
     retryAttempts: number;
-    reportingLevel: "basic" | "detailed" | "comprehensive";
+    reportingLevel: 'basic' | 'detailed' | 'comprehensive';
   };
   context: {
     applicationType: string;
@@ -37,12 +37,12 @@ interface MultiDimensionalTestRequest {
 }
 
 interface MultiDimensionalTestResponse {
-  status: "success" | "error" | "partial";
+  status: 'success' | 'error' | 'partial';
   testPlan: {
     id: string;
     name: string;
     dimensions: Array<{
-      type: "unit" | "integration" | "e2e" | "security" | "performance";
+      type: 'unit' | 'integration' | 'e2e' | 'security' | 'performance';
       testCount: number;
       estimatedDuration: number;
       coverageTarget: number;
@@ -118,8 +118,8 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!body.testSuite || !body.configuration || !body.context) {
       return NextResponse.json(
-        { error: "Missing required fields: testSuite, configuration, context" },
-        { status: 400 },
+        { error: 'Missing required fields: testSuite, configuration, context' },
+        { status: 400 }
       );
     }
 
@@ -137,7 +137,7 @@ Analyze the following requirements and generate a comprehensive multi-dimensiona
 TEST SUITE:
 Name: ${body.testSuite.name}
 Description: ${body.testSuite.description}
-Dimensions: ${body.testSuite.dimensions.join(", ")}
+Dimensions: ${body.testSuite.dimensions.join(', ')}
 Target Coverage: ${body.testSuite.targetCoverage}%
 Priority: ${body.testSuite.priority}
 
@@ -151,8 +151,8 @@ Reporting Level: ${body.configuration.reportingLevel}
 CONTEXT:
 Application Type: ${body.context.applicationType}
 Framework: ${body.context.framework}
-Critical Paths: ${body.context.criticalPaths.join(", ")}
-Risk Areas: ${body.context.riskAreas.join(", ")}
+Critical Paths: ${body.context.criticalPaths.join(', ')}
+Risk Areas: ${body.context.riskAreas.join(', ')}
 
 Generate comprehensive multi-dimensional testing strategy including:
 1. Test planning and orchestration for all dimensions
@@ -162,7 +162,7 @@ Generate comprehensive multi-dimensional testing strategy including:
 5. Reliability and quality assessment
 6. Insights and recommendations generation
 
-For each testing dimension (${body.testSuite.dimensions.join(", ")}):
+For each testing dimension (${body.testSuite.dimensions.join(', ')}):
 - Generate appropriate test cases
 - Define execution strategy
 - Set coverage targets
@@ -181,12 +181,12 @@ Respond with a JSON structure containing:
     const completion = await zai.chat.completions.create({
       messages: [
         {
-          role: "system",
+          role: 'system',
           content:
-            "You are the OptiTest AI Controller, an expert in multi-dimensional testing orchestration, test automation, and quality assurance with deep knowledge of various testing methodologies and frameworks.",
+            'You are the OptiTest AI Controller, an expert in multi-dimensional testing orchestration, test automation, and quality assurance with deep knowledge of various testing methodologies and frameworks.',
         },
         {
-          role: "user",
+          role: 'user',
           content: testingPrompt,
         },
       ],
@@ -199,30 +199,29 @@ Respond with a JSON structure containing:
     // Parse AI response
     let aiResponse;
     try {
-      aiResponse = JSON.parse(completion.choices[0]?.message?.content || "{}");
+      aiResponse = JSON.parse(completion.choices[0]?.message?.content || '{}');
     } catch (parseError) {
-      console.error("Failed to parse AI response:", parseError);
+      console.error('Failed to parse AI response:', parseError);
       aiResponse = {
         testPlan: {
           id: `plan-${Date.now()}`,
           name: body.testSuite.name,
-          dimensions: body.testSuite.dimensions.map((dim) => ({
+          dimensions: body.testSuite.dimensions.map(dim => ({
             type: dim,
             testCount: Math.floor(Math.random() * 50) + 10,
             estimatedDuration: Math.floor(Math.random() * 300) + 30,
             coverageTarget: body.testSuite.targetCoverage,
-            executionStrategy: "automated",
+            executionStrategy: 'automated',
           })),
           totalEstimatedDuration: Math.floor(Math.random() * 1000) + 300,
-          parallelizationStrategy: "dimension-based",
+          parallelizationStrategy: 'dimension-based',
         },
         executionResults: {
           overall: {
             passed: Math.floor(Math.random() * 100) + 50,
             failed: Math.floor(Math.random() * 20),
             skipped: Math.floor(Math.random() * 10),
-            coverage:
-              body.testSuite.targetCoverage - Math.floor(Math.random() * 10),
+            coverage: body.testSuite.targetCoverage - Math.floor(Math.random() * 10),
             duration: Math.floor(Math.random() * 1000) + 300,
           },
           byDimension: {
@@ -235,38 +234,26 @@ Respond with a JSON structure containing:
         },
         insights: {
           coverageGaps: [
-            "E2E testing needs improvement",
-            "Integration tests require more edge cases",
+            'E2E testing needs improvement',
+            'Integration tests require more edge cases',
           ],
-          performanceBottlenecks: [
-            "Database query optimization needed",
-            "API response times high",
-          ],
-          securityVulnerabilities: [
-            "Input validation gaps",
-            "Authentication edge cases",
-          ],
-          reliabilityIssues: [
-            "Test flakiness in E2E tests",
-            "Environment setup inconsistencies",
-          ],
+          performanceBottlenecks: ['Database query optimization needed', 'API response times high'],
+          securityVulnerabilities: ['Input validation gaps', 'Authentication edge cases'],
+          reliabilityIssues: ['Test flakiness in E2E tests', 'Environment setup inconsistencies'],
         },
         recommendations: {
-          immediate: [
-            "Fix critical security vulnerabilities",
-            "Optimize database queries",
-          ],
-          shortTerm: ["Increase E2E test coverage", "Improve test stability"],
+          immediate: ['Fix critical security vulnerabilities', 'Optimize database queries'],
+          shortTerm: ['Increase E2E test coverage', 'Improve test stability'],
           longTerm: [
-            "Implement comprehensive test automation",
-            "Establish continuous testing pipeline",
+            'Implement comprehensive test automation',
+            'Establish continuous testing pipeline',
           ],
         },
       };
     }
 
     const response: MultiDimensionalTestResponse = {
-      status: "success",
+      status: 'success',
       testPlan: aiResponse.testPlan,
       executionResults: aiResponse.executionResults,
       insights: aiResponse.insights,
@@ -281,7 +268,7 @@ Respond with a JSON structure containing:
           (aiResponse.executionResults.overall.passed /
             (aiResponse.executionResults.overall.passed +
               aiResponse.executionResults.overall.failed)) *
-            100,
+            100
         ),
         reliability: Math.round(aiResponse.executionResults.overall.coverage),
       },
@@ -289,71 +276,66 @@ Respond with a JSON structure containing:
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error("Multi-dimensional testing error:", error);
+    console.error('Multi-dimensional testing error:', error);
     return NextResponse.json(
       {
-        error: "Failed to execute multi-dimensional testing",
-        details: error instanceof Error ? error.message : "Unknown error",
-        status: "error",
+        error: 'Failed to execute multi-dimensional testing',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        status: 'error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
 
 export async function GET() {
   return NextResponse.json({
-    message: "OptiTest AI Multi-Dimensional Testing API",
-    version: "1.0.0",
+    message: 'OptiTest AI Multi-Dimensional Testing API',
+    version: '1.0.0',
     endpoints: {
-      "POST /api/testing/multi-dimensional":
-        "Execute multi-dimensional testing",
-      "GET /api/testing/multi-dimensional": "Get API status and capabilities",
+      'POST /api/testing/multi-dimensional': 'Execute multi-dimensional testing',
+      'GET /api/testing/multi-dimensional': 'Get API status and capabilities',
     },
     capabilities: [
-      "Unit testing orchestration",
-      "Integration testing automation",
-      "End-to-end testing execution",
-      "Security testing validation",
-      "Performance testing analysis",
-      "Cross-dimensional coverage analysis",
-      "Parallel test execution",
-      "Comprehensive reporting",
+      'Unit testing orchestration',
+      'Integration testing automation',
+      'End-to-end testing execution',
+      'Security testing validation',
+      'Performance testing analysis',
+      'Cross-dimensional coverage analysis',
+      'Parallel test execution',
+      'Comprehensive reporting',
     ],
     dimensions: {
       unit: {
-        description: "Individual component and function testing",
-        targetCoverage: "100%",
-        executionTime: "<5m",
-        features: ["Mocking", "Isolation", "Fast execution"],
+        description: 'Individual component and function testing',
+        targetCoverage: '100%',
+        executionTime: '<5m',
+        features: ['Mocking', 'Isolation', 'Fast execution'],
       },
       integration: {
-        description: "Component interaction and API testing",
-        targetCoverage: "95%+",
-        executionTime: "<15m",
-        features: ["API testing", "Database integration", "Service mocking"],
+        description: 'Component interaction and API testing',
+        targetCoverage: '95%+',
+        executionTime: '<15m',
+        features: ['API testing', 'Database integration', 'Service mocking'],
       },
       e2e: {
-        description: "Complete user journey testing",
-        targetCoverage: "90%+",
-        executionTime: "<30m",
-        features: ["UI automation", "User flows", "Cross-browser testing"],
+        description: 'Complete user journey testing',
+        targetCoverage: '90%+',
+        executionTime: '<30m',
+        features: ['UI automation', 'User flows', 'Cross-browser testing'],
       },
       security: {
-        description: "Security vulnerability and penetration testing",
-        targetCoverage: "100%",
-        executionTime: "Real-time",
-        features: [
-          "Vulnerability scanning",
-          "Penetration testing",
-          "Compliance checking",
-        ],
+        description: 'Security vulnerability and penetration testing',
+        targetCoverage: '100%',
+        executionTime: 'Real-time',
+        features: ['Vulnerability scanning', 'Penetration testing', 'Compliance checking'],
       },
       performance: {
-        description: "Performance and load testing",
-        targetCoverage: "100%",
-        executionTime: "Continuous",
-        features: ["Load testing", "Stress testing", "Performance monitoring"],
+        description: 'Performance and load testing',
+        targetCoverage: '100%',
+        executionTime: 'Continuous',
+        features: ['Load testing', 'Stress testing', 'Performance monitoring'],
       },
     },
   });

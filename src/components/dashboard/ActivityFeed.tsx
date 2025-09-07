@@ -9,17 +9,11 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Activity } from "lucide-react";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Activity } from 'lucide-react';
 
 interface ActivityItem {
   id: string;
@@ -34,10 +28,7 @@ interface ActivityFeedProps {
   maxDisplay?: number;
 }
 
-const ActivityFeed: React.FC<ActivityFeedProps> = ({
-  activities,
-  maxDisplay = 10,
-}) => {
+const ActivityFeed: React.FC<ActivityFeedProps> = ({ activities, maxDisplay = 10 }) => {
   if (activities.length === 0) {
     return (
       <Card>
@@ -65,11 +56,8 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {displayActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex items-center gap-4 p-3 rounded-lg border"
-            >
+          {displayActivities.map(activity => (
+            <div key={activity.id} className="flex items-center gap-4 p-3 rounded-lg border">
               <Activity className="h-4 w-4 text-muted-foreground" />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
@@ -79,16 +67,14 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
                   </span>
                 </div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs bg-muted px-2 py-1 rounded">
-                    {activity.type}
-                  </span>
+                  <span className="text-xs bg-muted px-2 py-1 rounded">{activity.type}</span>
                   <span
                     className={`text-xs px-2 py-1 rounded ${
-                      activity.status === "completed"
-                        ? "bg-green-100 text-green-800"
-                        : activity.status === "in-progress"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
+                      activity.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : activity.status === 'in-progress'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-gray-100 text-gray-800'
                     }`}
                   >
                     {activity.status}

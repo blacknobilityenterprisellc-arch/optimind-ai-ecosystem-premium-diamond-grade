@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
-import { useTheme } from "next-themes";
+import { useState, useCallback } from 'react';
+import { useTheme } from 'next-themes';
 import {
   Brain,
   Sparkles,
@@ -24,29 +24,29 @@ import {
   Layers,
   Crown,
   CreditCard,
-} from "lucide-react";
+} from 'lucide-react';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   usePremiumAIServices,
   PremiumAIService,
   AIProcessingResult,
-} from "@/lib/premium-ai-services";
-import { useSecureSubscription } from "@/lib/secure-subscription-manager";
+} from '@/lib/premium-ai-services';
+import { useSecureSubscription } from '@/lib/secure-subscription-manager';
 
 interface PremiumAIServicesProps {
   photos?: Array<{ id: string; file: File; url: string }>;
@@ -57,15 +57,13 @@ interface PremiumAIServicesProps {
 export function PremiumAIServices({
   photos = [],
   onProcessingComplete,
-  className = "",
+  className = '',
 }: PremiumAIServicesProps) {
-  const [selectedService, setSelectedService] = useState<string>("");
+  const [selectedService, setSelectedService] = useState<string>('');
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
-  const [processingMode, setProcessingMode] = useState<"single" | "batch">(
-    "single",
-  );
+  const [processingMode, setProcessingMode] = useState<'single' | 'batch'>('single');
   const [autoProcess, setAutoProcess] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [activeCategory, setActiveCategory] = useState<string>('all');
   const [showResults, setShowResults] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(0);
@@ -84,19 +82,17 @@ export function PremiumAIServices({
   } = usePremiumAIServices();
 
   const categories = [
-    { id: "all", name: "All Services", icon: Brain },
-    { id: "analysis", name: "Analysis", icon: Target },
-    { id: "enhancement", name: "Enhancement", icon: Wand2 },
-    { id: "security", name: "Security", icon: Shield },
-    { id: "organization", name: "Organization", icon: FolderOpen },
+    { id: 'all', name: 'All Services', icon: Brain },
+    { id: 'analysis', name: 'Analysis', icon: Target },
+    { id: 'enhancement', name: 'Enhancement', icon: Wand2 },
+    { id: 'security', name: 'Security', icon: Shield },
+    { id: 'organization', name: 'Organization', icon: FolderOpen },
   ];
 
   const availableServices = services.getServices(
-    activeCategory === "all" ? undefined : activeCategory,
+    activeCategory === 'all' ? undefined : activeCategory
   );
-  const selectedServiceData = selectedService
-    ? services.getService(selectedService)
-    : null;
+  const selectedServiceData = selectedService ? services.getService(selectedService) : null;
   const totalCost = selectedServiceData
     ? services.estimateCost(selectedService, selectedPhotos.length)
     : 0;
@@ -108,7 +104,7 @@ export function PremiumAIServices({
       setIsProcessing(true);
       setCurrentProgress(0);
 
-      const photo = photos.find((p) => p.id === selectedPhotos[0]);
+      const photo = photos.find(p => p.id === selectedPhotos[0]);
       if (!photo) return;
 
       const result = await processImage(selectedService, photo.id, photo.file);
@@ -121,7 +117,7 @@ export function PremiumAIServices({
         setIsProcessing(false);
       }, 1000);
     } catch (error) {
-      console.error("Processing failed:", error);
+      console.error('Processing failed:', error);
       setIsProcessing(false);
     }
   }, [
@@ -142,7 +138,7 @@ export function PremiumAIServices({
       setCurrentProgress(0);
 
       const imagesToProcess = selectedPhotos
-        .map((id) => photos.find((p) => p.id === id))
+        .map(id => photos.find(p => p.id === id))
         .filter(Boolean) as Array<{ id: string; file: File; url: string }>;
 
       const totalImages = imagesToProcess.length;
@@ -152,7 +148,7 @@ export function PremiumAIServices({
         setCurrentProgress(progress);
 
         // Add small delay for visual feedback
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       }
 
       await batchProcessImages(selectedService, imagesToProcess);
@@ -165,7 +161,7 @@ export function PremiumAIServices({
         setIsProcessing(false);
       }, 1000);
     } catch (error) {
-      console.error("Batch processing failed:", error);
+      console.error('Batch processing failed:', error);
       setIsProcessing(false);
     }
   }, [
@@ -179,15 +175,13 @@ export function PremiumAIServices({
   ]);
 
   const togglePhotoSelection = useCallback((photoId: string) => {
-    setSelectedPhotos((prev) =>
-      prev.includes(photoId)
-        ? prev.filter((id) => id !== photoId)
-        : [...prev, photoId],
+    setSelectedPhotos(prev =>
+      prev.includes(photoId) ? prev.filter(id => id !== photoId) : [...prev, photoId]
     );
   }, []);
 
   const selectAllPhotos = useCallback(() => {
-    setSelectedPhotos(photos.map((p) => p.id));
+    setSelectedPhotos(photos.map(p => p.id));
   }, [photos]);
 
   const clearSelection = useCallback(() => {
@@ -195,19 +189,19 @@ export function PremiumAIServices({
   }, []);
 
   const getCategoryIcon = (categoryId: string) => {
-    const category = categories.find((c) => c.id === categoryId);
+    const category = categories.find(c => c.id === categoryId);
     return category ? category.icon : Brain;
   };
 
   const getServiceIcon = (service: PremiumAIService) => {
     switch (service.category) {
-      case "analysis":
+      case 'analysis':
         return <Target className="w-5 h-5" />;
-      case "enhancement":
+      case 'enhancement':
         return <Wand2 className="w-5 h-5" />;
-      case "security":
+      case 'security':
         return <Shield className="w-5 h-5" />;
-      case "organization":
+      case 'organization':
         return <FolderOpen className="w-5 h-5" />;
       default:
         return <Brain className="w-5 h-5" />;
@@ -215,28 +209,28 @@ export function PremiumAIServices({
   };
 
   const getCategoryColor = (categoryId: string) => {
-    const isDark = theme === "dark";
+    const isDark = theme === 'dark';
     switch (categoryId) {
-      case "analysis":
+      case 'analysis':
         return isDark
-          ? "text-blue-400 bg-blue-950/50 border-blue-800"
-          : "text-blue-600 bg-blue-50 border-blue-200";
-      case "enhancement":
+          ? 'text-blue-400 bg-blue-950/50 border-blue-800'
+          : 'text-blue-600 bg-blue-50 border-blue-200';
+      case 'enhancement':
         return isDark
-          ? "text-purple-400 bg-purple-950/50 border-purple-800"
-          : "text-purple-600 bg-purple-50 border-purple-200";
-      case "security":
+          ? 'text-purple-400 bg-purple-950/50 border-purple-800'
+          : 'text-purple-600 bg-purple-50 border-purple-200';
+      case 'security':
         return isDark
-          ? "text-red-400 bg-red-950/50 border-red-800"
-          : "text-red-600 bg-red-50 border-red-200";
-      case "organization":
+          ? 'text-red-400 bg-red-950/50 border-red-800'
+          : 'text-red-600 bg-red-50 border-red-200';
+      case 'organization':
         return isDark
-          ? "text-green-400 bg-green-950/50 border-green-800"
-          : "text-green-600 bg-green-50 border-green-200";
+          ? 'text-green-400 bg-green-950/50 border-green-800'
+          : 'text-green-600 bg-green-50 border-green-200';
       default:
         return isDark
-          ? "text-gray-400 bg-gray-800/50 border-gray-700"
-          : "text-gray-600 bg-gray-50 border-gray-200";
+          ? 'text-gray-400 bg-gray-800/50 border-gray-700'
+          : 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
@@ -248,8 +242,7 @@ export function PremiumAIServices({
             <Crown className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">Premium AI Services</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Access advanced AI-powered photo analysis, enhancement, and
-              organization features
+              Access advanced AI-powered photo analysis, enhancement, and organization features
             </p>
             <Button className="w-full">
               <Sparkles className="w-4 h-4 mr-2" />
@@ -280,7 +273,7 @@ export function PremiumAIServices({
         {/* Category Tabs */}
         <Tabs value={activeCategory} onValueChange={setActiveCategory}>
           <TabsList className="grid w-full grid-cols-5 gap-2">
-            {categories.map((category) => (
+            {categories.map(category => (
               <TabsTrigger
                 key={category.id}
                 value={category.id}
@@ -295,27 +288,23 @@ export function PremiumAIServices({
           <TabsContent value={activeCategory} className="space-y-6">
             {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availableServices.map((service) => (
+              {availableServices.map(service => (
                 <Card
                   key={service.id}
                   className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
                     selectedService === service.id
-                      ? "ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-950/30"
-                      : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                      ? 'ring-2 ring-purple-500 bg-purple-50 dark:bg-purple-950/30'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
                   }`}
                   onClick={() => setSelectedService(service.id)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3 mb-3">
-                      <div
-                        className={`p-2 rounded-lg ${getCategoryColor(service.category)}`}
-                      >
+                      <div className={`p-2 rounded-lg ${getCategoryColor(service.category)}`}>
                         {getServiceIcon(service)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm mb-1">
-                          {service.name}
-                        </h3>
+                        <h3 className="font-semibold text-sm mb-1">{service.name}</h3>
                         <p className="text-xs text-muted-foreground line-clamp-2">
                           {service.description}
                         </p>
@@ -323,17 +312,11 @@ export function PremiumAIServices({
                     </div>
 
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {service.capabilities
-                        .slice(0, 3)
-                        .map((capability, idx) => (
-                          <Badge
-                            key={idx}
-                            variant="outline"
-                            className="text-xs"
-                          >
-                            {capability}
-                          </Badge>
-                        ))}
+                      {service.capabilities.slice(0, 3).map((capability, idx) => (
+                        <Badge key={idx} variant="outline" className="text-xs">
+                          {capability}
+                        </Badge>
+                      ))}
                       {service.capabilities.length > 3 && (
                         <Badge variant="outline" className="text-xs">
                           +{service.capabilities.length - 3}
@@ -345,9 +328,7 @@ export function PremiumAIServices({
                       <span className="text-muted-foreground">
                         {service.premium.premium} credits
                       </span>
-                      {service.isPremium && (
-                        <Crown className="w-3 h-3 text-yellow-500" />
-                      )}
+                      {service.isPremium && <Crown className="w-3 h-3 text-yellow-500" />}
                     </div>
                   </CardContent>
                 </Card>
@@ -361,18 +342,12 @@ export function PremiumAIServices({
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className="font-semibold">
-                          {selectedServiceData.name}
-                        </h3>
+                        <h3 className="font-semibold">{selectedServiceData.name}</h3>
                         <p className="text-sm text-muted-foreground">
                           {selectedServiceData.description}
                         </p>
                       </div>
-                      <Badge
-                        className={getCategoryColor(
-                          selectedServiceData.category,
-                        )}
-                      >
+                      <Badge className={getCategoryColor(selectedServiceData.category)}>
                         {selectedServiceData.category}
                       </Badge>
                     </div>
@@ -380,9 +355,7 @@ export function PremiumAIServices({
                     {/* Photo Selection */}
                     <div>
                       <div className="flex items-center justify-between mb-3">
-                        <Label className="text-sm font-medium">
-                          Select Photos
-                        </Label>
+                        <Label className="text-sm font-medium">Select Photos</Label>
                         <div className="flex gap-2">
                           <Button
                             variant="outline"
@@ -405,13 +378,13 @@ export function PremiumAIServices({
 
                       {photos.length > 0 ? (
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 border rounded-lg dark:border-gray-700">
-                          {photos.map((photo) => (
+                          {photos.map(photo => (
                             <div
                               key={photo.id}
                               className={`relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
                                 selectedPhotos.includes(photo.id)
-                                  ? "border-purple-500 ring-2 ring-purple-200 dark:ring-purple-900/50"
-                                  : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
+                                  ? 'border-purple-500 ring-2 ring-purple-200 dark:ring-purple-900/50'
+                                  : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
                               }`}
                               onClick={() => togglePhotoSelection(photo.id)}
                             >
@@ -441,31 +414,23 @@ export function PremiumAIServices({
                     {/* Processing Options */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">
-                          Processing Mode
-                        </Label>
+                        <Label className="text-sm font-medium">Processing Mode</Label>
                         <Select
                           value={processingMode}
-                          onValueChange={(value: "single" | "batch") =>
-                            setProcessingMode(value)
-                          }
+                          onValueChange={(value: 'single' | 'batch') => setProcessingMode(value)}
                         >
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="single">Single Photo</SelectItem>
-                            <SelectItem value="batch">
-                              Batch Processing
-                            </SelectItem>
+                            <SelectItem value="batch">Batch Processing</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">
-                          Auto Process
-                        </Label>
+                        <Label className="text-sm font-medium">Auto Process</Label>
                         <div className="flex items-center space-x-2">
                           <Switch
                             id="auto-process"
@@ -479,9 +444,7 @@ export function PremiumAIServices({
                       </div>
 
                       <div className="space-y-2">
-                        <Label className="text-sm font-medium">
-                          Estimated Cost
-                        </Label>
+                        <Label className="text-sm font-medium">Estimated Cost</Label>
                         <div className="text-lg font-semibold text-purple-600">
                           {totalCost} credits
                         </div>
@@ -503,14 +466,10 @@ export function PremiumAIServices({
                     <div className="flex gap-3">
                       <Button
                         onClick={
-                          processingMode === "single"
-                            ? handleProcessSingle
-                            : handleProcessBatch
+                          processingMode === 'single' ? handleProcessSingle : handleProcessBatch
                         }
                         disabled={
-                          selectedPhotos.length === 0 ||
-                          isProcessing ||
-                          isServiceProcessing
+                          selectedPhotos.length === 0 || isProcessing || isServiceProcessing
                         }
                         className="flex-1"
                       >
@@ -522,8 +481,8 @@ export function PremiumAIServices({
                         ) : (
                           <>
                             <Play className="w-4 h-4 mr-2" />
-                            {processingMode === "single"
-                              ? "Process Photo"
+                            {processingMode === 'single'
+                              ? 'Process Photo'
                               : `Process ${selectedPhotos.length} Photos`}
                           </>
                         )}
@@ -535,7 +494,7 @@ export function PremiumAIServices({
                         disabled={results.size === 0}
                       >
                         <BarChart3 className="w-4 h-4 mr-2" />
-                        {showResults ? "Hide Results" : "Show Results"}
+                        {showResults ? 'Hide Results' : 'Show Results'}
                       </Button>
                     </div>
                   </div>
@@ -555,7 +514,7 @@ export function PremiumAIServices({
                 <CardContent>
                   <div className="space-y-4">
                     {Array.from(results.entries()).map(([photoId, result]) => {
-                      const photo = photos.find((p) => p.id === photoId);
+                      const photo = photos.find(p => p.id === photoId);
                       return (
                         <div
                           key={photoId}
@@ -570,26 +529,16 @@ export function PremiumAIServices({
                           )}
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <h4 className="font-medium">
-                                {photo?.file.name || "Unknown"}
-                              </h4>
-                              <Badge
-                                variant={
-                                  result.success ? "default" : "destructive"
-                                }
-                              >
-                                {result.success ? "Success" : "Failed"}
+                              <h4 className="font-medium">{photo?.file.name || 'Unknown'}</h4>
+                              <Badge variant={result.success ? 'default' : 'destructive'}>
+                                {result.success ? 'Success' : 'Failed'}
                               </Badge>
                             </div>
                             <div className="text-sm text-muted-foreground space-y-1">
-                              <div>
-                                Processing time: {result.processingTime}ms
-                              </div>
+                              <div>Processing time: {result.processingTime}ms</div>
                               <div>Credits used: {result.creditsUsed}</div>
                               {result.error && (
-                                <div className="text-red-600">
-                                  Error: {result.error}
-                                </div>
+                                <div className="text-red-600">Error: {result.error}</div>
                               )}
                             </div>
                             {result.result && (
@@ -615,9 +564,7 @@ export function PremiumAIServices({
             {error && (
               <Alert className="border-red-200 bg-red-50">
                 <AlertTriangle className="w-4 h-4 text-red-600" />
-                <AlertDescription className="text-red-800">
-                  {error}
-                </AlertDescription>
+                <AlertDescription className="text-red-800">{error}</AlertDescription>
               </Alert>
             )}
           </TabsContent>

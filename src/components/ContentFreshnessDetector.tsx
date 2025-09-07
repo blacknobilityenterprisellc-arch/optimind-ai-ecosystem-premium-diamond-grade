@@ -1,13 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Loader2, RefreshCw, Clock, Calendar, AlertTriangle, CheckCircle, TrendingUp } from "lucide-react";
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import {
+  Loader2,
+  RefreshCw,
+  Clock,
+  Calendar,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+} from 'lucide-react';
 
 interface ContentAnalysis {
   url: string;
@@ -21,14 +29,14 @@ interface ContentAnalysis {
 }
 
 export function ContentFreshnessDetector() {
-  const [contentUrl, setContentUrl] = useState("");
+  const [contentUrl, setContentUrl] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResults, setAnalysisResults] = useState<ContentAnalysis | null>(null);
   const [progress, setProgress] = useState(0);
 
   const handleAnalyze = async () => {
     if (!contentUrl.trim()) {
-      toast.error("Please enter a content URL");
+      toast.error('Please enter a content URL');
       return;
     }
 
@@ -49,53 +57,55 @@ export function ContentFreshnessDetector() {
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 3000));
-      
+
       setProgress(100);
-      
+
       // Mock analysis results
       const mockResults: ContentAnalysis = {
         url: contentUrl,
         freshnessScore: Math.floor(Math.random() * 40) + 60, // 60-100
-        lastUpdated: new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        lastUpdated: new Date(Date.now() - Math.floor(Math.random() * 90) * 24 * 60 * 60 * 1000)
+          .toISOString()
+          .split('T')[0],
         recommendations: [
-          "Update statistics and data points",
-          "Add recent industry developments",
-          "Refresh examples and case studies",
-          "Update outbound links to current resources"
+          'Update statistics and data points',
+          'Add recent industry developments',
+          'Refresh examples and case studies',
+          'Update outbound links to current resources',
         ],
         issues: [
-          "Some statistics are outdated",
-          "References to old industry standards",
-          "Missing recent trend analysis"
+          'Some statistics are outdated',
+          'References to old industry standards',
+          'Missing recent trend analysis',
         ],
         opportunities: [
-          "Add new multimedia content",
-          "Include expert quotes or insights",
-          "Expand on emerging topics"
+          'Add new multimedia content',
+          'Include expert quotes or insights',
+          'Expand on emerging topics',
         ],
         wordCount: Math.floor(Math.random() * 2000) + 1000,
         readingTime: `${Math.floor(Math.random() * 8) + 3} min read`,
       };
 
       setAnalysisResults(mockResults);
-      toast.success("Content freshness analysis completed!");
+      toast.success('Content freshness analysis completed!');
     } catch (error) {
-      toast.error("Failed to analyze content freshness");
+      toast.error('Failed to analyze content freshness');
     } finally {
       setIsAnalyzing(false);
     }
   };
 
   const getFreshnessColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
-    return "text-red-600";
+    if (score >= 80) return 'text-green-600';
+    if (score >= 60) return 'text-yellow-600';
+    return 'text-red-600';
   };
 
   const getFreshnessStatus = (score: number) => {
-    if (score >= 80) return "Fresh";
-    if (score >= 60) return "Needs Update";
-    return "Outdated";
+    if (score >= 80) return 'Fresh';
+    if (score >= 60) return 'Needs Update';
+    return 'Outdated';
   };
 
   return (
@@ -107,7 +117,8 @@ export function ContentFreshnessDetector() {
             <span>Content Freshness Detector</span>
           </CardTitle>
           <CardDescription>
-            Analyze your content to determine if it's fresh, relevant, and up-to-date for your audience.
+            Analyze your content to determine if it's fresh, relevant, and up-to-date for your
+            audience.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -115,13 +126,10 @@ export function ContentFreshnessDetector() {
             <Input
               placeholder="Enter content URL to analyze"
               value={contentUrl}
-              onChange={(e) => setContentUrl(e.target.value)}
+              onChange={e => setContentUrl(e.target.value)}
               className="flex-1"
             />
-            <Button
-              onClick={handleAnalyze}
-              disabled={isAnalyzing || !contentUrl.trim()}
-            >
+            <Button onClick={handleAnalyze} disabled={isAnalyzing || !contentUrl.trim()}>
               {isAnalyzing ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
@@ -147,8 +155,8 @@ export function ContentFreshnessDetector() {
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <span>Freshness Analysis Results</span>
-              <Badge 
-                variant="secondary" 
+              <Badge
+                variant="secondary"
                 className={getFreshnessColor(analysisResults.freshnessScore)}
               >
                 {getFreshnessStatus(analysisResults.freshnessScore)}
@@ -158,11 +166,16 @@ export function ContentFreshnessDetector() {
           <CardContent className="space-y-6">
             {/* Freshness Score */}
             <div className="text-center">
-              <div className={`text-6xl font-bold ${getFreshnessColor(analysisResults.freshnessScore)}`}>
+              <div
+                className={`text-6xl font-bold ${getFreshnessColor(analysisResults.freshnessScore)}`}
+              >
                 {analysisResults.freshnessScore}%
               </div>
               <div className="text-sm text-muted-foreground">Content Freshness Score</div>
-              <Progress value={analysisResults.freshnessScore} className="w-full max-w-md mx-auto mt-2" />
+              <Progress
+                value={analysisResults.freshnessScore}
+                className="w-full max-w-md mx-auto mt-2"
+              />
             </div>
 
             {/* Content Metadata */}

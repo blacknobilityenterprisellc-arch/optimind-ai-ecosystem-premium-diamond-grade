@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { useEffect, useRef, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
 
-import { debug } from "@/lib/debug";
+import { debug } from '@/lib/debug';
 
 interface DashboardMetrics {
   totalContent: number;
@@ -14,7 +14,7 @@ interface DashboardMetrics {
 
 interface SystemAlert {
   id: string;
-  type: "info" | "warning" | "error" | "success";
+  type: 'info' | 'warning' | 'error' | 'success';
   title: string;
   description: string;
   timestamp: string;
@@ -49,8 +49,8 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
 
   useEffect(() => {
     // Initialize socket connection
-    const socket = io("http://localhost:3001", {
-      transports: ["websocket", "polling"],
+    const socket = io('http://localhost:3001', {
+      transports: ['websocket', 'polling'],
       timeout: 5000,
       reconnection: true,
       reconnectionAttempts: 5,
@@ -60,51 +60,51 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
     socketRef.current = socket;
 
     // Connection events
-    socket.on("connect", () => {
-      debug.log("Connected to real-time dashboard");
+    socket.on('connect', () => {
+      debug.log('Connected to real-time dashboard');
       setIsConnected(true);
       setConnectionError(null);
 
       // Subscribe to dashboard updates
-      socket.emit("subscribe-dashboard");
+      socket.emit('subscribe-dashboard');
     });
 
-    socket.on("disconnect", () => {
-      debug.log("Disconnected from real-time dashboard");
+    socket.on('disconnect', () => {
+      debug.log('Disconnected from real-time dashboard');
       setIsConnected(false);
     });
 
-    socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
+    socket.on('connect_error', error => {
+      console.error('Connection error:', error);
       setIsConnected(false);
       setConnectionError(error.message);
     });
 
     // Dashboard data events
-    socket.on("dashboard-init", (data) => {
-      debug.log("Received initial dashboard data:", data);
+    socket.on('dashboard-init', data => {
+      debug.log('Received initial dashboard data:', data);
       setMetrics(data.metrics);
       setAlerts(data.alerts);
       setActivities(data.activities);
     });
 
-    socket.on("metrics-update", (newMetrics: DashboardMetrics) => {
-      debug.log("Metrics updated:", newMetrics);
+    socket.on('metrics-update', (newMetrics: DashboardMetrics) => {
+      debug.log('Metrics updated:', newMetrics);
       setMetrics(newMetrics);
     });
 
-    socket.on("new-activity", (activity: ActivityUpdate) => {
-      debug.log("New activity:", activity);
-      setActivities((prev) => {
+    socket.on('new-activity', (activity: ActivityUpdate) => {
+      debug.log('New activity:', activity);
+      setActivities(prev => {
         // Keep only the latest 10 activities
         const updated = [activity, ...prev];
         return updated.slice(0, 10);
       });
     });
 
-    socket.on("new-alert", (alert: SystemAlert) => {
-      debug.log("New alert:", alert);
-      setAlerts((prev) => {
+    socket.on('new-alert', (alert: SystemAlert) => {
+      debug.log('New alert:', alert);
+      setAlerts(prev => {
         // Keep only the latest 5 alerts
         const updated = [alert, ...prev];
         return updated.slice(0, 5);
@@ -123,19 +123,19 @@ export const useRealTimeDashboard = (): UseRealTimeDashboardReturn => {
   // Action functions
   const requestMetricsUpdate = () => {
     if (socketRef.current && isConnected) {
-      socketRef.current.emit("request-metrics-update");
+      socketRef.current.emit('request-metrics-update');
     }
   };
 
   const monitorActivity = (type: string, action: string) => {
     if (socketRef.current && isConnected) {
-      socketRef.current.emit("monitor-activity", { type, action });
+      socketRef.current.emit('monitor-activity', { type, action });
     }
   };
 
   const sendSystemAlert = (alert: SystemAlert) => {
     if (socketRef.current && isConnected) {
-      socketRef.current.emit("system-alert", alert);
+      socketRef.current.emit('system-alert', alert);
     }
   };
 

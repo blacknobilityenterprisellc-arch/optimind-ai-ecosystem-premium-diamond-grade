@@ -1,6 +1,6 @@
 /**
  * Seamless Service Integrator for OptiMind AI Ecosystem
- * 
+ *
  * Provides intelligent configuration management system with automatic service integration,
  * health monitoring, and seamless service discovery for all ecosystem components.
  */
@@ -98,7 +98,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       }
 
       this.isInitialized = true;
-      
+
       console.log('Seamless Service Integrator initialized successfully');
       this.emit('initialized');
     } catch (error) {
@@ -137,7 +137,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
         lastCheck: new Date(),
         errorCount: 0,
         restartCount: 0,
-        metrics: {}
+        metrics: {},
       };
 
       this.serviceStatus.set(serviceConfig.id, status);
@@ -148,26 +148,25 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       }
 
       const duration = Date.now() - startTime;
-      
+
       console.log(`✅ Service registered successfully: ${serviceConfig.name} (${duration}ms)`);
       this.emit('serviceRegistered', serviceConfig);
-      
+
       return {
         success: true,
         serviceId: serviceConfig.id,
-        duration
+        duration,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       console.error(`❌ Service registration failed: ${serviceConfig.name}`, error);
-      
+
       return {
         success: false,
         error: errorMessage,
-        duration
+        duration,
       };
     }
   }
@@ -187,14 +186,14 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       }
 
       const status = this.serviceStatus.get(serviceId)!;
-      
+
       // Check if service is already running
       if (status.status === 'running') {
         console.log(`Service already running: ${serviceId}`);
         return {
           success: true,
           serviceId,
-          duration: Date.now() - startTime
+          duration: Date.now() - startTime,
         };
       }
 
@@ -216,20 +215,19 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       this.serviceStatus.set(serviceId, status);
 
       const duration = Date.now() - startTime;
-      
+
       console.log(`✅ Service started successfully: ${service.name} (${duration}ms)`);
       this.emit('serviceStarted', service);
-      
+
       return {
         success: true,
         serviceId,
-        duration
+        duration,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       // Update status to error
       const status = this.serviceStatus.get(serviceId);
       if (status) {
@@ -239,13 +237,13 @@ export class SeamlessServiceIntegrator extends EventEmitter {
         status.errorCount++;
         this.serviceStatus.set(serviceId, status);
       }
-      
+
       console.error(`❌ Service start failed: ${serviceId}`, error);
-      
+
       return {
         success: false,
         error: errorMessage,
-        duration
+        duration,
       };
     }
   }
@@ -265,14 +263,14 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       }
 
       const status = this.serviceStatus.get(serviceId)!;
-      
+
       // Check if service is already stopped
       if (status.status === 'stopped') {
         console.log(`Service already stopped: ${serviceId}`);
         return {
           success: true,
           serviceId,
-          duration: Date.now() - startTime
+          duration: Date.now() - startTime,
         };
       }
 
@@ -290,26 +288,25 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       this.serviceStatus.set(serviceId, status);
 
       const duration = Date.now() - startTime;
-      
+
       console.log(`✅ Service stopped successfully: ${service.name} (${duration}ms)`);
       this.emit('serviceStopped', service);
-      
+
       return {
         success: true,
         serviceId,
-        duration
+        duration,
       };
-
     } catch (error) {
       const duration = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       console.error(`❌ Service stop failed: ${serviceId}`, error);
-      
+
       return {
         success: false,
         error: errorMessage,
-        duration
+        duration,
       };
     }
   }
@@ -328,7 +325,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
 
     // Start the service
     const startResult = await this.startService(serviceId);
-    
+
     if (startResult.success) {
       const status = this.serviceStatus.get(serviceId);
       if (status) {
@@ -460,7 +457,6 @@ export class SeamlessServiceIntegrator extends EventEmitter {
           await this.registerService(serviceConfig);
         }
       }
-
     } catch (error) {
       console.error('Service discovery failed:', error);
     }
@@ -475,7 +471,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
     try {
       // Scan lib directory for service files
       const libFiles = await fs.readdir('src/lib');
-      
+
       for (const file of libFiles) {
         if (file.endsWith('.ts') && !file.includes('.test.')) {
           const serviceName = this.extractServiceName(file);
@@ -492,17 +488,16 @@ export class SeamlessServiceIntegrator extends EventEmitter {
               healthCheck: {
                 enabled: true,
                 interval: 30000,
-                timeout: 5000
+                timeout: 5000,
               },
               autoStart: true,
-              autoRestart: true
+              autoRestart: true,
             };
 
             services.push(serviceConfig);
           }
         }
       }
-
     } catch (error) {
       console.error('Service scan failed:', error);
     }
@@ -515,17 +510,53 @@ export class SeamlessServiceIntegrator extends EventEmitter {
    */
   private extractServiceName(fileName: string): string | null {
     const name = fileName.replace('.ts', '').replace(/[-_]/g, ' ');
-    
+
     // Filter out non-service files
     const nonServicePatterns = [
-      'utils', 'db', 'auth', 'cache', 'error', 'security', 'monitor',
-      'performance', 'focus', 'rate', 'scan', 'secure', 'subscription',
-      'file', 'keyboard', 'offline', 'openrouter', 'premium', 'ai',
-      'mcp', 'glm', 'enterprise', 'contractwise', 'domain', 'hybrid',
-      'agentic', 'ambient', 'analytics', 'blockchain', 'compliance',
-      'ecosystem', 'exclusive', 'intelligent', 'logger', 'multi',
-      'nsfw', 'opti', 'premium', 'real', 'self', 'unified', 'user',
-      'validation', 'zai'
+      'utils',
+      'db',
+      'auth',
+      'cache',
+      'error',
+      'security',
+      'monitor',
+      'performance',
+      'focus',
+      'rate',
+      'scan',
+      'secure',
+      'subscription',
+      'file',
+      'keyboard',
+      'offline',
+      'openrouter',
+      'premium',
+      'ai',
+      'mcp',
+      'glm',
+      'enterprise',
+      'contractwise',
+      'domain',
+      'hybrid',
+      'agentic',
+      'ambient',
+      'analytics',
+      'blockchain',
+      'compliance',
+      'ecosystem',
+      'exclusive',
+      'intelligent',
+      'logger',
+      'multi',
+      'nsfw',
+      'opti',
+      'premium',
+      'real',
+      'self',
+      'unified',
+      'user',
+      'validation',
+      'zai',
     ];
 
     for (const pattern of nonServicePatterns) {
@@ -542,7 +573,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
    */
   private inferServiceType(fileName: string): ServiceConfig['type'] {
     const name = fileName.toLowerCase();
-    
+
     if (name.includes('ai') || name.includes('glm') || name.includes('mcp')) {
       return 'ai';
     } else if (name.includes('db') || name.includes('database')) {
@@ -566,7 +597,11 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       throw new Error('Service ID and name are required');
     }
 
-    if (!['ai', 'database', 'security', 'monitoring', 'backup', 'integration'].includes(serviceConfig.type)) {
+    if (
+      !['ai', 'database', 'security', 'monitoring', 'backup', 'integration'].includes(
+        serviceConfig.type
+      )
+    ) {
       throw new Error(`Invalid service type: ${serviceConfig.type}`);
     }
 
@@ -595,7 +630,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
     try {
       const modulePath = `./${serviceConfig.id.replace(/-/g, '_')}`;
       const serviceModule = await import(modulePath);
-      
+
       if (serviceModule.default && typeof serviceModule.default.initialize === 'function') {
         await serviceModule.default.initialize();
       }
@@ -613,7 +648,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
     try {
       const modulePath = `./${serviceConfig.id.replace(/-/g, '_')}`;
       const serviceModule = await import(modulePath);
-      
+
       if (serviceModule.default && typeof serviceModule.default.destroy === 'function') {
         await serviceModule.default.destroy();
       }
@@ -631,7 +666,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
       // Check if service module has health check method
       const modulePath = `./${serviceConfig.id.replace(/-/g, '_')}`;
       const serviceModule = await import(modulePath);
-      
+
       if (serviceModule.default && typeof serviceModule.default.getHealth === 'function') {
         return await serviceModule.default.getHealth();
       }
@@ -664,10 +699,10 @@ export class SeamlessServiceIntegrator extends EventEmitter {
           healthCheck: {
             enabled: true,
             interval: 60000,
-            timeout: 10000
+            timeout: 10000,
           },
           autoStart: true,
-          autoRestart: true
+          autoRestart: true,
         },
         {
           id: 'seamless-service-integrator',
@@ -681,18 +716,17 @@ export class SeamlessServiceIntegrator extends EventEmitter {
           healthCheck: {
             enabled: true,
             interval: 30000,
-            timeout: 5000
+            timeout: 5000,
           },
           autoStart: true,
-          autoRestart: true
-        }
+          autoRestart: true,
+        },
       ];
 
       // Register predefined services
       for (const serviceConfig of predefinedServices) {
         await this.registerService(serviceConfig);
       }
-
     } catch (error) {
       console.error('Failed to load service configurations:', error);
     }
@@ -703,7 +737,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
    */
   getSystemStatus() {
     const statuses = Array.from(this.serviceStatus.values());
-    
+
     return {
       isInitialized: this.isInitialized,
       config: this.config,
@@ -713,9 +747,9 @@ export class SeamlessServiceIntegrator extends EventEmitter {
         stopped: statuses.filter(s => s.status === 'stopped').length,
         error: statuses.filter(s => s.status === 'error').length,
         healthy: statuses.filter(s => s.health === 'healthy').length,
-        unhealthy: statuses.filter(s => s.health === 'unhealthy').length
+        unhealthy: statuses.filter(s => s.health === 'unhealthy').length,
       },
-      uptime: process.uptime() * 1000
+      uptime: process.uptime() * 1000,
     };
   }
 
@@ -757,11 +791,11 @@ export const seamlessServiceIntegrator = new SeamlessServiceIntegrator({
   monitoring: {
     metricsEnabled: true,
     loggingEnabled: true,
-    alertingEnabled: true
+    alertingEnabled: true,
   },
   security: {
     authenticationEnabled: true,
     authorizationEnabled: true,
-    encryptionEnabled: true
-  }
+    encryptionEnabled: true,
+  },
 });
