@@ -1,4 +1,6 @@
-import OptiMindEcosystem from "@/components/OptiMindEcosystem";
+'use client';
+
+import OptiMindEcosystem from '@/components/OptiMindEcosystem';
 
 export default function Home() {
   return (
@@ -10,8 +12,8 @@ export default function Home() {
         <p className="text-xl text-gray-300 mb-12 text-center max-w-2xl mx-auto">
           Premium Diamond Grade AI Solutions for Enterprise Transformation
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div className="flex justify-center">
           <OptiMindEcosystem />
         </div>
       </div>

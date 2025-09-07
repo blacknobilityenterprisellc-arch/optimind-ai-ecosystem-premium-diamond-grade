@@ -3,12 +3,9 @@
  * Enhanced database management with comprehensive health checks, monitoring, and enterprise integration
  */
 
-import { PrismaClient } from "@prisma/client";
-import { getEnterpriseInitializer } from "./enterprise/EnterpriseInitializer";
-import {
-  IService,
-  ServiceHealth,
-} from "./enterprise/container/EnterpriseServiceContainer";
+import { PrismaClient } from '@prisma/client';
+import { getEnterpriseInitializer } from './enterprise/EnterpriseInitializer';
+import { IService, ServiceHealth } from './enterprise/container/EnterpriseServiceContainer';
 
 export interface DatabaseHealthStatus {
   connected: boolean;
@@ -40,16 +37,15 @@ export interface DatabaseMetrics {
 }
 
 class PremiumDatabaseHealthWrapper implements IService {
-  readonly name = "database";
+  readonly name = 'database';
   readonly metadata = {
-    name: "database",
-    version: "2.0.0",
-    description:
-      "Enterprise database service with comprehensive health monitoring and management",
-    author: "Enterprise Database Team",
+    name: 'database',
+    version: '2.0.0',
+    description: 'Enterprise database service with comprehensive health monitoring and management',
+    author: 'Enterprise Database Team',
     dependencies: [],
-    tags: ["database", "health", "monitoring", "enterprise"],
-    scope: "singleton" as const,
+    tags: ['database', 'health', 'monitoring', 'enterprise'],
+    scope: 'singleton' as const,
     priority: 100,
     timeout: 30000,
     retryCount: 3,
@@ -66,9 +62,8 @@ class PremiumDatabaseHealthWrapper implements IService {
   private metrics: Record<string, number> = {};
 
   private constructor() {
-    this.prisma = new PrismaClient({
-      log: ["query", "info", "warn", "error"],
-    });
+    // Use the existing database client from db.ts instead of creating a new one
+    this.prisma = null as any; // Will be initialized lazily
 
     this.healthStatus = {
       connected: false,
@@ -93,22 +88,19 @@ class PremiumDatabaseHealthWrapper implements IService {
       // Initialize enterprise system integration
       const enterprise = getEnterpriseInitializer();
       const state = enterprise.getState();
-
-      if (state.status === "RUNNING") {
+      
+      if (state.status === 'RUNNING') {
         this.enterpriseInitialized = true;
-        console.log("🔗 Enterprise system integration initialized");
+        console.log('🔗 Enterprise system integration initialized');
       }
     } catch (error) {
-      console.warn(
-        "Enterprise system not available, running in standalone mode",
-      );
+      console.warn('Enterprise system not available, running in standalone mode');
     }
   }
 
   static getInstance(): PremiumDatabaseHealthWrapper {
     if (!PremiumDatabaseHealthWrapper.instance) {
-      PremiumDatabaseHealthWrapper.instance =
-        new PremiumDatabaseHealthWrapper();
+      PremiumDatabaseHealthWrapper.instance = new PremiumDatabaseHealthWrapper();
     }
     return PremiumDatabaseHealthWrapper.instance;
   }
@@ -124,13 +116,11 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   private async performInitialization(): Promise<void> {
     try {
-      console.log(
-        "🗄️ Initializing Premium Enterprise Database Health Wrapper...",
-      );
+      console.log('🗄️ Initializing Premium Enterprise Database Health Wrapper...');
 
       // Test database connection
       const connectionResult = await this.testConnection();
-
+      
       if (connectionResult.success) {
         this.healthStatus = {
           connected: true,
@@ -140,86 +130,80 @@ class PremiumDatabaseHealthWrapper implements IService {
 
         // Get additional database information
         await this.gatherDatabaseInfo();
-
+        
         this.isInitialized = true;
-        console.log(
-          "✅ Premium Enterprise Database Health Wrapper initialized successfully",
-        );
-
+        console.log('✅ Premium Enterprise Database Health Wrapper initialized successfully');
+        
         // Emit enterprise event if available
         if (this.enterpriseInitialized) {
           try {
             const enterprise = getEnterpriseInitializer();
-            enterprise.getServiceContainer().emit("service:initialized", {
+            enterprise.getServiceContainer().emit('service:initialized', {
               service: this,
               metadata: this.metadata,
             });
           } catch (error) {
-            console.warn("Could not emit enterprise event:", error);
+            console.warn('Could not emit enterprise event:', error);
           }
         }
       } else {
-        throw new Error(connectionResult.error || "Database connection failed");
+        throw new Error(connectionResult.error || 'Database connection failed');
       }
+
     } catch (error) {
-      console.error("❌ Database initialization failed:", error);
+      console.error('❌ Database initialization failed:', error);
       this.healthStatus = {
         connected: false,
         responseTime: 0,
         lastCheck: new Date(),
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
-
+      
       // Set up fallback mode for development
       this.setupFallbackMode();
     }
   }
 
-  private async testConnection(): Promise<{
-    success: boolean;
-    error?: string;
-    responseTime?: number;
-  }> {
+  private async testConnection(): Promise<{ success: boolean; error?: string; responseTime?: number }> {
     const startTime = Date.now();
-
+    
     try {
-      // Simple connection test with proper error handling
-      await this.prisma.$queryRaw`SELECT 1 as test`;
-
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      await db.$queryRaw`SELECT 1 as test`;
+      
       const responseTime = Date.now() - startTime;
       return { success: true, responseTime };
+      
     } catch (error: any) {
-      console.warn(
-        "Database connection test failed, setting up fallback mode:",
-        error.message,
-      );
-      // For development, we'll consider this a success with fallback
-      return {
-        success: true,
-        responseTime: 10,
-        error: "Using fallback database mode",
+      console.warn('Database connection test failed:', error.message);
+      return { 
+        success: false, 
+        responseTime: Date.now() - startTime,
+        error: error.message 
       };
     }
   }
 
   private async gatherDatabaseInfo(): Promise<void> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // Get table information (SQLite specific)
-      const tables = (await this.prisma.$queryRaw`
+      const tables = await db.$queryRaw`
         SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'
-      `) as any[];
+      ` as any[];
 
-      this.healthStatus.tables = tables.map((table) => table.name);
+      this.healthStatus.tables = tables.map(table => table.name);
 
       // Get record counts for main tables
       const recordCounts: Record<string, number> = {};
-
-      for (const table of ["users", "projects", "analyses", "conversations"]) {
+      
+      for (const table of ['users', 'projects', 'analyses', 'conversations']) {
         if (this.healthStatus.tables?.includes(table)) {
           try {
-            const result = (await this.prisma.$queryRawUnsafe(
-              `SELECT COUNT(*) as count FROM ${table}`,
-            )) as any[];
+            const result = await db.$queryRawUnsafe(`SELECT COUNT(*) as count FROM ${table}`) as any[];
             recordCounts[table] = result[0]?.count || 0;
           } catch (error) {
             console.warn(`Could not get count for table ${table}:`, error);
@@ -231,38 +215,33 @@ class PremiumDatabaseHealthWrapper implements IService {
 
       // Get performance metrics
       const perfStartTime = Date.now();
-      await this.prisma.$queryRaw`SELECT COUNT(*) as total FROM sqlite_master`;
+      await db.$queryRaw`SELECT COUNT(*) as total FROM sqlite_master`;
       const queryTime = Date.now() - perfStartTime;
 
       this.healthStatus.performance = {
         queryTime,
         connectionTime: this.healthStatus.responseTime,
       };
+
     } catch (error) {
-      console.warn("Could not gather complete database info:", error);
+      console.warn('Could not gather complete database info:', error);
     }
   }
 
   private setupFallbackMode(): void {
-    console.log("⚠️ Setting up fallback database mode for development");
-
-    // Create mock data for development
+    console.log('⚠️ Setting up fallback database mode for development');
+    
+    // Create realistic fallback data for development
     this.healthStatus = {
-      connected: true,
-      responseTime: 10,
+      connected: false, // Set to false to indicate actual connection issues
+      responseTime: 0,
       lastCheck: new Date(),
-      error: "Using fallback mode",
-      tables: ["users", "projects", "analyses", "conversations"],
-      recordCounts: {
-        users: 1,
-        projects: 0,
-        analyses: 0,
-        conversations: 0,
-      },
+      error: 'Database connection failed - using fallback mode',
+      tables: [],
+      recordCounts: {},
       performance: {
-        queryTime: 5,
-        connectionTime: 10,
-        totalSize: 1024,
+        queryTime: 0,
+        connectionTime: 0,
       },
     };
 
@@ -272,28 +251,26 @@ class PremiumDatabaseHealthWrapper implements IService {
   async getHealthStatus(): Promise<DatabaseHealthStatus> {
     // Refresh health status if needed
     const now = new Date();
-    const timeSinceLastCheck =
-      now.getTime() - this.healthStatus.lastCheck.getTime();
-
-    if (timeSinceLastCheck > 30000) {
-      // Check every 30 seconds
+    const timeSinceLastCheck = now.getTime() - this.healthStatus.lastCheck.getTime();
+    
+    if (timeSinceLastCheck > 30000) { // Check every 30 seconds
       await this.refreshHealthStatus();
     }
-
+    
     return { ...this.healthStatus };
   }
 
   private async refreshHealthStatus(): Promise<void> {
     try {
       const connectionResult = await this.testConnection();
-
+      
       if (connectionResult.success) {
         this.healthStatus = {
           connected: true,
           responseTime: connectionResult.responseTime || 0,
           lastCheck: new Date(),
         };
-
+        
         await this.gatherDatabaseInfo();
       } else {
         this.healthStatus = {
@@ -308,21 +285,24 @@ class PremiumDatabaseHealthWrapper implements IService {
         connected: false,
         responseTime: 0,
         lastCheck: new Date(),
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
 
   async getMetrics(): Promise<DatabaseMetrics> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // Get connection info (SQLite specific)
-      const connectionInfo = (await this.prisma.$queryRaw`
+      const connectionInfo = await db.$queryRaw`
         PRAGMA database_list
-      `) as any[];
+      ` as any[];
 
       // Get query performance metrics
       const queryMetrics = await this.getQueryPerformanceMetrics();
-
+      
       // Get storage usage
       const storageUsage = await this.getStorageUsage();
 
@@ -334,8 +314,8 @@ class PremiumDatabaseHealthWrapper implements IService {
         storageUsage,
       };
     } catch (error) {
-      console.error("Failed to get database metrics:", error);
-
+      console.error('Failed to get database metrics:', error);
+      
       // Return fallback metrics
       return {
         totalConnections: 1,
@@ -381,16 +361,19 @@ class PremiumDatabaseHealthWrapper implements IService {
     tableSizes: Record<string, number>;
   }> {
     try {
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       const tableSizes: Record<string, number> = {};
       let totalSize = 0;
 
       if (this.healthStatus.tables) {
         for (const table of this.healthStatus.tables) {
           try {
-            const result = (await this.prisma.$queryRawUnsafe(`
+            const result = await db.$queryRawUnsafe(`
               SELECT SUM(pgsize) as size FROM dbstat WHERE name = '${table}'
-            `)) as any[];
-
+            `) as any[];
+            
             const size = result[0]?.size || 0;
             tableSizes[table] = size;
             totalSize += size;
@@ -413,7 +396,7 @@ class PremiumDatabaseHealthWrapper implements IService {
   }
 
   async performHealthCheck(): Promise<{
-    status: "HEALTHY" | "WARNING" | "CRITICAL";
+    status: 'HEALTHY' | 'WARNING' | 'CRITICAL';
     score: number;
     details: DatabaseHealthStatus;
     recommendations: string[];
@@ -427,47 +410,38 @@ class PremiumDatabaseHealthWrapper implements IService {
     // Check connection status
     if (!healthStatus.connected) {
       score -= 50;
-      recommendations.push(
-        "Database connection is down - check database server",
-      );
+      recommendations.push('Database connection is down - check database server');
     }
 
     // Check response time
     if (healthStatus.responseTime > 1000) {
       score -= 20;
-      recommendations.push(
-        "Database response time is slow - consider optimization",
-      );
+      recommendations.push('Database response time is slow - consider optimization');
     } else if (healthStatus.responseTime > 500) {
       score -= 10;
-      recommendations.push("Database response time could be improved");
+      recommendations.push('Database response time could be improved');
     }
 
     // Check query performance
     if (metrics.queryPerformance.averageTime > 100) {
       score -= 15;
-      recommendations.push(
-        "Query performance is degraded - review slow queries",
-      );
+      recommendations.push('Query performance is degraded - review slow queries');
     }
 
     // Check storage usage
-    if (metrics.storageUsage.totalSize > 1024 * 1024 * 100) {
-      // 100MB
+    if (metrics.storageUsage.totalSize > 1024 * 1024 * 100) { // 100MB
       score -= 10;
-      recommendations.push(
-        "Database size is large - consider cleanup or archiving",
-      );
+      recommendations.push('Database size is large - consider cleanup or archiving');
     }
 
     // Determine overall status
-    let status: "HEALTHY" | "WARNING" | "CRITICAL";
+    let status: 'HEALTHY' | 'WARNING' | 'CRITICAL';
     if (score >= 90) {
-      status = "HEALTHY";
+      status = 'HEALTHY';
     } else if (score >= 70) {
-      status = "WARNING";
+      status = 'WARNING';
     } else {
-      status = "CRITICAL";
+      status = 'CRITICAL';
     }
 
     return {
@@ -482,12 +456,14 @@ class PremiumDatabaseHealthWrapper implements IService {
     if (!this.isInitialized) {
       await this.initialize();
     }
-
+    
     if (!this.healthStatus.connected) {
-      throw new Error("Database is not connected");
+      throw new Error('Database is not connected');
     }
-
-    return this.prisma;
+    
+    // Return the existing database client from db.ts
+    const { db } = await import('./db');
+    return db as any;
   }
 
   async executeQuery<T>(query: string, params?: any[]): Promise<T> {
@@ -496,25 +472,28 @@ class PremiumDatabaseHealthWrapper implements IService {
         await this.initialize();
       }
 
+      // Use the existing database client from db.ts
+      const { db } = await import('./db');
+      
       // For raw queries, use unsafe method with parameters
       if (params && params.length > 0) {
-        return (await this.prisma.$queryRawUnsafe(query, ...params)) as T;
+        return await db.$queryRawUnsafe(query, ...params) as T;
       } else {
-        return (await this.prisma.$queryRawUnsafe(query)) as T;
+        return await db.$queryRawUnsafe(query) as T;
       }
     } catch (error) {
-      console.error("Query execution failed:", error);
+      console.error('Query execution failed:', error);
       throw error;
     }
   }
 
   async close(): Promise<void> {
     try {
-      await this.prisma.$disconnect();
+      // We don't need to disconnect since we're using the shared db client
       this.isInitialized = false;
-      console.log("✅ Database connection closed");
+      console.log('✅ Database health wrapper closed');
     } catch (error) {
-      console.error("Failed to close database connection:", error);
+      console.error('Failed to close database health wrapper:', error);
     }
   }
 
@@ -524,52 +503,52 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async waitForHealthy(timeout: number = 30000): Promise<boolean> {
     const startTime = Date.now();
-
+    
     while (Date.now() - startTime < timeout) {
       if (this.isHealthy()) {
         return true;
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
       await this.refreshHealthStatus();
     }
-
+    
     return false;
   }
 
   // Enterprise Service Interface Implementation
   async start(): Promise<void> {
-    console.log("🗄️ Starting Enterprise Database Service...");
+    console.log('🗄️ Starting Enterprise Database Service...');
     // Additional startup logic if needed
     if (this.enterpriseInitialized) {
       try {
         const enterprise = getEnterpriseInitializer();
-        enterprise.getServiceContainer().emit("service:started", {
+        enterprise.getServiceContainer().emit('service:started', {
           service: this,
           metadata: this.metadata,
         });
       } catch (error) {
-        console.warn("Could not emit enterprise start event:", error);
+        console.warn('Could not emit enterprise start event:', error);
       }
     }
-    console.log("✅ Enterprise Database Service Started");
+    console.log('✅ Enterprise Database Service Started');
   }
 
   async stop(): Promise<void> {
-    console.log("🗄️ Stopping Enterprise Database Service...");
+    console.log('🗄️ Stopping Enterprise Database Service...');
     await this.close();
     if (this.enterpriseInitialized) {
       try {
         const enterprise = getEnterpriseInitializer();
-        enterprise.getServiceContainer().emit("service:stopped", {
+        enterprise.getServiceContainer().emit('service:stopped', {
           service: this,
           metadata: this.metadata,
         });
       } catch (error) {
-        console.warn("Could not emit enterprise stop event:", error);
+        console.warn('Could not emit enterprise stop event:', error);
       }
     }
-    console.log("✅ Enterprise Database Service Stopped");
+    console.log('✅ Enterprise Database Service Stopped');
   }
 
   async dispose(): Promise<void> {
@@ -578,37 +557,27 @@ class PremiumDatabaseHealthWrapper implements IService {
 
   async healthCheck(): Promise<ServiceHealth> {
     const healthCheck = await this.performHealthCheck();
-
+    
     return {
-      status:
-        healthCheck.status === "HEALTHY"
-          ? "HEALTHY"
-          : healthCheck.status === "WARNING"
-            ? "DEGRADED"
-            : "UNHEALTHY",
+      status: healthCheck.status === 'HEALTHY' ? 'HEALTHY' : 
+               healthCheck.status === 'WARNING' ? 'DEGRADED' : 'UNHEALTHY',
       timestamp: Date.now(),
       uptime: Date.now() - (this.healthStatus.lastCheck.getTime() - 86400000), // Approximate uptime
       memoryUsage: process.memoryUsage().heapUsed,
       metrics: this.metrics,
-      checks: [
-        {
-          name: "database_connection",
-          status:
-            healthCheck.status === "HEALTHY"
-              ? "PASS"
-              : healthCheck.status === "WARNING"
-                ? "WARN"
-                : "FAIL",
-          message: healthCheck.recommendations.join(", "),
-          timestamp: Date.now(),
-        },
-      ],
+      checks: [{
+        name: 'database_connection',
+        status: healthCheck.status === 'HEALTHY' ? 'PASS' : 
+                healthCheck.status === 'WARNING' ? 'WARN' : 'FAIL',
+        message: healthCheck.recommendations.join(', '),
+        timestamp: Date.now(),
+      }],
     };
   }
 
   async getMetrics(): Promise<Record<string, number>> {
     const dbMetrics = await this.getMetrics();
-
+    
     // Update internal metrics
     this.metrics = {
       ...this.metrics,
@@ -626,12 +595,10 @@ class PremiumDatabaseHealthWrapper implements IService {
 }
 
 // Export singleton instance
-export const premiumDatabaseWrapper =
-  PremiumDatabaseHealthWrapper.getInstance();
+export const premiumDatabaseWrapper = PremiumDatabaseHealthWrapper.getInstance();
 
 // Export convenience functions
 export const getDatabaseHealth = () => premiumDatabaseWrapper.getHealthStatus();
 export const getDatabaseMetrics = () => premiumDatabaseWrapper.getMetrics();
-export const performDatabaseHealthCheck = () =>
-  premiumDatabaseWrapper.performHealthCheck();
+export const performDatabaseHealthCheck = () => premiumDatabaseWrapper.performHealthCheck();
 export const getPrismaClient = () => premiumDatabaseWrapper.getPrismaClient();
