@@ -1,1 +1,1 @@
-ESLint analysis completed for targeted mode
+ESLint analysis completed for enterprise mode
