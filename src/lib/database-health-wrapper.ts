@@ -510,10 +510,6 @@ class PremiumDatabaseHealthWrapper implements IService {
   }
 
   // Enterprise Service Interface Implementation
-  async initialize(): Promise<void> {
-    await this.initialize();
-  }
-
   async start(): Promise<void> {
     console.log('🗄️ Starting Enterprise Database Service...');
     // Additional startup logic if needed

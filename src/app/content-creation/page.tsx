@@ -29,7 +29,7 @@ import {
   Layers,
   Edit3,
   Magic,
-  Picture,
+  Image,
   Sliders,
   Eye,
   RefreshCw,

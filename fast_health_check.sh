@@ -5,6 +5,12 @@ echo "🚀 Starting Fast System Health Check..."
 echo "⏱️  Timeout: 30 seconds maximum"
 echo "=================================="
 
+# Source environment file if it exists
+if [ -f ".env" ]; then
+    echo "📝 Loading environment variables..."
+    source .env
+fi
+
 # Set timeout
 TIMEOUT=30
 START_TIME=$(date +%s)

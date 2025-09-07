@@ -1,4 +1,4 @@
-import { OptiMindEcosystem } from '@/lib/opti-mind-ecosystem';
+import OptiMindEcosystem from '@/components/OptiMindEcosystem';
 
 export default function Home() {
   return (
