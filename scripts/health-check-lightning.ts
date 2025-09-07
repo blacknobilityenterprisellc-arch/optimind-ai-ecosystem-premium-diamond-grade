@@ -8,6 +8,10 @@
  * and MCP (Model Control Protocol) for intelligent system analysis.
  */
 
+// Load environment variables
+import { config } from 'dotenv';
+config({ path: '.env' });
+
 import { premiumZAIWrapper } from '../src/lib/zai-sdk-wrapper';
 import { enhancedMCPService } from '../src/lib/mcp-service-enhanced';
 import { premiumDatabaseWrapper } from '../src/lib/database-health-wrapper';

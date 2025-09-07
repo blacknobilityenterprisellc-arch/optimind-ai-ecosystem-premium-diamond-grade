@@ -9,6 +9,10 @@
  * @version: 2.0.0
  */
 
+// Load environment variables
+import { config } from 'dotenv';
+config({ path: '.env' });
+
 const fetch = require('node-fetch');
 
 const BASE_URL = 'http://localhost:3000';
