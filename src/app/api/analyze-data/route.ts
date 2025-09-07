@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { aiService } from "@/lib/ai";
+import { aiService } from '@/lib/ai';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,10 +9,7 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!data || !analysisType) {
-      return NextResponse.json(
-        { error: "Data and analysis type are required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Data and analysis type are required' }, { status: 400 });
     }
 
     // Analyze data using AI service
@@ -26,10 +23,7 @@ export async function POST(request: NextRequest) {
       cost: result.cost,
     });
   } catch (error) {
-    console.error("Data analysis error:", error);
-    return NextResponse.json(
-      { error: "Failed to analyze data" },
-      { status: 500 },
-    );
+    console.error('Data analysis error:', error);
+    return NextResponse.json({ error: 'Failed to analyze data' }, { status: 500 });
   }
 }
