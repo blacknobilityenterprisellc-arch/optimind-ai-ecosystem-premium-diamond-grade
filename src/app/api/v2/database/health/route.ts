@@ -7,15 +7,25 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-import { databaseManagerV2 } from "@/lib/v2/database-manager";
+import { DatabaseManagerV2 } from "@/lib/v2/database-manager";
 
 export async function GET(request: NextRequest) {
   try {
     // Get database health
-    const health = await databaseManagerV2.getHealth();
+    const health = await DatabaseManagerV2.health();
 
     // Get database metrics
-    const metrics = databaseManagerV2.getMetrics();
+    const metrics = DatabaseManagerV2.getMetrics ? await DatabaseManagerV2.getMetrics() : {
+      totalConnections: 0,
+      activeConnections: 0,
+      totalQueries: 0,
+      averageQueryTime: 0,
+      slowQueries: 0,
+      errors: 0,
+      uptime: 0,
+      lastBackup: null,
+      databaseSize: 0,
+    };
 
     // Fix BigInt serialization
     const responseData = {
