@@ -4,7 +4,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -36,10 +35,11 @@ export function AIBackgroundGenerator() {
 
     setIsGenerating(true);
     setProgress(0);
+    let progressInterval: NodeJS.Timeout;
 
     try {
       // Simulate generation progress
-      const progressInterval = setInterval(() => {
+      progressInterval = setInterval(() => {
         setProgress(prev => {
           if (prev >= 90) {
             clearInterval(progressInterval);
@@ -56,11 +56,13 @@ export function AIBackgroundGenerator() {
       setGeneratedImage("https://via.placeholder.com/512x512/6366f1/ffffff?text=Generated+Background");
       
       toast.success("Background generated successfully!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to generate background");
     } finally {
       setIsGenerating(false);
-      clearInterval(progressInterval);
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
     }
   };
 
