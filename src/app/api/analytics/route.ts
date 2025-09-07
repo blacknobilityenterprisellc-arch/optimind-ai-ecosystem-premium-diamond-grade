@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { db } from "@/lib/db";
+import { db } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-    const days = Number.parseInt(searchParams.get("days") || "30");
+    const userId = searchParams.get('userId');
+    const days = Number.parseInt(searchParams.get('days') || '30');
 
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
@@ -45,14 +45,14 @@ export async function GET(request: NextRequest) {
         DATE(createdAt) as date,
         COUNT(*) as conversations
       FROM Conversation 
-      WHERE ${userId ? `userId = ${userId} AND` : ""} createdAt >= ${startDate}
+      WHERE ${userId ? `userId = ${userId} AND` : ''} createdAt >= ${startDate}
       GROUP BY DATE(createdAt)
       ORDER BY date ASC
     `) as Array<{ date: string; conversations: number }>;
 
     // Get tool usage stats
     const toolUsage = await db.toolUsage.groupBy({
-      by: ["toolName"],
+      by: ['toolName'],
       where: {
         ...userWhere,
         createdAt: { gte: startDate },
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
       },
       orderBy: {
         _count: {
-          toolName: "desc",
+          toolName: 'desc',
         },
       },
     });
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: 'desc' },
         take: 10,
       });
     }
@@ -96,7 +96,7 @@ export async function GET(request: NextRequest) {
     const systemHealth = {
       activeUsers: await db.user.count({
         where: {
-          status: "ACTIVE",
+          status: 'ACTIVE',
           createdAt: { gte: startDate },
         },
       }),
@@ -124,10 +124,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error("Get analytics error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 },
-    );
+    console.error('Get analytics error:', error);
+    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
 }

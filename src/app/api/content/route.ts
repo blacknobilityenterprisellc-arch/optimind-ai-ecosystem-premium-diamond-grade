@@ -1,20 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
     // Content retrieval logic here
     return NextResponse.json({
-      message: "Content retrieved",
+      message: 'Content retrieved',
       data: [],
-      status: "success",
+      status: 'success',
     });
   } catch {
     return NextResponse.json(
       {
-        error: "Failed to retrieve content",
-        status: "error",
+        error: 'Failed to retrieve content',
+        status: 'error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -32,17 +32,17 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json({
-      message: "Content created",
+      message: 'Content created',
       data: createdContent,
-      status: "success",
+      status: 'success',
     });
   } catch {
     return NextResponse.json(
       {
-        error: "Failed to create content",
-        status: "error",
+        error: 'Failed to create content',
+        status: 'error',
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
