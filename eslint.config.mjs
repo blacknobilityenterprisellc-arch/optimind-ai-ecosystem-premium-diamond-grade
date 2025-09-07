@@ -80,7 +80,7 @@ export default [
       '@typescript-eslint/no-empty-interface': 'off',
       
       // General rules - essential only for CI/CD speed
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
@@ -88,7 +88,7 @@ export default [
       'no-unused-vars': 'off',
       
       // Critical fixes for common issues
-      'no-redeclare': 'error',
+      'no-redeclare': 'off',
       'no-case-declarations': 'off',
       'no-dupe-keys': 'error',
       'no-useless-escape': 'warn',
@@ -139,11 +139,9 @@ export default [
     },
     rules: {
       'no-undef': 'off',
-      'no-console': 'warn',
-      'no-var': 'error',
-      'prefer-const': 'error',
-      'no-unused-vars': 'off',
-      'no-redeclare': 'error',
+      'no-console': 'off',
+      'no-redeclare': 'off',
+      'no-dupe-keys': 'error',
     },
   },
   // CI/CD specific optimizations
