@@ -3,12 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Enterprise Performance Optimization
   experimental: {
-    turbopack: true,
-    serverComponentsExternalPackages: [],
+    // turbopack: true, // Disabled for compatibility
+    // serverComponentsExternalPackages: [], // Disabled for compatibility
   },
   
   // Enterprise Build Optimization
-  swcMinify: true,
+  // swcMinify: true, // Disabled for compatibility
   compress: true,
   poweredByHeader: false,
   
