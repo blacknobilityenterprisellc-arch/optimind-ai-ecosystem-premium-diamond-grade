@@ -201,7 +201,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
 
     // Add regions as labels with bounding boxes
     if (analysis.regions && Array.isArray(analysis.regions)) {
-      analysis.regions.forEach((region: any) => {
+      analysis.regions.forEach((region: unknown) => {
         labels.push({
           label: region.label,
           score: region.score,
@@ -251,7 +251,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
  * Provides contextual analysis and reasoning for content moderation decisions
  */
 export async function zaiTextReasoning(context: {
-  visualAnalysis?: any;
+  visualAnalysis?: unknown;
   metadata?: Record<string, any>;
   userContext?: string;
   additionalPrompt?: string;
@@ -438,7 +438,7 @@ export async function withRetry<T>(
       const delay = baseDelay * Math.pow(2, attempt - 1);
       console.warn(`Attempt ${attempt} failed, retrying in ${delay}ms:`, error.message);
 
-      await new Promise(resolve => setTimeout(resolve, delay));
+      await new Promise(resolve => window.setTimeout(resolve, delay));
     }
   }
 

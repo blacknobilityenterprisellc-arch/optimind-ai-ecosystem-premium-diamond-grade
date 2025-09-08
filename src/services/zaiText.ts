@@ -109,7 +109,7 @@ export async function zaiTextReasoning(
     JSON.stringify(resp);
 
   // parse and validate
-  let parsed: any;
+  let parsed: unknown;
   try {
     parsed = JSON.parse(rawText);
   } catch {
@@ -141,7 +141,7 @@ export async function zaiTextReasoning(
     }
   }
 
-  const labels: ModelLabel[] = (parsed.labels || []).map((l: any) => ({
+  const labels: ModelLabel[] = (parsed.labels || []).map((l: unknown) => ({
     label: String(l.label),
     score: Number(l.score),
   }));

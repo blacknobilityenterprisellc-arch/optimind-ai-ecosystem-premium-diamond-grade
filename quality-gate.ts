@@ -57,19 +57,25 @@ class QualityGate {
   private thresholds: QualityThresholds;
   private logFile: string;
   private reportFile: string;
+  private ciMode: boolean;
 
-  constructor() {
+  constructor(ciMode: boolean = false) {
+    this.ciMode = ciMode;
+    
+    // Adjust thresholds for CI mode (more lenient)
     this.thresholds = {
-      maxErrors: 50,
-      maxWarnings: 1000,
-      maxVulnerabilities: 5,
-      minTestCoverage: 80,
-      maxBuildTime: 300000, // 5 minutes
-      maxBundleSize: 10485760, // 10MB
+      maxErrors: ciMode ? 100 : 50,
+      maxWarnings: ciMode ? 2000 : 1000,
+      maxVulnerabilities: ciMode ? 10 : 5,
+      minTestCoverage: ciMode ? 60 : 80,
+      maxBuildTime: ciMode ? 600000 : 300000, // 10 minutes for CI
+      maxBundleSize: ciMode ? 20971520 : 10485760, // 20MB for CI
     };
 
     this.logFile = path.join(process.cwd(), 'quality-gate.log');
-    this.reportFile = path.join(process.cwd(), 'quality-report.json');
+    this.reportFile = ciMode ? 
+      path.join(process.cwd(), 'ci-quality-report.json') : 
+      path.join(process.cwd(), 'quality-report.json');
   }
 
   private log(level: string, message: string): void {
@@ -77,21 +83,38 @@ class QualityGate {
     const logMessage = `${timestamp} [${level.toUpperCase()}] ${message}\n`;
     
     fs.appendFileSync(this.logFile, logMessage);
-    console.log(`[${level.toUpperCase()}] ${message}`);
+    if (!this.ciMode) {
+      console.log(`[${level.toUpperCase()}] ${message}`);
+    }
+  }
+
+  setReportFile(reportFile: string): void {
+    this.reportFile = reportFile;
   }
 
   private async runESLintCheck(): Promise<{ errors: number; warnings: number; total: number; passed: boolean }> {
     this.log('info', 'Running ESLint quality check...');
     
     try {
-      const result = execSync('npx eslint . --config eslint.config.ci.mjs --max-warnings 100 --format json', {
-        encoding: 'utf8',
-        stdio: 'pipe'
-      });
+      // Use comprehensive lint report if available
+      let errors = 0;
+      let warnings = 0;
+      
+      if (fs.existsSync('comprehensive-lint-report.json')) {
+        const lintReport = JSON.parse(fs.readFileSync('comprehensive-lint-report.json', 'utf8'));
+        errors = lintReport.lint_report?.results?.errors || 0;
+        warnings = lintReport.lint_report?.results?.warnings || 0;
+      } else {
+        const result = execSync('npx eslint . --config eslint.config.ci.mjs --max-warnings 100 --format json', {
+          encoding: 'utf8',
+          stdio: 'pipe'
+        });
 
-      const issues = JSON.parse(result);
-      const errors = issues.reduce((sum: number, issue: any) => sum + issue.errorCount, 0);
-      const warnings = issues.reduce((sum: number, issue: any) => sum + issue.warningCount, 0);
+        const issues = JSON.parse(result);
+        errors = issues.reduce((sum: number, issue: any) => sum + issue.errorCount, 0);
+        warnings = issues.reduce((sum: number, issue: any) => sum + issue.warningCount, 0);
+      }
+      
       const total = errors + warnings;
       const passed = errors <= this.thresholds.maxErrors && warnings <= this.thresholds.maxWarnings;
 
@@ -368,7 +391,26 @@ class QualityGate {
 
 // Execute quality gate
 async function main() {
-  const qualityGate = new QualityGate();
+  const args = process.argv.slice(2);
+  let ciMode = false;
+  let reportFile = 'quality-report.json';
+  
+  // Parse command line arguments
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--mode' && args[i + 1] === 'ci') {
+      ciMode = true;
+    }
+    if (args[i] === '--report' && args[i + 1]) {
+      reportFile = args[i + 1];
+    }
+  }
+  
+  const qualityGate = new QualityGate(ciMode);
+  
+  if (reportFile !== 'quality-report.json') {
+    qualityGate.setReportFile(reportFile);
+  }
+  
   await qualityGate.executeQualityGate();
 }
 

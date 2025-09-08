@@ -121,7 +121,7 @@ export default function ModerationResultsPage() {
     // Simulate API call
     const fetchData = async () => {
       setLoading(true);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => window.setTimeout(resolve, 1000));
       setResults(mockResults);
       setFilteredResults(mockResults);
       setLoading(false);

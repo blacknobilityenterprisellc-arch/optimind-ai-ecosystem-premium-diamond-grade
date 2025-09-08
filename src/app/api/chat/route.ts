@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const zai = await ZAI.create();
 
     const completion = await zai.chat.completions.create({
-      messages: messages.map((msg: any) => ({
+      messages: messages.map((msg: { role: string; content: string }) => ({
         role: msg.role,
         content: msg.content,
       })),
@@ -35,8 +35,13 @@ export async function POST(request: NextRequest) {
       model: completion.model,
       usage: completion.usage,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Chat API error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Internal server error',
+      },
+      { status: 500 }
+    );
   }
 }

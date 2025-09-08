@@ -160,7 +160,7 @@ export async function zaiVisionAnalyze(
     resp?.choices?.[0]?.message?.content ??
     JSON.stringify(resp); // fallback to raw JSON for debugging
 
-  let parsed: any;
+  let parsed: unknown;
   try {
     parsed = safeJsonParse(rawText);
   } catch (err) {
@@ -189,7 +189,7 @@ export async function zaiVisionAnalyze(
   }
 
   // Map to ModelResult type
-  const labels: ModelLabel[] = (parsed.labels || []).map((l: any) => ({
+  const labels: ModelLabel[] = (parsed.labels || []).map((l: unknown) => ({
     label: String(l.label),
     score: Number(l.score),
     region: l.region

@@ -123,8 +123,13 @@ export async function GET(request: NextRequest) {
         endDate: new Date(),
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Get analytics error:', error);
-    return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Internal server error',
+      },
+      { status: 500 }
+    );
   }
 }

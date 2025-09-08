@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         usage: result.usage,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Open Router analysis error:', error);
     return NextResponse.json(
       {
