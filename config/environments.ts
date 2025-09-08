@@ -54,7 +54,7 @@ const environments: Record<string, EnvironmentConfig> = {
     name: 'Staging',
     apiUrl: 'https://optimind-ai-staging.vercel.app/api',
     appUrl: 'https://optimind-ai-staging.vercel.app',
-    databaseUrl: process.env.STAGING_DATABASE_URL || 'file:./staging.db',
+    databaseUrl: process.env['STAGING_DATABASE_URL'] || 'file:./staging.db',
     nodeEnv: 'staging',
     features: {
       analytics: true,
@@ -77,7 +77,7 @@ const environments: Record<string, EnvironmentConfig> = {
     name: 'Production',
     apiUrl: 'https://optimind-ai-ecosystem.vercel.app/api',
     appUrl: 'https://optimind-ai-ecosystem.vercel.app',
-    databaseUrl: process.env.PRODUCTION_DATABASE_URL || 'file:./prod.db',
+    databaseUrl: process.env['PRODUCTION_DATABASE_URL'] || 'file:./prod.db',
     nodeEnv: 'production',
     features: {
       analytics: true,
@@ -99,8 +99,8 @@ const environments: Record<string, EnvironmentConfig> = {
 }
 
 export function getEnvironmentConfig(env?: string): EnvironmentConfig {
-  const environment = env || process.env.NODE_ENV || process.env.DEPLOY_ENV || 'development'
-  return environments[environment] || environments.development
+  const environment = env || process.env.NODE_ENV || process.env['DEPLOY_ENV'] || 'development'
+  return environments[environment] || environments['development']!
 }
 
 export function getCurrentEnvironment(): EnvironmentConfig {

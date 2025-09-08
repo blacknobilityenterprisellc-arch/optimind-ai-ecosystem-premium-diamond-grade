@@ -6,7 +6,7 @@
  * Automatically installs, configures, and manages all system dependencies
  */
 
-import { execSync, spawn } from 'child_process';
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -16,8 +16,8 @@ interface DependencyConfig {
   version?: string;
   type: 'production' | 'development' | 'optional';
   critical: boolean;
-  validate?: (installPath: string) => Promise<boolean>;
-  postInstall?: (installPath: string) => Promise<void>;
+  validate?: () => Promise<boolean>;
+  postInstall?: () => Promise<void>;
 }
 
 interface SystemDependency {

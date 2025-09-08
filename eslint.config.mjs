@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
+import globals from 'globals';
 
 export default [
   js.configs.recommended,
@@ -17,42 +18,9 @@ export default [
         },
       },
       globals: {
-        // Node.js globals
-        console: 'readonly',
-        process: 'readonly',
-        Buffer: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        global: 'readonly',
-        module: 'readonly',
-        require: 'readonly',
-        exports: 'readonly',
-        
-        // Timer functions
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly',
-        setImmediate: 'readonly',
-        clearImmediate: 'readonly',
-        
-        // Web/API globals
-        fetch: 'readonly',
-        URL: 'readonly',
-        URLSearchParams: 'readonly',
-        Headers: 'readonly',
-        Request: 'readonly',
-        Response: 'readonly',
-        
-        // Test globals
-        describe: 'readonly',
-        test: 'readonly',
-        expect: 'readonly',
-        beforeEach: 'readonly',
-        afterEach: 'readonly',
-        beforeAll: 'readonly',
-        afterAll: 'readonly',
-        jest: 'readonly',
+        ...globals.node,
+        ...globals.browser,
+        ...globals.jest,
         
         // React/Next.js globals
         React: 'readonly',
@@ -113,28 +81,9 @@ export default [
       ecmaVersion: 2022,
       sourceType: 'module',
       globals: {
-        console: 'readonly',
-        process: 'readonly',
-        Buffer: 'readonly',
-        __dirname: 'readonly',
-        __filename: 'readonly',
-        global: 'readonly',
-        module: 'readonly',
-        require: 'readonly',
-        exports: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly',
-        setImmediate: 'readonly',
-        clearImmediate: 'readonly',
-        
-        // Web globals
-        fetch: 'readonly',
-        URL: 'readonly',
-        Headers: 'readonly',
-        Request: 'readonly',
-        Response: 'readonly',
+        ...globals.node,
+        ...globals.browser,
+        ...globals.jest,
       },
     },
     rules: {
@@ -149,6 +98,7 @@ export default [
     files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}'],
     languageOptions: {
       globals: {
+        ...globals.jest,
         console: 'readonly',
         describe: 'readonly',
         test: 'readonly',
