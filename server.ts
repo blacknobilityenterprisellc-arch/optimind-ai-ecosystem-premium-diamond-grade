@@ -39,19 +39,19 @@ async function createCustomServer() {
 
     // Start server
     httpServer.listen(port, hostname, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
+      
     });
 
     // Handle graceful shutdown
     process.on('SIGTERM', () => {
-      console.log('SIGTERM received, shutting down gracefully');
+      
       httpServer.close(() => {
         process.exit(0);
       });
     });
 
   } catch (error) {
-    console.error('Error starting server:', error);
+    
     process.exit(1);
   }
 }
