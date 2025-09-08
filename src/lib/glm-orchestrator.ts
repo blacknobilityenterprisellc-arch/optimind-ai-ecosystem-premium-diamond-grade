@@ -6,7 +6,7 @@
  * This is the core orchestrator that should be used throughout the system.
  */
 
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 
 // Define proper types instead of 'any'
 export interface OperationPayload {
