@@ -30,22 +30,22 @@ export class ZaiClient {
   }
 
   private sleep(ms: number) {
-    return new Promise(res => setTimeout(res, ms));
+    return new Promise(res => window.setTimeout(res, ms));
   }
 
   /**
    * Generic call to Z.AI generate endpoint. Retries on 5xx or network errors.
    * `payload` shape is generic: { model, input, parameters, modalities, ... }
    */
-  async callZai(payload: any, options?: { retries?: number; timeoutMs?: number }) {
+  async callZai(payload: unknown, options?: { retries?: number; timeoutMs?: number }) {
     const retries = options?.retries ?? this.config.maxRetries ?? 3;
     const timeoutMs = options?.timeoutMs ?? this.config.timeoutMs ?? 30_000;
     let attempt = 0;
-    let lastErr: any = null;
+    let lastErr: unknown = null;
 
     while (++attempt <= retries) {
       const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      const timer = window.setTimeout(() => controller.abort(), timeoutMs);
 
       try {
         const res = await fetch(this.config.apiUrl!, {
@@ -58,7 +58,7 @@ export class ZaiClient {
           signal: controller.signal,
         });
 
-        clearTimeout(timer);
+        window.clearTimeout(timer);
 
         if (res.ok) {
           const json = await res.json();
@@ -77,7 +77,7 @@ export class ZaiClient {
         const text = await res.text();
         throw new Error(`ZAI API error status=${res.status} body=${text}`);
       } catch (err) {
-        clearTimeout(timer);
+        window.clearTimeout(timer);
         lastErr = err;
 
         // Retry on network errors or aborts

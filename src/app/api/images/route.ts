@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(imageData);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Images API error:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     };
 
     return NextResponse.json(analysisResult);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Image analysis error:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to analyze image' },

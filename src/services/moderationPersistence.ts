@@ -12,10 +12,10 @@ import { ModelResult, ConsensusResult } from '@/types';
 export interface PersistAnalysisInput {
   type: AnalysisType;
   inputRef: string;
-  labels: Array<{ label: string; score: number; region?: any }>;
+  labels: Array<{ label: string; score: number; region?: unknown }>;
   reasons?: string[];
   provenance: { model: string; version?: string };
-  rawOutput?: any;
+  rawOutput?: unknown;
   reviewNeeded: boolean;
 }
 
@@ -216,7 +216,7 @@ function calculateSeverity(labels: Array<{ label: string; score: number }>): num
 /**
  * Log an audit event for tracking and compliance
  */
-async function logAuditEvent(event: string, payload: any, actor?: string) {
+async function logAuditEvent(event: string, payload: unknown, actor?: string) {
   try {
     await db.auditLog.create({
       data: {
@@ -270,7 +270,7 @@ export async function getPendingReviewItems(
   try {
     const { priority, assignedTo, limit = 50, offset = 0 } = options;
 
-    const where: any = { status: ReviewStatus.PENDING };
+    const where: unknown = { status: ReviewStatus.PENDING };
     if (priority) where.priority = priority;
     if (assignedTo) where.assignedTo = assignedTo;
 

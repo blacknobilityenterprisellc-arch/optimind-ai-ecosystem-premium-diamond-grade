@@ -29,7 +29,7 @@ export interface ModerationResult {
   };
 }
 
-export function assertValidModeration(obj: any): ModerationResult {
+export function assertValidModeration(obj: unknown): ModerationResult {
   const valid = validateModeration(obj);
   if (!valid) {
     const err = validateModeration.errors;
@@ -41,7 +41,10 @@ export function assertValidModeration(obj: any): ModerationResult {
 /**
  * Safe validation with fallback for operational resilience
  */
-export function safeValidateModeration(obj: any, allowLenient: boolean = false): ModerationResult {
+export function safeValidateModeration(
+  obj: unknown,
+  allowLenient: boolean = false
+): ModerationResult {
   try {
     return assertValidModeration(obj);
   } catch (error) {
@@ -63,7 +66,7 @@ export function safeValidateModeration(obj: any, allowLenient: boolean = false):
 /**
  * Extract JSON from model response with fallback parsing
  */
-export function extractJsonFromResponse(response: string): any {
+export function extractJsonFromResponse(response: string): unknown {
   try {
     return JSON.parse(response);
   } catch {
