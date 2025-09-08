@@ -311,7 +311,7 @@ export class UserService {
 
   // Use case: Get all users (admin only)
   @withErrorHandling('UserService.getAllUsers')
-  async getAllUsers(options?: any): Promise<User[]> {
+  async getAllUsers(options?: unknown): Promise<User[]> {
     return await this.userRepository.findAll(options);
   }
 

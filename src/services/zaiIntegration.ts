@@ -35,7 +35,7 @@ export interface ZaiIntegrationConfig {
   maxConcurrency?: number;
   enableAIR?: boolean;
   enableAdaptiveConsensus?: boolean;
-  adaptiveConfig?: any;
+  adaptiveConfig?: unknown;
 }
 
 export class ZaiIntegration {
@@ -375,7 +375,7 @@ export class ZaiIntegration {
   /**
    * Determine if human review is needed based on consensus results
    */
-  private determineReviewNeed(consensus: any, successfulModelsCount: number): boolean {
+  private determineReviewNeed(consensus: unknown, successfulModelsCount: number): boolean {
     if (!consensus || !consensus.allLabels) return true;
 
     // Critical labels that always require review

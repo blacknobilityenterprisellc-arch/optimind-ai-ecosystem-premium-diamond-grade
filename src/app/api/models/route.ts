@@ -14,7 +14,7 @@ export async function GET() {
       enableOpenRouter: true,
     });
     return NextResponse.json({ models });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Models API error:', error);
     return NextResponse.json({ error: error.message || 'Failed to fetch models' }, { status: 500 });
   }

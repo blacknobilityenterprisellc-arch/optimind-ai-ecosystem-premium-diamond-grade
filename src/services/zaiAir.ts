@@ -322,7 +322,7 @@ export async function zaiAirAnalyze(
     resp?.choices?.[0]?.message?.content ??
     JSON.stringify(resp);
 
-  let parsed: any;
+  let parsed: unknown;
   try {
     parsed = safeJsonParse(rawText);
   } catch (err) {
@@ -361,7 +361,7 @@ export async function zaiAirAnalyze(
 
   // Add risk assessment categories as labels
   if (parsed.risk_assessment?.content_categories) {
-    parsed.risk_assessment.content_categories.forEach((category: any) => {
+    parsed.risk_assessment.content_categories.forEach((category: unknown) => {
       labels.push({
         label: category.category,
         score: category.severity * category.confidence, // Combined severity and confidence
@@ -371,7 +371,7 @@ export async function zaiAirAnalyze(
 
   // Add scene analysis subjects as labels
   if (parsed.scene_analysis?.primary_subjects) {
-    parsed.scene_analysis.primary_subjects.forEach((subject: any) => {
+    parsed.scene_analysis.primary_subjects.forEach((subject: unknown) => {
       labels.push({
         label: `subject_${subject.subject.toLowerCase().replace(/\s+/g, '_')}`,
         score: subject.confidence * 0.7, // Lower weight for subject detection
@@ -428,6 +428,6 @@ export async function zaiAirAnalyze(
 // Export utility functions for AIR-specific operations
 export const AirUtils = {
   buildAirPrompt,
-  validateAir: (data: any) => validateAir(data),
+  validateAir: (data: unknown) => validateAir(data),
   getAirSchema: () => airSchema,
 };
