@@ -1110,7 +1110,7 @@ class PremiumContextEngineeringService {
 
     // Validate required sections
     for (const sectionId of template.structure.requiredSections) {
-      if (!sections[sectionId] || !sections[sectionId].trim()) {
+      if (!sections[sectionId]?.trim()) {
         errors.push({
           section: sectionId,
           field: 'content',
@@ -1320,7 +1320,7 @@ class PremiumContextEngineeringService {
   } {
     const errors: ValidationError[] = [];
 
-    if (!outputSpec || !outputSpec.trim()) {
+    if (!outputSpec?.trim()) {
       errors.push({
         section: 'output_format',
         field: 'content',
