@@ -604,7 +604,7 @@ class AutonomousController {
       }
 
     } catch (error: unknown) {
-      this.log('warn', `Automation loop failed: ${error.message}`);
+      this.log('warn', `Automation loop failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 

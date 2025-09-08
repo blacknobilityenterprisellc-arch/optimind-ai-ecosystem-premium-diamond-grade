@@ -26,6 +26,7 @@ async function initializeAPIKeySystem() {
           email: 'admin@optimind.ai',
           name: 'System Administrator',
           role: 'ADMIN',
+          password: 'admin-initial-password-123', // Add required password field
           credits: 10000,
           apiKey: 'optimind-admin-initial-key',
           isActive: true
@@ -107,16 +108,12 @@ async function initializeAPIKeySystem() {
             permissions: JSON.stringify([`service:${service.service}`, 'read', 'write']),
             rateLimit: 500,
             isActive: true,
-            createdBy: 'system',
-            metadata: JSON.stringify({
-              service: service.service,
-              type: 'ai-service'
-            })
+            createdBy: 'system'
           }
         });
         console.log(`✅ Created ${service.name}: ${serviceKey.name}`);
       } catch (error) {
-        console.log(`❌ Failed to create ${service.name}: ${error.message}`);
+        console.log(`❌ Failed to create ${service.name}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
 
@@ -155,7 +152,7 @@ async function initializeAPIKeySystem() {
 
   } catch (error) {
     console.error('❌ Error initializing API key system:', error);
-    console.error('Stack trace:', error.stack);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     await db.$disconnect();
     process.exit(1);
   }
