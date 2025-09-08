@@ -128,6 +128,9 @@ export default [
         WeakSet: 'readonly',
         JSON: 'readonly',
         Math: 'readonly',
+        // JSX types
+        JSX: 'readonly',
+        React: 'readonly',
       },
     },
     rules: {
