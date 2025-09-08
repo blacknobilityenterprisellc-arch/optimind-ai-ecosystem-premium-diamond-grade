@@ -139,6 +139,13 @@ export default [
       'no-console': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
+      // Performance optimization rules
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['lodash', 'underscore'],
+          message: 'Use native JavaScript methods instead of Lodash/Underscore for better performance'
+        }]
+      }],
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,

@@ -71,6 +71,16 @@ export default [
       // Performance critical rules only
       'no-unreachable-loop': 'error',
       'no-unused-private-class-members': 'warn',
+      // Performance optimization rules
+      'no-restricted-imports': ['warn', {
+        patterns: [{
+          group: ['lodash', 'underscore'],
+          message: 'Use native JavaScript methods instead of Lodash/Underscore for better performance'
+        }]
+      }],
+      // Code complexity rules
+      'complexity': ['warn', 15],
+      'max-lines-per-function': ['warn', 100],
     },
   },
   {
