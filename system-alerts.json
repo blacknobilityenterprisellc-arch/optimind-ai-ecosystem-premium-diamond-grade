@@ -38,5 +38,29 @@
     "message": "Reliability issues: 0.0%",
     "timestamp": "2025-09-08T02:12:10.692Z",
     "resolved": true
+  },
+  {
+    "id": "alert_1757297530693_e59nix232",
+    "type": "info",
+    "component": "predictive",
+    "message": "Performance degradation trend detected",
+    "timestamp": "2025-09-08T02:12:10.693Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297685884_bpnurwdiv",
+    "type": "warning",
+    "component": "performance",
+    "message": "Performance degraded: 15.7%",
+    "timestamp": "2025-09-08T02:14:45.884Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297685884_ntq95rb2r",
+    "type": "warning",
+    "component": "reliability",
+    "message": "Reliability issues: 0.0%",
+    "timestamp": "2025-09-08T02:14:45.884Z",
+    "resolved": true
   }
 ]

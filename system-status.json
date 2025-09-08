@@ -9,16 +9,16 @@
     "application": "unhealthy"
   },
   "metrics": {
-    "uptime": 32120,
+    "uptime": 1757297498573,
     "healthScore": 50,
-    "performance": 18.099999999999994,
+    "performance": 15.700000000000003,
     "reliability": 0,
-    "efficiency": 93.06,
+    "efficiency": 93.08,
     "autonomousActions": 0,
     "recoveryActions": 0,
-    "optimizationActions": 2
+    "optimizationActions": 4
   },
-  "lastUpdate": "2025-09-08T02:09:54.135Z",
+  "lastUpdate": "2025-09-08T02:12:10.693Z",
   "alerts": [
     {
       "id": "alert_1757297394134_wpi5keyy1",
@@ -58,6 +58,30 @@
       "component": "reliability",
       "message": "Reliability issues: 0.0%",
       "timestamp": "2025-09-08T02:12:10.692Z",
+      "resolved": true
+    },
+    {
+      "id": "alert_1757297530693_e59nix232",
+      "type": "info",
+      "component": "predictive",
+      "message": "Performance degradation trend detected",
+      "timestamp": "2025-09-08T02:12:10.693Z",
+      "resolved": true
+    },
+    {
+      "id": "alert_1757297685884_bpnurwdiv",
+      "type": "warning",
+      "component": "performance",
+      "message": "Performance degraded: 15.7%",
+      "timestamp": "2025-09-08T02:14:45.884Z",
+      "resolved": true
+    },
+    {
+      "id": "alert_1757297685884_ntq95rb2r",
+      "type": "warning",
+      "component": "reliability",
+      "message": "Reliability issues: 0.0%",
+      "timestamp": "2025-09-08T02:14:45.884Z",
       "resolved": true
     }
   ]
