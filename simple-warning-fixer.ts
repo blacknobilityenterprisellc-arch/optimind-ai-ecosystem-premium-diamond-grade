@@ -125,7 +125,7 @@ class SimpleWarningFixer {
               
               // If no items are used, remove the import
               if (allUnused && importedItems.length > 0) {
-                content = content.replace(importLine + '\n', '');
+                content = content.replace(`${importLine  }\n`, '');
                 fixedCount++;
               }
             }
