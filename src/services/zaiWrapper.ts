@@ -408,7 +408,7 @@ export async function generateSaliencyMap(
     });
 
     const imageData = response.data[0];
-    if (!imageData || !imageData.base64) {
+    if (!imageData?.base64) {
       throw new Error('No image data received from saliency map generation');
     }
 

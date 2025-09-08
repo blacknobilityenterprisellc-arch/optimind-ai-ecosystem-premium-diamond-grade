@@ -118,7 +118,7 @@ export function BatchProcessingManager() {
 
           // Check if all items are processed
           const job = jobs.find(j => j.id === jobId);
-          if (job && job.items.every(item => item.status !== 'processing')) {
+          if (job?.items.every(item => item.status !== 'processing')) {
             clearInterval(interval);
             resolve();
           }

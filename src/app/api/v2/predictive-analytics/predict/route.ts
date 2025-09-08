@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   try {
     const { modelId, input, priority = 'medium' } = await request.json();
 
-    if (!modelId || !input || !input.features) {
+    if (!modelId || !input?.features) {
       return NextResponse.json(
         { error: 'Model ID and input features are required' },
         { status: 400 }
