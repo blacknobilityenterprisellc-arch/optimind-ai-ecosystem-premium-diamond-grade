@@ -50,7 +50,7 @@ class AutomatedWarningFixer {
       this.log(`✅ Completed: ${description}`, 'success');
       return true;
     } catch (error) {
-      this.log(`❌ Failed: ${description} - ${error.message}`, 'error');
+      this.log(`❌ Failed: ${description} - ${error instanceof Error ? error.message : String(error)}`, 'error');
       return false;
     }
   }
@@ -196,7 +196,7 @@ async function main() {
   
   // Check if a specific batch was requested
   const args = process.argv.slice(2);
-  if (args.length > 0 && args[0] === '--batch') {
+  if (args.length > 0 && args[0] === '--batch' && args[1]) {
     const batchName = args[1];
     await fixer.runSpecificFix(batchName);
   } else {
