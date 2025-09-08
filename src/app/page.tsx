@@ -2,7 +2,7 @@
 
 import OptiMindEcosystem from '@/components/OptiMindEcosystem';
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="container mx-auto px-4 py-12">
