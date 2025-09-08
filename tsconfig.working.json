@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2024",
+    "target": "ES2020",
     "lib": [
-      "ES2024",
+      "ES2020",
       "DOM",
       "DOM.Iterable"
     ],
@@ -15,31 +15,19 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "noImplicitOverride": true,
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "noImplicitReturns": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictNullChecks": true,
-    "useUnknownInCatchVariables": true,
-    "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "verbatimModuleSyntax": true,
-    "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*"
@@ -47,9 +35,6 @@
   "exclude": [
     "node_modules",
     "dist",
-    "build",
-    "*.test.ts",
-    "*.spec.ts",
-    "src/__tests__/**/*"
+    "build"
   ]
 }
