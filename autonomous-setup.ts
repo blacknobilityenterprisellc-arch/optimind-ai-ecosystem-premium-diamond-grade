@@ -9,7 +9,6 @@
 import { execSync, spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { createInterface } from 'readline';
 
 // Global variables
 const SCRIPT_DIR = process.cwd();
@@ -17,7 +16,6 @@ const LOG_FILE = path.join(SCRIPT_DIR, 'autonomous-setup.log');
 const ERROR_LOG = path.join(SCRIPT_DIR, 'autonomous-setup-errors.log');
 const START_TIME = Date.now();
 const MAX_RETRIES = 3;
-const HEALTH_CHECK_INTERVAL = 30000;
 
 // Color definitions for output
 const colors = {
@@ -127,7 +125,7 @@ const checkSystemRequirements = async () => {
   // Check available disk space
   try {
     const dfOutput = await executeCommand('df -k .', { silent: true });
-    const availableSpace = parseInt(dfOutput.split('\n')[1].split(/[ \t]+/)[3]);
+    const availableSpace = parseInt(dfOutput.split('\n')[1]?.split(/[ \t]+/)[3] || '0');
     const requiredSpace = 1048576; // 1GB in KB
     
     if (availableSpace < requiredSpace) {
@@ -332,7 +330,7 @@ const startDevelopmentServer = async () => {
   serverProcess.unref();
   
   // Save server PID
-  fs.writeFileSync(path.join(SCRIPT_DIR, '.server.pid'), serverProcess.pid.toString());
+  fs.writeFileSync(path.join(SCRIPT_DIR, '.server.pid'), (serverProcess.pid || 0).toString());
   
   // Wait for server to start
   logProgress('Waiting for server to start...');
@@ -361,7 +359,7 @@ const setupMonitoring = async () => {
 
 # OptiMind AI Ecosystem - Server Monitoring Script
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/monitor.log"
 SERVER_PID_FILE="$SCRIPT_DIR/.server.pid"
 
@@ -421,7 +419,7 @@ done
   
   monitorProcess.unref();
   
-  fs.writeFileSync(path.join(SCRIPT_DIR, '.monitor.pid'), monitorProcess.pid.toString());
+  fs.writeFileSync(path.join(SCRIPT_DIR, '.monitor.pid'), (monitorProcess.pid || 0).toString());
   
   logSuccess(`Monitoring system started (PID: ${monitorProcess.pid})`);
 };
