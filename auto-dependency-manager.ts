@@ -57,7 +57,7 @@ class AutoDependencyManager {
     const logMessage = `${timestamp} [${level.toUpperCase()}] ${message}\n`;
     
     fs.appendFileSync(this.logFile, logMessage);
-    console.log(`[${level.toUpperCase()}] ${message}`);
+    }] ${message}`);
   }
 
   private async executeCommand(
@@ -717,23 +717,21 @@ export default config;
 
 // Main execution
 async function main() {
-  console.log('🤖 OptiMind AI Ecosystem - Automatic Dependency Manager');
-  console.log('========================================================');
-  
+
   const manager = new AutoDependencyManager();
   
   try {
     const success = await manager.manageDependencies();
     
     if (success) {
-      console.log('✅ Dependency management completed successfully');
+      
       await manager.generateReport();
     } else {
-      console.log('❌ Dependency management failed');
+      
       process.exit(1);
     }
   } catch (error) {
-    console.error('❌ Fatal error:', error);
+    
     process.exit(1);
   }
 }
@@ -741,7 +739,7 @@ async function main() {
 // Run if called directly
 if (require.main === module) {
   main().catch(error => {
-    console.error('❌ Unhandled error:', error);
+    
     process.exit(1);
   });
 }
