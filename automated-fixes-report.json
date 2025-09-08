@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-09-08T08:36:06.773Z",
+  "summary": {
+    "totalBatches": 5,
+    "successful": 0,
+    "failed": 5
+  },
+  "results": [
+    {
+      "name": "Console Statements",
+      "success": false,
+      "time": "300s"
+    },
+    {
+      "name": "Unused Variables",
+      "success": false,
+      "time": "45s"
+    },
+    {
+      "name": "TypeScript Unused Variables",
+      "success": false,
+      "time": "2s"
+    },
+    {
+      "name": "Useless Escapes",
+      "success": false,
+      "time": "2s"
+    },
+    {
+      "name": "Duplicate Imports",
+      "success": false,
+      "time": "32s"
+    }
+  ],
+  "recommendations": [
+    "Review the fixed files to ensure no functionality was broken",
+    "Run the lint test again to verify improvements",
+    "Manually address the remaining non-auto-fixable warnings",
+    "Set up pre-commit hooks to prevent future issues"
+  ]
+}
