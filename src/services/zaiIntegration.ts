@@ -208,7 +208,7 @@ export class ZaiIntegration {
         type: AnalysisType.VISION,
         inputRef: imageId,
         labels: modelResult.labels,
-        reasons: (modelResult.rawOutput && modelResult.rawOutput.reasons) || [],
+        reasons: modelResult.rawOutput?.reasons || [],
         provenance: {
           model: modelResult.modelName,
           version: modelResult.modelVersion,
@@ -276,7 +276,7 @@ export class ZaiIntegration {
         type: AnalysisType.AIR,
         inputRef: imageId,
         labels: modelResult.labels,
-        reasons: (modelResult.rawOutput && modelResult.rawOutput.reasons) || [],
+        reasons: modelResult.rawOutput?.reasons || [],
         provenance: {
           model: modelResult.modelName,
           version: modelResult.modelVersion,
@@ -339,7 +339,7 @@ export class ZaiIntegration {
         type: AnalysisType.TEXT,
         inputRef: imageId,
         labels: modelResult.labels,
-        reasons: (modelResult.rawOutput && modelResult.rawOutput.reasons) || [],
+        reasons: modelResult.rawOutput?.reasons || [],
         provenance: {
           model: modelResult.modelName,
           version: modelResult.modelVersion,
@@ -376,7 +376,7 @@ export class ZaiIntegration {
    * Determine if human review is needed based on consensus results
    */
   private determineReviewNeed(consensus: unknown, successfulModelsCount: number): boolean {
-    if (!consensus || !consensus.allLabels) return true;
+    if (!consensus?.allLabels) return true;
 
     // Critical labels that always require review
     const criticalLabels = ['child_exposed', 'deepfake_suspected', 'sexual_nudity', 'violence'];
