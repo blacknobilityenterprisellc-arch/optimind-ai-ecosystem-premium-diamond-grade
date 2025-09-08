@@ -723,14 +723,14 @@ async function main() {
     const success = await manager.manageDependencies();
     
     if (success) {
-      console.log('✅ Dependency management completed successfully');
+      
       await manager.generateReport();
     } else {
-      console.log('❌ Dependency management failed');
+      
       process.exit(1);
     }
   } catch (error) {
-    console.log('❌ Dependency management failed with error:', error instanceof Error ? error.message : String(error));
+    console.error('Dependency management failed:', error);
     process.exit(1);
   }
 }
@@ -738,7 +738,7 @@ async function main() {
 // Run if called directly
 if (require.main === module) {
   main().catch(error => {
-    console.error('❌ Auto dependency manager failed:', error instanceof Error ? error.message : String(error));
+    console.error('Script execution failed:', error);
     process.exit(1);
   });
 }
