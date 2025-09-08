@@ -4,6 +4,7 @@
       "script_name": "Premium Diamond-Grade Lightning Lint Test",
       "version": "2.0.0",
       "enterprise_mode": "diamond-grade",
+<<<<<<< HEAD
       "timestamp": "2025-09-08T04:30:09Z",
       "git_commit": "0e7266be8c702d3d1e568ac196838745924653a9",
       "git_branch": "master"
@@ -12,13 +13,27 @@
       "total_files_analyzed": 50799,
       "errors": 2031,
       "warnings": 3386,
+=======
+      "timestamp": "2025-09-08T05:08:25Z",
+      "git_commit": "49d41e3be20fd4f359c9f09d6fc613a724923d32",
+      "git_branch": "master"
+    },
+    "results": {
+      "total_files_analyzed": 50865,
+      "errors": 0,
+      "warnings": 3391,
+>>>>>>> master
       "suggestions": 0,
       "fixable_issues": 0
     },
     "quality_metrics": {
       "code_quality_score": 0,
       "performance_metrics": {
+<<<<<<< HEAD
         "total_duration_ms": 47849
+=======
+        "total_duration_ms": 34392
+>>>>>>> master
       }
     },
     "analysis_mode": "enterprise",
