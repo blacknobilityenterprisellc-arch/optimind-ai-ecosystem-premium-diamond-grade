@@ -15,7 +15,7 @@ export default [
           jsx: true,
         },
         project: './tsconfig.json',
-        tsconfigRootDir: import.meta.url ? new URL('.', import.meta.url).pathname : process.cwd(),
+        tsconfigRootDir: process.cwd(),
       },
       globals: {
         console: 'readonly',

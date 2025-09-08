@@ -239,7 +239,7 @@ class QualityGate {
 
       this.log('info', `Tests: ${passed} passed, ${failed} failed, ${coverage}% coverage (${testPassed ? 'PASSED' : 'FAILED'})`);
       
-      return { passed, failed, coverage, passed: testPassed };
+      return { passed, failed, coverage, testPassed };
     } catch (error) {
       this.log('warn', 'Tests not configured, using mock results');
       const passed = 95;
@@ -247,7 +247,7 @@ class QualityGate {
       const coverage = 85;
       const testPassed = coverage >= this.thresholds.minTestCoverage;
       
-      return { passed, failed, coverage, passed: testPassed };
+      return { passed, failed, coverage, testPassed };
     }
   }
 

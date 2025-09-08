@@ -224,10 +224,10 @@ class AutonomousController {
       this.displaySystemStatus();
       
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.status.overall = 'error';
-      this.log('error', `Controller initialization failed: ${error.message}`);
-      await this.createAlert('critical', 'controller', `Initialization failed: ${error.message}`);
+      this.log('error', `Controller initialization failed: ${error instanceof Error ? error.message : String(error)}`);
+      await this.createAlert('critical', 'controller', `Initialization failed: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
   }
@@ -361,9 +361,9 @@ class AutonomousController {
       this.status.lastUpdate = new Date();
       this.status.metrics.uptime = Date.now() - this.status.metrics.uptime;
       
-    } catch (error: any) {
-      this.log('error', `Health check failed: ${error.message}`);
-      await this.createAlert('error', 'controller', `Health check failed: ${error.message}`);
+    } catch (error: unknown) {
+      this.log('error', `Health check failed: ${error instanceof Error ? error.message : String(error)}`);
+      await this.createAlert('error', 'controller', `Health check failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -576,8 +576,8 @@ class AutonomousController {
 
       alert.resolved = true;
       this.log('success', `Autonomous action completed: ${alert.actionTaken}`);
-    } catch (error: any) {
-      this.log('error', `Autonomous action failed: ${error.message}`);
+    } catch (error: unknown) {
+      this.log('error', `Autonomous action failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
 
@@ -603,7 +603,7 @@ class AutonomousController {
         await this.performSelfLearning();
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.log('warn', `Automation loop failed: ${error.message}`);
     }
   }
