@@ -1,16 +1,14 @@
-const { createServer } = require('http');
-const { parse } = require('url');
 const next = require('next');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-exports.handler = async (event, context) => {
+exports.handler = async (event) => {
   // Wait for Next.js to be ready
   await app.prepare();
   
-  const { path, httpMethod, headers, body, queryStringParameters } = event;
+  const { path, httpMethod, headers, body } = event;
   
   // Create a mock request object
   const req = {
