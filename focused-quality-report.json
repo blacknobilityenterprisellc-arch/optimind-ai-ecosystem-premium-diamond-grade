@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "timestamp": "2025-09-08T03:36:49.260Z",
+    "overallScore": 45,
+    "status": "poor"
+  },
+  "sourceFiles": {
+    "total": 334,
+    "typescript": 199,
+    "react": 135
+  },
+  "analysis": {
+    "eslint": {
+      "errors": 50,
+      "warnings": 200,
+      "fixable": 80,
+      "total": 250,
+      "passed": false
+    },
+    "typescript": {
+      "errors": 1,
+      "passed": false
+    }
+  },
+  "quality": {
+    "score": 45,
+    "status": "poor",
+    "recommendations": [
+      "Use automated fixes for addressable warnings",
+      "Fix TypeScript compilation errors for type safety"
+    ]
+  },
+  "generatedBy": "OptiMind AI Ecosystem - Focused Quality Assessment"
+}
