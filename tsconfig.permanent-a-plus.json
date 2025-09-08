@@ -24,7 +24,7 @@
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "noImplicitReturns": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictNullChecks": true,
     "useUnknownInCatchVariables": true,
     "alwaysStrict": true,
@@ -36,10 +36,10 @@
     "verbatimModuleSyntax": true,
     "resolvePackageJsonExports": true,
     "resolvePackageJsonImports": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "customConditions": [
+      "development",
+      "production"
+    ]
   },
   "include": [
     "src/**/*"
@@ -49,7 +49,6 @@
     "dist",
     "build",
     "*.test.ts",
-    "*.spec.ts",
-    "src/__tests__/**/*"
+    "*.spec.ts"
   ]
 }
