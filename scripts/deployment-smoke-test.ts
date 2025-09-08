@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 import { createServer } from 'http'
-import { nextServer } from 'next/dist/server/next'
+import { NextServer } from 'next/dist/server/next'
 
 /**
  * Smoke test script for deployment verification
