@@ -25,6 +25,7 @@ export default [
         
         // React/Next.js globals
         React: 'readonly',
+        JSX: 'readonly',
         window: 'readonly',
         document: 'readonly',
         navigator: 'readonly',

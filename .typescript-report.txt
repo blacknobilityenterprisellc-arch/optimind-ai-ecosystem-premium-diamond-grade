@@ -1,1 +1,1 @@
-TypeScript analysis completed for enterprise mode
+TypeScript analysis completed for standard mode
