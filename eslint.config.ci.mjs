@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import globals from 'globals';
+import nextPlugin from '@next/eslint-plugin-next';
 
 export default [
   js.configs.recommended,
@@ -35,6 +36,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescript,
+      '@next/next': nextPlugin,
     },
     rules: {
       // TypeScript rules - Essential only for performance
