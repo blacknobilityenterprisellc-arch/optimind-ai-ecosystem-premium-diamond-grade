@@ -127,7 +127,7 @@ class GLMOrchestratorFixer {
           connectionIds.push(connectionId);
           console.log(`✅ Connected GLM model: ${model.name} (${connectionId})`);
         } catch (error) {
-          console.warn(`⚠️  Failed to connect GLM model ${model.name}:`, error.message);
+          console.warn(`⚠️  Failed to connect GLM model ${model.name}:`, error instanceof Error ? error.message : String(error));
         }
       }
       
@@ -201,7 +201,7 @@ class GLMOrchestratorFixer {
       console.log('🎯 Testing GLM ensemble analysis...');
       const ensembleResults = await this.aiService.ensembleAnalysis({
         prompt: 'Analyze the current state of AI orchestration in this system',
-        models: ['glm-4.5-flagship', 'glm-4.5-auto-think', 'air']
+        model: 'glm-4.5-flagship' // Use single model instead of models array
       });
       
       console.log(`✅ GLM ensemble analysis completed with ${ensembleResults.length} model responses`);

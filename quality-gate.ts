@@ -32,7 +32,7 @@ interface QualityMetrics {
     passed: boolean;
   };
   tests: {
-    passed: number;
+    passedCount: number;
     failed: number;
     coverage: number;
     passed: boolean;
@@ -221,7 +221,7 @@ class QualityGate {
     }
   }
 
-  private async runTestCheck(): Promise<{ passed: number; failed: number; coverage: number; passed: boolean }> {
+  private async runTestCheck(): Promise<{ passedCount: number; failed: number; coverage: number; passed: boolean }> {
     this.log('info', 'Running test check...');
     
     try {
@@ -232,22 +232,22 @@ class QualityGate {
       });
 
       // Mock test results for demo
-      const passed = 95;
+      const passedCount = 95;
       const failed = 5;
       const coverage = 85;
       const testPassed = coverage >= this.thresholds.minTestCoverage;
 
-      this.log('info', `Tests: ${passed} passed, ${failed} failed, ${coverage}% coverage (${testPassed ? 'PASSED' : 'FAILED'})`);
+      this.log('info', `Tests: ${passedCount} passed, ${failed} failed, ${coverage}% coverage (${testPassed ? 'PASSED' : 'FAILED'})`);
       
-      return { passed, failed, coverage, testPassed };
+      return { passedCount, failed, coverage, passed: testPassed };
     } catch (error) {
       this.log('warn', 'Tests not configured, using mock results');
-      const passed = 95;
+      const passedCount = 95;
       const failed = 5;
       const coverage = 85;
       const testPassed = coverage >= this.thresholds.minTestCoverage;
       
-      return { passed, failed, coverage, testPassed };
+      return { passedCount, failed, coverage, passed: testPassed };
     }
   }
 

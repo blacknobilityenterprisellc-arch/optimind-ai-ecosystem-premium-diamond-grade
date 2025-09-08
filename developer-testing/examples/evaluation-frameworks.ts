@@ -273,7 +273,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
             });
             details.push(detail);
           } catch (error) {
-            this.logger.error(`Error evaluating metric ${metric.name}:`, error);
+            this.logger.error(`Error evaluating metric ${metric.name}:`, error instanceof Error ? error : new Error(String(error)));
             details.push({
               category: category.name,
               metric: metric.name,
@@ -314,7 +314,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
       this.logger.info(`Model evaluation completed: ${input.modelId} - Score: ${overallScore}`);
       return result;
     } catch (error) {
-      this.logger.error(`Model evaluation failed: ${input.modelId}`, error);
+      this.logger.error(`Model evaluation failed: ${input.modelId}`, error instanceof Error ? error : new Error(String(error)));
       return {
         id: `eval_${input.modelId}_${Date.now()}`,
         framework: this.name,
@@ -433,7 +433,7 @@ export class ModelEvaluationFramework implements EvaluationFramework {
       details: `Model accuracy evaluated at ${(accuracy * 100).toFixed(1)}%`,
       evidence: [
         { test_type: 'classification', accuracy },
-        { sample_size: input.testCases?.length || 100 }
+        { sample_size: (input && typeof input === 'object' && 'testCases' in input && Array.isArray((input as any).testCases)) ? (input as any).testCases.length : 100 }
       ]
     };
   }
@@ -950,7 +950,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
             });
             details.push(detail);
           } catch (error) {
-            this.logger.error(`Error evaluating metric ${metric.name}:`, error);
+            this.logger.error(`Error evaluating metric ${metric.name}:`, error instanceof Error ? error : new Error(String(error)));
             details.push({
               category: category.name,
               metric: metric.name,
@@ -991,7 +991,7 @@ export class AgentEvaluationFramework implements EvaluationFramework {
       this.logger.info(`Agent evaluation completed: ${input.agentId} - Score: ${overallScore}`);
       return result;
     } catch (error) {
-      this.logger.error(`Agent evaluation failed: ${input.agentId}`, error);
+      this.logger.error(`Agent evaluation failed: ${input.agentId}`, error instanceof Error ? error : new Error(String(error)));
       return {
         id: `eval_${input.agentId}_${Date.now()}`,
         framework: this.name,
