@@ -14,3 +14,6 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
 
 // Export Prisma client for direct imports
 export { PrismaClient };
+
+// Export prisma instance for backward compatibility
+export const prisma = db;
