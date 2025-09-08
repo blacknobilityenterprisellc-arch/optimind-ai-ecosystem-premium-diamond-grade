@@ -494,4 +494,4 @@ if (require.main === module) {
   main();
 }
 
-export { CICDEmergencyFix, CICDIssue, FixResult };
+export type { CICDIssue, FixResult };

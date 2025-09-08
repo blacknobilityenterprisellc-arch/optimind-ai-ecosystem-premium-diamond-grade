@@ -175,7 +175,7 @@ export class AgentTestingFramework extends EventEmitter {
         resourceUsage: this.getDefaultResourceUsage()
       };
 
-      this.logger.error(`Test failed: ${testId}`, error);
+      this.logger.error(`Test failed: ${testId}`, error instanceof Error ? error : new Error(String(error)));
       this.emit('testFailed', { testId, error: errorResult });
 
       return errorResult;
@@ -196,7 +196,7 @@ export class AgentTestingFramework extends EventEmitter {
         const result = await this.executeTest(agentConfig, scenarioId);
         results.push(result);
       } catch (error) {
-        this.logger.error(`Batch test failed for scenario: ${scenarioId}`, error);
+        this.logger.error(`Batch test failed for scenario: ${scenarioId}`, error instanceof Error ? error : new Error(String(error)));
         // Continue with other tests even if one fails
       }
     }
@@ -399,18 +399,23 @@ export class AgentTestingFramework extends EventEmitter {
    */
   private determineTestStatus(scenario: TestScenario, simulationResult: unknown): 'passed' | 'failed' | 'partial' | 'timeout' | 'error' {
     // Simple logic for demonstration - in practice, this would be more sophisticated
-    const errorCount = simulationResult.errors.length;
-    const criticalErrors = simulationResult.errors.filter((e: TestError) => e.severity === 'critical').length;
+    if (simulationResult && typeof simulationResult === 'object' && 'errors' in simulationResult) {
+      const errors = (simulationResult as any).errors;
+      const errorCount = Array.isArray(errors) ? errors.length : 0;
+      const criticalErrors = Array.isArray(errors) ? errors.filter((e: TestError) => e.severity === 'critical').length : 0;
 
-    if (criticalErrors > 0) {
-      return 'failed';
+      if (criticalErrors > 0) {
+        return 'failed';
+      }
+
+      if (errorCount > 2) {
+        return 'partial';
+      }
+
+      return 'passed';
+    } else {
+      return 'error';
     }
-
-    if (errorCount > 2) {
-      return 'partial';
-    }
-
-    return 'passed';
   }
 
   /**

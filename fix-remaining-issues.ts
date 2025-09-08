@@ -264,7 +264,7 @@ class CriticalIssuesFixer {
 
   async execute(): Promise<void> {
     console.log('🚀 Starting OptiMind AI Ecosystem Critical Issues Fixer');
-    console.log('=' * 60);
+    console.log('='.repeat(60));
     
     try {
       // Step 1: Initial analysis
