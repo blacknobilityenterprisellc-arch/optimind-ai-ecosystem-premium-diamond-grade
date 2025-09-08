@@ -343,7 +343,7 @@ export class EnterpriseEnvironmentConfig<T = z.infer<typeof baseConfigSchema>>
   }
 
   private mergeDeep(target: any, source: any): any {
-    const output = Object.assign({}, target);
+    const output = { ...target };
     if (this.isObject(target) && this.isObject(source)) {
       Object.keys(source).forEach(key => {
         if (this.isObject(source[key])) {

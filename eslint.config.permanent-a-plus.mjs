@@ -1,4 +1,3 @@
-
 import eslint from '@eslint/js';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
@@ -26,16 +25,35 @@ export default [
       unicorn,
     },
     rules: {
-      // Premium Diamond-Grade Rules
+      // Permanent A+ Grade Rules
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'error',
+      '@typescript-eslint/prefer-nullish-coalescing': 'error',
+      '@typescript-eslint/prefer-optional-chain': 'error',
       'security/detect-object-injection': 'error',
-      'sonarjs/cognitive-complexity': 'warn',
-      'unicorn/filename-case': 'error',
+      'security/detect-eval-with-expression': 'error',
+      'sonarjs/cognitive-complexity': ['error', 15],
+      'sonarjs/no-duplicate-string': 'error',
+      'sonarjs/no-identical-functions': 'error',
+      'unicorn/filename-case': ['error', { case: 'camelCase' }],
+      'unicorn/no-null': 'error',
+      'unicorn/prefer-default-parameters': 'error',
+      'unicorn/prefer-module': 'error',
       'prefer-const': 'error',
       'no-var': 'error',
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-unused-vars': 'error',
+      'no-undef': 'error',
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'prefer-arrow-callback': 'error',
+      'prefer-template': 'error',
+      'template-curly-spacing': 'error',
+      'object-shorthand': 'error',
+      'prefer-object-spread': 'error',
     },
   },
   prettier,
