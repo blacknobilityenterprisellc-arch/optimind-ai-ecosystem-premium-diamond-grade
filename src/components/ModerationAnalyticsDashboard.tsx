@@ -3,16 +3,10 @@
 import { useState, useEffect } from 'react';
 import {
   BarChart3,
-  TrendingUp,
-  Users,
-  Shield,
   AlertTriangle,
   CheckCircle,
   Clock,
   Zap,
-  Activity,
-  Target,
-  Filter,
   Download,
   RefreshCw,
 } from 'lucide-react';
@@ -23,6 +17,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { logger } from '@/lib/logger';
 
 interface AnalyticsData {
   totalProcessed: number;
@@ -65,15 +60,15 @@ export function ModerationAnalyticsDashboard() {
   // Simulate fetching analytics data
   useEffect(() => {
     fetchAnalyticsData();
-    const interval = setInterval(fetchAnalyticsData, 30000); // Refresh every 30 seconds
-    return () => clearInterval(interval);
+    const interval = window.setInterval(fetchAnalyticsData, 30000); // Refresh every 30 seconds
+    return () => window.clearInterval(interval);
   }, []);
 
   const fetchAnalyticsData = async () => {
     setIsLoading(true);
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => window.setTimeout(resolve, 1000));
 
       const mockData: AnalyticsData = {
         totalProcessed: 15420,
@@ -129,7 +124,10 @@ export function ModerationAnalyticsDashboard() {
       setAnalytics(mockData);
       setLastUpdated(new Date());
     } catch (error) {
-      console.error('Failed to fetch analytics:', error);
+      logger.error(
+        'Failed to fetch analytics',
+        error instanceof Error ? error : new Error(String(error))
+      );
     } finally {
       setIsLoading(false);
     }

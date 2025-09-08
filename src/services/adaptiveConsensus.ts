@@ -508,7 +508,7 @@ export class AdaptiveConsensusEngine {
    * Get performance summary for provenance
    */
   private getPerformanceSummary() {
-    const summary: any = {};
+    const summary: unknown = {};
 
     for (const [modelName, performance] of this.modelPerformance.entries()) {
       summary[modelName] = {
