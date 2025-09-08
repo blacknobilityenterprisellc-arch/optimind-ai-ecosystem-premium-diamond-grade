@@ -1,0 +1,66 @@
+[
+  {
+    "id": "alert_1757297394134_wpi5keyy1",
+    "type": "warning",
+    "component": "performance",
+    "message": "Performance degraded: 18.1%",
+    "timestamp": "2025-09-08T02:09:54.134Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297394134_34od174gi",
+    "type": "warning",
+    "component": "reliability",
+    "message": "Reliability issues: 0.0%",
+    "timestamp": "2025-09-08T02:09:54.134Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297394135_1mnjizyzu",
+    "type": "info",
+    "component": "predictive",
+    "message": "Performance degradation trend detected",
+    "timestamp": "2025-09-08T02:09:54.135Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297530692_c84k96lpn",
+    "type": "warning",
+    "component": "performance",
+    "message": "Performance degraded: 18.1%",
+    "timestamp": "2025-09-08T02:12:10.692Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297530692_n19td938o",
+    "type": "warning",
+    "component": "reliability",
+    "message": "Reliability issues: 0.0%",
+    "timestamp": "2025-09-08T02:12:10.692Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297530693_e59nix232",
+    "type": "info",
+    "component": "predictive",
+    "message": "Performance degradation trend detected",
+    "timestamp": "2025-09-08T02:12:10.693Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297685884_bpnurwdiv",
+    "type": "warning",
+    "component": "performance",
+    "message": "Performance degraded: 15.7%",
+    "timestamp": "2025-09-08T02:14:45.884Z",
+    "resolved": true
+  },
+  {
+    "id": "alert_1757297685884_ntq95rb2r",
+    "type": "warning",
+    "component": "reliability",
+    "message": "Reliability issues: 0.0%",
+    "timestamp": "2025-09-08T02:14:45.884Z",
+    "resolved": true
+  }
+]
