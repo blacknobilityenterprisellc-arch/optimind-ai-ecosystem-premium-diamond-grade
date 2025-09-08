@@ -6,7 +6,6 @@
  * Orchestrates all autonomous systems for intelligent operation
  */
 
-import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -96,7 +95,6 @@ class AutonomousController {
   private intelligence?: OptiMindSystemIntelligence;
   
   // Process management
-  private processes: Map<string, any> = new Map();
   private intervals: Map<string, NodeJS.Timeout> = new Map();
 
   constructor() {
@@ -734,7 +732,7 @@ class AutonomousController {
     this.status.overall = 'stopping';
 
     // Stop all intervals
-    for (const [name, interval] of this.intervals) {
+    for (const [, interval] of this.intervals) {
       clearInterval(interval);
     }
     this.intervals.clear();
@@ -749,44 +747,10 @@ class AutonomousController {
     }
 
     this.isRunning = false;
-    this.status.overall = 'stopped';
+    this.status.overall = 'stopping';
     this.saveState();
 
     this.log('success', 'Autonomous controller stopped');
-  }
-
-  // Start web status server
-  private startWebServer(): void {
-    const http = require('http');
-    
-    const server = http.createServer(async (req, res) => {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      
-      if (req.url === '/status') {
-        res.end(JSON.stringify(this.getStatus()));
-      } else if (req.url === '/metrics') {
-        res.end(JSON.stringify(this.getMetrics()));
-      } else if (req.url === '/alerts') {
-        res.end(JSON.stringify(this.getActiveAlerts()));
-      } else if (req.url === '/health') {
-        res.end(JSON.stringify({
-          status: this.status.overall,
-          healthScore: this.status.metrics.healthScore,
-          timestamp: new Date().toISOString(),
-          uptime: this.status.metrics.uptime
-        }));
-      } else {
-        res.end(JSON.stringify({
-          message: 'OptiMind AI Ecosystem - Autonomous Controller',
-          version: '1.0.0',
-          endpoints: ['/status', '/metrics', '/alerts', '/health']
-        }));
-      }
-    });
-
-    server.listen(3002, () => {
-      this.log('info', 'Web status server started on port 3002');
-    });
   }
 }
 
@@ -802,9 +766,6 @@ async function main() {
     
     if (success) {
       console.log('✅ Autonomous Controller initialized successfully');
-      
-      // Start web status server
-      (controller as any).startWebServer();
       
       // Handle graceful shutdown
       process.on('SIGINT', async () => {
