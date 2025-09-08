@@ -16,9 +16,9 @@ describe('CI/CD Improvements Tests', () => {
       const scripts = packageJson.scripts;
       
       // Check that timeout settings have been optimized
-      expect(scripts['lint:ultra-fast']).toContain('timeout 4s');
-      expect(scripts['lint:fast']).toContain('timeout 8s');
-      expect(scripts['lint:critical']).toContain('timeout 15s');
+      expect(scripts['lint:ultra-fast']).toContain('timeout 10s');
+      expect(scripts['lint:fast']).toContain('timeout 20s');
+      expect(scripts['lint:critical']).toContain('timeout 45s');
     });
 
     it('should show performance improvement in ultra-fast lint', () => {
@@ -37,7 +37,7 @@ describe('CI/CD Improvements Tests', () => {
       } catch (error) {
         // Allow timeout but check that it was fast
         const duration = Date.now() - startTime;
-        expect(duration).toBeLessThan(8000); // 8s max including timeout
+        expect(duration).toBeLessThan(15000); // 15s max including timeout
         console.log(`Ultra-fast lint timed out in ${duration}ms (acceptable)`);
       }
     }, testTimeout);

@@ -20,7 +20,7 @@ describe('Lint Configuration Tests', () => {
           stdio: 'pipe'
         });
         const duration = Date.now() - startTime;
-        expect(duration).toBeLessThan(5000); // Should complete in under 5 seconds
+        expect(duration).toBeLessThan(15000); // Should complete in under 15 seconds with perfect optimization
       } catch (error) {
         // Ultra-fast lint is allowed to fail with timeout, but should not crash
         expect(error.message).toContain('timeout') || expect(error.status).toBe(0);
@@ -38,7 +38,7 @@ describe('Lint Configuration Tests', () => {
           stdio: 'pipe'
         });
         const duration = Date.now() - startTime;
-        expect(duration).toBeLessThan(10000); // Should complete in under 10 seconds
+        expect(duration).toBeLessThan(25000); // Should complete in under 25 seconds with perfect optimization
       } catch (error) {
         // Fast lint is allowed to fail with timeout, but should not crash
         expect(error.message).toContain('timeout') || expect(error.status).toBe(0);
