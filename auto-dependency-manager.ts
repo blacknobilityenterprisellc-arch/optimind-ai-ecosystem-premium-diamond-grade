@@ -90,12 +90,12 @@ class AutoDependencyManager {
         });
 
         return { success: true, output: result };
-      } catch (error: any) {
+      } catch (error: unknown) {
         this.log('warn', `Command failed (attempt ${attempt}/${retries}): ${command}`);
         
         if (attempt === retries) {
-          this.log('error', `Command failed after ${retries} attempts: ${error.message}`);
-          return { success: false, error: error.message };
+          this.log('error', `Command failed after ${retries} attempts: ${error instanceof Error ? error.message : String(error)}`);
+          return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
         
         // Wait before retry
@@ -137,7 +137,7 @@ class AutoDependencyManager {
 
       this.log('success', 'Dependency management completed successfully');
       return true;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.log('error', `Dependency management failed: ${error.message}`);
       return false;
     }
@@ -244,7 +244,11 @@ class AutoDependencyManager {
     }
 
     // Read package.json
-    let packageJson: any;
+    let packageJson: {
+      dependencies?: Record<string, string>;
+      devDependencies?: Record<string, string>;
+      [key: string]: unknown;
+    };
     try {
       packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
     } catch (error) {
@@ -299,7 +303,11 @@ class AutoDependencyManager {
   }
 
   // Get critical dependencies from package.json
-  private getCriticalDependencies(packageJson: any): DependencyConfig[] {
+  private getCriticalDependencies(packageJson: {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    [key: string]: unknown;
+  }): DependencyConfig[] {
     const dependencies: DependencyConfig[] = [];
     
     // Add production dependencies
@@ -687,9 +695,9 @@ export default config;
     }
 
     report += '\n## Recommendations\n';
-    report += '- Regularly run \`npm audit\` to check for security vulnerabilities\n';
-    report += '- Use \`npm outdated\` to check for package updates\n';
-    report += '- Consider using \`npm ci\` for production installations\n';
+    report += '- Regularly run `npm audit` to check for security vulnerabilities\n';
+    report += '- Use `npm outdated` to check for package updates\n';
+    report += '- Consider using `npm ci` for production installations\n';
     report += '- Monitor dependency sizes and performance impact\n';
 
     fs.writeFileSync(reportPath, report);

@@ -88,10 +88,6 @@ export default [
         performance: 'readonly',
         requestAnimationFrame: 'readonly',
         cancelAnimationFrame: 'readonly',
-        setTimeout: 'readonly',
-        clearTimeout: 'readonly',
-        setInterval: 'readonly',
-        clearInterval: 'readonly',
         // UI Components (common shadcn/ui components)
         Alert: 'readonly',
         AlertDescription: 'readonly',
