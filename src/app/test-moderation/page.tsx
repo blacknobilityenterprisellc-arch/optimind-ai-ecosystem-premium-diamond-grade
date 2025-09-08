@@ -43,7 +43,7 @@ export default function TestModerationPage() {
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file && file.type.startsWith('image/')) {
+    if (file?.type.startsWith('image/')) {
       setSelectedFile(file);
       setResult(null);
     } else {

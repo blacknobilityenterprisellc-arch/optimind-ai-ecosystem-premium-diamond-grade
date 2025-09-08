@@ -294,7 +294,7 @@ export class AgentOrchestrator {
     // Wait for the GLM orchestrator to complete the operation
     const result = await glmOrchestrator.getOperationResult(operationId);
 
-    if (!result || !result.success) {
+    if (!result?.success) {
       throw new Error(result ? `Operation failed: ${JSON.stringify(result)}` : 'Operation failed');
     }
 

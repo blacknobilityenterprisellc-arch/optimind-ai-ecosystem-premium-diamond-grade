@@ -113,7 +113,7 @@ export class Email {
       throw new ValidationError('Email domain is not allowed');
     }
 
-    if (options?.blockedDomains && options.blockedDomains.includes(email.domain)) {
+    if (options?.blockedDomains?.includes(email.domain)) {
       throw new ValidationError('Email domain is blocked');
     }
 
