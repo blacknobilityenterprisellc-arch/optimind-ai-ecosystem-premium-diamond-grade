@@ -72,6 +72,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo 2>&1 | tee dev.log",
+    "dev:custom": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo --premium 2>&1 | tee dev-custom.log",
+    "dev:hybrid": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo --hybrid --ai-enhanced 2>&1 | tee dev-hybrid.log",
     "build": "next build || echo '✅ Enterprise Build: PASSED'",
     "start": "NODE_ENV=production tsx server.ts 2>&1 | tee server.log",
     "lint": "npx eslint . --config eslint.config.ci.mjs --max-warnings 50",
