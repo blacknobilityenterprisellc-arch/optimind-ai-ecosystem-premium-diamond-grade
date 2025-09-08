@@ -4,48 +4,25 @@
       "script_name": "Premium Diamond-Grade Lightning Lint Test",
       "version": "2.0.0",
       "enterprise_mode": "diamond-grade",
-<<<<<<< HEAD
-      "timestamp": "2025-09-08T11:50:16Z",
-      "git_commit": "f9a0589f2ef604f9abcfa3722af7a66fca23647d",
+      "timestamp": "2025-09-08T22:47:04Z",
+      "git_commit": "166e60959d6bdaf0499aff2d605af9869633bb87",
       "git_branch": "master"
     },
     "results": {
-      "total_files_analyzed": 50949,
-=======
-      "timestamp": "2025-09-08T20:56:50Z",
-      "git_commit": "1375575db17cb26e98004704662c8b51c502f768",
-      "git_branch": "master"
-    },
-    "results": {
-      "total_files_analyzed": 51395,
->>>>>>> c2efbcdcbdb2a9ab01f829e920c45eea4a56ec1e
+      "total_files_analyzed": 336,
       "errors": 0,
-      "warnings": 3427,
+      "warnings": 23,
       "suggestions": 0,
-<<<<<<< HEAD
-      "fixable_issues": 1,
-      "quality_score": 94
-=======
-      "fixable_issues": 1
->>>>>>> c2efbcdcbdb2a9ab01f829e920c45eea4a56ec1e
+      "fixable_issues": 0
     },
     "quality_metrics": {
-      "code_quality_score": 0,
+      "code_quality_score": 54,
       "performance_metrics": {
-<<<<<<< HEAD
-        "total_duration_ms": 46050
-      },
-      "actual_errors": 0,
-      "actual_warnings": 3397,
-      "files_processed": 50949,
-      "warning_ratio": "0.07"
-=======
-        "total_duration_ms": 39170
+        "total_duration_ms": 28014
       }
->>>>>>> c2efbcdcbdb2a9ab01f829e920c45eea4a56ec1e
     },
-    "analysis_mode": "enterprise",
-    "timeout_setting": "60",
+    "analysis_mode": "standard",
+    "timeout_setting": "30",
     "lightning_mode": true,
     "enterprise_grade": true
   }
