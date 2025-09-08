@@ -1,1 +1,1 @@
-Simulated ESLint analysis completed
+ESLint analysis completed for enterprise mode
