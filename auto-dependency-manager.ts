@@ -57,7 +57,7 @@ class AutoDependencyManager {
     const logMessage = `${timestamp} [${level.toUpperCase()}] ${message}\n`;
     
     fs.appendFileSync(this.logFile, logMessage);
-    }] ${message}`);
+    console.log(`[${level.toUpperCase()}] ${message}`);
   }
 
   private async executeCommand(
@@ -138,7 +138,7 @@ class AutoDependencyManager {
       this.log('success', 'Dependency management completed successfully');
       return true;
     } catch (error: unknown) {
-      this.log('error', `Dependency management failed: ${error.message}`);
+      this.log('error', `Dependency management failed: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
   }
@@ -717,21 +717,20 @@ export default config;
 
 // Main execution
 async function main() {
-
   const manager = new AutoDependencyManager();
   
   try {
     const success = await manager.manageDependencies();
     
     if (success) {
-      
+      console.log('✅ Dependency management completed successfully');
       await manager.generateReport();
     } else {
-      
+      console.log('❌ Dependency management failed');
       process.exit(1);
     }
   } catch (error) {
-    
+    console.log('❌ Dependency management failed with error:', error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
@@ -739,7 +738,7 @@ async function main() {
 // Run if called directly
 if (require.main === module) {
   main().catch(error => {
-    
+    console.error('❌ Auto dependency manager failed:', error instanceof Error ? error.message : String(error));
     process.exit(1);
   });
 }
