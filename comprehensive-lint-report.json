@@ -13,13 +13,18 @@
       "errors": 0,
       "warnings": 3397,
       "suggestions": 0,
-      "fixable_issues": 1
+      "fixable_issues": 1,
+      "quality_score": 94
     },
     "quality_metrics": {
-      "code_quality_score": 0,
+      "code_quality_score": 94,
       "performance_metrics": {
         "total_duration_ms": 46050
-      }
+      },
+      "actual_errors": 0,
+      "actual_warnings": 3397,
+      "files_processed": 50949,
+      "warning_ratio": "0.07"
     },
     "analysis_mode": "enterprise",
     "timeout_setting": "60",
