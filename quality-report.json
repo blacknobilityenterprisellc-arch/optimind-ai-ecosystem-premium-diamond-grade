@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "timestamp": "2025-09-08T20:01:40.163Z",
+    "overallScore": 37,
+    "status": "fail",
+    "blocked": true
+  },
+  "thresholds": {
+    "maxErrors": 50,
+    "maxWarnings": 1000,
+    "maxVulnerabilities": 5,
+    "minTestCoverage": 80,
+    "maxBuildTime": 300000,
+    "maxBundleSize": 10485760
+  },
+  "metrics": {
+    "timestamp": "2025-09-08T20:01:40.163Z",
+    "eslint": {
+      "errors": 0,
+      "warnings": 3397,
+      "total": 3397,
+      "passed": false
+    },
+    "typescript": {
+      "errors": 9999,
+      "passed": false
+    },
+    "performance": {
+      "buildTime": 54912,
+      "bundleSize": 511687330,
+      "passed": false
+    },
+    "security": {
+      "vulnerabilities": 0,
+      "passed": true
+    },
+    "tests": {
+      "passed": 95,
+      "failed": 5,
+      "coverage": 85,
+      "testPassed": true
+    },
+    "overall": {
+      "score": 37,
+      "status": "fail",
+      "blocked": true
+    }
+  },
+  "recommendations": [
+    "Address ESLint errors and warnings to improve code quality",
+    "Fix TypeScript compilation errors",
+    "Reduce bundle size through code splitting and optimization",
+    "Overall quality score is below acceptable threshold - comprehensive review recommended"
+  ]
+}
