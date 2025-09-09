@@ -318,7 +318,7 @@ log_info "🚀 Ready for perfect CI/CD pipeline execution"
     ];
 
     let passedTests = 0;
-    let totalTests = tests.length;
+    const totalTests = tests.length;
 
     tests.forEach(test => {
       this.log(`🔍 Perfect Testing: ${test.name}`);

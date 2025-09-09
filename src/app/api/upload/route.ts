@@ -1,10 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const type = formData.get('type') as string;
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });

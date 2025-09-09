@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, Search, BarChart3, Globe, Target, TrendingUp, AlertTriangle } from 'lucide-react';
 
 interface CompetitorAnalysis {
   domain: string;

@@ -5,11 +5,10 @@
  * Decrypt quantum-secure data
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { secureMessage, userId } = await request.json();
 

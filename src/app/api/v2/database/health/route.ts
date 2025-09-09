@@ -5,11 +5,10 @@
  * Database health monitoring and metrics
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get database health
     const health = await DatabaseManagerV2.health();

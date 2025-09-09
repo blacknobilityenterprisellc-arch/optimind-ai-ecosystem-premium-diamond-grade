@@ -1,7 +1,6 @@
 'use client';
 
 import { Component, ReactNode } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

@@ -9,7 +9,6 @@
  * @compliance: SOC2, GDPR, ISO27001
  */
 
-import { FileText, ImageIcon, Code, Search, Shield, Database } from 'lucide-react';
 import { AICapability } from './DashboardDataHooks';
 
 export const aiCapabilities: AICapability[] = [

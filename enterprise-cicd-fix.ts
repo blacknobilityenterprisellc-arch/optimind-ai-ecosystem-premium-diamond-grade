@@ -281,7 +281,7 @@ log_info "📊 All systems are operational and ready for CI/CD"
     ];
 
     let passedTests = 0;
-    let totalTests = tests.length;
+    const totalTests = tests.length;
 
     tests.forEach(test => {
       this.log(`🔍 Testing: ${test.name}`);

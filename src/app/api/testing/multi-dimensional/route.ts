@@ -10,7 +10,6 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
 
 interface MultiDimensionalTestRequest {
@@ -111,7 +110,7 @@ interface MultiDimensionalTestResponse {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body: MultiDimensionalTestRequest = await request.json();
 

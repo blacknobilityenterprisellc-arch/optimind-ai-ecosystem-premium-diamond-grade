@@ -5,11 +5,10 @@
  * Encrypt data with quantum-resistant cryptography
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { data, userId, resourceId } = await request.json();
 

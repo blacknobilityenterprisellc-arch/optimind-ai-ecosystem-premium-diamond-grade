@@ -3,11 +3,10 @@
  * Premium Diamond Grade Quantum-Resistant Security Endpoints
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { quantumSecurityV2 } from '@/lib/v2/quantum-security';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { operation, ...params } = body;

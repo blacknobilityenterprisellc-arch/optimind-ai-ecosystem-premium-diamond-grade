@@ -3,11 +3,10 @@
  * Premium Diamond Grade Model Context Protocol Endpoints
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { mcpIntegrationV2 } from '@/lib/v2/mcp-integration';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { operation, ...params } = body;

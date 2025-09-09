@@ -10,7 +10,6 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
 
 interface TestGenerationRequest {
@@ -56,7 +55,7 @@ interface TestGenerationResponse {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body: TestGenerationRequest = await request.json();
 

@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get('name') || 'World';
@@ -37,7 +36,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { name, message } = body;

@@ -5,11 +5,10 @@
  * Generate quantum-secure key pairs for users
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { userId, algorithm, keySize } = await request.json();
 

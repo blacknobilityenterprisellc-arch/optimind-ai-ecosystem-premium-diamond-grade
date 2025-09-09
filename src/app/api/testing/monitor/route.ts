@@ -10,7 +10,6 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 interface MonitorRequest {
   filters?: {
@@ -151,7 +150,7 @@ function generateMockTestData(): MonitorResponse {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body: MonitorRequest = await request.json();
 

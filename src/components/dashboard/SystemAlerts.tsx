@@ -13,7 +13,6 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, AlertTriangle, CheckCircle, Activity } from 'lucide-react';
 
 interface SystemAlert {
   id: string;
