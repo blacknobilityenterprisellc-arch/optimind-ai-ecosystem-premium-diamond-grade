@@ -5,8 +5,6 @@
  * Part of the Creative & Media Suite in the OptiMind AI Ecosystem.
  */
 
-'use client';
-
 import { Metadata } from 'next';
 import LogoDesigner from '@/components/LogoDesigner';
 
