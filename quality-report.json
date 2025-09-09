@@ -1,6 +1,6 @@
 {
   "summary": {
-    "timestamp": "2025-09-09T06:08:22.998Z",
+    "timestamp": "2025-09-09T06:10:24.171Z",
     "overallScore": 57,
     "status": "fail",
     "blocked": true
@@ -14,7 +14,7 @@
     "maxBundleSize": 10485760
   },
   "metrics": {
-    "timestamp": "2025-09-09T06:08:22.998Z",
+    "timestamp": "2025-09-09T06:10:24.171Z",
     "eslint": {
       "errors": 0,
       "warnings": 23,
@@ -26,8 +26,8 @@
       "passed": false
     },
     "performance": {
-      "buildTime": 51145,
-      "bundleSize": 555976054,
+      "buildTime": 39704,
+      "bundleSize": 556023144,
       "passed": false
     },
     "security": {
@@ -35,7 +35,7 @@
       "passed": true
     },
     "tests": {
-      "passed": 95,
+      "passedTests": 95,
       "failed": 5,
       "coverage": 85,
       "testPassed": true
