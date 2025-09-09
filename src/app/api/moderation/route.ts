@@ -3,11 +3,10 @@
  * Demonstrates the ZaiIntegration system in action
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { ZaiIntegration } from '@/services/zaiIntegration';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     console.log('[moderation API] Starting moderation analysis...');
 

@@ -1,10 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 
 import { contractWiseService, ContractAnalysisRequest } from '@/lib/contractwise-service';
 import { authOptions } from '@/lib/auth';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

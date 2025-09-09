@@ -3,14 +3,13 @@
  * Premium Diamond Grade Predictive Model Management Endpoints
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import {
   predictiveAnalyticsServiceV2,
   type ModelManagementRequest,
 } from '@/lib/v2/predictive-analytics-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { action, ...params } = body;
@@ -46,7 +45,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

@@ -5,11 +5,10 @@
  * Database backup and restore operations
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { databaseManagerV2 } from '@/lib/v2/database-manager';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     // Create database backup
     const backup = await databaseManagerV2.createBackup();
@@ -38,7 +37,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get backup history
     const backupHistory = databaseManagerV2.getBackupHistory();

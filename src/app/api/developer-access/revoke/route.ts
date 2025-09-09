@@ -3,10 +3,9 @@
  * Revokes developer access keys with audit logging
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
 

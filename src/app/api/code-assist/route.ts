@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 
 import { aiService } from '@/lib/ai';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { code, language, task, context } = body;

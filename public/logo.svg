@@ -1,118 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 2000 1700">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
   <defs>
-    <style>
-      .cls-1 {
-        fill: url(#gradient1);
-      }
-
-      .cls-2 {
-        fill: url(#gradient2);
-      }
-
-      .cls-3 {
-        fill: url(#gradient3);
-      }
-      
-      .glow {
-        filter: url(#glow-filter);
-      }
-      
-      .pulse {
-        animation: pulse 2s ease-in-out infinite;
-      }
-      
-      @keyframes pulse {
-        0%, 100% { opacity: 0.4; }
-        50% { opacity: 1; }
-      }
-      
-      @keyframes shimmer {
-        0% { transform: translateX(-200%); }
-        100% { transform: translateX(200%); }
-      }
-      
-      .shimmer {
-        animation: shimmer 3s ease-in-out infinite;
-      }
-    </style>
+    <!-- Premium gradient definitions -->
+    <linearGradient id="primary-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8B5CF6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06B6D4;stop-opacity:1" />
+    </linearGradient>
     
-    <!-- 发光滤镜 -->
-    <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-      <feMerge> 
+    <linearGradient id="accent-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#EF4444;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="secondary-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow effect -->
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
     
-    <!-- 动态渐变 -->
-    <linearGradient id="gradient1" x1="531.58" y1="-4.02" x2="531.58" y2="1661.41" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#070606">
-        <animate attributeName="stop-color" values="#070606;#5a5a5a;#070606" dur="1.8s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset=".37" stop-color="#1b1b1b">
-        <animate attributeName="stop-color" values="#1b1b1b;#888888;#1b1b1b" dur="1.8s" repeatCount="indefinite"/>
-      </stop>
-      <stop offset="1" stop-color="#3b3b3b">
-        <animate attributeName="stop-color" values="#3b3b3b;#cccccc;#3b3b3b" dur="1.8s" repeatCount="indefinite"/>
-      </stop>
-    </linearGradient>
-    
-    <linearGradient id="gradient2" x1="1000" y1="-4.02" x2="1000" y2="1661.41" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#070606">
-        <animate attributeName="stop-color" values="#070606;#5a5a5a;#070606" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
-      </stop>
-      <stop offset=".37" stop-color="#1b1b1b">
-        <animate attributeName="stop-color" values="#1b1b1b;#888888;#1b1b1b" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
-      </stop>
-      <stop offset="1" stop-color="#3b3b3b">
-        <animate attributeName="stop-color" values="#3b3b3b;#cccccc;#3b3b3b" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
-      </stop>
-    </linearGradient>
-    
-    <linearGradient id="gradient3" x1="1462.04" y1="-4.02" x2="1462.04" y2="1661.41" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#070606">
-        <animate attributeName="stop-color" values="#070606;#5a5a5a;#070606" dur="1.8s" repeatCount="indefinite" begin="1.2s"/>
-      </stop>
-      <stop offset=".37" stop-color="#1b1b1b">
-        <animate attributeName="stop-color" values="#1b1b1b;#888888;#1b1b1b" dur="1.8s" repeatCount="indefinite" begin="1.2s"/>
-      </stop>
-      <stop offset="1" stop-color="#3b3b3b">
-        <animate attributeName="stop-color" values="#3b3b3b;#cccccc;#3b3b3b" dur="1.8s" repeatCount="indefinite" begin="1.2s"/>
-      </stop>
-    </linearGradient>
-    
-    <!-- 光晕渐变 -->
-    <radialGradient id="glow-gradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
-      <stop offset="70%" stop-color="#888888" stop-opacity="0.1"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </radialGradient>
-    
-    <!-- 闪光效果 -->
-    <linearGradient id="shine-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
-      <stop offset="45%" stop-color="#ffffff" stop-opacity="0"/>
-      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.8"/>
-      <stop offset="55%" stop-color="#ffffff" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-    </linearGradient>
-    
-    <!-- 裁切路径 -->
-    <clipPath id="shape-clip">
-      <polygon points="1008.73 0 827.29 251.03 54.43 251.03 235.74 0 1008.73 0"/>
-      <polygon points="1937.79 1449.1 1756.47 1700 986.3 1700 1167.48 1449.1 1937.79 1449.1"/>
-      <polygon points="2000 0 771.98 1700 0 1700 1228.02 0 2000 0"/>
-    </clipPath>
+    <!-- Subtle shadow -->
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
   </defs>
   
-  <g class="glow breathe">
-    <g class="pulse wave-effect">
-      <!-- 主要几何形状 -->
-      <polygon class="cls-1" points="1008.73 0 827.29 251.03 54.43 251.03 235.74 0 1008.73 0"/>
-      <polygon class="cls-3" points="1937.79 1449.1 1756.47 1700 986.3 1700 1167.48 1449.1 1937.79 1449.1"/>
-      <polygon class="cls-2" points="2000 0 771.98 1700 0 1700 1228.02 0 2000 0"/>
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#primary-gradient)" opacity="0.1"/>
+  
+  <!-- Central AI brain/core -->
+  <g transform="translate(60, 60)">
+    <!-- Core circle -->
+    <circle cx="0" cy="0" r="25" fill="url(#primary-gradient)" filter="url(#glow)" opacity="0.9"/>
+    
+    <!-- Neural network connections -->
+    <g stroke="url(#primary-gradient)" stroke-width="2" fill="none" opacity="0.7">
+      <!-- Top connections -->
+      <line x1="0" y1="-25" x2="0" y2="-40" stroke-dasharray="2,2"/>
+      <line x1="-18" y1="-18" x2="-28" y2="-28" stroke-dasharray="2,2"/>
+      <line x1="18" y1="-18" x2="28" y2="-28" stroke-dasharray="2,2"/>
+      
+      <!-- Right connections -->
+      <line x1="25" y1="0" x2="40" y2="0" stroke-dasharray="2,2"/>
+      <line x1="18" y1="18" x2="28" y2="28" stroke-dasharray="2,2"/>
+      
+      <!-- Bottom connections -->
+      <line x1="0" y1="25" x2="0" y2="40" stroke-dasharray="2,2"/>
+      <line x1="-18" y1="18" x2="-28" y2="28" stroke-dasharray="2,2"/>
+      
+      <!-- Left connections -->
+      <line x1="-25" y1="0" x2="-40" y2="0" stroke-dasharray="2,2"/>
+    </g>
+    
+    <!-- Outer nodes -->
+    <g fill="url(#accent-gradient)">
+      <circle cx="0" cy="-40" r="4" filter="url(#glow)"/>
+      <circle cx="-28" cy="-28" r="3" filter="url(#glow)"/>
+      <circle cx="28" cy="-28" r="3" filter="url(#glow)"/>
+      <circle cx="40" cy="0" r="4" filter="url(#glow)"/>
+      <circle cx="28" cy="28" r="3" filter="url(#glow)"/>
+      <circle cx="0" cy="40" r="4" filter="url(#glow)"/>
+      <circle cx="-28" cy="28" r="3" filter="url(#glow)"/>
+      <circle cx="-40" cy="0" r="4" filter="url(#glow)"/>
+    </g>
+    
+    <!-- Central brain icon -->
+    <g fill="white" opacity="0.9">
+      <!-- Brain shape -->
+      <path d="M -8,-8 C -8,-12 -4,-16 0,-16 C 4,-16 8,-12 8,-8 C 8,-4 6,-2 4,0 C 6,2 8,4 8,8 C 8,12 4,16 0,16 C -4,16 -8,12 -8,8 C -8,4 -6,2 -4,0 C -6,-2 -8,-4 -8,-8 Z" 
+            fill="white" opacity="0.9"/>
+      
+      <!-- Brain divisions -->
+      <line x1="0" y1="-16" x2="0" y2="16" stroke="url(#primary-gradient)" stroke-width="1" opacity="0.7"/>
+      <path d="M -8,-8 Q 0,-4 8,-8" stroke="url(#primary-gradient)" stroke-width="1" fill="none" opacity="0.7"/>
+      <path d="M -8,8 Q 0,4 8,8" stroke="url(#primary-gradient)" stroke-width="1" fill="none" opacity="0.7"/>
+    </g>
+    
+    <!-- Orbiting elements -->
+    <g fill="url(#secondary-gradient)">
+      <circle cx="35" cy="0" r="2" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="20s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="-35" cy="0" r="2" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="180 0 0" to="540 0 0" dur="20s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="35" r="2" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="90 0 0" to="450 0 0" dur="20s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-35" r="2" opacity="0.8">
+        <animateTransform attributeName="transform" type="rotate" from="270 0 0" to="630 0 0" dur="20s" repeatCount="indefinite"/>
+      </circle>
     </g>
   </g>
+  
+  <!-- Subtle pulse animation -->
+  <circle cx="60" cy="60" r="50" fill="none" stroke="url(#primary-gradient)" stroke-width="1" opacity="0.3">
+    <animate attributeName="r" values="50;55;50" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.1;0.3" dur="3s" repeatCount="indefinite"/>
+  </circle>
 </svg>

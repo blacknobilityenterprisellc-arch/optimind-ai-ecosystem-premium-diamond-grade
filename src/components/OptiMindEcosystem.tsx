@@ -197,11 +197,11 @@ const HeroSection = () => (
   </div>
 );
 
-const CategoryFilter = ({ 
-  categories, 
-  selectedCategory, 
-  setSelectedCategory 
-}: { 
+const CategoryFilter = ({
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+}: {
   categories: Array<{ id: string; label: string; count: number }>;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
@@ -213,7 +213,7 @@ const CategoryFilter = ({
         variant={selectedCategory === category.id ? 'default' : 'outline'}
         size="sm"
         onClick={() => setSelectedCategory(category.id)}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 text-xs sm:text-sm"
       >
         {category.label}
         <Badge variant="secondary" className="text-xs">
@@ -225,13 +225,13 @@ const CategoryFilter = ({
 );
 
 const FeaturesGrid = ({ features }: { features: EcosystemFeature[] }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
     {features.map(feature => (
       <Card
         key={feature.id}
-        className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50"
+        className="hover:shadow-lg transition-all duration-300 border-gray-700 bg-gray-800/50 transform hover:scale-105"
       >
-        <CardHeader>
+        <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <feature.icon className={`h-6 w-6 ${feature.color}`} />
             <div className="flex items-center gap-2">
@@ -243,10 +243,10 @@ const FeaturesGrid = ({ features }: { features: EcosystemFeature[] }) => (
               </Badge>
             </div>
           </div>
-          <CardTitle className="text-lg text-white">{feature.title}</CardTitle>
-          <CardDescription className="text-gray-400">{feature.description}</CardDescription>
+          <CardTitle className="text-lg text-white leading-tight">{feature.title}</CardTitle>
+          <CardDescription className="text-gray-400 text-sm">{feature.description}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-500">{feature.stats}</span>
             <Button variant="outline" size="sm" className="text-xs">
@@ -269,22 +269,22 @@ const EcosystemStats = () => (
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="text-center">
-          <div className="text-2xl font-bold text-purple-400">45+</div>
-          <div className="text-sm text-gray-400">AI Models</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div className="text-center p-2 sm:p-0">
+          <div className="text-xl sm:text-2xl font-bold text-purple-400">45+</div>
+          <div className="text-xs sm:text-sm text-gray-400">AI Models</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-green-400">99.9%</div>
-          <div className="text-sm text-gray-400">Uptime</div>
+        <div className="text-center p-2 sm:p-0">
+          <div className="text-xl sm:text-2xl font-bold text-green-400">99.9%</div>
+          <div className="text-xs sm:text-sm text-gray-400">Uptime</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-blue-400">1M+</div>
-          <div className="text-sm text-gray-400">API Calls</div>
+        <div className="text-center p-2 sm:p-0">
+          <div className="text-xl sm:text-2xl font-bold text-blue-400">1M+</div>
+          <div className="text-xs sm:text-sm text-gray-400">API Calls</div>
         </div>
-        <div className="text-center">
-          <div className="text-2xl font-bold text-orange-400">24/7</div>
-          <div className="text-sm text-gray-400">Support</div>
+        <div className="text-center p-2 sm:p-0">
+          <div className="text-xl sm:text-2xl font-bold text-orange-400">24/7</div>
+          <div className="text-xs sm:text-sm text-gray-400">Support</div>
         </div>
       </div>
     </CardContent>
@@ -300,18 +300,21 @@ const QuickActions = () => (
       </CardTitle>
     </CardHeader>
     <CardContent>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Button className="bg-purple-600 hover:bg-purple-700" size="lg">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <Button className="bg-purple-600 hover:bg-purple-700 w-full sm:size-lg" size="lg">
           <Brain className="h-4 w-4 mr-2" />
-          Try GLM Orchestrator
+          <span className="hidden sm:inline">Try GLM Orchestrator</span>
+          <span className="sm:hidden">GLM AI</span>
         </Button>
-        <Button variant="outline" size="lg" className="border-gray-600">
+        <Button variant="outline" size="lg" className="border-gray-600 w-full">
           <MessageSquare className="h-4 w-4 mr-2" />
-          Create Content
+          <span className="hidden sm:inline">Create Content</span>
+          <span className="sm:hidden">Content</span>
         </Button>
-        <Button variant="outline" size="lg" className="border-gray-600">
+        <Button variant="outline" size="lg" className="border-gray-600 w-full">
           <ImageIcon className="h-4 w-4 mr-2" />
-          Analyze Image
+          <span className="hidden sm:inline">Analyze Image</span>
+          <span className="sm:hidden">Image</span>
         </Button>
       </div>
     </CardContent>
@@ -332,10 +335,10 @@ const OptiMindEcosystem: React.FC = () => {
   return (
     <div className="w-full space-y-8">
       <HeroSection />
-      <CategoryFilter 
-        categories={categories} 
-        selectedCategory={selectedCategory} 
-        setSelectedCategory={setSelectedCategory} 
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
       />
       <FeaturesGrid features={filteredFeatures} />
       <EcosystemStats />

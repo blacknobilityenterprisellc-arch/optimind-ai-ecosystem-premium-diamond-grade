@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
@@ -64,7 +63,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { title, userId, projectId, model = 'gpt-4' } = await request.json();
 

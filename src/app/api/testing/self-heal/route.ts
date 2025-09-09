@@ -10,7 +10,6 @@
  * @compliance: SOC2, GDPR, ISO27001, HIPAA
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
 
 interface SelfHealRequest {
@@ -63,7 +62,7 @@ interface SelfHealResponse {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body: SelfHealRequest = await request.json();
 

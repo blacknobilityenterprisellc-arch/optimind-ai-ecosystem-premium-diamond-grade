@@ -3,14 +3,13 @@
  * Premium Diamond Grade Predictive Insights Endpoints
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import {
   predictiveAnalyticsServiceV2,
   type PredictiveInsightRequest,
 } from '@/lib/v2/predictive-analytics-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { userId, data, ...params } = body;
@@ -47,7 +46,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

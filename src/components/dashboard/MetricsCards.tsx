@@ -14,7 +14,6 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { FileText, TrendingUp, Users, Activity } from 'lucide-react';
 
 interface DashboardMetrics {
   totalContent: number;

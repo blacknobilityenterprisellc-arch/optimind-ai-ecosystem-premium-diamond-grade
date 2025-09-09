@@ -5,11 +5,10 @@
  * Submit and execute prediction jobs
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { predictiveAnalyticsService } from '@/lib/v2/predictive-analytics-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { modelId, input, priority = 'medium' } = await request.json();
 
@@ -51,7 +50,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const jobId = searchParams.get('jobId');

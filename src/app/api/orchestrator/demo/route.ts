@@ -4,13 +4,12 @@
  * This endpoint provides a web interface to test and monitor
  * the enhanced agent coordination system.
  */
-import { NextRequest, NextResponse } from 'next/server';
 import { OrchestratorDemo } from '@/lib/orchestration/demo';
 
 // Global demo instance
 let demoInstance: OrchestratorDemo | null = null;
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { action } = body;

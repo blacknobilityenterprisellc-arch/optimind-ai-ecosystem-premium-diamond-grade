@@ -208,7 +208,7 @@ class AutoDependencyManager {
         this.log('success', `${dep.name} is installed: ${result.output?.trim()}`);
         return true;
       }
-    } catch (error) {
+    } catch {
       this.log('warn', `${dep.name} is not installed`);
     }
 
@@ -251,7 +251,7 @@ class AutoDependencyManager {
     };
     try {
       packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    } catch (error) {
+    } catch {
       this.log('error', 'Failed to parse package.json');
       return false;
     }
@@ -353,7 +353,7 @@ class AutoDependencyManager {
         silent: true 
       });
       return result.success;
-    } catch (error) {
+      } catch {
       return false;
     }
   }
@@ -390,7 +390,7 @@ class AutoDependencyManager {
       } else {
         this.log('warn', 'Unused dependencies detected, consider removing them');
       }
-    } catch (error) {
+    } catch {
       this.log('info', 'depcheck not available, skipping unused dependency check');
     }
 
@@ -709,7 +709,7 @@ export default config;
     try {
       const result = await this.executeCommand(command, { silent: true });
       return result.output?.trim() || 'Not available';
-    } catch (error) {
+    } catch {
       return 'Not available';
     }
   }

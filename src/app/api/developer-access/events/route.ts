@@ -3,10 +3,9 @@
  * Provides access events for monitoring and tracking
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

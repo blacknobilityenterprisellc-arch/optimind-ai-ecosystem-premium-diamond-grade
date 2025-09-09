@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback, useState, useRef } from 'react';
-import { Upload, Image as ImageIcon, FileImage, X, CheckCircle, AlertCircle } from 'lucide-react';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 
 import { zaiApiService } from '@/lib/zai-api-service';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { imageBase64, analysisType, customPrompt, modelIds } = body;
