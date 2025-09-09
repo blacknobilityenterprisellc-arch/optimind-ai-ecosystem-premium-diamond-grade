@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-09-09T17:57:34.124Z",
+  "timestamp": "2025-09-09T17:58:10.614Z",
   "summary": {
     "totalBatches": 5,
     "successful": 0,
@@ -14,7 +14,7 @@
     {
       "name": "Unused Variables",
       "success": false,
-      "time": "176s"
+      "time": "300s"
     },
     {
       "name": "TypeScript Unused Variables",
@@ -24,7 +24,7 @@
     {
       "name": "Useless Escapes",
       "success": false,
-      "time": "53s"
+      "time": "87s"
     },
     {
       "name": "Duplicate Imports",
