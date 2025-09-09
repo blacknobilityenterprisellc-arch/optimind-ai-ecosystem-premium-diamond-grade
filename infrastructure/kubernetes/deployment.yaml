@@ -1,0 +1,169 @@
+# OptiMind AI Ecosystem - Kubernetes Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: optimind-ai-app
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    tier: production
+    version: "1.0.0"
+    security-tier: "enterprise"
+  annotations:
+    description: "OptiMind AI Ecosystem - Premium Diamond-Grade Application"
+    compliance: "SOC2-GDPR-HIPAA"
+    deployment.strategy: "rolling-update"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: optimind-ai
+      tier: production
+  template:
+    metadata:
+      labels:
+        app: optimind-ai
+        tier: production
+        version: "1.0.0"
+        security-tier: "enterprise"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+        traefik.enable: "true"
+        traefik.http.routers.optimind-ai.rule: "Host(`optimind.local`)"
+        traefik.http.routers.optimind-ai.entrypoints: "websecure"
+        traefik.http.services.optimind-ai.loadbalancer.server.port: "3000"
+    spec:
+      # Security Context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+        readOnlyRootFilesystem: true
+      
+      # Service Account
+      serviceAccountName: optimind-ai-service-account
+      
+      # Node Selector and Tolerations
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
+        kubernetes.io/os: "linux"
+      tolerations:
+        - key: "dedicated"
+          operator: "Equal"
+          value: "optimind-ai"
+          effect: "NoSchedule"
+      
+      # Containers
+      containers:
+      - name: optimind-ai-app
+        image: "optimind-ai-ecosystem:latest"
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 3000
+          protocol: TCP
+        - name: metrics
+          containerPort: 9090
+          protocol: TCP
+        - name: debug
+          containerPort: 9229
+          protocol: TCP
+        
+        # Environment Variables
+        envFrom:
+        - configMapRef:
+            name: optimind-ai-config
+        - secretRef:
+            name: optimind-ai-secrets
+        
+        # Resource Limits and Requests
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+        
+        # Liveness Probe
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        
+        # Readiness Probe
+        readinessProbe:
+          httpGet:
+            path: /api/ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+          successThreshold: 1
+        
+        # Security Context
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+          runAsGroup: 1001
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - CHOWN
+            - DAC_OVERRIDE
+        
+        # Volume Mounts
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /app/.next/cache
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+        
+        # Lifecycle
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "curl -X POST http://localhost:3000/api/shutdown || true"]
+      
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
+      - name: config
+        configMap:
+          name: optimind-ai-config
+          defaultMode: 0444
+      
+      # Image Pull Secrets
+      imagePullSecrets:
+      - name: regcred
+      
+      # Restart Policy
+      restartPolicy: Always
+      
+      # Termination Grace Period
+      terminationGracePeriodSeconds: 60

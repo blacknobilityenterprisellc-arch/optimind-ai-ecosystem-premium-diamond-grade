@@ -1,0 +1,57 @@
+# OptiMind AI Ecosystem - Development Dockerfile
+# Optimized for local development with hot reload
+
+FROM node:20-alpine AS development
+
+# Install development tools
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    bash \
+    && npm install -g npm@latest \
+    && npm install -g tsx \
+    && npm install -g prisma
+
+# Create app user
+RUN addgroup -g 1001 -S nodejs \
+    && adduser -S nextjs -u 1001
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+COPY npm-shrinkwrap.json ./ 2>/dev/null || true
+
+# Install all dependencies including dev dependencies
+RUN npm ci && \
+    npm audit fix --audit-level=moderate || true
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Create .next directory with proper permissions
+RUN mkdir -p .next && chown -R nextjs:nodejs .next
+
+# Switch to non-root user
+USER nextjs
+
+# Expose ports
+EXPOSE 3000
+
+# Set development environment
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1 \
+    CHOKIDAR_USEPOLLING=true
+
+# Health check for development
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:3000/api/health || exit 1
+
+# Start development server
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,99 @@
+# OptiMind AI Ecosystem - Kubernetes Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: optimind-ai-service
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    tier: production
+    service-type: load-balancer
+  annotations:
+    description: "OptiMind AI Ecosystem - Load Balancer Service"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: "HTTP"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-port: "3000"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: "/api/health"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "30"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: "5"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-success-threshold: "2"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: "3"
+spec:
+  type: LoadBalancer
+  selector:
+    app: optimind-ai
+    tier: production
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 3000
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  - name: debug
+    port: 9229
+    targetPort: 9229
+    protocol: TCP
+  externalTrafficPolicy: Local
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
+---
+# Internal ClusterIP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: optimind-ai-internal
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    tier: production
+    service-type: internal
+  annotations:
+    description: "OptiMind AI Ecosystem - Internal Cluster Service"
+spec:
+  type: ClusterIP
+  selector:
+    app: optimind-ai
+    tier: production
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+---
+# Headless Service for StatefulSet
+apiVersion: v1
+kind: Service
+metadata:
+  name: optimind-ai-headless
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    tier: production
+    service-type: headless
+  annotations:
+    description: "OptiMind AI Ecosystem - Headless Service"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: optimind-ai
+    tier: production
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+    protocol: TCP
