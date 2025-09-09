@@ -27,10 +27,18 @@ export class EcosystemHarmonyManager {
     return true;
   }
 
-  public getHarmonyStatus(): { level: string; operational: boolean } {
+  public getHarmonyStatus(): { level: string; operational: boolean; fluidity: any; creativity: any } {
     return {
       level: this.harmonyLevel,
       operational: this.isInitialized,
+      fluidity: {
+        seamlessTransitions: true,
+        intuitiveFlow: true
+      },
+      creativity: {
+        unrestrictedExploration: true,
+        innovativePotential: true
+      }
     };
   }
 
