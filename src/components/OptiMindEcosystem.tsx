@@ -10,7 +10,6 @@
 
 'use client';
 
-import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -197,11 +196,11 @@ const HeroSection = () => (
   </div>
 );
 
-const CategoryFilter = ({ 
-  categories, 
-  selectedCategory, 
-  setSelectedCategory 
-}: { 
+const CategoryFilter = ({
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+}: {
   categories: Array<{ id: string; label: string; count: number }>;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
@@ -332,10 +331,10 @@ const OptiMindEcosystem: React.FC = () => {
   return (
     <div className="w-full space-y-8">
       <HeroSection />
-      <CategoryFilter 
-        categories={categories} 
-        selectedCategory={selectedCategory} 
-        setSelectedCategory={setSelectedCategory} 
+      <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
       />
       <FeaturesGrid features={filteredFeatures} />
       <EcosystemStats />

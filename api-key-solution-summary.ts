@@ -1,6 +1,5 @@
 #!/usr/bin/env tsx
 
-/* eslint-disable no-console */
 /**
  * OptiMind AI Ecosystem - API Key Management Solution Summary
  * 
