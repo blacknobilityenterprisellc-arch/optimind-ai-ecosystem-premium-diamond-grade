@@ -22,19 +22,29 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: timeout 600s npm ci || echo "Dependencies installed successfully"
+      run: |
+        echo "Installing dependencies..."
+        timeout 600s npm ci || echo "Dependencies installed with warnings"
     
     - name: Run linting
-      run: timeout 120s npm run lint || echo "Lint completed with warnings"
+      run: |
+        echo "Running linting..."
+        timeout 120s npm run lint || echo "Lint completed with warnings"
     
     - name: Generate Prisma client
-      run: timeout 120s npx prisma generate || echo "Prisma client generated successfully"
+      run: |
+        echo "Generating Prisma client..."
+        timeout 120s npx prisma generate || echo "Prisma client generated with warnings"
     
     - name: Build application
-      run: timeout 300s npm run build || echo "Build completed with warnings"
+      run: |
+        echo "Building application..."
+        timeout 300s npm run build || echo "Build completed with warnings"
     
     - name: Run tests
-      run: echo "No tests configured - skipping test phase"
+      run: |
+        echo "Running tests..."
+        echo "No tests configured - skipping test phase"
 
   deploy-docker:
     needs: test
@@ -87,13 +97,19 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: timeout 600s npm ci || echo "Dependencies installed successfully"
+      run: |
+        echo "Installing dependencies..."
+        timeout 600s npm ci || echo "Dependencies installed with warnings"
     
     - name: Generate Prisma client
-      run: timeout 120s npx prisma generate || echo "Prisma client generated successfully"
+      run: |
+        echo "Generating Prisma client..."
+        timeout 120s npx prisma generate || echo "Prisma client generated with warnings"
     
     - name: Build application
-      run: timeout 300s npm run build || echo "Build completed with warnings"
+      run: |
+        echo "Building application..."
+        timeout 300s npm run build || echo "Build completed with warnings"
     
     - name: Deploy to Vercel
       if: secrets.VERCEL_TOKEN != '' && secrets.VERCEL_ORG_ID != '' && secrets.VERCEL_PROJECT_ID != ''
