@@ -1,12 +1,12 @@
 {
   "summary": {
-    "timestamp": "2025-09-08T20:03:07.843Z",
+    "timestamp": "2025-09-09T06:07:49.804Z",
     "overallScore": 45,
     "status": "poor"
   },
   "sourceFiles": {
-    "total": 334,
-    "typescript": 199,
+    "total": 336,
+    "typescript": 201,
     "react": 135
   },
   "analysis": {

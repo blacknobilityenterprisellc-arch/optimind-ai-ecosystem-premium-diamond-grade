@@ -164,7 +164,6 @@ export default [
         emitDecoratorMetadata: true,
         experimentalDecorators: true,
         verbatimModuleSyntax: true,
-        allowImportingTsExtensions: true,
         resolvePackageJsonExports: true,
         resolvePackageJsonImports: true,
         customConditions: ['development', 'production'],
