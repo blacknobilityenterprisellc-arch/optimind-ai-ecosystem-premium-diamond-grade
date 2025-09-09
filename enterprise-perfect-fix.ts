@@ -54,8 +54,7 @@ class EnterprisePerfectFixer {
       return { 
         success: false, 
         error: error.message,
-        output: error.stdout,
-        code: error.status
+        output: error.stdout
       };
     }
   }

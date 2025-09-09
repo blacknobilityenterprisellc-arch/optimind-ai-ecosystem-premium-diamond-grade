@@ -32,10 +32,10 @@ interface QualityMetrics {
     passed: boolean;
   };
   tests: {
-    passed: number;
+    passedTests: number;
     failed: number;
     coverage: number;
-    passed: boolean;
+    testPassed: boolean;
   };
   overall: {
     score: number;
@@ -221,7 +221,7 @@ class QualityGate {
     }
   }
 
-  private async runTestCheck(): Promise<{ passed: number; failed: number; coverage: number; passed: boolean }> {
+  private async runTestCheck(): Promise<{ passedTests: number; failed: number; coverage: number; testPassed: boolean }> {
     this.log('info', 'Running test check...');
     
     try {
@@ -232,22 +232,22 @@ class QualityGate {
       });
 
       // Mock test results for demo
-      const passed = 95;
-      const failed = 5;
+      const testPassed = 95;
+      const testFailed = 5;
       const coverage = 85;
-      const testPassed = coverage >= this.thresholds.minTestCoverage;
+      const testsPassed = coverage >= this.thresholds.minTestCoverage;
 
-      this.log('info', `Tests: ${passed} passed, ${failed} failed, ${coverage}% coverage (${testPassed ? 'PASSED' : 'FAILED'})`);
+      this.log('info', `Tests: ${testPassed} passed, ${testFailed} failed, ${coverage}% coverage (${testsPassed ? 'PASSED' : 'FAILED'})`);
       
-      return { passed, failed, coverage, testPassed };
+      return { passedTests: testPassed, failed: testFailed, coverage, testPassed: testsPassed };
     } catch (error) {
       this.log('warn', 'Tests not configured, using mock results');
-      const passed = 95;
-      const failed = 5;
+      const testPassed = 95;
+      const testFailed = 5;
       const coverage = 85;
-      const testPassed = coverage >= this.thresholds.minTestCoverage;
+      const testsPassed = coverage >= this.thresholds.minTestCoverage;
       
-      return { passed, failed, coverage, testPassed };
+      return { passedTests: testPassed, failed: testFailed, coverage, testPassed: testsPassed };
     }
   }
 
@@ -262,7 +262,7 @@ class QualityGate {
   }
 
   private determineStatus(score: number, metrics: QualityMetrics): 'pass' | 'warn' | 'fail' {
-    if (score >= 90 && metrics.eslint.passed && metrics.typescript.passed && metrics.security.passed && metrics.performance.passed && metrics.tests.passed) {
+    if (score >= 90 && metrics.eslint.passed && metrics.typescript.passed && metrics.security.passed && metrics.performance.passed && metrics.tests.testPassed) {
       return 'pass';
     } else if (score >= 70) {
       return 'warn';
@@ -312,7 +312,7 @@ class QualityGate {
       }
     }
 
-    if (!metrics.tests.passed) {
+    if (!metrics.tests.testPassed) {
       recommendations.push('Improve test coverage to meet minimum requirements');
     }
 
@@ -371,7 +371,7 @@ class QualityGate {
     console.log(`• TypeScript: ${typescript.errors} errors (${typescript.passed ? '✅' : '❌'})`);
     console.log(`• Security: ${security.vulnerabilities} vulnerabilities (${security.passed ? '✅' : '❌'})`);
     console.log(`• Performance: ${performance.buildTime}ms build, ${Math.floor(performance.bundleSize / 1024)}KB (${performance.passed ? '✅' : '❌'})`);
-    console.log(`• Tests: ${tests.coverage}% coverage (${tests.passed ? '✅' : '❌'})`);
+    console.log(`• Tests: ${tests.coverage}% coverage (${tests.testPassed ? '✅' : '❌'})`);
 
     if (metrics.overall.blocked) {
       console.log('\n🚫 QUALITY GATE BLOCKED');

@@ -14,9 +14,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 class FinalOptimizer {
+  issues: string[] = [];
+  optimizations: string[] = [];
+
   constructor() {
-    this.issues = [];
-    this.optimizations = [];
+    // Initialize properties
   }
 
   async runOptimization(): Promise<void> {
@@ -72,7 +74,7 @@ class FinalOptimizer {
       }
       
       console.log('✅ Database serialization issues fixed\n');
-    } catch (error) {
+    } catch (error: any) {
       this.issues.push(`Failed to fix database serialization: ${error.message}`);
       console.log('❌ Failed to fix database serialization\n');
     }
@@ -103,7 +105,7 @@ class FinalOptimizer {
       }
       
       console.log('✅ Security authentication fixed\n');
-    } catch (error) {
+    } catch (error: any) {
       this.issues.push(`Failed to fix security authentication: ${error.message}`);
       console.log('❌ Failed to fix security authentication\n');
     }
