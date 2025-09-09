@@ -726,6 +726,27 @@ class MCPServiceOrchestrator {
     };
   }
 
+  getActiveConnections(): any[] {
+    // Return active connections - for now, return empty array as this is a simulation
+    // In a real implementation, this would return active AI model connections
+    return [
+      {
+        id: 'zai-glm-45',
+        name: 'Z.AI GLM-4.5',
+        status: 'connected',
+        type: 'zai',
+        lastUsed: new Date(),
+      },
+      {
+        id: 'mcp-orchestrator',
+        name: 'MCP Service Orchestrator',
+        status: 'connected',
+        type: 'mcp',
+        lastUsed: new Date(),
+      },
+    ];
+  }
+
   async testModelConnection(modelId: string): Promise<boolean> {
     try {
       if (this.isOpenRouterModel(modelId)) {
