@@ -1,0 +1,20 @@
+[
+  {
+    "timestamp": "2025-09-08T20:09:43.136Z",
+    "score": 0,
+    "errors": 999,
+    "warnings": 999,
+    "security": 999,
+    "performance": 0,
+    "coverage": 0
+  },
+  {
+    "timestamp": "2025-09-08T20:14:28.419Z",
+    "score": 0,
+    "errors": 999,
+    "warnings": 999,
+    "security": 999,
+    "performance": 0,
+    "coverage": 0
+  }
+]

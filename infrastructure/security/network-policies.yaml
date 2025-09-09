@@ -1,0 +1,201 @@
+# OptiMind AI Ecosystem - Zero-Trust Network Policies
+# Kubernetes Network Policies for Zero-Trust Architecture
+
+# Default Deny All Traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "default-deny"
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+# Allow Application Ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-application-ingress
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "application-ingress"
+spec:
+  podSelector:
+    matchLabels:
+      app: optimind-ai
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 3000
+---
+# Allow Application Egress to Database
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-db-egress
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "db-egress"
+spec:
+  podSelector:
+    matchLabels:
+      app: optimind-ai
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
+---
+# Allow Application Egress to Redis
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-egress
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "redis-egress"
+spec:
+  podSelector:
+    matchLabels:
+      app: optimind-ai
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+---
+# Allow Application Egress to External APIs
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-external-api-egress
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "external-api-egress"
+spec:
+  podSelector:
+    matchLabels:
+      app: optimind-ai
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80
+---
+# Allow Monitoring Egress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring-egress
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    security-policy: "zero-trust"
+    policy-type: "monitoring-egress"
+spec:
+  podSelector:
+    matchLabels:
+      app: optimind-ai
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 9090
+---
+# Database Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-network-policy
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: postgres
+    security-policy: "zero-trust"
+    policy-type: "database-protection"
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: optimind-ai
+    ports:
+    - protocol: TCP
+      port: 5432
+---
+# Redis Network Policy
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-network-policy
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: redis
+    security-policy: "zero-trust"
+    policy-type: "redis-protection"
+spec:
+  podSelector:
+    matchLabels:
+      app: redis
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: optimind-ai
+    ports:
+    - protocol: TCP
+      port: 6379

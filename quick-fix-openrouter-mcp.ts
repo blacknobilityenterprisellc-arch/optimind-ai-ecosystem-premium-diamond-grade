@@ -77,7 +77,7 @@ class QuickFixer {
           connectionIds.push(connectionId);
           console.log(`✅ Connected to model: ${model} (${connectionId})`);
         } catch (error) {
-          console.warn(`⚠️  Failed to connect to ${model}:`, error.message);
+          console.warn(`⚠️  Failed to connect to ${model}:`, error instanceof Error ? error.message : String(error));
         }
       }
       

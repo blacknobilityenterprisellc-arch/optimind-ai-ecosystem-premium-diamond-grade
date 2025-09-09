@@ -1,0 +1,78 @@
+# OptiMind AI Ecosystem - Kubernetes ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: optimind-ai-config
+  namespace: optimind-ai-ecosystem
+  labels:
+    app: optimind-ai
+    tier: production
+data:
+  # Application Configuration
+  NODE_ENV: "production"
+  NEXT_TELEMETRY_DISABLED: "1"
+  NEXT_DISABLE_ESLINT_PLUGIN: "true"
+  
+  # Database Configuration
+  DATABASE_SSL: "true"
+  DATABASE_POOL_MIN: "2"
+  DATABASE_POOL_MAX: "10"
+  
+  # Redis Configuration
+  REDIS_URL: "redis://optimind-redis:6379"
+  REDIS_PASSWORD: "optimind123"
+  
+  # AI Model Configuration
+  DEFAULT_AI_MODEL: "glm-4.5"
+  AI_MODEL_TIMEOUT: "30000"
+  AI_MODEL_MAX_TOKENS: "4000"
+  
+  # Security Configuration
+  SESSION_SECRET: "your-session-secret-here"
+  CSRF_SECRET: "your-csrf-secret-here"
+  
+  # Performance Configuration
+  ENABLE_COMPRESSION: "true"
+  ENABLE_SWR: "true"
+  CACHE_MAX_AGE: "3600"
+  
+  # Logging Configuration
+  LOG_LEVEL: "info"
+  LOG_FORMAT: "json"
+  ENABLE_REQUEST_LOGGING: "true"
+  
+  # Monitoring Configuration
+  ENABLE_METRICS: "true"
+  METRICS_PORT: "9090"
+  ENABLE_TRACING: "true"
+  TRACING_SAMPLING_RATE: "0.1"
+  
+  # Security Headers
+  ENABLE_CSP: "true"
+  ENABLE_HSTS: "true"
+  ENABLE_CORS: "true"
+  
+  # API Configuration
+  API_RATE_LIMIT: "100"
+  API_RATE_WINDOW: "60000"
+  API_TIMEOUT: "30000"
+  
+  # File Upload Configuration
+  MAX_FILE_SIZE: "10485760" # 10MB
+  ALLOWED_FILE_TYPES: "jpg,jpeg,png,gif,pdf,doc,docx"
+  
+  # Email Configuration
+  SMTP_HOST: "smtp.optimind.local"
+  SMTP_PORT: "587"
+  SMTP_SECURE: "false"
+  SMTP_USER: "noreply@optimind.local"
+  
+  # Analytics Configuration
+  ENABLE_ANALYTICS: "true"
+  ANALYTICS_ENDPOINT: "https://analytics.optimind.local"
+  
+  # Feature Flags
+  ENABLE_AI_FEATURES: "true"
+  ENABLE_PREMIUM_FEATURES: "true"
+  ENABLE_ENTERPRISE_FEATURES: "true"
+  ENABLE_BETA_FEATURES: "false"

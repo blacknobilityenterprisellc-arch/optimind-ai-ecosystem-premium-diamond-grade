@@ -439,7 +439,7 @@ NEXT_TELEMETRY_DISABLED="1"
 
 # OptiMind AI Ecosystem - Intelligent Monitoring Script
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/intelligent-monitor.log"
 SERVER_PID_FILE="$SCRIPT_DIR/.server.pid"
 STATE_FILE="$SCRIPT_DIR/system-state.json"

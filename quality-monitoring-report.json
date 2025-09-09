@@ -1,0 +1,41 @@
+{
+  "timestamp": "2025-09-08T20:14:44.102Z",
+  "current": {
+    "timestamp": "2025-09-08T20:14:28.419Z",
+    "score": 0,
+    "errors": 999,
+    "warnings": 999,
+    "security": 999,
+    "performance": 0,
+    "coverage": 0
+  },
+  "previous": {
+    "timestamp": "2025-09-08T20:09:43.136Z",
+    "score": 0,
+    "errors": 999,
+    "warnings": 999,
+    "security": 999,
+    "performance": 0,
+    "coverage": 0
+  },
+  "trend": {
+    "scoreChange": 0,
+    "errorChange": 0,
+    "warningChange": 0
+  },
+  "thresholds": {
+    "minScore": 80,
+    "maxErrors": 50,
+    "maxWarnings": 1000,
+    "maxSecurityIssues": 5,
+    "minCoverage": 80,
+    "maxBuildTime": 300000
+  },
+  "activeAlerts": [],
+  "summary": {
+    "totalMeasurements": 2,
+    "alertsThisWeek": 0,
+    "averageScore": 0,
+    "trendDirection": "declining"
+  }
+}
