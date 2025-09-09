@@ -182,8 +182,8 @@ export default function SidebarNavigation() {
         <div className="p-3 sm:p-4 md:p-6 border-b border-border/40">
           <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
             <div className="relative">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-primary to-purple-600 rounded-lg flex items-center justify-center">
-                <Brain className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                <img src="/logo.svg" alt="OptiMind AI Logo" className="w-full h-full" />
               </div>
               <div className="absolute -top-1 -right-1">
                 <Sparkles className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-500" />
