@@ -6,10 +6,9 @@
  * of all AI agents and system components.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { glmOrchestrator } from '@/lib/glm-orchestrator';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
@@ -144,7 +143,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { action, payload } = body;

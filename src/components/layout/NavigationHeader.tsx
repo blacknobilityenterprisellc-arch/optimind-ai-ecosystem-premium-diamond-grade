@@ -21,7 +21,6 @@ import {
   Crown,
   ChevronDown,
 } from 'lucide-react';
-import { TestTube, Activity, TrendingUp, AlertTriangle, FileCheck } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';

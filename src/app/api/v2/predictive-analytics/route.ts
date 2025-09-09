@@ -3,11 +3,10 @@
  * Premium Diamond Grade AI-Powered Predictive Analytics Endpoints
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { predictiveAnalyticsV2 } from '@/lib/v2/predictive-analytics';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { operation, ...params } = body;

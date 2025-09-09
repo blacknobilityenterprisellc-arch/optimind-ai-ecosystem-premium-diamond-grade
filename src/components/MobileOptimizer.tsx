@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { Smartphone, Monitor, Zap, Shield, Battery, Wifi, WifiOff } from 'lucide-react';
 
 interface MobileOptimizerProps {
   children: React.ReactNode;

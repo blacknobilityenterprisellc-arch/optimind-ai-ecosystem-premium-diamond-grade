@@ -1,4 +1,3 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 const validationSchema = z.object({
@@ -7,7 +6,7 @@ const validationSchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters'),
 });
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
 

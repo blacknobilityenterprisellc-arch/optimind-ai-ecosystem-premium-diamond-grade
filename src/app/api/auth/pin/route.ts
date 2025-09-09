@@ -1,6 +1,5 @@
 import crypto from 'crypto';
 
-import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
@@ -9,7 +8,7 @@ const rateLimit = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
 const MAX_ATTEMPTS = 5;
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { pin } = await request.json();
 
@@ -108,7 +107,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE() {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {

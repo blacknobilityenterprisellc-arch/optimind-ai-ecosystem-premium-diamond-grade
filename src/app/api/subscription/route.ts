@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 
 import { db } from '@/lib/db';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get session token from authorization header
     const authHeader = request.headers.get('authorization');
@@ -107,7 +106,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {

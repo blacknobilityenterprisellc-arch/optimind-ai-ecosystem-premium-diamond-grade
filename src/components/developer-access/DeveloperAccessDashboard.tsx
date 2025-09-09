@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AlertTriangle, Key, Shield, Activity, Users, TrendingUp } from 'lucide-react';
 
 interface DeveloperAccessKey {
   id: string;

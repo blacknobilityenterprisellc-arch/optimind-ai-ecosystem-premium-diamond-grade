@@ -13,7 +13,6 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Crown, Gem, Wifi, WifiOff } from 'lucide-react';
 
 interface DashboardHeaderProps {
   isConnected: boolean;

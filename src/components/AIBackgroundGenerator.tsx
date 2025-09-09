@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, Download, Sparkles, Wand2 } from 'lucide-react';
 
 export function AIBackgroundGenerator() {
   const [prompt, setPrompt] = useState('');

@@ -5,10 +5,9 @@
  * Provides automatic issue detection, scanning, and fixing capabilities
  */
 
-import { NextRequest, NextResponse } from 'next/server';
 import { premiumDiamondGradeScanner } from '@/lib/premium-diamond-grade-scanner';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
@@ -96,7 +95,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { action, issue } = body;

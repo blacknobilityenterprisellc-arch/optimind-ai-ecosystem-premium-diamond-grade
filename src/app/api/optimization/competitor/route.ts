@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const { competitorUrls, topic } = await request.json();
 
