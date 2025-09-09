@@ -20,6 +20,10 @@ import {
   Zap,
   Crown,
   ChevronDown,
+  TestTube,
+  Activity,
+  AlertTriangle,
+  FileCheck,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
