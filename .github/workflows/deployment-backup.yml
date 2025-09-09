@@ -2,10 +2,10 @@ name: Deployment (Fixed)
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, develop ]
   pull_request:
     types: [closed]
-    branches: [ main, master ]
+    branches: [ main, develop ]
   workflow_dispatch:
     inputs:
       environment:

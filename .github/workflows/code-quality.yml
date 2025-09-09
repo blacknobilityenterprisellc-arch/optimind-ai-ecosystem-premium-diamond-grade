@@ -2,9 +2,9 @@ name: Enterprise Code Quality - Premium Diamond Grade
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   schedule:
     - cron: '0 2 * * *'  # Daily at 2 AM
   workflow_dispatch:

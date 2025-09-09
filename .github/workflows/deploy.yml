@@ -2,9 +2,9 @@ name: Deploy Optimind AI Ecosystem (Fixed)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 jobs:
   test:
