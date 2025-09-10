@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark' | 'high-contrast';
+type Theme = 'light' | 'dark' | 'high-contrast' | 'premium-diamond' | 'enterprise-blue';
 
 interface ThemeContextType {
   theme: Theme;
@@ -11,6 +11,9 @@ interface ThemeContextType {
   isHighContrast: boolean;
   prefersReducedMotion: boolean;
   isScreenReaderActive: boolean;
+  isPremiumMode: boolean;
+  performanceMode: 'standard' | 'high-performance' | 'ultra-fast';
+  setPerformanceMode: (mode: 'standard' | 'high-performance' | 'ultra-fast') => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -24,18 +27,27 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isScreenReaderActive, setIsScreenReaderActive] = useState(false);
+  const [performanceMode, setPerformanceModeState] = useState<'standard' | 'high-performance' | 'ultra-fast'>('high-performance');
+
+  // Premium mode detection
+  const isPremiumMode = theme === 'premium-diamond' || theme === 'enterprise-blue';
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme;
+    const storedPerformanceMode = localStorage.getItem('performance-mode') as 'standard' | 'high-performance' | 'ultra-fast';
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const systemPrefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
 
     const initialTheme =
       storedTheme ||
-      (systemPrefersHighContrast ? 'high-contrast' : systemPrefersDark ? 'dark' : 'light');
+      (systemPrefersHighContrast ? 'high-contrast' : systemPrefersDark ? 'dark' : 'premium-diamond'); // Default to premium-diamond
 
     setThemeState(initialTheme);
+    
+    if (storedPerformanceMode) {
+      setPerformanceModeState(storedPerformanceMode);
+    }
 
     // Check for reduced motion preference
     setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -55,7 +67,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
         } else if (darkModeMediaQuery.matches) {
           setThemeState('dark');
         } else {
-          setThemeState('light');
+          setThemeState('premium-diamond');
         }
       }
     };
@@ -80,7 +92,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     const root = document.documentElement;
 
     // Remove all theme classes
-    root.classList.remove('light', 'dark', 'high-contrast');
+    root.classList.remove('light', 'dark', 'high-contrast', 'premium-diamond', 'enterprise-blue');
 
     // Add current theme class
     root.classList.add(theme);
@@ -88,8 +100,75 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     // Store theme preference
     localStorage.setItem('theme', theme);
 
-    // Update CSS custom properties for high contrast
-    if (theme === 'high-contrast') {
+    // Apply premium diamond theme styles
+    if (theme === 'premium-diamond') {
+      root.style.setProperty('--background', '#0f0f0f');
+      root.style.setProperty('--foreground', '#ffffff');
+      root.style.setProperty('--card', '#1a1a1a');
+      root.style.setProperty('--card-foreground', '#ffffff');
+      root.style.setProperty('--primary', '#8b5cf6');
+      root.style.setProperty('--primary-foreground', '#ffffff');
+      root.style.setProperty('--secondary', '#ec4899');
+      root.style.setProperty('--secondary-foreground', '#ffffff');
+      root.style.setProperty('--muted', '#262626');
+      root.style.setProperty('--muted-foreground', '#a1a1aa');
+      root.style.setProperty('--accent', '#8b5cf6');
+      root.style.setProperty('--accent-foreground', '#ffffff');
+      root.style.setProperty('--border', '#374151');
+      root.style.setProperty('--input', '#262626');
+      root.style.setProperty('--ring', '#8b5cf6');
+      
+      // Add premium diamond specific styles
+      const style = document.createElement('style');
+      style.id = 'premium-diamond-styles';
+      style.textContent = `
+        .premium-diamond {
+          background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%) !important;
+        }
+        
+        .premium-diamond .premium-gradient {
+          background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%) !important;
+        }
+        
+        .premium-diamond .diamond-border {
+          border: 1px solid rgba(139, 92, 246, 0.3) !important;
+        }
+        
+        .premium-diamond .glow-effect {
+          box-shadow: 0 0 20px rgba(139, 92, 246, 0.3) !important;
+        }
+      `;
+
+      // Remove existing styles
+      const existingStyle = document.querySelector('#premium-diamond-styles');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+
+      document.head.appendChild(style);
+    } else if (theme === 'enterprise-blue') {
+      root.style.setProperty('--background', '#0c1426');
+      root.style.setProperty('--foreground', '#ffffff');
+      root.style.setProperty('--card', '#1a2332');
+      root.style.setProperty('--card-foreground', '#ffffff');
+      root.style.setProperty('--primary', '#3b82f6');
+      root.style.setProperty('--primary-foreground', '#ffffff');
+      root.style.setProperty('--secondary', '#06b6d4');
+      root.style.setProperty('--secondary-foreground', '#ffffff');
+      root.style.setProperty('--muted', '#1e293b');
+      root.style.setProperty('--muted-foreground', '#94a3b8');
+      root.style.setProperty('--accent', '#3b82f6');
+      root.style.setProperty('--accent-foreground', '#ffffff');
+      root.style.setProperty('--border', '#334155');
+      root.style.setProperty('--input', '#1e293b');
+      root.style.setProperty('--ring', '#3b82f6');
+      
+      // Remove premium diamond styles
+      const existingStyle = document.querySelector('#premium-diamond-styles');
+      if (existingStyle) {
+        existingStyle.remove();
+      }
+    } else if (theme === 'high-contrast') {
       root.style.setProperty('--background', 'black');
       root.style.setProperty('--foreground', 'white');
       root.style.setProperty('--card', 'black');
@@ -168,13 +247,17 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
 
       document.head.appendChild(style);
     } else {
-      // Remove high contrast styles
-      const existingStyle = document.querySelector('#high-contrast-styles');
+      // Remove premium and high contrast styles
+      const existingStyle = document.querySelector('#premium-diamond-styles');
+      const highContrastStyle = document.querySelector('#high-contrast-styles');
       if (existingStyle) {
         existingStyle.remove();
       }
+      if (highContrastStyle) {
+        highContrastStyle.remove();
+      }
 
-      // Reset CSS custom properties
+      // Reset CSS custom properties for light/dark themes
       root.style.removeProperty('--background');
       root.style.removeProperty('--foreground');
       root.style.removeProperty('--card');
@@ -192,24 +275,40 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
       root.style.removeProperty('--ring');
     }
 
-    // Apply reduced motion preference
-    if (prefersReducedMotion) {
-      root.style.setProperty('--transition-duration', '0ms');
-      root.style.setProperty('--animation-duration', '0ms');
-    } else {
-      root.style.removeProperty('--transition-duration');
-      root.style.removeProperty('--animation-duration');
+    // Apply performance mode settings
+    let transitionDuration = '150ms';
+    let animationDuration = '300ms';
+    
+    if (performanceMode === 'high-performance') {
+      transitionDuration = '100ms';
+      animationDuration = '200ms';
+    } else if (performanceMode === 'ultra-fast') {
+      transitionDuration = '50ms';
+      animationDuration = '100ms';
     }
-  }, [theme, prefersReducedMotion]);
+
+    if (prefersReducedMotion) {
+      transitionDuration = '0ms';
+      animationDuration = '0ms';
+    }
+
+    root.style.setProperty('--transition-duration', transitionDuration);
+    root.style.setProperty('--animation-duration', animationDuration);
+  }, [theme, prefersReducedMotion, performanceMode]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
   };
 
+  const setPerformanceMode = (mode: 'standard' | 'high-performance' | 'ultra-fast') => {
+    setPerformanceModeState(mode);
+    localStorage.setItem('performance-mode', mode);
+  };
+
   const toggleHighContrast = () => {
     setThemeState(currentTheme => {
       if (currentTheme === 'high-contrast') {
-        return (localStorage.getItem('last-normal-theme') as Theme) || 'light';
+        return (localStorage.getItem('last-normal-theme') as Theme) || 'premium-diamond';
       } else {
         localStorage.setItem('last-normal-theme', theme);
         return 'high-contrast';
@@ -224,6 +323,9 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     isHighContrast: theme === 'high-contrast',
     prefersReducedMotion,
     isScreenReaderActive,
+    isPremiumMode,
+    performanceMode,
+    setPerformanceMode,
   };
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

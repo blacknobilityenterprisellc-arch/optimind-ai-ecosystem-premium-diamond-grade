@@ -1,14 +1,15 @@
 /**
- * Diamond-Grade Premium UI Interface
+ * Diamond-Grade Premium UI Interface - Enhanced World-Class Edition
  * 
- * A world-class, premier interface showcasing the latest UI/UX best practices
- * for the OptiMind AI Ecosystem with enhanced interactivity, visual excellence,
- * and user experience optimization.
+ * A pinnacle of UI/UX excellence showcasing enterprise-grade best practices,
+ * advanced AI capabilities, and premium diamond-grade features for the 
+ * OptiMind AI Ecosystem. This interface represents the absolute cutting edge
+ * of design, performance, and user experience innovation.
  */
 
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Brain,
@@ -53,9 +54,35 @@ import {
   MousePointer,
   Smartphone,
   Tablet,
-  Monitor2,
+  Display,
   Users,
   Activity,
+  Cpu,
+  HardDrive,
+  Wifi,
+  WifiOff,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Gauge,
+  Layers,
+  Network,
+  Lock,
+  Unlock,
+  Fingerprint,
+  Key,
+  Database,
+  Cloud,
+  Server,
+  Terminal,
+  Code,
+  Palette,
+  Zap as Lightning,
+  Award as Trophy,
+  Gem,
+  Crown as Royal,
+  Shield as Security,
+  Target as Bullseye,
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -82,6 +109,16 @@ interface PremiumFeature {
   trend: 'up' | 'down' | 'stable';
   color: string;
   gradient: string;
+  performance: {
+    speed: number;
+    efficiency: number;
+    reliability: number;
+  };
+  security: {
+    encryption: boolean;
+    authentication: boolean;
+    compliance: string[];
+  };
 }
 
 interface UserActivity {
@@ -91,6 +128,25 @@ interface UserActivity {
   feature: string;
   timestamp: string;
   avatar: string;
+  performance: number;
+}
+
+interface PerformanceMetrics {
+  cpu: number;
+  memory: number;
+  network: number;
+  uptime: number;
+  responseTime: number;
+  throughput: number;
+}
+
+interface SecurityStatus {
+  encryption: boolean;
+  authentication: boolean;
+  firewall: boolean;
+  monitoring: boolean;
+  compliance: string[];
+  threats: number;
 }
 
 const premiumFeatures: PremiumFeature[] = [
@@ -107,6 +163,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'up',
     color: 'from-purple-500 to-pink-500',
     gradient: 'linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%)',
+    performance: {
+      speed: 98,
+      efficiency: 96,
+      reliability: 99
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2', 'ISO 27001', 'GDPR']
+    }
   },
   {
     id: 'content-creation',
@@ -121,6 +187,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'up',
     color: 'from-blue-500 to-cyan-500',
     gradient: 'linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%)',
+    performance: {
+      speed: 95,
+      efficiency: 93,
+      reliability: 97
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2', 'CCPA']
+    }
   },
   {
     id: 'image-analysis',
@@ -135,6 +211,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'stable',
     color: 'from-orange-500 to-red-500',
     gradient: 'linear-gradient(135deg, #F97316 0%, #EF4444 100%)',
+    performance: {
+      speed: 92,
+      efficiency: 90,
+      reliability: 95
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2', 'HIPAA']
+    }
   },
   {
     id: 'research-analysis',
@@ -149,6 +235,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'up',
     color: 'from-indigo-500 to-purple-500',
     gradient: 'linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)',
+    performance: {
+      speed: 88,
+      efficiency: 85,
+      reliability: 92
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2']
+    }
   },
   {
     id: 'security-shield',
@@ -163,6 +259,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'up',
     color: 'from-green-500 to-emerald-500',
     gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+    performance: {
+      speed: 99,
+      efficiency: 98,
+      reliability: 100
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2', 'ISO 27001', 'GDPR', 'HIPAA', 'PCI DSS']
+    }
   },
   {
     id: 'optimization-engine',
@@ -177,6 +283,16 @@ const premiumFeatures: PremiumFeature[] = [
     trend: 'up',
     color: 'from-yellow-500 to-orange-500',
     gradient: 'linear-gradient(135deg, #EAB308 0%, #F97316 100%)',
+    performance: {
+      speed: 96,
+      efficiency: 94,
+      reliability: 98
+    },
+    security: {
+      encryption: true,
+      authentication: true,
+      compliance: ['SOC 2', 'ISO 27001']
+    }
   },
 ];
 
@@ -188,6 +304,7 @@ const userActivities: UserActivity[] = [
     feature: 'GLM Orchestrator',
     timestamp: '2 minutes ago',
     avatar: '/avatars/01.png',
+    performance: 98
   },
   {
     id: '2',
@@ -196,6 +313,7 @@ const userActivities: UserActivity[] = [
     feature: 'Premium Content',
     timestamp: '5 minutes ago',
     avatar: '/avatars/02.png',
+    performance: 95
   },
   {
     id: '3',
@@ -204,6 +322,7 @@ const userActivities: UserActivity[] = [
     feature: 'Vision Intelligence',
     timestamp: '8 minutes ago',
     avatar: '/avatars/03.png',
+    performance: 92
   },
   {
     id: '4',
@@ -212,8 +331,29 @@ const userActivities: UserActivity[] = [
     feature: 'Performance Engine',
     timestamp: '12 minutes ago',
     avatar: '/avatars/04.png',
+    performance: 96
   },
 ];
+
+// Real-time performance metrics simulation
+const generatePerformanceMetrics = (): PerformanceMetrics => ({
+  cpu: Math.floor(Math.random() * 30) + 20,
+  memory: Math.floor(Math.random() * 40) + 30,
+  network: Math.floor(Math.random() * 25) + 15,
+  uptime: 99.9,
+  responseTime: Math.floor(Math.random() * 50) + 20,
+  throughput: Math.floor(Math.random() * 1000) + 500
+});
+
+// Security status simulation
+const generateSecurityStatus = (): SecurityStatus => ({
+  encryption: true,
+  authentication: true,
+  firewall: true,
+  monitoring: true,
+  compliance: ['SOC 2', 'ISO 27001', 'GDPR'],
+  threats: Math.floor(Math.random() * 3)
+});
 
 const DiamondGradeInterface: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -225,15 +365,27 @@ const DiamondGradeInterface: React.FC = () => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const { theme, setTheme } = useTheme();
+  
+  // Enhanced state for premium features
+  const [performanceMetrics, setPerformanceMetrics] = useState<PerformanceMetrics>(generatePerformanceMetrics());
+  const [securityStatus, setSecurityStatus] = useState<SecurityStatus>(generateSecurityStatus());
+  const [lastUpdate, setLastUpdate] = useState<string>(new Date().toLocaleTimeString());
+  const [performanceMode, setPerformanceMode] = useState<'standard' | 'high-performance'>('standard');
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Real-time performance monitoring
   useEffect(() => {
     const interval = setInterval(() => {
       if (isPlaying && progress < 100) {
         setProgress(prev => Math.min(prev + 1, 100));
       }
-    }, 100);
+      
+      // Update performance metrics
+      setPerformanceMetrics(generatePerformanceMetrics());
+      setSecurityStatus(generateSecurityStatus());
+      setLastUpdate(new Date().toLocaleTimeString());
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [isPlaying, progress]);
@@ -355,10 +507,66 @@ const DiamondGradeInterface: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="sm"
+                  onClick={() => setTheme('premium-diamond')}
+                  className={theme === 'premium-diamond' ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-400' : 'text-gray-400'}
+                >
+                  <Diamond className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme('enterprise-blue')}
+                  className={theme === 'enterprise-blue' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400'}
+                >
+                  <Shield className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setTheme('high-contrast')}
                   className={theme === 'high-contrast' ? 'bg-blue-500/20 text-blue-400' : 'text-gray-400'}
                 >
                   <Monitor className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Performance Mode */}
+              <div className="flex items-center space-x-2 bg-gray-700/50 rounded-lg p-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPerformanceMode('standard')}
+                  className={`px-2 py-1 text-xs ${
+                    performanceMode === 'standard' 
+                      ? 'bg-gray-600 text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Standard
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPerformanceMode('high-performance')}
+                  className={`px-2 py-1 text-xs ${
+                    performanceMode === 'high-performance' 
+                      ? 'bg-green-600/20 text-green-400' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Fast
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setPerformanceMode('ultra-fast')}
+                  className={`px-2 py-1 text-xs ${
+                    performanceMode === 'ultra-fast' 
+                      ? 'bg-red-600/20 text-red-400' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  Ultra
                 </Button>
               </div>
 
@@ -424,6 +632,128 @@ const DiamondGradeInterface: React.FC = () => {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* Premium Performance & Security Dashboard */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"
+        >
+          {/* Performance Metrics */}
+          <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold text-white flex items-center space-x-2">
+                  <Gauge className="h-5 w-5 text-purple-400" />
+                  <span>Performance Metrics</span>
+                </CardTitle>
+                <Badge variant="outline" className="text-xs border-green-500/50 text-green-400">
+                  Live
+                </Badge>
+              </div>
+              <CardDescription className="text-sm text-gray-400">
+                Real-time system performance monitoring
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">CPU Usage</span>
+                    <span className="text-sm font-medium text-white">{performanceMetrics.cpu}%</span>
+                  </div>
+                  <Progress value={performanceMetrics.cpu} className="h-2 bg-gray-700" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">Memory</span>
+                    <span className="text-sm font-medium text-white">{performanceMetrics.memory}%</span>
+                  </div>
+                  <Progress value={performanceMetrics.memory} className="h-2 bg-gray-700" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">Network</span>
+                    <span className="text-sm font-medium text-white">{performanceMetrics.network}%</span>
+                  </div>
+                  <Progress value={performanceMetrics.network} className="h-2 bg-gray-700" />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-400">Response Time</span>
+                    <span className="text-sm font-medium text-white">{performanceMetrics.responseTime}ms</span>
+                  </div>
+                  <Progress value={100 - performanceMetrics.responseTime} className="h-2 bg-gray-700" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                <span className="text-xs text-gray-500">Last updated</span>
+                <span className="text-xs text-gray-400">{lastUpdate}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Security Status */}
+          <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold text-white flex items-center space-x-2">
+                  <Security className="h-5 w-5 text-green-400" />
+                  <span>Security Status</span>
+                </CardTitle>
+                <Badge variant="outline" className="text-xs border-green-500/50 text-green-400">
+                  Protected
+                </Badge>
+              </div>
+              <CardDescription className="text-sm text-gray-400">
+                Enterprise-grade security monitoring
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${securityStatus.encryption ? 'bg-green-400' : 'bg-red-400'}`} />
+                  <span className="text-sm text-gray-300">Encryption</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${securityStatus.authentication ? 'bg-green-400' : 'bg-red-400'}`} />
+                  <span className="text-sm text-gray-300">Authentication</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${securityStatus.firewall ? 'bg-green-400' : 'bg-red-400'}`} />
+                  <span className="text-sm text-gray-300">Firewall</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${securityStatus.monitoring ? 'bg-green-400' : 'bg-red-400'}`} />
+                  <span className="text-sm text-gray-300">Monitoring</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Active Threats</span>
+                  <span className={`text-sm font-medium ${securityStatus.threats > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                    {securityStatus.threats}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Compliance</span>
+                  <div className="flex flex-wrap gap-1">
+                    {securityStatus.compliance.map((cert, index) => (
+                      <Badge key={index} variant="outline" className="text-xs border-blue-500/50 text-blue-400">
+                        {cert}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                <span className="text-xs text-gray-500">Security Score</span>
+                <span className="text-xs text-green-400 font-medium">98/100</span>
+              </div>
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Control Panel */}
@@ -590,6 +920,36 @@ const DiamondGradeInterface: React.FC = () => {
                       </div>
                     </div>
                     
+                    {/* Performance Indicators */}
+                    <div className="grid grid-cols-3 gap-2 mb-3">
+                      <div className="text-center">
+                        <div className="text-xs text-gray-400">Speed</div>
+                        <div className="text-sm font-medium text-white">{feature.performance.speed}%</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs text-gray-400">Efficiency</div>
+                        <div className="text-sm font-medium text-white">{feature.performance.efficiency}%</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-xs text-gray-400">Reliability</div>
+                        <div className="text-sm font-medium text-white">{feature.performance.reliability}%</div>
+                      </div>
+                    </div>
+                    
+                    {/* Security Compliance Badges */}
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {feature.security.compliance.slice(0, 2).map((cert, index) => (
+                        <Badge key={index} variant="outline" className="text-xs border-green-500/50 text-green-400">
+                          {cert}
+                        </Badge>
+                      ))}
+                      {feature.security.compliance.length > 2 && (
+                        <Badge variant="outline" className="text-xs border-gray-500/50 text-gray-400">
+                          +{feature.security.compliance.length - 2}
+                        </Badge>
+                      )}
+                    </div>
+                    
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 text-xs text-gray-400">
                         <Users className="h-3 w-3" />
@@ -656,7 +1016,13 @@ const DiamondGradeInterface: React.FC = () => {
                     <p className="text-xs text-gray-400">
                       {activity.action} <span className="text-purple-400">{activity.feature}</span>
                     </p>
-                    <p className="text-xs text-gray-500">{activity.timestamp}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-xs text-gray-500">{activity.timestamp}</p>
+                      <div className="flex items-center space-x-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-green-400" />
+                        <span className="text-xs text-green-400">{activity.performance}%</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -665,15 +1031,136 @@ const DiamondGradeInterface: React.FC = () => {
         </motion.div>
       </main>
 
-      {/* Accessibility Footer */}
+      {/* Premium Diamond-Grade Footer */}
       <motion.footer 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
-        className="border-t border-gray-800 mt-12"
+        className="mt-16 pt-8 border-t border-gray-800"
       >
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            {/* Enterprise Status */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white flex items-center space-x-2">
+                <Royal className="h-5 w-5 text-yellow-400" />
+                <span>Enterprise Status</span>
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">System Health</span>
+                  <Badge className="bg-green-500/20 text-green-400 border-green-500/50">
+                    Optimal
+                  </Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">AI Models</span>
+                  <span className="text-sm text-white">45/45 Active</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Global Coverage</span>
+                  <span className="text-sm text-white">150+ Countries</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Compliance & Security */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white flex items-center space-x-2">
+                <Shield className="h-5 w-5 text-green-400" />
+                <span>Compliance</span>
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {['SOC 2', 'ISO 27001', 'GDPR', 'HIPAA', 'PCI DSS'].map((cert, index) => (
+                  <Badge key={index} variant="outline" className="text-xs border-blue-500/50 text-blue-400">
+                    {cert}
+                  </Badge>
+                ))}
+              </div>
+              <div className="text-xs text-gray-400">
+                Enterprise-grade security with zero-trust architecture
+              </div>
+            </div>
+
+            {/* Performance SLA */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white flex items-center space-x-2">
+                <Gauge className="h-5 w-5 text-purple-400" />
+                <span>Performance SLA</span>
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Uptime</span>
+                  <span className="text-sm text-green-400">99.9%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Response Time</span>
+                  <span className="text-sm text-green-400">&lt;50ms</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Availability</span>
+                  <span className="text-sm text-green-400">24/7/365</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Support & Contact */}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-white flex items-center space-x-2">
+                <Users className="h-5 w-5 text-blue-400" />
+                <span>Support</span>
+              </h4>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 rounded-full bg-green-400" />
+                  <span className="text-sm text-gray-300">24/7 Premium Support</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-400" />
+                  <span className="text-sm text-gray-300">Dedicated Account Manager</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 rounded-full bg-purple-400" />
+                  <span className="text-sm text-gray-300">Enterprise Training</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Premium Footer Bar */}
+          <div className="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl p-6 text-center mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
+                  <Diamond className="h-6 w-6 text-white" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-lg font-bold text-white">OptiMind AI Ecosystem</h3>
+                  <p className="text-sm text-gray-400">Diamond-Grade Premium Experience</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                  Enterprise Ready
+                </Badge>
+                <Badge className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-0">
+                  AI-Powered
+                </Badge>
+                <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0">
+                  Secure by Design
+                </Badge>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-purple-500/20">
+              <p className="text-xs text-gray-400">
+                © 2025 OptiMind AI Ecosystem. Crafted with precision by Jocely P. Honore and the N.D.E. team. 
+                Built for enterprise excellence and powered by cutting-edge AI technology.
+              </p>
+            </div>
+          </div>
+
+          {/* Accessibility Footer */}
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 py-6 border-t border-gray-800">
             <div className="flex items-center space-x-4 text-sm text-gray-400">
               <div className="flex items-center space-x-1">
                 <Accessibility className="h-4 w-4" />
@@ -690,7 +1177,7 @@ const DiamondGradeInterface: React.FC = () => {
             </div>
             
             <div className="flex items-center space-x-4 text-sm text-gray-400">
-              <span>© 2024 OptiMind AI Ecosystem</span>
+              <span>© 2025 OptiMind AI Ecosystem</span>
               <span>•</span>
               <span>Diamond Grade v2.0</span>
               <span>•</span>

@@ -72,7 +72,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo 2>&1 | tee dev.log",
-    "dev:custom": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo --premium 2>&1 | tee dev-custom.log",
+    "dev:custom": "tsx server.ts --turbo --premium",
     "dev:hybrid": "nodemon --exec \"npx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx -- --turbo --hybrid --ai-enhanced 2>&1 | tee dev-hybrid.log",
     "build": "timeout 420s next build || echo \"Build completed successfully\"",
     "start": "NODE_ENV=production tsx server.ts 2>&1 | tee server.log",

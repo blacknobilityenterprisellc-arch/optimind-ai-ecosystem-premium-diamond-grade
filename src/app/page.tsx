@@ -1,7 +1,7 @@
 'use client';
 
-import SimpleTest from '@/components/premium-ui/SimpleTest';
+import DiamondGradeInterface from '@/components/premium-ui/DiamondGradeInterface';
 
 export default function Home(): JSX.Element {
-  return <SimpleTest />;
+  return <DiamondGradeInterface />;
 }
