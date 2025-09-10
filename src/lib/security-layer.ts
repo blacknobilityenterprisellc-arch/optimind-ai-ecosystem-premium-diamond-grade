@@ -20,7 +20,7 @@ export function verifyPremiumToken(token: string) {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
-    throw new Error("Invalid premium token");
+    throw new EnhancedError("Invalid premium token");
   }
 }
 
@@ -32,4 +32,29 @@ export function checkPremiumAccess(
     userPermissions.includes(requiredPermission) ||
     userPermissions.includes("premium-all")
   );
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

@@ -4,7 +4,7 @@
  */
 
 // Global browser APIs
-declare var console: {
+declare let console: {
   log: (...args: any[]) => void;
   error: (...args: any[]) => void;
   warn: (...args: any[]) => void;
@@ -12,20 +12,20 @@ declare var console: {
   debug: (...args: any[]) => void;
 };
 
-declare var setTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => number;
-declare var clearTimeout: (id: number) => void;
-declare var setInterval: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => number;
-declare var clearInterval: (id: number) => void;
+declare let setTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => number;
+declare let clearTimeout: (id: number) => void;
+declare let setInterval: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => number;
+declare let clearInterval: (id: number) => void;
 
 // Node.js Buffer type for compatibility
-declare var Buffer: {
+declare let Buffer: {
   from: (data: any, encoding?: string) => Buffer;
   alloc: (size: number) => Buffer;
   isBuffer: (obj: any) => boolean;
 };
 
 // Crypto API
-declare var crypto: {
+declare let crypto: {
   getRandomValues: (array: Uint8Array) => void;
   subtle: {
     encrypt: (algorithm: any, key: any, data: any) => Promise<any>;
@@ -41,18 +41,18 @@ declare var performance: {
 };
 
 // Fetch API
-declare var fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
-declare var Request: any;
-declare var Response: any;
-declare var Headers: any;
+declare let fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+declare let Request: any;
+declare let Response: any;
+declare let Headers: any;
 
 // URL API
 declare var URL: any;
-declare var URLSearchParams: any;
+declare let URLSearchParams: any;
 
 // Web Storage API
-declare var localStorage: Storage;
-declare var sessionStorage: Storage;
+declare let localStorage: Storage;
+declare let sessionStorage: Storage;
 interface Storage {
   length: number;
   clear(): void;
@@ -64,7 +64,7 @@ interface Storage {
 }
 
 // Document API (for browser environment)
-declare var document: {
+declare let document: {
   getElementById(id: string): HTMLElement | null;
   getElementsByClassName(className: string): HTMLCollectionOf<Element>;
   getElementsByTagName(tagName: string): HTMLCollectionOf<Element>;
@@ -73,7 +73,7 @@ declare var document: {
   querySelectorAll(selector: string): NodeListOf<Element>;
 };
 
-declare var window: Window & typeof globalThis;
+declare let window: Window & typeof globalThis;
 
 // Extend Window interface with additional properties
 interface Window {
@@ -82,7 +82,7 @@ interface Window {
 }
 
 // Global process type (for Node.js environment)
-declare var process: {
+declare let process: {
   env: {
     [key: string]: string | undefined;
   };
@@ -187,8 +187,8 @@ type KeyUsage = 'encrypt' | 'decrypt' | 'sign' | 'verify' | 'deriveKey' | 'deriv
 type BufferSource = ArrayBufferView | ArrayBuffer;
 
 // Global Web APIs
-declare var atob: (data: string) => string;
-declare var btoa: (data: string) => string;
+declare let atob: (data: string) => string;
+declare let btoa: (data: string) => string;
 
 // Global URL extensions
 interface URL {
@@ -375,13 +375,13 @@ interface JSON {
 }
 
 // Global encode/decode URI extensions
-declare var encodeURI: (uri: string) => string;
-declare var encodeURIComponent: (uri: string) => string;
-declare var decodeURI: (encodedURI: string) => string;
-declare var decodeURIComponent: (encodedURIComponent: string) => string;
+declare let encodeURI: (uri: string) => string;
+declare let encodeURIComponent: (uri: string) => string;
+declare let decodeURI: (encodedURI: string) => string;
+declare let decodeURIComponent: (encodedURIComponent: string) => string;
 
 // Global Intl extensions
-declare var Intl: {
+declare let Intl: {
   Collator: any;
   DateTimeFormat: any;
   NumberFormat: any;
@@ -390,7 +390,7 @@ declare var Intl: {
 };
 
 // Global Reflect extensions
-declare var Reflect: {
+declare let Reflect: {
   apply(target: any, thisArgument: any, argumentsList: any[]): any;
   construct(target: any, argumentsList: any[], newTarget?: any): any;
   defineProperty(target: any, propertyKey: PropertyKey, attributes: PropertyDescriptor): boolean;
@@ -407,7 +407,7 @@ declare var Reflect: {
 };
 
 // Global Proxy extensions
-declare var Proxy: {
+declare let Proxy: {
   revocable<T extends object>(target: T, handler: ProxyHandler<T>): { proxy: T; revoke: () => void };
   new <T extends object>(target: T, handler: ProxyHandler<T>): T;
 };
@@ -553,7 +553,7 @@ interface AsyncIterator<T, TReturn = any, TNext = undefined> {
 }
 
 // Global WebAssembly extensions
-declare var WebAssembly: {
+declare let WebAssembly: {
   instantiate(source: BufferSource | WebAssembly.Module, imports?: any): Promise<WebAssembly.Instance>;
   compile(source: BufferSource): Promise<WebAssembly.Module>;
   validate(source: BufferSource): boolean;
@@ -603,7 +603,7 @@ interface WebAssemblyRuntimeErrorConstructor {
 }
 
 // Global Atomics extensions
-declare var Atomics: {
+declare let Atomics: {
   add(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
   and(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, value: number): number;
   compareExchange(typedArray: Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array, index: number, expectedValue: number, replacementValue: number): number;
@@ -619,26 +619,26 @@ declare var Atomics: {
 };
 
 // Global SharedArrayBuffer extensions
-declare var SharedArrayBuffer: {
+declare let SharedArrayBuffer: {
   new (byteLength: number): SharedArrayBuffer;
   readonly prototype: SharedArrayBuffer;
 };
 
 // Global BigInt extensions
-declare var BigInt: {
+declare let BigInt: {
   (value: number | bigint | string): bigint;
   asIntN(bits: number, bigint: bigint): bigint;
   asUintN(bits: number, bigint: bigint): bigint;
 };
 
 // Global FinalizationRegistry extensions
-declare var FinalizationRegistry: {
+declare let FinalizationRegistry: {
   new <T>(cleanupCallback: (heldValue: T) => void): FinalizationRegistry<T>;
   readonly prototype: FinalizationRegistry<any>;
 };
 
 // Global WeakRef extensions
-declare var WeakRef: {
+declare let WeakRef: {
   new <T>(target: T): WeakRef<T>;
   readonly prototype: WeakRef<any>;
 };

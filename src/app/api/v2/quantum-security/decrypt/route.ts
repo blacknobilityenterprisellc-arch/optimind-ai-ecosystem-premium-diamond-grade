@@ -7,7 +7,6 @@ import { NextResponse } from 'next/server';
  * Decrypt quantum-secure data
  */
 
-
 import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
 export async function POST() {

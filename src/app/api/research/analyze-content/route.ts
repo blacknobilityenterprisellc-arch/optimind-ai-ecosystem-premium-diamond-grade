@@ -83,7 +83,7 @@ export async function POST() {
     const analysisContent = completion.choices[0]?.message?.content;
 
     if (!analysisContent) {
-      throw new Error('No analysis content received from AI');
+      throw new EnhancedError('No analysis content received from AI');
     }
 
     // Parse the JSON response
@@ -117,5 +117,30 @@ export async function POST() {
       },
       { status: 500 }
     );
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack,
+    };
   }
 }

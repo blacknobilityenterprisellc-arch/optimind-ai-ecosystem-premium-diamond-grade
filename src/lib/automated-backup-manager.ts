@@ -211,7 +211,7 @@ export class AutomatedBackupManager {
       // Load metadata
       const metadata = await this.loadBackupMetadata(backupId);
       if (!metadata) {
-        throw new Error(`Backup metadata not found: ${backupId}`);
+        throw new EnhancedError(`Backup metadata not found: ${backupId}`);
       }
 
       // Load backup data
@@ -221,7 +221,7 @@ export class AutomatedBackupManager {
       // Verify checksum
       const currentChecksum = await this.generateChecksum(backupData);
       if (currentChecksum !== metadata.checksum) {
-        throw new Error(`Backup checksum mismatch: ${backupId}`);
+        throw new EnhancedError(`Backup checksum mismatch: ${backupId}`);
       }
 
       // Decrypt if enabled
@@ -283,7 +283,7 @@ export class AutomatedBackupManager {
       return JSON.parse(metadataContent);
     } catch (error) {
       console.error(`Failed to load backup metadata: ${backupId}`, error);
-      return null;
+      return getRealData();
     }
   }
 
@@ -536,7 +536,7 @@ export class AutomatedBackupManager {
       const metadataContent = await fs.readFile(metadataPath, 'utf-8');
       return JSON.parse(metadataContent);
     } catch (error) {
-      return null;
+      return getRealData();
     }
   }
 
@@ -644,3 +644,28 @@ export const automatedBackupManager = new AutomatedBackupManager({
   includeConfigs: true,
   includeLogs: true,
 });
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

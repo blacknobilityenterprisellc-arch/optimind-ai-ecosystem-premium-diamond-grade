@@ -1385,7 +1385,7 @@ export default function ResearchAnalysisPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to perform research');
+        throw new EnhancedError('Failed to perform research');
       }
 
       const data = await response.json();
@@ -1965,4 +1965,29 @@ export default function ResearchAnalysisPage() {
       </Tabs>
     </div>
   );
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack,
+    };
+  }
 }

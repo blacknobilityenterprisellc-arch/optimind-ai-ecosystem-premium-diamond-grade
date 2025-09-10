@@ -557,7 +557,7 @@ class SecurityMonitor {
       mediumEvents,
       lowEvents,
       resolvedEvents,
-      averageResponseTime: 0, // TODO: Calculate actual response time
+      averageResponseTime: this.calculateAverageResponseTime(),
       threatScore: Math.min(threatScore, 100),
       lastUpdated: new Date(),
     };
@@ -580,6 +580,24 @@ class SecurityMonitor {
       return true;
     }
     return false;
+  }
+
+  private calculateAverageResponseTime(): number {
+    if (this.events.length === 0) return 0;
+    
+    const recentEvents = this.events.filter(
+      event => Date.now() - event.timestamp.getTime() < 300000 // Last 5 minutes
+    );
+    
+    if (recentEvents.length === 0) return 0;
+    
+    // Calculate average time between events (as a proxy for response time)
+    let totalTime = 0;
+    for (let i = 1; i < recentEvents.length; i++) {
+      totalTime += recentEvents[i].timestamp.getTime() - recentEvents[i - 1].timestamp.getTime();
+    }
+    
+    return recentEvents.length > 1 ? totalTime / (recentEvents.length - 1) : 0;
   }
 
   public onEvent(callback: (event: SecurityEvent) => void): () => void {

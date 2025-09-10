@@ -41,7 +41,7 @@ const SidebarContext = React.createContext<SidebarContextProps | null>(null);
 function useSidebar() {
   const context = React.useContext(SidebarContext);
   if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider.');
+    throw new EnhancedError('useSidebar must be used within a SidebarProvider.');
   }
 
   return context;
@@ -691,3 +691,28 @@ export {
   SidebarTrigger,
   useSidebar,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

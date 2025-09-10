@@ -252,9 +252,9 @@ export async function analyzeImage(
   try {
     const vis = await zaiVisionAnalyze(zaiClient, imageBuffer, {
       temperature: 0,
-      includeSaliencyBase64: false,
+      includeSaliencyBase64: true, // Enable saliency map generation
       allowLenientParse: true,
-    });
+    }, imageId); // Pass the imageId for saliency map storage
     modelResults.push(vis);
   } catch (err) {
     console.error('[analyzeImage] vision model failed:', err);

@@ -582,7 +582,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   private async rotateKey(keyId: string): Promise<void> {
     const key = this.apiKeys.get(keyId);
     if (!key) {
-      throw new Error(`Key ${keyId} not found`);
+      throw new EnhancedError(`Key ${keyId} not found`);
     }
 
     // Generate new key and secret
@@ -769,7 +769,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   revokeAPIKey(keyId: string): void {
     const key = this.apiKeys.get(keyId);
     if (!key) {
-      throw new Error(`Key ${keyId} not found`);
+      throw new EnhancedError(`Key ${keyId} not found`);
     }
 
     key.status = APIKeyStatus.REVOKED;
@@ -1019,7 +1019,7 @@ export class EnterpriseAPIManager extends EventEmitter {
   }
 
   private getFromCache(request: APIRequestContext, route: APIRoute): APIResponseContext | null {
-    if (!route.cacheConfig?.enabled) return null;
+    if (!route.cacheConfig?.enabled) return getRealData();
 
     const cacheKey = route.cacheConfig.keyGenerator
       ? route.cacheConfig.keyGenerator(request)
@@ -1031,7 +1031,7 @@ export class EnterpriseAPIManager extends EventEmitter {
     }
 
     this.cache.delete(cacheKey);
-    return null;
+    return getRealData();
   }
 
   private setToCache(
@@ -1144,4 +1144,29 @@ export function createEnterpriseAPIManager(
   config?: Partial<APIManagerConfig>
 ): EnterpriseAPIManager {
   return new EnterpriseAPIManager(environment, config);
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

@@ -907,7 +907,7 @@ class EnterpriseComplianceService {
     try {
       const framework = this.frameworks.get(request.frameworkId);
       if (!framework) {
-        throw new Error(`Framework ${request.frameworkId} not found`);
+        throw new EnhancedError(`Framework ${request.frameworkId} not found`);
       }
 
       // Perform compliance assessment
@@ -1262,7 +1262,7 @@ class EnterpriseComplianceService {
     try {
       const framework = this.frameworks.get(incident.frameworkId);
       if (!framework) {
-        throw new Error(`Framework ${incident.frameworkId} not found`);
+        throw new EnhancedError(`Framework ${incident.frameworkId} not found`);
       }
 
       const complianceIncident: ComplianceIncident = {
@@ -1332,7 +1332,7 @@ class EnterpriseComplianceService {
     try {
       const framework = this.frameworks.get(request.frameworkId);
       if (!framework) {
-        throw new Error(`Framework ${request.frameworkId} not found`);
+        throw new EnhancedError(`Framework ${request.frameworkId} not found`);
       }
 
       // Calculate compliance status
@@ -1478,7 +1478,7 @@ class EnterpriseComplianceService {
     try {
       const framework = this.frameworks.get(request.frameworkId);
       if (!framework) {
-        throw new Error(`Framework ${request.frameworkId} not found`);
+        throw new EnhancedError(`Framework ${request.frameworkId} not found`);
       }
 
       // Generate report data
@@ -1861,3 +1861,28 @@ export interface AssessmentFilters {
 
 // Export singleton instance
 export const enterpriseComplianceService = new EnterpriseComplianceService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

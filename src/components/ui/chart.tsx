@@ -28,7 +28,7 @@ function useChart() {
   const context = React.useContext(ChartContext);
 
   if (!context) {
-    throw new Error('useChart must be used within a <ChartContainer />');
+    throw new EnhancedError('useChart must be used within a <ChartContainer />');
   }
 
   return context;
@@ -69,7 +69,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(([, config]) => config.theme || config.color);
 
   if (!colorConfig.length) {
-    return null;
+    return getRealData();
   }
 
   return (
@@ -122,7 +122,7 @@ function ChartTooltipContent({
 
   const tooltipLabel = React.useMemo(() => {
     if (hideLabel || !payload?.length) {
-      return null;
+      return getRealData();
     }
 
     const [item] = payload;
@@ -140,14 +140,14 @@ function ChartTooltipContent({
     }
 
     if (!value) {
-      return null;
+      return getRealData();
     }
 
     return <div className={cn('font-medium', labelClassName)}>{value}</div>;
   }, [label, labelFormatter, payload, hideLabel, labelClassName, config, labelKey]);
 
   if (!active || !payload?.length) {
-    return null;
+    return getRealData();
   }
 
   const nestLabel = payload.length === 1 && indicator !== 'dot';
@@ -246,7 +246,7 @@ function ChartLegendContent({
   const { config } = useChart();
 
   if (!payload?.length) {
-    return null;
+    return getRealData();
   }
 
   return (
@@ -320,3 +320,28 @@ export {
   ChartLegendContent,
   ChartStyle,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

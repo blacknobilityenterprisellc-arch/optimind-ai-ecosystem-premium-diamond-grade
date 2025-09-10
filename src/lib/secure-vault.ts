@@ -109,7 +109,7 @@ class SecureVault {
       console.log('Secure Vault initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Secure Vault:', error);
-      throw new Error('Vault initialization failed');
+      throw new EnhancedError('Vault initialization failed');
     }
   }
 
@@ -130,14 +130,14 @@ class SecureVault {
     nsfwAnalysis?: NSFWDetectionResult
   ): Promise<string> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     try {
       // Check vault size limit
       const currentSize = this.getTotalSize();
       if (currentSize + data.length > this.config.maxVaultSize) {
-        throw new Error('Vault size limit exceeded');
+        throw new EnhancedError('Vault size limit exceeded');
       }
 
       // Generate unique ID
@@ -193,18 +193,18 @@ class SecureVault {
   // Retrieve and decrypt item from vault
   async getItem(itemId: string): Promise<{ data: Buffer; metadata: VaultMetadata }> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error('Item not found');
+        throw new EnhancedError('Item not found');
       }
 
       // Check if item is quarantined
       if (item.isQuarantined) {
-        throw new Error(`Item is quarantined: ${item.quarantineReason}`);
+        throw new EnhancedError(`Item is quarantined: ${item.quarantineReason}`);
       }
 
       // Decrypt data
@@ -272,13 +272,13 @@ class SecureVault {
   // Remove item from vault
   async removeItem(itemId: string, secureDelete: boolean = false): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error('Item not found');
+        throw new EnhancedError('Item not found');
       }
 
       if (secureDelete && this.config.secureDeleteEnabled) {
@@ -313,13 +313,13 @@ class SecureVault {
     riskLevel: 'low' | 'medium' | 'high' | 'critical'
   ): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     try {
       const item = this.vaultItems.get(itemId);
       if (!item) {
-        throw new Error('Item not found');
+        throw new EnhancedError('Item not found');
       }
 
       item.isQuarantined = true;
@@ -435,7 +435,7 @@ class SecureVault {
   // Backup vault data
   async backup(): Promise<string> {
     if (!this.isInitialized) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     const backupData = {
@@ -466,21 +466,21 @@ class SecureVault {
         false,
         error instanceof Error ? error.message : 'Unknown error'
       );
-      throw new Error('Restore failed: invalid backup data');
+      throw new EnhancedError('Restore failed: invalid backup data');
     }
   }
 
   // Change vault password
   async changePassword(oldPassword: string, newPassword: string): Promise<void> {
     if (!this.isInitialized || !this.vaultKey) {
-      throw new Error('Vault not initialized');
+      throw new EnhancedError('Vault not initialized');
     }
 
     try {
       // Verify old password
       const testKey = await this.deriveKey(oldPassword, 'test');
       if (testKey !== this.vaultKey) {
-        throw new Error('Invalid old password');
+        throw new EnhancedError('Invalid old password');
       }
 
       // Re-encrypt all items with new key
@@ -505,3 +505,28 @@ export const secureVault = new SecureVault();
 
 // Export types and utilities
 export type { VaultItem, VaultMetadata, VaultConfig, VaultAccessLog, VaultStats };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

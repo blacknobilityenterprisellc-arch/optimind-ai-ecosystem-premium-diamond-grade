@@ -205,7 +205,7 @@ class MCPServiceOrchestrator {
     try {
       const config = BUSINESS_SOLUTIONS[request.businessType];
       if (!config) {
-        throw new Error(`Unknown business type: ${request.businessType}`);
+        throw new EnhancedError(`Unknown business type: ${request.businessType}`);
       }
 
       // Select optimal models based on request options
@@ -401,7 +401,7 @@ class MCPServiceOrchestrator {
       };
     } catch (error) {
       const processingTime = Date.now() - startTime;
-      throw new Error(
+      throw new EnhancedError(
         `Model ${modelId} failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -762,3 +762,28 @@ class MCPServiceOrchestrator {
 
 // Export singleton instance
 export const mcpServiceOrchestrator = new MCPServiceOrchestrator();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

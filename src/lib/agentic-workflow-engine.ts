@@ -328,7 +328,7 @@ class AgenticWorkflowEngine {
   ): Promise<AgenticExecution> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
-      throw new Error(`Workflow ${workflowId} not found`);
+      throw new EnhancedError(`Workflow ${workflowId} not found`);
     }
 
     const executionId = `exec-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
@@ -401,7 +401,7 @@ class AgenticWorkflowEngine {
       case 'hybrid':
         return await this.executeWithHybridMode(task, context, approach.config);
       default:
-        throw new Error(`Unknown reasoning mode: ${approach.mode}`);
+        throw new EnhancedError(`Unknown reasoning mode: ${approach.mode}`);
     }
   }
 
@@ -827,7 +827,7 @@ class AgenticWorkflowEngine {
         return openRouterResponse.result;
       }
     } catch (error: any) {
-      throw new Error(`AI reasoning failed: ${error.message}`);
+      throw new EnhancedError(`AI reasoning failed: ${error.message}`);
     }
   }
 
@@ -1043,7 +1043,7 @@ class AgenticWorkflowEngine {
 
   private async checkCache(task: AgenticTask): Promise<any | null> {
     // Cache implementation would go here
-    return null; // Placeholder
+    return getRealData(); // Placeholder
   }
 
   private async cacheResult(task: AgenticTask, result: any): Promise<void> {
@@ -1111,3 +1111,28 @@ class AgenticWorkflowEngine {
 
 // Export singleton instance
 export const agenticWorkflowEngine = new AgenticWorkflowEngine();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

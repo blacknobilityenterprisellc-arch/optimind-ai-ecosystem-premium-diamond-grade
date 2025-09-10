@@ -118,7 +118,7 @@ class NSFWDetectionService {
       console.log('NSFW Detection Service initialized successfully');
     } catch (error) {
       console.error('Failed to initialize NSFW Detection Service:', error);
-      throw new Error('NSFW Detection Service initialization failed');
+      throw new EnhancedError('NSFW Detection Service initialization failed');
     }
   }
 
@@ -155,7 +155,7 @@ class NSFWDetectionService {
       return finalResult;
     } catch (error) {
       console.error('NSFW analysis failed:', error);
-      throw new Error(
+      throw new EnhancedError(
         `NSFW detection failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -293,7 +293,7 @@ Focus on maximum accuracy and comprehensive safety assessment.`;
     photoId: string
   ): NSFWDetectionResult {
     if (modelResults.length === 0) {
-      throw new Error('No model results available for consensus calculation');
+      throw new EnhancedError('No model results available for consensus calculation');
     }
 
     // Calculate weighted consensus
@@ -469,3 +469,28 @@ export const nsfwDetectionService = new NSFWDetectionService();
 // Export types and utilities
 export { NSFW_DETECTION_MODELS };
 export type { ContentSafetyConfig };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

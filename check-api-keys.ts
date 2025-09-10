@@ -15,7 +15,7 @@ async function checkAPIKeys() {
     console.log('📋 Regular API Keys:');
     console.log('═'.repeat(50));
     
-    const apiKeys = await db.apiKey.findMany({
+    const apiKeys = await db.getClient().apiKey.findMany({
       include: {
         user: {
           select: {
@@ -61,7 +61,7 @@ async function checkAPIKeys() {
     console.log('\n🔑 Developer Access Keys:');
     console.log('═'.repeat(50));
     
-    const devKeys = await db.developerAccessKey.findMany({
+    const devKeys = await db.getClient().developerAccessKey.findMany({
       include: {
         user: {
           select: {
@@ -102,7 +102,7 @@ async function checkAPIKeys() {
     console.log('\n👥 Users with API Access:');
     console.log('═'.repeat(50));
     
-    const usersWithKeys = await db.user.findMany({
+    const usersWithKeys = await db.getClient().user.findMany({
       where: {
         OR: [
           {
@@ -172,7 +172,7 @@ async function checkAPIKeys() {
     console.error('❌ Error checking API keys:', error);
     console.error('Make sure the database is properly configured and accessible');
   } finally {
-    await db.$disconnect();
+    await db.getClient().$disconnect();
   }
 }
 

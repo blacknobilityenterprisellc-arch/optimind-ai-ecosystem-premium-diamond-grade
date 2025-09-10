@@ -184,7 +184,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      throw new Error('No content received from GLM-4.5V');
+      throw new EnhancedError('No content received from GLM-4.5V');
     }
 
     // Parse and validate JSON response
@@ -193,7 +193,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
       analysis = JSON.parse(content);
     } catch (parseError) {
       console.error('Failed to parse GLM-4.5V response:', content);
-      throw new Error(`Invalid JSON response from GLM-4.5V: ${parseError.message}`);
+      throw new EnhancedError(`Invalid JSON response from GLM-4.5V: ${parseError.message}`);
     }
 
     // Convert analysis to ModelResult format
@@ -242,7 +242,7 @@ Important: Respond ONLY with valid JSON. No explanations, no markdown, just the 
     };
   } catch (error) {
     console.error('GLM-4.5V analysis failed:', error);
-    throw new Error(`GLM-4.5V analysis failed: ${error.message}`);
+    throw new EnhancedError(`GLM-4.5V analysis failed: ${error.message}`);
   }
 }
 
@@ -312,7 +312,7 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
-      throw new Error('No content received from GLM-4.5');
+      throw new EnhancedError('No content received from GLM-4.5');
     }
 
     // Parse and validate JSON response
@@ -321,7 +321,7 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
       reasoning = JSON.parse(content);
     } catch (parseError) {
       console.error('Failed to parse GLM-4.5 response:', content);
-      throw new Error(`Invalid JSON response from GLM-4.5: ${parseError.message}`);
+      throw new EnhancedError(`Invalid JSON response from GLM-4.5: ${parseError.message}`);
     }
 
     // Convert reasoning to ModelResult format
@@ -372,7 +372,7 @@ Provide a comprehensive analysis including risk assessment, recommended action, 
     };
   } catch (error) {
     console.error('GLM-4.5 reasoning failed:', error);
-    throw new Error(`GLM-4.5 reasoning failed: ${error.message}`);
+    throw new EnhancedError(`GLM-4.5 reasoning failed: ${error.message}`);
   }
 }
 
@@ -409,13 +409,13 @@ export async function generateSaliencyMap(
 
     const imageData = response.data[0];
     if (!imageData?.base64) {
-      throw new Error('No image data received from saliency map generation');
+      throw new EnhancedError('No image data received from saliency map generation');
     }
 
     return `data:image/png;base64,${imageData.base64}`;
   } catch (error) {
     console.error('Saliency map generation failed:', error);
-    throw new Error(`Saliency map generation failed: ${error.message}`);
+    throw new EnhancedError(`Saliency map generation failed: ${error.message}`);
   }
 }
 
@@ -442,7 +442,7 @@ export async function withRetry<T>(
     }
   }
 
-  throw new Error('Max retries exceeded');
+  throw new EnhancedError('Max retries exceeded');
 }
 
 // Export utility functions for testing and monitoring
@@ -452,3 +452,28 @@ export const ZaiUtils = {
   VISION_ANALYSIS_SCHEMA,
   TEXT_REASONING_SCHEMA,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

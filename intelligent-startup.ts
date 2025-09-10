@@ -611,7 +611,7 @@ class IntelligentStartup {
         if (step.validation) {
           const validationSuccess = await step.validation();
           if (!validationSuccess) {
-            throw new Error('Step validation failed');
+            throw new EnhancedError('Step validation failed');
           }
         }
 
@@ -625,7 +625,7 @@ class IntelligentStartup {
         
         return true;
       } else {
-        throw new Error(result.error || 'Step execution failed');
+        throw new EnhancedError(result.error || 'Step execution failed');
       }
     } catch (error: any) {
       step.status = 'failed';
@@ -968,3 +968,27 @@ if (require.main === module) {
 }
 
 export default IntelligentStartup;
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

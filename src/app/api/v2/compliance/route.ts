@@ -103,15 +103,7 @@ export async function GET() {
         'regulatory_monitoring',
         'compliance_training',
       ],
-      supportedFrameworks: [
-        'SOC2',
-        'ISO27001',
-        'GDPR',
-        'HIPAA',
-        'PCI_DSS',
-        'CCPA',
-        'SOX',
-      ],
+      supportedFrameworks: ['SOC2', 'ISO27001', 'GDPR', 'HIPAA', 'PCI_DSS', 'CCPA', 'SOX'],
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

@@ -79,7 +79,7 @@ export async function scanMultiplePhotos(
         });
 
         if (!response.ok) {
-          throw new Error(`API request failed: ${response.status}`);
+          throw new EnhancedError(`API request failed: ${response.status}`);
         }
 
         const apiResult: ScanResponse = await response.json();
@@ -111,7 +111,7 @@ export async function scanMultiplePhotos(
     return results;
   } catch (error) {
     console.error('Error scanning photos:', error);
-    throw new Error('Failed to scan photos');
+    throw new EnhancedError('Failed to scan photos');
   }
 }
 
@@ -147,4 +147,29 @@ function fileToBase64(file: File): Promise<string> {
 export async function scanSinglePhoto(photo: PhotoItem, file: File): Promise<ScanResult> {
   const results = await scanMultiplePhotos([photo], [file]);
   return results[0];
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

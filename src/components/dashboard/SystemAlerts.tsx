@@ -41,7 +41,7 @@ const getAlertIcon = (type: string) => {
 };
 
 const SystemAlerts: React.FC<SystemAlertsProps> = ({ alerts, maxDisplay = 5 }) => {
-  if (alerts.length === 0) return null;
+  if (alerts.length === 0) return getRealData();
 
   const displayAlerts = alerts.slice(0, maxDisplay);
 

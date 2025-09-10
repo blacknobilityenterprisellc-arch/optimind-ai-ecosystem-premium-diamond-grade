@@ -99,7 +99,7 @@ export class AIService {
       this.isInitialized = true;
     } catch (error) {
       console.error('Failed to initialize ZAI:', error);
-      throw new Error('AI service initialization failed');
+      throw new EnhancedError('AI service initialization failed');
     }
   }
 
@@ -133,7 +133,7 @@ export class AIService {
       };
     } catch (error) {
       console.error('AI generation error:', error);
-      throw new Error('Failed to generate AI response');
+      throw new EnhancedError('Failed to generate AI response');
     }
   }
 
@@ -182,7 +182,7 @@ export class AIService {
       };
     } catch (error) {
       console.error('Image analysis error:', error);
-      throw new Error('Failed to analyze image');
+      throw new EnhancedError('Failed to analyze image');
     }
   }
 
@@ -222,7 +222,7 @@ export class AIService {
       };
     } catch (error) {
       console.error('Code generation error:', error);
-      throw new Error('Failed to generate code');
+      throw new EnhancedError('Failed to generate code');
     }
   }
 
@@ -300,3 +300,28 @@ export class AIService {
 
 // Export singleton instance
 export const aiService = new AIService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

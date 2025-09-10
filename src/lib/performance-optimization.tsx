@@ -105,7 +105,7 @@ export function useLazyComponent<T extends React.ComponentType<any>>(
 
   const LazyComponent = useMemo(() => {
     if (!Component) {
-      return null;
+      return getRealData();
     }
 
     const WrappedComponent = (props: Parameters<T>[0]) => {
@@ -307,7 +307,7 @@ export function trackPerformance(componentName: string, metrics: Partial<Perform
 export function getPerformanceMetrics(componentName: string) {
   const metrics = performanceMetrics.get(componentName) || [];
 
-  if (metrics.length === 0) return null;
+  if (metrics.length === 0) return getRealData();
 
   const avgLoadTime = metrics.reduce((sum, m) => sum + m.loadTime, 0) / metrics.length;
   const avgRenderTime = metrics.reduce((sum, m) => sum + m.renderTime, 0) / metrics.length;

@@ -93,7 +93,7 @@ class NeonMigration {
       fs.copyFileSync(neonSchemaPath, schemaPath);
       console.log('✅ Switched to PostgreSQL schema');
     } else {
-      throw new Error('Neon schema file not found');
+      throw new EnhancedError('Neon schema file not found');
     }
   }
 
@@ -104,7 +104,7 @@ class NeonMigration {
       execSync('npx prisma generate', { stdio: 'inherit' });
       console.log('✅ Prisma client generated successfully');
     } catch (error) {
-      throw new Error(`Failed to generate Prisma client: ${error.message}`);
+      throw new EnhancedError(`Failed to generate Prisma client: ${error.message}`);
     }
   }
 
@@ -115,7 +115,7 @@ class NeonMigration {
       execSync('npx prisma db push', { stdio: 'inherit' });
       console.log('✅ Schema pushed to Neon successfully');
     } catch (error) {
-      throw new Error(`Failed to push schema to Neon: ${error.message}`);
+      throw new EnhancedError(`Failed to push schema to Neon: ${error.message}`);
     }
   }
 
@@ -163,7 +163,7 @@ class NeonMigration {
       console.log('✅ CRUD operations working correctly');
       
     } catch (error) {
-      throw new Error(`Migration validation failed: ${error.message}`);
+      throw new EnhancedError(`Migration validation failed: ${error.message}`);
     }
   }
 
@@ -218,4 +218,28 @@ export { NeonMigration };
 // Run if called directly
 if (require.main === module) {
   main();
+}
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

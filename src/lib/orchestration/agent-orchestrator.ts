@@ -151,7 +151,7 @@ export class AgentOrchestrator {
       return await this.runningTasks.get(taskId)!;
     }
 
-    return null;
+    return getRealData();
   }
 
   /**
@@ -229,7 +229,7 @@ export class AgentOrchestrator {
         return task;
       }
     }
-    return null;
+    return getRealData();
   }
 
   /**
@@ -295,7 +295,7 @@ export class AgentOrchestrator {
     const result = await glmOrchestrator.getOperationResult(operationId);
 
     if (!result?.success) {
-      throw new Error(result ? `Operation failed: ${JSON.stringify(result)}` : 'Operation failed');
+      throw new EnhancedError(result ? `Operation failed: ${JSON.stringify(result)}` : 'Operation failed');
     }
 
     return result.result;
@@ -362,5 +362,30 @@ export class AgentOrchestrator {
     this.completedTasks.clear();
     this.taskDependencies.clear();
     glmOrchestrator.destroy();
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

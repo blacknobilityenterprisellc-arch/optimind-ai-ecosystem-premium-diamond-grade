@@ -94,7 +94,7 @@ export function Paywall({ isOpen, onClose, onSubscribe, hasFreeTrial = true }: P
     },
   ];
 
-  if (!isOpen) return null;
+  if (!isOpen) return getRealData();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">

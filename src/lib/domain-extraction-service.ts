@@ -224,19 +224,19 @@ class DomainExtractionService {
       // Get domain configuration
       const domainConfig = this.domainConfigs.get(request.domain);
       if (!domainConfig) {
-        throw new Error(`Unsupported domain: ${request.domain}`);
+        throw new EnhancedError(`Unsupported domain: ${request.domain}`);
       }
 
       // Get agent configuration
       const agentConfig = mcpService.getAgent(domainConfig.agentProfile);
       if (!agentConfig) {
-        throw new Error(`Agent profile not found: ${domainConfig.agentProfile}`);
+        throw new EnhancedError(`Agent profile not found: ${domainConfig.agentProfile}`);
       }
 
       // Validate request
       const validation = this.validateExtractionRequest(request, domainConfig);
       if (!validation.isValid) {
-        throw new Error(`Invalid request: ${validation.errors.join(', ')}`);
+        throw new EnhancedError(`Invalid request: ${validation.errors.join(', ')}`);
       }
 
       // Generate context prompt
@@ -402,7 +402,7 @@ class DomainExtractionService {
     const response = await premiumContextEngineeringService.generateContextPrompt(contextRequest);
 
     if (!response.success || !response.prompt) {
-      throw new Error(`Failed to generate context prompt: ${response.errors.join(', ')}`);
+      throw new EnhancedError(`Failed to generate context prompt: ${response.errors.join(', ')}`);
     }
 
     return response.prompt;
@@ -694,7 +694,7 @@ class DomainExtractionService {
         data: aiResult,
       };
     } catch (error: any) {
-      throw new Error(`AI extraction failed: ${error.message}`);
+      throw new EnhancedError(`AI extraction failed: ${error.message}`);
     }
   }
 
@@ -1224,3 +1224,28 @@ class DomainExtractionService {
 
 // Export singleton instance
 export const domainExtractionService = new DomainExtractionService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

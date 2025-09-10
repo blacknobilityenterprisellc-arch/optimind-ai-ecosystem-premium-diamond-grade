@@ -807,7 +807,7 @@ class PremiumContextEngineeringService {
     try {
       const template = this.templates.get(request.templateId);
       if (!template) {
-        throw new Error(`Template ${request.templateId} not found`);
+        throw new EnhancedError(`Template ${request.templateId} not found`);
       }
 
       // Validate input variables
@@ -940,7 +940,7 @@ class PremiumContextEngineeringService {
       if (variable.defaultValue !== undefined) {
         value = variable.defaultValue;
       } else if (variable.required) {
-        throw new Error(`Required variable ${variable.name} is missing`);
+        throw new EnhancedError(`Required variable ${variable.name} is missing`);
       } else {
         value = '';
       }
@@ -985,23 +985,23 @@ class PremiumContextEngineeringService {
     const validation = section.validation;
 
     if (validation.required && !content.trim()) {
-      throw new Error(`Section ${section.id} is required but empty`);
+      throw new EnhancedError(`Section ${section.id} is required but empty`);
     }
 
     if (validation.minLength && content.length < validation.minLength) {
-      throw new Error(
+      throw new EnhancedError(
         `Section ${section.id} must be at least ${validation.minLength} characters long`
       );
     }
 
     if (validation.maxLength && content.length > validation.maxLength) {
-      throw new Error(`Section ${section.id} must not exceed ${validation.maxLength} characters`);
+      throw new EnhancedError(`Section ${section.id} must not exceed ${validation.maxLength} characters`);
     }
 
     if (validation.pattern) {
       const regex = new RegExp(validation.pattern);
       if (!regex.test(content)) {
-        throw new Error(`Section ${section.id} does not match required pattern`);
+        throw new EnhancedError(`Section ${section.id} does not match required pattern`);
       }
     }
   }
@@ -1064,7 +1064,7 @@ class PremiumContextEngineeringService {
       return `Variable ${name} must be of type ${expectedType}, got ${actualType}`;
     }
 
-    return null;
+    return getRealData();
   }
 
   private validateVariableConstraints(
@@ -1091,7 +1091,7 @@ class PremiumContextEngineeringService {
       }
     }
 
-    return null;
+    return getRealData();
   }
 
   private validatePrompt(
@@ -1479,21 +1479,46 @@ class PremiumContextEngineeringService {
 
       // Validate prompt structure
       if (!prompt.id || !prompt.templateId || !prompt.sections) {
-        throw new Error('Invalid prompt structure');
+        throw new EnhancedError('Invalid prompt structure');
       }
 
       // Verify template exists
       if (!this.templates.has(prompt.templateId)) {
-        throw new Error(`Template ${prompt.templateId} not found`);
+        throw new EnhancedError(`Template ${prompt.templateId} not found`);
       }
 
       return prompt;
     } catch (error: any) {
       console.error('Failed to import prompt:', error);
-      return null;
+      return getRealData();
     }
   }
 }
 
 // Export singleton instance
 export const premiumContextEngineeringService = new PremiumContextEngineeringService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

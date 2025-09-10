@@ -214,7 +214,7 @@ class SecureDeletionService {
       console.log('Secure Deletion Service initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Secure Deletion Service:', error);
-      throw new Error('Secure Deletion Service initialization failed');
+      throw new EnhancedError('Secure Deletion Service initialization failed');
     }
   }
 
@@ -241,7 +241,7 @@ class SecureDeletionService {
     }
   ): Promise<DeletionJob> {
     if (!this.isInitialized) {
-      throw new Error('Secure Deletion Service not initialized');
+      throw new EnhancedError('Secure Deletion Service not initialized');
     }
 
     try {
@@ -291,7 +291,7 @@ class SecureDeletionService {
       return job;
     } catch (error) {
       console.error('Failed to create deletion job:', error);
-      throw new Error(
+      throw new EnhancedError(
         `Failed to create deletion job: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -300,16 +300,16 @@ class SecureDeletionService {
   // Execute deletion job
   async executeDeletionJob(jobId: string): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error('Secure Deletion Service not initialized');
+      throw new EnhancedError('Secure Deletion Service not initialized');
     }
 
     const job = this.activeJobs.get(jobId);
     if (!job) {
-      throw new Error('Deletion job not found');
+      throw new EnhancedError('Deletion job not found');
     }
 
     if (job.status !== 'pending') {
-      throw new Error(`Job is already ${job.status}`);
+      throw new EnhancedError(`Job is already ${job.status}`);
     }
 
     try {
@@ -440,7 +440,7 @@ class SecureDeletionService {
       try {
         const sample = await fileHandle.read(Buffer.alloc(1024), 0, 1024, 0);
         if (sample.bytesRead > 0) {
-          throw new Error('File still contains readable data after deletion');
+          throw new EnhancedError('File still contains readable data after deletion');
         }
       } catch {
         // Expected error - file should be unreadable
@@ -479,7 +479,7 @@ class SecureDeletionService {
     try {
       // Try to access the file - should fail
       await fs.access(job.filePath);
-      throw new Error('File still exists after deletion');
+      throw new EnhancedError('File still exists after deletion');
     } catch (error) {
       // Expected error - file should not exist
       if ((error as any).code === 'ENOENT') {
@@ -657,11 +657,11 @@ Certificate Hash: ${crypto.createHash('sha256').update(certificate).digest('hex'
   async cancelDeletionJob(jobId: string, reason?: string): Promise<void> {
     const job = this.activeJobs.get(jobId);
     if (!job) {
-      throw new Error('Deletion job not found');
+      throw new EnhancedError('Deletion job not found');
     }
 
     if (job.status !== 'pending' && job.status !== 'in_progress') {
-      throw new Error(`Cannot cancel job in ${job.status} state`);
+      throw new EnhancedError(`Cannot cancel job in ${job.status} state`);
     }
 
     job.status = 'cancelled';
@@ -767,3 +767,28 @@ export type {
   ComplianceReport,
   SecureDeletionConfig,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

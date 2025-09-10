@@ -256,7 +256,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
 
   register<T extends IService>(descriptor: ServiceDescriptor<T>): void {
     if (this.services.has(descriptor.name)) {
-      throw new Error(`Service ${descriptor.name} is already registered`);
+      throw new EnhancedError(`Service ${descriptor.name} is already registered`);
     }
 
     // Complete metadata with defaults
@@ -319,7 +319,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
     };
 
     if (hasCycle(serviceName)) {
-      throw new Error(`Circular dependency detected involving service: ${serviceName}`);
+      throw new EnhancedError(`Circular dependency detected involving service: ${serviceName}`);
     }
   }
 
@@ -330,7 +330,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
 
     const descriptor = this.services.get(serviceName);
     if (!descriptor) {
-      throw new Error(`Service ${serviceName} not found`);
+      throw new EnhancedError(`Service ${serviceName} not found`);
     }
 
     const initPromise = this.doInitializeService(descriptor);
@@ -397,7 +397,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
   async startService(serviceName: string): Promise<void> {
     const instance = this.instances.get(serviceName);
     if (!instance) {
-      throw new Error(`Service ${serviceName} not found`);
+      throw new EnhancedError(`Service ${serviceName} not found`);
     }
 
     if (instance.lifecycle === ServiceLifecycle.RUNNING) {
@@ -426,7 +426,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
   async stopService(serviceName: string): Promise<void> {
     const instance = this.instances.get(serviceName);
     if (!instance) {
-      throw new Error(`Service ${serviceName} not found`);
+      throw new EnhancedError(`Service ${serviceName} not found`);
     }
 
     if (instance.lifecycle === ServiceLifecycle.STOPPED) {
@@ -455,7 +455,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
   async getService<T extends IService>(serviceName: string, scopeId?: string): Promise<T> {
     const descriptor = this.services.get(serviceName);
     if (!descriptor) {
-      throw new Error(`Service ${serviceName} not found`);
+      throw new EnhancedError(`Service ${serviceName} not found`);
     }
 
     // Handle scoped services
@@ -534,7 +534,7 @@ export class EnterpriseServiceContainer extends EventEmitter {
   async getServiceHealth(serviceName: string): Promise<ServiceHealth> {
     const instance = this.instances.get(serviceName);
     if (!instance) {
-      throw new Error(`Service ${serviceName} not found`);
+      throw new EnhancedError(`Service ${serviceName} not found`);
     }
 
     if (instance.service.healthCheck) {
@@ -764,7 +764,7 @@ let globalContainer: EnterpriseServiceContainer;
 
 export function getGlobalContainer(): EnterpriseServiceContainer {
   if (!globalContainer) {
-    throw new Error('Global service container not initialized');
+    throw new EnhancedError('Global service container not initialized');
   }
   return globalContainer;
 }
@@ -802,4 +802,29 @@ export function Inject(serviceName: string) {
 
     return descriptor;
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

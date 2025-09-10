@@ -24,7 +24,11 @@ export async function POST(request: Request) {
         break;
 
       case 'fine_tune_model':
-        result = await modelTrainingV2.fineTuneModel(params.baseModel, params.dataset, params.config);
+        result = await modelTrainingV2.fineTuneModel(
+          params.baseModel,
+          params.dataset,
+          params.config
+        );
         break;
 
       case 'monitor_training':

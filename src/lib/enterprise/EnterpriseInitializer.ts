@@ -779,7 +779,7 @@ export async function initializeEnterpriseSystem(
 // Get global enterprise initializer
 export function getEnterpriseInitializer(): EnterpriseInitializer {
   if (!globalInitializer) {
-    throw new Error('Enterprise system not initialized');
+    throw new EnhancedError('Enterprise system not initialized');
   }
   return globalInitializer;
 }
@@ -792,4 +792,29 @@ export function getEnterpriseSystemState(): EnterpriseSystemState {
 // Check if enterprise system is healthy
 export function isEnterpriseSystemHealthy(): boolean {
   return getEnterpriseInitializer().isHealthy();
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

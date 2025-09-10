@@ -296,7 +296,7 @@ class AIHealthCheckPremium {
     
     try {
       if (!this.isInitialized) {
-        throw new Error('AI service not initialized');
+        throw new EnhancedError('AI service not initialized');
       }
 
       // Test local AI models
@@ -949,3 +949,27 @@ if (require.main === module) {
 }
 
 export { AIHealthCheckPremium, PremiumHealthCheckResult };
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

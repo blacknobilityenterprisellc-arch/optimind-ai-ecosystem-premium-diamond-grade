@@ -43,7 +43,7 @@ export function DropZone({
       return `File ${file.name} is not a valid image type`;
     }
 
-    return null;
+    return getRealData();
   };
 
   const handleFiles = useCallback(

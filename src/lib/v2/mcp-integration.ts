@@ -165,7 +165,7 @@ class MCPIntegrationV2 {
     // Validate context size
     const contextSize = JSON.stringify(context).length;
     if (contextSize > this.protocol.maxContextSize) {
-      throw new Error(
+      throw new EnhancedError(
         `Context size (${contextSize} bytes) exceeds maximum allowed size (${this.protocol.maxContextSize} bytes)`
       );
     }
@@ -215,7 +215,7 @@ class MCPIntegrationV2 {
     }
 
     this.stats.contextMisses++;
-    return null;
+    return getRealData();
   }
 
   /**
@@ -293,7 +293,7 @@ class MCPIntegrationV2 {
     // Validate message size
     const messageSize = JSON.stringify(fullMessage).length;
     if (messageSize > this.protocol.maxMessageSize) {
-      throw new Error(
+      throw new EnhancedError(
         `Message size (${messageSize} bytes) exceeds maximum allowed size (${this.protocol.maxMessageSize} bytes)`
       );
     }
@@ -883,3 +883,28 @@ export const createMCPIntegration = () => {
 };
 
 export default MCPIntegrationV2;
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

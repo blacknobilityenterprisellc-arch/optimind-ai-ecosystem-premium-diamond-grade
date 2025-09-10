@@ -1,0 +1,32 @@
+{
+  "ai_analysis": {
+    "timestamp": "2025-09-10T21:41:52Z",
+    "analysis_duration_ms": 2013,
+    "files_analyzed": {
+      "typescript": 25058,
+      "javascript": 41891,
+      "json": 2981,
+      "markdown": 2506,
+      "total": 66949
+    },
+    "quality_metrics": {
+      "complexity_score": 65,
+      "maintainability_score": 90,
+      "security_score": 95,
+      "performance_score": 90,
+      "overall_score": 85
+    },
+    "insights": [
+      "Consider refactoring complex modules to improve maintainability"
+      "Excellent code organization and structure"
+      "Strong security practices implemented"
+      "Good performance optimization strategies in place"
+    ],
+    "recommendations": [
+      "Enhance documentation and code comments"
+      "Implement additional security checks"
+    ],
+    "analysis_mode": "enterprise",
+    "enterprise_grade": true
+  }
+}

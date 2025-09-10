@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
  * Demonstrates the ZaiIntegration system in action
  */
 
-
 import { ZaiIntegration } from '@/services/zaiIntegration';
 
 export async function POST() {

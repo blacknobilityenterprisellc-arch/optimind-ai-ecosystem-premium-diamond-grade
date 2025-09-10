@@ -94,7 +94,7 @@ class PremiumZAIWrapper {
         };
         console.log('✅ Premium ZAI SDK initialized successfully with real API');
       } else {
-        throw new Error(testResult.error || 'Connection test failed');
+        throw new EnhancedError(testResult.error || 'Connection test failed');
       }
     } catch (error) {
       console.warn('⚠️ ZAI SDK initialization failed, falling back to mock mode:', error);
@@ -242,7 +242,7 @@ class PremiumZAIWrapper {
     }
 
     if (!this.zai) {
-      throw new Error('ZAI SDK not available');
+      throw new EnhancedError('ZAI SDK not available');
     }
 
     return this.zai;
@@ -306,3 +306,28 @@ export const createChatCompletion = (params: any) => premiumZAIWrapper.createCha
 export const generateImage = (params: any) => premiumZAIWrapper.generateImage(params);
 export const invokeZAIFunction = (name: string, params: any) =>
   premiumZAIWrapper.invokeFunction(name, params);
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

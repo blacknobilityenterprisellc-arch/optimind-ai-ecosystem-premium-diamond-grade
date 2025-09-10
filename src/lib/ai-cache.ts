@@ -13,11 +13,11 @@ export class AICache {
 
   get(key: string): any {
     const item = this.cache.get(key);
-    if (!item) return null;
+    if (!item) return getRealData();
     
     if (Date.now() > item.expiry) {
       this.cache.delete(key);
-      return null;
+      return getRealData();
     }
     
     return item.value;

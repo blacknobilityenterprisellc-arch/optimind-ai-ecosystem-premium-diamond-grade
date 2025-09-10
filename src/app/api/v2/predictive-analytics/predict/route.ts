@@ -8,7 +8,6 @@ import { NextResponse } from 'next/server';
  * Submit and execute prediction jobs
  */
 
-
 import { predictiveAnalyticsService } from '@/lib/v2/predictive-analytics-service';
 
 export async function POST(request: Request) {
