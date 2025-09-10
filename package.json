@@ -73,7 +73,7 @@
   "scripts": {
     "dev": "NODE_ENV=development next dev --port 3000 --hostname 0.0.0.0",
     "dev:fast": "./dev-ultra.sh",
-    "dev:custom": "bash start-optimind.sh",
+    "dev:custom": "bash start-simple-fixed.sh",
     "dev:unified": "bash start-optimind-unified.sh",
     "dev:intelligent": "tsx server-intelligent.ts",
     "dev:lightning": "tsx server-minimal.ts",
