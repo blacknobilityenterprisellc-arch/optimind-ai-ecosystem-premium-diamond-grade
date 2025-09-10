@@ -1,4 +1,4 @@
-// server-minimal.ts - Minimal custom server for debugging
+// server-minimal.ts - Ultra-Fast Next.js Server
 import { createServer } from 'http';
 import next from 'next';
 
@@ -6,32 +6,40 @@ const dev = process.env.NODE_ENV !== 'production';
 const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || '0.0.0.0';
 
-console.log(`🚀 Starting minimal custom server in ${dev ? 'development' : 'production'} mode`);
-console.log(`🌐 Server will run on http://${hostname}:${port}`);
+// Minimal configuration for fastest startup
+const serverConfig = {
+  dev,
+  dir: process.cwd(),
+  hostname,
+  port,
+  quiet: true,
+  turbopack: true,
+};
 
+// Ultra-fast server setup
 async function startServer() {
+  const startTime = Date.now();
+  
   try {
-    console.log('Creating Next.js app...');
-    const nextApp = next({ dev, hostname, port });
+    const app = next(serverConfig);
+    await app.prepare();
     
-    console.log('Preparing Next.js app...');
-    await nextApp.prepare();
-    console.log('✅ Next.js app prepared');
+    const handler = app.getRequestHandler();
     
-    const handler = nextApp.getRequestHandler();
-    
-    console.log('Creating HTTP server...');
+    // Create and start server
     const server = createServer(handler);
     
-    console.log('Starting server...');
     server.listen(port, hostname, () => {
-      console.log(`✅ Server ready at http://${hostname}:${port}`);
+      const totalTime = Date.now() - startTime;
+      console.log(`🚀 Server ready in ${totalTime}ms`);
+      console.log(`📍 http://${hostname}:${port}`);
     });
     
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error('❌ Startup failed:', error);
     process.exit(1);
   }
 }
 
+// Start immediately
 startServer();
