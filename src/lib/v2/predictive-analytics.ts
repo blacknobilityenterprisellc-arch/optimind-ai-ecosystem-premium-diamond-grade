@@ -478,9 +478,10 @@ class PredictiveAnalyticsV2 {
     modelType: string
   ): number | number[] | string {
     switch (modelType) {
-      case 'CLASSIFICATION':
+      case 'CLASSIFICATION': {
         const maxIndex = predictionData.indexOf(Math.max(...predictionData));
         return `Class ${maxIndex}`;
+      }
       case 'REGRESSION':
         return predictionData[0];
       case 'NEURAL_NETWORK':

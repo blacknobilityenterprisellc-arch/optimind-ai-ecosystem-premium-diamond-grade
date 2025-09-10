@@ -243,10 +243,17 @@ module.exports = {
     function({ addUtilities }) {
       addUtilities({
         '.focus-ring': {
-          '@apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
+          outline: 'none',
+          ringWidth: '2px',
+          ringColor: 'rgb(99 102 241)', // primary-500
+          ringOffsetWidth: '2px',
         },
         '.focus-ring-inset': {
-          '@apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-inset focus:ring-offset-2',
+          outline: 'none',
+          ringWidth: '2px',
+          ringColor: 'rgb(99 102 241)', // primary-500
+          ringInset: true,
+          ringOffsetWidth: '2px',
         },
       });
     },
