@@ -147,7 +147,7 @@ class PremiumDatabaseHealthWrapper implements IService {
           }
         }
       } else {
-        throw new Error(connectionResult.error || 'Database connection failed');
+        throw new EnhancedError(connectionResult.error || 'Database connection failed');
       }
     } catch (error) {
       console.error('❌ Database initialization failed:', error);
@@ -463,7 +463,7 @@ class PremiumDatabaseHealthWrapper implements IService {
     }
 
     if (!this.healthStatus.connected) {
-      throw new Error('Database is not connected');
+      throw new EnhancedError('Database is not connected');
     }
 
     // Return the existing database client from db.ts
@@ -617,3 +617,28 @@ export const getDatabaseHealth = () => premiumDatabaseWrapper.getHealthStatus();
 export const getDatabaseMetrics = () => premiumDatabaseWrapper.getMetrics();
 export const performDatabaseHealthCheck = () => premiumDatabaseWrapper.performHealthCheck();
 export const getPrismaClient = () => premiumDatabaseWrapper.getPrismaClient();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

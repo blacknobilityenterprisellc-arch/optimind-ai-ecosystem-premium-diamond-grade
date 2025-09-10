@@ -59,7 +59,7 @@ export async function persistAnalysisResult(input: PersistAnalysisInput) {
     return analysis;
   } catch (error) {
     console.error('[moderationPersistence] Failed to persist analysis:', error);
-    throw new Error(`Failed to persist analysis: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to persist analysis: ${(error as Error).message}`);
   }
 }
 
@@ -108,7 +108,7 @@ export async function flagAnalysisAsFailed(inputRef: string, failure: FlagFailur
     return failedAnalysis;
   } catch (error) {
     console.error('[moderationPersistence] Failed to flag analysis as failed:', error);
-    throw new Error(`Failed to flag analysis failure: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to flag analysis failure: ${(error as Error).message}`);
   }
 }
 
@@ -149,7 +149,7 @@ async function createReviewItem(
     return reviewItem;
   } catch (error) {
     console.error('[moderationPersistence] Failed to create review item:', error);
-    throw new Error(`Failed to create review item: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to create review item: ${(error as Error).message}`);
   }
 }
 
@@ -252,7 +252,7 @@ export async function getAnalysisHistory(inputRef: string) {
     };
   } catch (error) {
     console.error('[moderationPersistence] Failed to get analysis history:', error);
-    throw new Error(`Failed to get analysis history: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to get analysis history: ${(error as Error).message}`);
   }
 }
 
@@ -284,7 +284,7 @@ export async function getPendingReviewItems(
     return items;
   } catch (error) {
     console.error('[moderationPersistence] Failed to get pending review items:', error);
-    throw new Error(`Failed to get pending review items: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to get pending review items: ${(error as Error).message}`);
   }
 }
 
@@ -338,6 +338,31 @@ export async function updateReviewItem(
     return updatedItem;
   } catch (error) {
     console.error('[moderationPersistence] Failed to update review item:', error);
-    throw new Error(`Failed to update review item: ${(error as Error).message}`);
+    throw new EnhancedError(`Failed to update review item: ${(error as Error).message}`);
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Premium Dashboard Component
- * 
+ *
  * A sophisticated dashboard featuring the latest UI/UX patterns including
  * real-time data visualization, interactive widgets, personalized insights,
  * and intelligent user experience optimization.
@@ -370,7 +370,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTheme } from '@/components/theme-provider';
 
@@ -660,7 +666,7 @@ const PremiumDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 text-white">
       {/* Header */}
-      <motion.header 
+      <motion.header
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -710,7 +716,10 @@ const PremiumDashboard: React.FC = () => {
                 >
                   <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                 </Button>
-                <Select value={refreshInterval.toString()} onValueChange={(value) => setRefreshInterval(parseInt(value))}>
+                <Select
+                  value={refreshInterval.toString()}
+                  onValueChange={value => setRefreshInterval(parseInt(value))}
+                >
                   <SelectTrigger className="w-24 bg-gray-800/50 border-gray-600">
                     <SelectValue />
                   </SelectTrigger>
@@ -735,7 +744,7 @@ const PremiumDashboard: React.FC = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Metrics Grid */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -753,17 +762,20 @@ const PremiumDashboard: React.FC = () => {
               <Card className="h-full bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-gray-700 hover:border-purple-500/50 transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className={`p-2 rounded-lg bg-gray-700/50 group-hover:bg-purple-600/20 transition-colors`}>
+                    <div
+                      className={`p-2 rounded-lg bg-gray-700/50 group-hover:bg-purple-600/20 transition-colors`}
+                    >
                       <metric.icon className={`h-5 w-5 ${metric.color}`} />
                     </div>
                     {getChangeIcon(metric.changeType)}
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold text-white">{metric.value}</h3>
                       <span className={`text-sm ${getChangeColor(metric.changeType)}`}>
-                        {metric.change > 0 ? '+' : ''}{metric.change}%
+                        {metric.change > 0 ? '+' : ''}
+                        {metric.change}%
                       </span>
                     </div>
                     <p className="text-sm text-gray-400">{metric.title}</p>
@@ -776,7 +788,7 @@ const PremiumDashboard: React.FC = () => {
         </motion.div>
 
         {/* Tabs Section */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -822,15 +834,19 @@ const PremiumDashboard: React.FC = () => {
                     <CardDescription>Real-time system metrics and health</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {performanceMetrics.map((metric) => (
+                    {performanceMetrics.map(metric => (
                       <div key={metric.id} className="space-y-2">
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium text-white">{metric.name}</span>
                           <div className="flex items-center space-x-2">
                             <span className={`text-sm ${getStatusColor(metric.status)}`}>
-                              {metric.value}{metric.unit}
+                              {metric.value}
+                              {metric.unit}
                             </span>
-                            <Badge variant="outline" className={`${getStatusBg(metric.status)} border-0 text-xs`}>
+                            <Badge
+                              variant="outline"
+                              className={`${getStatusBg(metric.status)} border-0 text-xs`}
+                            >
                               {metric.status}
                             </Badge>
                           </div>
@@ -841,7 +857,10 @@ const PremiumDashboard: React.FC = () => {
                         />
                         <div className="flex justify-between text-xs text-gray-500">
                           <span>0{metric.unit}</span>
-                          <span>Target: {metric.target}{metric.unit}</span>
+                          <span>
+                            Target: {metric.target}
+                            {metric.unit}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -862,15 +881,24 @@ const PremiumDashboard: React.FC = () => {
                       <Brain className="h-4 w-4 mr-2" />
                       Launch GLM Orchestrator
                     </Button>
-                    <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                    <Button
+                      variant="outline"
+                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-700"
+                    >
                       <FileText className="h-4 w-4 mr-2" />
                       Create Content
                     </Button>
-                    <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                    <Button
+                      variant="outline"
+                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-700"
+                    >
                       <ImageIcon className="h-4 w-4 mr-2" />
                       Analyze Image
                     </Button>
-                    <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-700">
+                    <Button
+                      variant="outline"
+                      className="w-full border-gray-600 text-gray-300 hover:bg-gray-700"
+                    >
                       <Target className="h-4 w-4 mr-2" />
                       Optimize Performance
                     </Button>
@@ -970,8 +998,11 @@ const PremiumDashboard: React.FC = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {activityItems.map((activity) => (
-                      <div key={activity.id} className="flex items-center space-x-4 p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 transition-colors">
+                    {activityItems.map(activity => (
+                      <div
+                        key={activity.id}
+                        className="flex items-center space-x-4 p-3 bg-gray-700/30 rounded-lg hover:bg-gray-700/50 transition-colors"
+                      >
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={activity.avatar} />
                           <AvatarFallback className="bg-gradient-to-br from-purple-600 to-pink-600">
@@ -985,7 +1016,11 @@ const PremiumDashboard: React.FC = () => {
                           </p>
                           <p className="text-xs text-gray-500">{activity.timestamp}</p>
                         </div>
-                        <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-gray-400 hover:text-white"
+                        >
                           <Eye className="h-4 w-4" />
                         </Button>
                       </div>

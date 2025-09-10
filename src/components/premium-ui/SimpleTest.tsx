@@ -1,6 +1,6 @@
 /**
  * Simple Test Component for UI/UX Validation
- * 
+ *
  * A minimal component to test basic functionality
  */
 
@@ -21,7 +21,7 @@ const SimpleTest: React.FC = () => {
           OptiMind AI Ecosystem - UI Test
           <Sparkles className="h-6 w-6 text-yellow-400" />
         </h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-gray-800/50 border-gray-700">
             <CardHeader>
@@ -34,23 +34,17 @@ const SimpleTest: React.FC = () => {
               <p className="text-gray-300 mb-4">
                 This is a test of the premium UI components to verify functionality.
               </p>
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600">
-                Test Button
-              </Button>
-              <Badge className="ml-2 bg-purple-600/20 text-purple-400">
-                Active
-              </Badge>
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600">Test Button</Button>
+              <Badge className="ml-2 bg-purple-600/20 text-purple-400">Active</Badge>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-gray-800/50 border-gray-700">
             <CardHeader>
               <CardTitle>Navigation Test</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-300 mb-4">
-                Testing navigation and interaction capabilities.
-              </p>
+              <p className="text-gray-300 mb-4">Testing navigation and interaction capabilities.</p>
               <div className="flex gap-2">
                 <Button variant="outline">Nav Item 1</Button>
                 <Button variant="outline">Nav Item 2</Button>
@@ -58,7 +52,7 @@ const SimpleTest: React.FC = () => {
             </CardContent>
           </Card>
         </div>
-        
+
         <div className="mt-8 p-6 bg-gray-800/30 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">UI/UX Assessment Results:</h2>
           <div className="space-y-2 text-gray-300">

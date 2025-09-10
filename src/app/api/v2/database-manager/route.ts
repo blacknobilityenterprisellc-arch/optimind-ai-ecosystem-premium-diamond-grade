@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
  * Premium Diamond Grade Resumable Database Management Endpoints
  */
 
-
 import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
 
 // Create singleton instance

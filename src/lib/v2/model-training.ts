@@ -87,7 +87,7 @@ export class ModelTrainingV2 {
     
     const job = this.trainingJobs.get(jobId);
     if (!job) {
-      throw new Error('Training job not found');
+      throw new EnhancedError('Training job not found');
     }
 
     job.status = 'running';
@@ -140,7 +140,7 @@ export class ModelTrainingV2 {
     
     const job = this.trainingJobs.get(jobId);
     if (!job) {
-      throw new Error('Training job not found');
+      throw new EnhancedError('Training job not found');
     }
 
     const monitoring = {
@@ -163,7 +163,7 @@ export class ModelTrainingV2 {
     
     const model = this.trainedModels.get(modelId);
     if (!model) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     const evaluation = {
@@ -188,7 +188,7 @@ export class ModelTrainingV2 {
     
     const model = this.trainedModels.get(modelId);
     if (!model) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     model.status = 'deployed';
@@ -303,12 +303,12 @@ export class ModelTrainingV2 {
     
     const model = this.trainedModels.get(modelId);
     if (!model) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     const exportFormats = ['onnx', 'tensorflow', 'pytorch', 'coreml'];
     if (!exportFormats.includes(format)) {
-      throw new Error(`Unsupported format: ${format}`);
+      throw new EnhancedError(`Unsupported format: ${format}`);
     }
 
     const exportInfo = {
@@ -557,3 +557,27 @@ export class ModelTrainingV2 {
 
 // Export singleton instance
 export const modelTrainingV2 = new ModelTrainingV2();
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

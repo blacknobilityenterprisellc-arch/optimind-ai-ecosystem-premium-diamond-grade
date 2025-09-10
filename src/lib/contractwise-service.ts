@@ -115,7 +115,7 @@ class ContractWiseService {
     const mcpResponse = await mcpServiceOrchestrator.processBusinessRequest(mcpRequest);
 
     if (!mcpResponse.success) {
-      throw new Error(`Contract analysis failed: ${mcpResponse.error}`);
+      throw new EnhancedError(`Contract analysis failed: ${mcpResponse.error}`);
     }
 
     // Parse and structure the response
@@ -283,7 +283,7 @@ class ContractWiseService {
       return savedRecord;
     } catch (error) {
       console.error('Failed to save contract analysis to database:', error);
-      throw new Error('Failed to save analysis results');
+      throw new EnhancedError('Failed to save analysis results');
     }
   }
 
@@ -314,13 +314,13 @@ class ContractWiseService {
       });
 
       if (!contract) {
-        throw new Error('Contract analysis not found');
+        throw new EnhancedError('Contract analysis not found');
       }
 
       return contract;
     } catch (error) {
       console.error('Failed to get contract analysis:', error);
-      throw new Error('Failed to retrieve contract analysis');
+      throw new EnhancedError('Failed to retrieve contract analysis');
     }
   }
 
@@ -340,7 +340,7 @@ class ContractWiseService {
       return contracts;
     } catch (error) {
       console.error('Failed to get user contract analyses:', error);
-      throw new Error('Failed to retrieve contract analyses');
+      throw new EnhancedError('Failed to retrieve contract analyses');
     }
   }
 
@@ -354,13 +354,13 @@ class ContractWiseService {
       });
 
       if (deleted.count === 0) {
-        throw new Error('Contract analysis not found');
+        throw new EnhancedError('Contract analysis not found');
       }
 
       return true;
     } catch (error) {
       console.error('Failed to delete contract analysis:', error);
-      throw new Error('Failed to delete contract analysis');
+      throw new EnhancedError('Failed to delete contract analysis');
     }
   }
 
@@ -389,7 +389,7 @@ class ContractWiseService {
     const mcpResponse = await mcpServiceOrchestrator.processBusinessRequest(mcpRequest);
 
     if (!mcpResponse.success) {
-      throw new Error(`Template generation failed: ${mcpResponse.error}`);
+      throw new EnhancedError(`Template generation failed: ${mcpResponse.error}`);
     }
 
     // Parse the template and suggestions from the response
@@ -442,7 +442,7 @@ class ContractWiseService {
     const mcpResponse = await mcpServiceOrchestrator.processBusinessRequest(mcpRequest);
 
     if (!mcpResponse.success) {
-      throw new Error(`Contract comparison failed: ${mcpResponse.error}`);
+      throw new EnhancedError(`Contract comparison failed: ${mcpResponse.error}`);
     }
 
     const result = mcpResponse.result;
@@ -540,3 +540,28 @@ class ContractWiseService {
 
 // Export singleton instance
 export const contractWiseService = new ContractWiseService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

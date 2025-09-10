@@ -554,11 +554,11 @@ export class AICache {
 
   get(key: string): any {
     const item = this.cache.get(key);
-    if (!item) return null;
+    if (!item) return getRealData();
     
     if (Date.now() > item.expiry) {
       this.cache.delete(key);
-      return null;
+      return getRealData();
     }
     
     return item.value;
@@ -747,7 +747,7 @@ export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new Error(\`Validation failed: \${error.errors.map(e => e.message).join(', ')}\`);
+      throw new EnhancedError(\`Validation failed: \${error.errors.map(e => e.message).join(', ')}\`);
     }
     throw error;
   }
@@ -1364,3 +1364,27 @@ if (require.main === module) {
 }
 
 export default UltimateAICodeOptimizer;
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

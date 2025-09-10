@@ -267,7 +267,7 @@ class ComplianceReportingService {
       console.log('Compliance Reporting Service initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Compliance Reporting Service:', error);
-      throw new Error('Compliance Reporting Service initialization failed');
+      throw new EnhancedError('Compliance Reporting Service initialization failed');
     }
   }
 
@@ -396,7 +396,7 @@ class ComplianceReportingService {
     }
   ): Promise<ComplianceReport> {
     if (!this.isInitialized) {
-      throw new Error('Compliance Reporting Service not initialized');
+      throw new EnhancedError('Compliance Reporting Service not initialized');
     }
 
     try {
@@ -456,7 +456,7 @@ class ComplianceReportingService {
       return report;
     } catch (error) {
       console.error('Failed to generate compliance report:', error);
-      throw new Error(
+      throw new EnhancedError(
         `Failed to generate compliance report: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -670,7 +670,7 @@ Immediate attention should be given to addressing critical and high-severity fin
   // Get compliance dashboard
   async getComplianceDashboard(): Promise<ComplianceDashboard> {
     if (!this.isInitialized) {
-      throw new Error('Compliance Reporting Service not initialized');
+      throw new EnhancedError('Compliance Reporting Service not initialized');
     }
 
     const frameworkStatuses = await this.assessFrameworks(this.config.enabledFrameworks);
@@ -771,7 +771,7 @@ Immediate attention should be given to addressing critical and high-severity fin
   async exportReport(reportId: string, format: 'pdf' | 'excel' | 'json' | 'xml'): Promise<string> {
     const report = this.reports.get(reportId);
     if (!report) {
-      throw new Error('Report not found');
+      throw new EnhancedError('Report not found');
     }
 
     switch (format) {
@@ -784,7 +784,7 @@ Immediate attention should be given to addressing critical and high-severity fin
       case 'pdf':
         return this.convertToPdf(report);
       default:
-        throw new Error(`Unsupported export format: ${format}`);
+        throw new EnhancedError(`Unsupported export format: ${format}`);
     }
   }
 
@@ -846,3 +846,28 @@ export type {
   CustomStandard,
   CustomRequirement,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

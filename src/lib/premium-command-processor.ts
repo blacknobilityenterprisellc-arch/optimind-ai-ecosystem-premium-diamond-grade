@@ -22,7 +22,7 @@ export async function processPremiumCommand(command: any) {
         break;
 
       default:
-        throw new Error(`Unknown premium command type: ${command.type}`);
+        throw new EnhancedError(`Unknown premium command type: ${command.type}`);
     }
 
     // Track command execution
@@ -65,4 +65,29 @@ function getSystemStatus() {
     memory: process.memoryUsage(),
     premium: true,
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

@@ -1,41 +1,28 @@
 import crypto from 'crypto';
-
-
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/db';
+import { withRateLimit, authRateLimiter } from '@/lib/ai-rate-limiter';
+import { withValidation, ValidationSchemas } from '@/lib/input-validation';
 
-// Rate limiting in memory (in production, use Redis or similar)
-const rateLimit = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_WINDOW = 5 * 60 * 1000; // 5 minutes
-const MAX_ATTEMPTS = 5;
+// Apply strict rate limiting and validation for auth
+const rateLimitMiddleware = withRateLimit(authRateLimiter);
+const validationMiddleware = withValidation(ValidationSchemas.Auth.PIN);
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const { pin } = await request.json();
-
-    if (!pin || typeof pin !== 'string' || pin.length !== 4) {
-      return NextResponse.json({ error: 'Invalid PIN format' }, { status: 400 });
+    // Apply rate limiting first
+    const rateLimitResult = await rateLimitMiddleware(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
-    // Get client IP for rate limiting
-    const forwarded = request.headers.get('x-forwarded-for');
-    const clientIP = forwarded ? forwarded.split(',')[0] : 'unknown';
-
-    // Check rate limit
-    const now = Date.now();
-    const userLimit = rateLimit.get(clientIP);
-
-    if (userLimit && userLimit.count >= MAX_ATTEMPTS) {
-      if (now < userLimit.resetTime) {
-        return NextResponse.json(
-          { error: 'Too many attempts. Please try again later.' },
-          { status: 429 }
-        );
-      } else {
-        // Reset rate limit
-        rateLimit.delete(clientIP);
-      }
+    // Apply input validation
+    const validationResult = await validationMiddleware(request);
+    if (!validationResult.success) {
+      return validationResult.response!;
     }
+
+    const { pin } = validationResult.data!;
 
     // Get stored PIN hash from database
     const securitySettings = await db.securitySettings.findUnique({
@@ -69,22 +56,12 @@ export async function POST() {
       isValid = pin === defaultPin;
     }
 
-    // Update rate limit
     if (!isValid) {
-      const currentLimit = rateLimit.get(clientIP) || {
-        count: 0,
-        resetTime: now + RATE_LIMIT_WINDOW,
-      };
-      currentLimit.count++;
-      rateLimit.set(clientIP, currentLimit);
-
       return NextResponse.json({ error: 'Invalid PIN' }, { status: 401 });
     }
 
-    // Clear rate limit on successful authentication
-    rateLimit.delete(clientIP);
-
     // Generate session token
+    const now = Date.now();
     const sessionToken = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date(now + 24 * 60 * 60 * 1000); // 24 hours
 

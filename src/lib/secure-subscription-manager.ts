@@ -77,7 +77,7 @@ class SecureSubscriptionManager {
 
     const sessionToken = sessionStorage.getItem('auth_session');
     if (!sessionToken) {
-      throw new Error('Authentication required');
+      throw new EnhancedError('Authentication required');
     }
 
     const response = await fetch('/api/subscription', {
@@ -91,7 +91,7 @@ class SecureSubscriptionManager {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Subscription failed');
+      throw new EnhancedError(error.error || 'Subscription failed');
     }
 
     const data = await response.json();
@@ -112,7 +112,7 @@ class SecureSubscriptionManager {
 
     const sessionToken = sessionStorage.getItem('auth_session');
     if (!sessionToken) {
-      throw new Error('Authentication required');
+      throw new EnhancedError('Authentication required');
     }
 
     const response = await fetch('/api/subscription', {
@@ -126,7 +126,7 @@ class SecureSubscriptionManager {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Trial activation failed');
+      throw new EnhancedError(error.error || 'Trial activation failed');
     }
 
     const data = await response.json();
@@ -385,4 +385,29 @@ export function useSecureSubscription() {
     refreshSubscription:
       secureSubscriptionManager.refreshSubscription.bind(secureSubscriptionManager),
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

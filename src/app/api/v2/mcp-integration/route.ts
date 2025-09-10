@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
  * Premium Diamond Grade Model Context Protocol Endpoints
  */
 
-
 import { mcpIntegrationV2 } from '@/lib/v2/mcp-integration';
 
 export async function POST() {

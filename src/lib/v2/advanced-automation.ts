@@ -157,7 +157,7 @@ export class AdvancedAutomationV2 {
     
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
-      throw new Error('Workflow not found');
+      throw new EnhancedError('Workflow not found');
     }
 
     const executionId = `exec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -746,3 +746,27 @@ export class AdvancedAutomationV2 {
 
 // Export singleton instance
 export const advancedAutomationV2 = new AdvancedAutomationV2();
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

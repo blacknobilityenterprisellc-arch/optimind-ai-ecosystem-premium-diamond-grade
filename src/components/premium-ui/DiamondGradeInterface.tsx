@@ -40,9 +40,11 @@ export default function DiamondGradeInterface() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const filteredFeatures = premiumFeatures.filter(feature => {
-    const matchesCategory = selectedCategory === 'all' || feature.category.toLowerCase() === selectedCategory;
-    const matchesSearch = feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         feature.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' || feature.category.toLowerCase() === selectedCategory;
+    const matchesSearch =
+      feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      feature.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -60,24 +62,29 @@ export default function DiamondGradeInterface() {
           <input
             placeholder="Search features..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full max-w-md px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredFeatures.map((feature) => (
+          {filteredFeatures.map(feature => (
             <div key={feature.id} className="bg-gray-800 rounded-lg p-6 border border-gray-700">
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-gray-400 mb-4">{feature.description}</p>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500">{feature.category}</span>
-                <span className={`px-2 py-1 rounded text-xs ${
-                  feature.status === 'exclusive' ? 'bg-purple-600 text-white' :
-                  feature.status === 'premium' ? 'bg-blue-600 text-white' :
-                  feature.status === 'beta' ? 'bg-yellow-600 text-white' :
-                  'bg-gray-600 text-white'
-                }`}>
+                <span
+                  className={`px-2 py-1 rounded text-xs ${
+                    feature.status === 'exclusive'
+                      ? 'bg-purple-600 text-white'
+                      : feature.status === 'premium'
+                        ? 'bg-blue-600 text-white'
+                        : feature.status === 'beta'
+                          ? 'bg-yellow-600 text-white'
+                          : 'bg-gray-600 text-white'
+                  }`}
+                >
                   {feature.status}
                 </span>
               </div>

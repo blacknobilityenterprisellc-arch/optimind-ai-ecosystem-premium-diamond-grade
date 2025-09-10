@@ -1,6 +1,6 @@
 /**
  * Premium Navigation Component
- * 
+ *
  * A state-of-the-art navigation system featuring the latest UI/UX patterns
  * including adaptive layouts, intelligent search, user personalization,
  * and seamless cross-device experiences.
@@ -224,7 +224,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useTheme } from '@/components/theme-provider';
 
@@ -589,17 +596,13 @@ const PremiumNavigation: React.FC = () => {
   const markAsRead = (notificationId: string) => {
     setNotifications(prev =>
       prev.map(notification =>
-        notification.id === notificationId
-          ? { ...notification, isRead: true }
-          : notification
+        notification.id === notificationId ? { ...notification, isRead: true } : notification
       )
     );
   };
 
   const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, isRead: true }))
-    );
+    setNotifications(prev => prev.map(notification => ({ ...notification, isRead: true })));
   };
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
@@ -660,10 +663,10 @@ const PremiumNavigation: React.FC = () => {
 
           {/* Navigation Items */}
           <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {navItems.map((item) => (
+            {navItems.map(item => (
               <div key={item.id}>
                 <button
-                  onClick={() => item.children ? toggleExpanded(item.id) : router.push(item.href)}
+                  onClick={() => (item.children ? toggleExpanded(item.id) : router.push(item.href))}
                   className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-200 ${
                     isActive(item.href) || isChildActive(item.children)
                       ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border border-purple-500/30'
@@ -679,7 +682,10 @@ const PremiumNavigation: React.FC = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     {item.badge && (
-                      <Badge variant="secondary" className="text-xs bg-purple-600/20 text-purple-400">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs bg-purple-600/20 text-purple-400"
+                      >
                         {item.badge}
                       </Badge>
                     )}
@@ -694,7 +700,7 @@ const PremiumNavigation: React.FC = () => {
                 {/* Sub-items */}
                 {item.children && expandedItems.includes(item.id) && (
                   <div className="ml-4 mt-2 space-y-1">
-                    {item.children.map((child) => (
+                    {item.children.map(child => (
                       <button
                         key={child.id}
                         onClick={() => router.push(child.href)}
@@ -731,11 +737,17 @@ const PremiumNavigation: React.FC = () => {
                 <p className="text-xs text-gray-400">{user.role}</p>
               </div>
               <div className="flex items-center space-x-1">
-                <div className={`w-2 h-2 rounded-full ${
-                  user.status === 'online' ? 'bg-green-500' :
-                  user.status === 'busy' ? 'bg-red-500' :
-                  user.status === 'away' ? 'bg-yellow-500' : 'bg-gray-500'
-                }`} />
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    user.status === 'online'
+                      ? 'bg-green-500'
+                      : user.status === 'busy'
+                        ? 'bg-red-500'
+                        : user.status === 'away'
+                          ? 'bg-yellow-500'
+                          : 'bg-gray-500'
+                  }`}
+                />
               </div>
             </div>
           </div>
@@ -746,12 +758,14 @@ const PremiumNavigation: React.FC = () => {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
         <div className="bg-black/90 backdrop-blur-xl border-t border-gray-700/50">
           <div className="grid grid-cols-5 gap-1 p-2">
-            {navItems.slice(0, 5).map((item) => (
+            {navItems.slice(0, 5).map(item => (
               <button
                 key={item.id}
                 onClick={() => router.push(item.href)}
                 className={`flex flex-col items-center space-y-1 p-2 rounded-lg transition-colors ${
-                  isActive(item.href) ? 'bg-purple-600/20 text-purple-400' : 'text-gray-400 hover:text-white'
+                  isActive(item.href)
+                    ? 'bg-purple-600/20 text-purple-400'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
                 <item.icon className="h-5 w-5" />
@@ -785,7 +799,7 @@ const PremiumNavigation: React.FC = () => {
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed right-0 top-0 h-full w-80 bg-gray-900 border-l border-gray-700/50"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <div className="flex flex-col h-full">
                 {/* Header */}
@@ -803,7 +817,7 @@ const PremiumNavigation: React.FC = () => {
 
                 {/* Navigation Items */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                  {navItems.map((item) => (
+                  {navItems.map(item => (
                     <div key={item.id}>
                       <button
                         onClick={() => {
@@ -829,24 +843,26 @@ const PremiumNavigation: React.FC = () => {
                         </div>
                         <div className="flex items-center space-x-2">
                           {item.badge && (
-                            <Badge variant="secondary" className="text-xs bg-purple-600/20 text-purple-400">
+                            <Badge
+                              variant="secondary"
+                              className="text-xs bg-purple-600/20 text-purple-400"
+                            >
                               {item.badge}
                             </Badge>
                           )}
-                          {item.children && (
-                            expandedItems.includes(item.id) ? (
+                          {item.children &&
+                            (expandedItems.includes(item.id) ? (
                               <ChevronDown className="h-4 w-4" />
                             ) : (
                               <ChevronRight className="h-4 w-4" />
-                            )
-                          )}
+                            ))}
                         </div>
                       </button>
 
                       {/* Sub-items */}
                       {item.children && expandedItems.includes(item.id) && (
                         <div className="ml-4 mt-2 space-y-1">
-                          {item.children.map((child) => (
+                          {item.children.map(child => (
                             <button
                               key={child.id}
                               onClick={() => {
@@ -886,11 +902,17 @@ const PremiumNavigation: React.FC = () => {
                       <p className="text-xs text-gray-400">{user.role}</p>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <div className={`w-2 h-2 rounded-full ${
-                        user.status === 'online' ? 'bg-green-500' :
-                        user.status === 'busy' ? 'bg-red-500' :
-                        user.status === 'away' ? 'bg-yellow-500' : 'bg-gray-500'
-                      }`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          user.status === 'online'
+                            ? 'bg-green-500'
+                            : user.status === 'busy'
+                              ? 'bg-red-500'
+                              : user.status === 'away'
+                                ? 'bg-yellow-500'
+                                : 'bg-gray-500'
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>

@@ -546,7 +546,7 @@ class MCPService {
   async executeTool(request: MCPToolRequest): Promise<MCPToolResponse> {
     const tool = this.tools.get(request.toolId);
     if (!tool) {
-      throw new Error(`Tool ${request.toolId} not found`);
+      throw new EnhancedError(`Tool ${request.toolId} not found`);
     }
 
     const startTime = Date.now();
@@ -608,7 +608,7 @@ class MCPService {
       case 'domain':
         return await this.executeDomainTool(tool, parameters, context);
       default:
-        throw new Error(`Unknown tool category: ${tool.category}`);
+        throw new EnhancedError(`Unknown tool category: ${tool.category}`);
     }
   }
 
@@ -624,7 +624,7 @@ class MCPService {
       case 'web-search':
         return await this.searchWeb(parameters.query, parameters.numResults, parameters.safeSearch);
       default:
-        throw new Error(`Unknown search tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown search tool: ${tool.id}`);
     }
   }
 
@@ -645,7 +645,7 @@ class MCPService {
           parameters.conditions
         );
       default:
-        throw new Error(`Unknown system tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown system tool: ${tool.id}`);
     }
   }
 
@@ -664,7 +664,7 @@ class MCPService {
           parameters.granularity
         );
       default:
-        throw new Error(`Unknown analysis tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown analysis tool: ${tool.id}`);
     }
   }
 
@@ -683,7 +683,7 @@ class MCPService {
           parameters.consent
         );
       default:
-        throw new Error(`Unknown compliance tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown compliance tool: ${tool.id}`);
     }
   }
 
@@ -702,7 +702,7 @@ class MCPService {
           parameters.jurisdiction
         );
       default:
-        throw new Error(`Unknown domain tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown domain tool: ${tool.id}`);
     }
   }
 
@@ -852,7 +852,7 @@ class MCPService {
     if (schema.required) {
       for (const field of schema.required) {
         if (!(field in data)) {
-          throw new Error(`Required field '${field}' is missing`);
+          throw new EnhancedError(`Required field '${field}' is missing`);
         }
       }
     }
@@ -890,7 +890,7 @@ class MCPService {
   async executeWorkflow(workflowId: string, inputData: any): Promise<any> {
     const workflow = this.workflows.get(workflowId);
     if (!workflow) {
-      throw new Error(`Workflow ${workflowId} not found`);
+      throw new EnhancedError(`Workflow ${workflowId} not found`);
     }
 
     const context: any = {
@@ -908,7 +908,7 @@ class MCPService {
         const stepResult = await this.executeWorkflowStep(step, context);
         context.stepResults[step.id] = stepResult;
       } catch (error: any) {
-        throw new Error(`Workflow step ${step.id} failed: ${error.message}`);
+        throw new EnhancedError(`Workflow step ${step.id} failed: ${error.message}`);
       }
     }
 
@@ -927,7 +927,7 @@ class MCPService {
     switch (step.type) {
       case 'tool':
         if (!step.toolId) {
-          throw new Error('Tool step requires toolId');
+          throw new EnhancedError('Tool step requires toolId');
         }
         const toolRequest: MCPToolRequest = {
           toolId: step.toolId,
@@ -936,7 +936,7 @@ class MCPService {
         };
         const toolResponse = await this.executeTool(toolRequest);
         if (!toolResponse.success) {
-          throw new Error(toolResponse.error);
+          throw new EnhancedError(toolResponse.error);
         }
         return toolResponse.result;
 
@@ -953,10 +953,35 @@ class MCPService {
         return { transformed: step.parameters };
 
       default:
-        throw new Error(`Unknown step type: ${step.type}`);
+        throw new EnhancedError(`Unknown step type: ${step.type}`);
     }
   }
 }
 
 // Export singleton instance
 export const mcpService = new MCPService();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

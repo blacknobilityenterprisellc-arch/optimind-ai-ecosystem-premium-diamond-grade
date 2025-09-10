@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-
 import { getAvailableModels } from '@/lib/multi-model-ai';
 
 export async function GET() {

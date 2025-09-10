@@ -16,7 +16,7 @@ import { glmOrchestrator } from './src/lib/glm-orchestrator';
 import { selfHealingIntegration } from './src/lib/self-healing-integration';
 import ContinuousQualityMonitor from './continuous-quality-monitor';
 import { premiumDiamondGradeScanner } from './src/lib/premium-diamond-grade-scanner';
-import { ultimateAICodeOptimizer } from './ultimate-ai-code-optimizer';
+import UltimateAICodeOptimizer from './ultimate-ai-code-optimizer';
 
 interface UltimateAIConfig {
   enableSelfLearning: boolean;

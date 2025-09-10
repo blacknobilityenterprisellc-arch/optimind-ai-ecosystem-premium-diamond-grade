@@ -125,7 +125,7 @@ export class AgentTestingFramework extends EventEmitter {
   async executeTest(agentConfig: AgentConfiguration, scenarioId: string): Promise<TestResult> {
     const scenario = this.testScenarios.get(scenarioId);
     if (!scenario) {
-      throw new Error(`Test scenario not found: ${scenarioId}`);
+      throw new EnhancedError(`Test scenario not found: ${scenarioId}`);
     }
 
     const testId = `${agentConfig.agentId}_${scenarioId}_${Date.now()}`;
@@ -630,3 +630,27 @@ export const predefinedScenarios: TestScenario[] = [
     }
   }
 ];
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

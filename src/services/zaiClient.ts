@@ -25,7 +25,7 @@ export class ZaiClient {
   constructor(cfg: Partial<ZaiClientConfig>) {
     this.config = { ...DEFAULT_CONFIG, ...cfg } as ZaiClientConfig;
     if (!this.config.apiKey) {
-      throw new Error('ZAI API key required in ZaiClient config');
+      throw new EnhancedError('ZAI API key required in ZaiClient config');
     }
   }
 
@@ -75,7 +75,7 @@ export class ZaiClient {
 
         // For client errors, parse body and throw immediately
         const text = await res.text();
-        throw new Error(`ZAI API error status=${res.status} body=${text}`);
+        throw new EnhancedError(`ZAI API error status=${res.status} body=${text}`);
       } catch (err) {
         window.clearTimeout(timer);
         lastErr = err;
@@ -90,5 +90,30 @@ export class ZaiClient {
       }
     }
     throw lastErr;
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

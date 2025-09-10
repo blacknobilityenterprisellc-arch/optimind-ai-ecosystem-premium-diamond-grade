@@ -88,7 +88,7 @@ const executeWithRetry = async (command: string, options: { maxRetries?: number;
     }
   }
   
-  throw new Error('Should not reach here');
+  throw new EnhancedError('Should not reach here');
 };
 
 // Check system requirements
@@ -130,7 +130,7 @@ const checkSystemRequirements = async () => {
     
     if (availableSpace < requiredSpace) {
       logError(`Insufficient disk space. Required: 1GB, Available: ${Math.floor(availableSpace / 1024)}MB`);
-      throw new Error('Insufficient disk space');
+      throw new EnhancedError('Insufficient disk space');
     }
     
     logSuccess('System requirements check passed');
@@ -562,3 +562,27 @@ main().catch(error => {
   logError(`Unhandled error: ${error}`);
   process.exit(1);
 });
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

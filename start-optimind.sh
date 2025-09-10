@@ -28,21 +28,21 @@ case $MODE in
         kill_port $PORT
         echo "⚡ Starting in NANO mode (Fastest - <1s)..."
         cd /home/z/my-project
-        PORT=$PORT npx tsx server-nano.ts
+        PORT=$PORT npx tsx /home/z/my-project/server-nano.ts
         ;;
     "micro")
         PORT=3006
         kill_port $PORT
         echo "⚡ Starting in MICRO mode (Fastest - ~1-2s)..."
         cd /home/z/my-project
-        PORT=$PORT npx tsx server-micro.ts
+        PORT=$PORT npx tsx /home/z/my-project/server-micro.ts
         ;;
     "ultra")
         PORT=3005
         kill_port $PORT
         echo "🚀 Starting in ULTRA mode (Very Fast - ~2-3s)..."
         cd /home/z/my-project
-        PORT=$PORT npx tsx server-optimized.ts
+        PORT=$PORT npx tsx /home/z/my-project/server-optimized.ts
         ;;
     "fast")
         PORT=3004
@@ -56,7 +56,7 @@ case $MODE in
         kill_port $PORT
         echo "🔧 Starting in NORMAL mode (Full Features - ~5-10s)..."
         cd /home/z/my-project
-        PORT=$PORT npx tsx server.ts --turbo --premium
+        PORT=$PORT npx tsx /home/z/my-project/server.ts --turbo --premium
         ;;
     "help"|"-h"|"--help")
         echo "Usage: $0 [nano|micro|ultra|fast|normal|help]"
@@ -69,6 +69,7 @@ case $MODE in
         echo "  normal  - Full features (~5-10s), all capabilities"
         echo ""
         echo "Examples:"
+        echo "  $0          # Start fastest (nano mode)"
         echo "  $0 nano     # Start fastest"
         echo "  $0 micro    # Start fast"
         echo "  $0 ultra    # Start very fast"

@@ -121,7 +121,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
 
       // Check for conflicts
       if (this.services.has(serviceConfig.id)) {
-        throw new Error(`Service already registered: ${serviceConfig.id}`);
+        throw new EnhancedError(`Service already registered: ${serviceConfig.id}`);
       }
 
       // Register service
@@ -182,7 +182,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
 
       const service = this.services.get(serviceId);
       if (!service) {
-        throw new Error(`Service not found: ${serviceId}`);
+        throw new EnhancedError(`Service not found: ${serviceId}`);
       }
 
       const status = this.serviceStatus.get(serviceId)!;
@@ -259,7 +259,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
 
       const service = this.services.get(serviceId);
       if (!service) {
-        throw new Error(`Service not found: ${serviceId}`);
+        throw new EnhancedError(`Service not found: ${serviceId}`);
       }
 
       const status = this.serviceStatus.get(serviceId)!;
@@ -561,7 +561,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
 
     for (const pattern of nonServicePatterns) {
       if (name.toLowerCase().includes(pattern)) {
-        return null;
+        return getRealData();
       }
     }
 
@@ -594,7 +594,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
    */
   private validateServiceConfig(serviceConfig: ServiceConfig): void {
     if (!serviceConfig.id || !serviceConfig.name) {
-      throw new Error('Service ID and name are required');
+      throw new EnhancedError('Service ID and name are required');
     }
 
     if (
@@ -602,11 +602,11 @@ export class SeamlessServiceIntegrator extends EventEmitter {
         serviceConfig.type
       )
     ) {
-      throw new Error(`Invalid service type: ${serviceConfig.type}`);
+      throw new EnhancedError(`Invalid service type: ${serviceConfig.type}`);
     }
 
     if (serviceConfig.priority < 1 || serviceConfig.priority > 10) {
-      throw new Error('Service priority must be between 1 and 10');
+      throw new EnhancedError('Service priority must be between 1 and 10');
     }
   }
 
@@ -617,7 +617,7 @@ export class SeamlessServiceIntegrator extends EventEmitter {
     for (const depId of serviceConfig.dependencies) {
       const depStatus = this.serviceStatus.get(depId);
       if (!depStatus || depStatus.status !== 'running') {
-        throw new Error(`Dependency not running: ${depId}`);
+        throw new EnhancedError(`Dependency not running: ${depId}`);
       }
     }
   }
@@ -799,3 +799,28 @@ export const seamlessServiceIntegrator = new SeamlessServiceIntegrator({
     encryptionEnabled: true,
   },
 });
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

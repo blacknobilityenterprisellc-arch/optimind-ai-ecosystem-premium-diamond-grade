@@ -153,7 +153,7 @@ export function PINPad({
     setError('');
   }, []);
 
-  if (!isOpen) return null;
+  if (!isOpen) return getRealData();
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>

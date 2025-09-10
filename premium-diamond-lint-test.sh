@@ -382,6 +382,16 @@ generate_json_report() {
       "suggestions": ${RESULTS["suggestions"]},
       "fixable_issues": ${RESULTS["fixable"]}
     },
+    "ai_analysis": {
+      "complexity_score": ${RESULTS["ai_complexity_score"]:-0},
+      "maintainability_score": ${RESULTS["ai_maintainability_score"]:-0},
+      "security_score": ${RESULTS["ai_security_score"]:-0},
+      "performance_score": ${RESULTS["ai_performance_score"]:-0},
+      "overall_score": ${RESULTS["ai_overall_score"]:-0},
+      "analysis_duration_ms": ${RESULTS["ai_analysis_duration"]:-0},
+      "insights_count": ${RESULTS["ai_insights_count"]:-0},
+      "recommendations_count": ${RESULTS["ai_recommendations_count"]:-0}
+    },
     "quality_metrics": {
       "code_quality_score": $quality_score,
       "performance_metrics": {
@@ -442,7 +452,20 @@ main() {
     # Phase 5: AI Analysis (if enabled)
     if [[ "$AI_ANALYSIS" == "true" ]]; then
         log_info "Phase 5: Enterprise AI Analysis"
-        log_info "AI analysis completed (simulated for lightning mode)"
+        
+        # Source the AI analysis function
+        if [[ -f "./enterprise-ai-analysis.sh" ]]; then
+            source ./enterprise-ai-analysis.sh
+            if perform_enterprise_ai_analysis; then
+                log_success "Real AI analysis completed successfully"
+            else
+                log_error "AI analysis failed"
+            fi
+        else
+            log_warning "AI analysis script not found, using fallback simulation"
+            log_info "AI analysis completed (simulated for lightning mode)"
+        fi
+        
         mark_checkpoint "ai_analysis_complete"
     fi
     

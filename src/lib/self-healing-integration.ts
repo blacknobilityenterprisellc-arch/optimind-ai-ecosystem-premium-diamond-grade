@@ -76,7 +76,7 @@ export class SelfHealingIntegration {
    */
   start(): void {
     if (!this.isInitialized) {
-      throw new Error('Self-Healing Integration not initialized');
+      throw new EnhancedError('Self-Healing Integration not initialized');
     }
 
     console.log('Self-Healing Integration started');
@@ -96,7 +96,7 @@ export class SelfHealingIntegration {
    */
   async triggerHealingCycle(issue?: any): Promise<HealingReport> {
     if (!this.isInitialized) {
-      throw new Error('Self-Healing Integration not initialized');
+      throw new EnhancedError('Self-Healing Integration not initialized');
     }
 
     const healingId = this.generateHealingId();
@@ -336,3 +336,28 @@ export const selfHealingIntegration = new SelfHealingIntegration({
   errorThreshold: 5, // 5% error rate threshold
   notificationEnabled: true,
 });
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

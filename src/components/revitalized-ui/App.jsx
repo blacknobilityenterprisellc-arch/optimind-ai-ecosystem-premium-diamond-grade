@@ -1,6 +1,6 @@
 /**
  * OptiMind AI Ecosystem - Main App Component
- * 
+ *
  * Premium enterprise-grade React application with routing and state management
  * Addresses all PRD requirements: functionality, responsiveness, accessibility, and performance
  */
@@ -24,13 +24,13 @@ import '../styles/globals.css';
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
+  exit: { opacity: 0, y: -20 },
 };
 
 const pageTransition = {
   type: 'tween',
   ease: 'anticipate',
-  duration: 0.5
+  duration: 0.5,
 };
 
 // Scroll to top component
@@ -98,7 +98,7 @@ const App = () => {
     <Router>
       <div className="App">
         <ScrollToTop />
-        
+
         <AnimatePresence mode="wait">
           <Routes>
             <Route
@@ -120,7 +120,7 @@ const App = () => {
                 </motion.div>
               }
             />
-            
+
             {/* Additional routes can be added here */}
             <Route
               path="/features"
@@ -138,7 +138,7 @@ const App = () => {
                 </motion.div>
               }
             />
-            
+
             <Route
               path="/contact"
               element={
@@ -155,7 +155,7 @@ const App = () => {
                 </motion.div>
               }
             />
-            
+
             {/* 404 Page */}
             <Route
               path="*"

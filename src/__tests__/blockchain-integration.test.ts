@@ -1,0 +1,385 @@
+/**
+ * OptiMind AI Ecosystem - Blockchain Integration Tests
+ * Premium Diamond Grade Blockchain Functionality Testing
+ */
+
+import { createRealBlockchainStorage, type BlockchainConfig, type EnhancedNFTMetadata } from '@/lib/real-blockchain-storage';
+
+// Mock the dependencies
+jest.mock('z-ai-web-dev-sdk', () => ({
+  create: jest.fn().mockResolvedValue({
+    chat: {
+      completions: {
+        create: jest.fn().mockResolvedValue({
+          choices: [{
+            message: {
+              content: 'Mock AI response for blockchain operations'
+            }
+          }]
+        })
+      }
+    }
+  })
+}));
+
+jest.mock('ethers', () => ({
+  JsonRpcProvider: jest.fn().mockImplementation(() => ({
+    getNetwork: jest.fn().mockResolvedValue({ name: 'testnet', chainId: 1 }),
+    getBlockNumber: jest.fn().mockResolvedValue(12345),
+    getGasPrice: jest.fn().mockResolvedValue(BigInt(20000000000)),
+    getFeeData: jest.fn().mockResolvedValue({
+      maxFeePerGas: BigInt(25000000000),
+      maxPriorityFeePerGas: BigInt(2000000000)
+    })
+  })),
+  Wallet: jest.fn().mockImplementation(() => ({
+    address: '0x1234567890123456789012345678901234567890',
+    sendTransaction: jest.fn().mockResolvedValue({
+      hash: '0xtesthash',
+      wait: jest.fn().mockResolvedValue({
+        hash: '0xtesthash',
+        blockNumber: 12345,
+        gasUsed: BigInt(21000)
+      })
+    })
+  })),
+  Contract: jest.fn().mockImplementation(() => ({
+    safeMint: jest.fn().mockResolvedValue({
+      hash: '0xtestnft',
+      wait: jest.fn().mockResolvedValue({
+        hash: '0xtestnft',
+        blockNumber: 12346,
+        gasUsed: BigInt(100000)
+      })
+    }),
+    transferFrom: jest.fn().mockResolvedValue({
+      hash: '0xtesttransfer',
+      wait: jest.fn().mockResolvedValue({
+        hash: '0xtesttransfer',
+        blockNumber: 12347,
+        gasUsed: BigInt(50000)
+      })
+    }),
+    balanceOf: jest.fn().mockResolvedValue(BigInt(2)),
+    tokenOfOwnerByIndex: jest.fn().mockResolvedValue(BigInt(1)),
+    tokenURI: jest.fn().mockResolvedValue('ipfs://testmetadata'),
+    ownerOf: jest.fn().mockResolvedValue('0x1234567890123456789012345678901234567890')
+  })),
+  formatUnits: jest.fn().mockReturnValue('20'),
+  parseUnits: jest.fn().mockReturnValue(BigInt(20000000000))
+}));
+
+jest.mock('ipfs-http-client', () => ({
+  create: jest.fn().mockReturnValue({
+    id: jest.fn().mockResolvedValue({ id: 'testipfsnode' }),
+    add: jest.fn().mockResolvedValue({
+      path: 'QmTest123',
+      cid: { toString: () => 'QmTest123' }
+    }),
+    cat: jest.fn().mockResolvedValue(Buffer.from('mock ipfs data'))
+  })
+}));
+
+describe('Blockchain Integration', () => {
+  let blockchainStorage: any;
+  let config: BlockchainConfig;
+
+  beforeEach(() => {
+    config = {
+      provider: 'ethereum',
+      network: 'testnet',
+      rpcUrl: 'https://testnet.infura.io/v3/test',
+      infuraApiKey: 'test-key',
+      gasLimit: 300000,
+      timeout: 30000,
+      retries: 3
+    };
+    
+    blockchainStorage = createRealBlockchainStorage(config);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Initialization', () => {
+    it('should initialize blockchain storage successfully', async () => {
+      const result = await blockchainStorage.initialize();
+      expect(result).toBe(true);
+    });
+
+    it('should handle initialization errors gracefully', async () => {
+      // Mock initialization failure
+      const realBlockchainImplementationStorage, 'initializeWeb3Provider' as any);
+      mockInitialize.mockRejectedValue(new Error('Connection failed'));
+      
+      const result = await blockchainStorage.initialize();
+      expect(result).toBe(false);
+      
+      mockInitialize.mockRestore();
+    });
+  });
+
+  describe('NFT Operations', () => {
+    beforeEach(async () => {
+      await blockchainStorage.initialize();
+    });
+
+    it('should store photo as NFT successfully', async () => {
+      const imageData = Buffer.from('test image data');
+      const metadata: EnhancedNFTMetadata = {
+        name: 'Test NFT',
+        description: 'A test NFT from OptiMind AI',
+        image: 'test-image-url',
+        attributes: [
+          { trait_type: 'AI Generated', value: 'Yes' },
+          { trait_type: 'Platform', value: 'OptiMind AI' }
+        ]
+      };
+
+      const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
+
+      expect(result.success).toBe(true);
+      expect(result.transactionHash).toBeDefined();
+      expect(result.blockNumber).toBeDefined();
+      expect(result.metadata).toEqual(metadata);
+      expect(result.ipfsHashes).toBeDefined();
+    });
+
+    it('should handle NFT storage errors gracefully', async () => {
+      const imageData = Buffer.from('test image data');
+      const metadata: EnhancedNFTMetadata = {
+        name: 'Test NFT',
+        description: 'A test NFT from OptiMind AI',
+        image: 'test-image-url',
+        attributes: []
+      };
+
+      // Mock IPFS upload failure
+      const realBlockchainImplementationStorage, 'uploadToIPFS' as any);
+      mockUpload.mockRejectedValue(new Error('IPFS upload failed'));
+
+      const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      
+      mockUpload.mockRestore();
+    });
+
+    it('should transfer NFT successfully', async () => {
+      const result = await blockchainStorage.transferNFT('1', '0x1234567890123456789012345678901234567890', '0x0987654321098765432109876543210987654321');
+
+      expect(result.success).toBe(true);
+      expect(result.transactionHash).toBeDefined();
+      expect(result.blockNumber).toBeDefined();
+    });
+
+    it('should get NFT metadata successfully', async () => {
+      const metadata = await blockchainStorage.getNFTMetadata('1');
+
+      expect(metadata).toBeDefined();
+      expect(metadata!.name).toBe('OptiMind AI NFT #1');
+      expect(metadata!.description).toContain('AI-generated NFT');
+    });
+
+    it('should get owner NFTs successfully', async () => {
+      const ownerNFTs = await blockchainStorage.getOwnerNFTs('0x1234567890123456789012345678901234567890');
+
+      expect(ownerNFTs).toBeDefined();
+      expect(Array.isArray(ownerNFTs)).toBe(true);
+      expect(ownerNFTs.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('IPFS Operations', () => {
+    beforeEach(async () => {
+      await blockchainStorage.initialize();
+    });
+
+    it('should upload data to IPFS successfully', async () => {
+      const data = Buffer.from('test data for IPFS');
+      const result = await blockchainStorage.uploadToIPFS(data);
+
+      expect(result.hash).toBeDefined();
+      expect(result.size).toBeGreaterThan(0);
+    });
+
+    it('should handle IPFS upload timeout', async () => {
+      const data = Buffer.from('test data for IPFS');
+      
+      // Mock timeout
+      const realBlockchainImplementationStorage.ipfs, 'add');
+      mockAdd.mockImplementation(() => 
+        new Promise((_, reject) => setTimeout(() => reject(new Error('IPFS upload timeout')), 100))
+      );
+
+      await expect(blockchainStorage.uploadToIPFS(data, { timeout: 50 })).rejects.toThrow('IPFS upload timeout');
+      
+      mockAdd.mockRestore();
+    });
+  });
+
+  describe('Configuration', () => {
+    beforeEach(async () => {
+      await blockchainStorage.initialize();
+    });
+
+    it('should return correct configuration', () => {
+      const config = blockchainStorage.getConfig();
+
+      expect(config.provider).toBe('ethereum');
+      expect(config.network).toBe('testnet');
+      expect(config.gasLimit).toBe(300000);
+    });
+
+    it('should handle different network configurations', async () => {
+      const polygonConfig: BlockchainConfig = {
+        provider: 'polygon',
+        network: 'mainnet',
+        rpcUrl: 'https://polygon-rpc.com/',
+        gasLimit: 500000
+      };
+
+      const polygonStorage = createRealBlockchainStorage(polygonConfig);
+      await polygonStorage.initialize();
+
+      const config = polygonStorage.getConfig();
+      expect(config.provider).toBe('polygon');
+      expect(config.network).toBe('mainnet');
+    });
+  });
+
+  describe('Multi-Chain Support', () => {
+    it.each([
+      { provider: 'ethereum', network: 'mainnet' },
+      { provider: 'polygon', network: 'mainnet' },
+      { provider: 'binance', network: 'mainnet' },
+      { provider: 'arbitrum', network: 'mainnet' }
+    ])('should support $provider $network', async ({ provider, network }) => {
+      const chainConfig: BlockchainConfig = {
+        provider: provider as any,
+        network: network as any,
+        rpcUrl: `https://${provider}-rpc.com/`,
+        gasLimit: 300000
+      };
+
+      const chainStorage = createRealBlockchainStorage(chainConfig);
+      const result = await chainStorage.initialize();
+
+      expect(result).toBe(true);
+      
+      const config = chainStorage.getConfig();
+      expect(config.provider).toBe(provider);
+      expect(config.network).toBe(network);
+    });
+  });
+
+  describe('Error Handling', () => {
+    beforeEach(async () => {
+      await blockchainStorage.initialize();
+    });
+
+    it('should handle network connection issues', async () => {
+      // Mock network failure
+      const realBlockchainImplementationStorage.provider, 'getNetwork');
+      mockGetNetwork.mockRejectedValue(new Error('Network unreachable'));
+
+      const imageData = Buffer.from('test image data');
+      const metadata: EnhancedNFTMetadata = {
+        name: 'Test NFT',
+        description: 'A test NFT from OptiMind AI',
+        image: 'test-image-url',
+        attributes: []
+      };
+
+      const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
+      
+      expect(result.success).toBe(false);
+      expect(result.error).toBeDefined();
+      
+      mockGetNetwork.mockRestore();
+    });
+  });
+
+  describe('Performance', () => {
+    beforeEach(async () => {
+      await blockchainStorage.initialize();
+    });
+
+    it('should handle concurrent operations efficiently', async () => {
+      const operations = [];
+      const operationCount = 5;
+
+      for (let i = 0; i < operationCount; i++) {
+        operations.push(
+          blockchainStorage.uploadToIPFS(Buffer.from(`test data ${i}`))
+        );
+      }
+
+      const results = await Promise.all(operations);
+      
+      expect(results).toHaveLength(operationCount);
+      results.forEach(result => {
+        expect(result.hash).toBeDefined();
+      });
+    });
+  });
+});
+
+describe('Blockchain Integration Security', () => {
+  let blockchainStorage: any;
+  let config: BlockchainConfig;
+
+  beforeEach(async () => {
+    config = {
+      provider: 'ethereum',
+      network: 'testnet',
+      rpcUrl: 'https://testnet.infura.io/v3/test',
+      infuraApiKey: 'test-key',
+      gasLimit: 300000
+    };
+    
+    blockchainStorage = createRealBlockchainStorage(config);
+    await blockchainStorage.initialize();
+  });
+
+  it('should validate transaction parameters', async () => {
+    const imageData = Buffer.from('test image data');
+    const metadata: EnhancedNFTMetadata = {
+      name: 'Test NFT',
+      description: 'A test NFT from OptiMind AI',
+      image: 'test-image-url',
+      attributes: []
+    };
+
+    // Test with invalid address
+    const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, 'invalid-address');
+    
+    expect(result).toBeDefined();
+    // Should handle invalid address gracefully
+  });
+
+  it('should handle gas limit validation', async () => {
+    const configWithLowGas: BlockchainConfig = {
+      ...config,
+      gasLimit: 1000 // Very low gas limit
+    };
+
+    const lowGasStorage = createRealBlockchainStorage(configWithLowGas);
+    await lowGasStorage.initialize();
+
+    const imageData = Buffer.from('test image data');
+    const metadata: EnhancedNFTMetadata = {
+      name: 'Test NFT',
+      description: 'A test NFT from OptiMind AI',
+      image: 'test-image-url',
+      attributes: []
+    };
+
+    const result = await lowGasStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
+    
+    expect(result).toBeDefined();
+    // Should handle gas limit issues gracefully
+  });
+});

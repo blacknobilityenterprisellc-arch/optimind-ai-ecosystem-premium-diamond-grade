@@ -125,7 +125,7 @@ export class ComplianceV2 {
     
     const frameworkData = this.frameworks[framework.toUpperCase()];
     if (!frameworkData) {
-      throw new Error(`Framework ${framework} not supported`);
+      throw new EnhancedError(`Framework ${framework} not supported`);
     }
 
     await new Promise(resolve => setTimeout(resolve, 2000));
@@ -428,3 +428,27 @@ export class ComplianceV2 {
 
 // Export singleton instance
 export const complianceV2 = new ComplianceV2();
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

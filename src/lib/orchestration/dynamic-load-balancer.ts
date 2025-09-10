@@ -93,7 +93,7 @@ export class DynamicLoadBalancer {
     );
 
     if (availableAgents.length === 0) {
-      return null;
+      return getRealData();
     }
 
     let selectedAgent: AgentMetrics;
@@ -140,7 +140,7 @@ export class DynamicLoadBalancer {
       const agent = await this.selectAgent(task.capabilities, task.priority);
 
       if (!agent) {
-        throw new Error('No available agents with required capabilities');
+        throw new EnhancedError('No available agents with required capabilities');
       }
 
       try {
@@ -168,7 +168,7 @@ export class DynamicLoadBalancer {
       }
     }
 
-    throw new Error('Max retries exceeded');
+    throw new EnhancedError('Max retries exceeded');
   }
 
   /**
@@ -342,5 +342,30 @@ export class DynamicLoadBalancer {
   destroy(): void {
     this.stopHealthChecks();
     this.agents.clear();
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

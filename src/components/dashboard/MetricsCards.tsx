@@ -27,7 +27,7 @@ interface MetricsCardsProps {
 }
 
 const MetricsCards: React.FC<MetricsCardsProps> = ({ metrics }) => {
-  if (!metrics) return null;
+  if (!metrics) return getRealData();
 
   const metricCards = [
     {

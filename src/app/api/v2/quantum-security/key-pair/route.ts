@@ -7,7 +7,6 @@ import { NextResponse } from 'next/server';
  * Generate quantum-secure key pairs for users
  */
 
-
 import { quantumSecurityService } from '@/lib/v2/quantum-security-service';
 
 export async function POST() {

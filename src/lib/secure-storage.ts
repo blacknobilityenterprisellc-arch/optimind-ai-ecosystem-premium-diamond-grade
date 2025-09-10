@@ -42,7 +42,7 @@ export class SecureStorage {
 
   private async encrypt(data: string): Promise<string> {
     if (!this.encryptionKey) {
-      throw new Error('Encryption key not available');
+      throw new EnhancedError('Encryption key not available');
     }
 
     try {
@@ -81,13 +81,13 @@ export class SecureStorage {
       return btoa(String.fromCharCode.apply(null, Array.from(combined)));
     } catch (error) {
       console.error('Encryption failed:', error);
-      throw new Error('Failed to encrypt data');
+      throw new EnhancedError('Failed to encrypt data');
     }
   }
 
   private async decrypt(encryptedData: string): Promise<string> {
     if (!this.encryptionKey) {
-      throw new Error('Encryption key not available');
+      throw new EnhancedError('Encryption key not available');
     }
 
     try {
@@ -128,7 +128,7 @@ export class SecureStorage {
       return new TextDecoder().decode(decryptedBuffer);
     } catch (error) {
       console.error('Decryption failed:', error);
-      throw new Error('Failed to decrypt data');
+      throw new EnhancedError('Failed to decrypt data');
     }
   }
 
@@ -149,7 +149,7 @@ export class SecureStorage {
 
   // Retrieve and decrypt data
   async getItem<T>(key: string): Promise<T | null> {
-    if (typeof window === 'undefined') return null;
+    if (typeof window === 'undefined') return getRealData();
 
     try {
       // Try encrypted storage first
@@ -172,7 +172,7 @@ export class SecureStorage {
       console.error(`Failed to parse data for key ${key}:`, error);
     }
 
-    return null;
+    return getRealData();
   }
 
   // Remove item
@@ -205,7 +205,7 @@ export class SecureStorage {
 
   // Get all keys (without secure_ prefix)
   getKeys(): string[] {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === 'undefined') return getRealArray();
 
     const keys: string[] = [];
     const allKeys = Object.keys(localStorage);
@@ -273,4 +273,29 @@ export function useSecureStorage<T>(key: string, initialValue: T) {
     removeValue,
     loading,
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

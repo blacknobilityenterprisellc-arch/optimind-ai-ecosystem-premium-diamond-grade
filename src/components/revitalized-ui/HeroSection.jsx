@@ -1,24 +1,24 @@
 /**
  * OptiMind AI Ecosystem - Hero Section Component
- * 
+ *
  * Visually striking hero section with compelling headlines and clear call-to-action
  * Features responsive design, smooth animations, and high contrast accessibility
  */
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Sparkles, 
-  ArrowRight, 
-  Zap, 
-  Brain, 
-  Shield, 
+import {
+  Sparkles,
+  ArrowRight,
+  Zap,
+  Brain,
+  Shield,
   BarChart3,
   Users,
   CheckCircle,
   Play,
   Star,
-  TrendingUp
+  TrendingUp,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -28,9 +28,14 @@ const HeroSection = () => {
   // Animated statistics
   const stats = [
     { label: 'AI Models', value: '45+', icon: Brain, color: 'from-blue-500 to-purple-600' },
-    { label: 'Enterprise Clients', value: '1000+', icon: Users, color: 'from-green-500 to-emerald-600' },
+    {
+      label: 'Enterprise Clients',
+      value: '1000+',
+      icon: Users,
+      color: 'from-green-500 to-emerald-600',
+    },
     { label: 'Uptime', value: '99.9%', icon: Shield, color: 'from-yellow-500 to-orange-600' },
-    { label: 'Response Time', value: '<50ms', icon: Zap, color: 'from-purple-500 to-pink-600' }
+    { label: 'Response Time', value: '<50ms', icon: Zap, color: 'from-purple-500 to-pink-600' },
   ];
 
   // Features highlights
@@ -40,23 +45,26 @@ const HeroSection = () => {
     '45+ AI Models Integrated',
     '24/7 Premium Support',
     'Scalable Architecture',
-    'Real-time Analytics'
+    'Real-time Analytics',
   ];
 
   // Auto-rotate stats
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentStatIndex((prev) => (prev + 1) % stats.length);
+      setCurrentStatIndex(prev => (prev + 1) % stats.length);
     }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30" />
-      
+
       {/* Animated Background Shapes */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -67,7 +75,7 @@ const HeroSection = () => {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: 'linear'
+            ease: 'linear',
           }}
           className="absolute top-20 left-10 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30"
         />
@@ -79,7 +87,7 @@ const HeroSection = () => {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: 'linear'
+            ease: 'linear',
           }}
           className="absolute top-40 right-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30"
         />
@@ -91,7 +99,7 @@ const HeroSection = () => {
           transition={{
             duration: 30,
             repeat: Infinity,
-            ease: 'linear'
+            ease: 'linear',
           }}
           className="absolute bottom-20 left-1/2 w-72 h-72 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-30"
         />
@@ -142,7 +150,8 @@ const HeroSection = () => {
                 transition={{ delay: 0.5, duration: 0.6 }}
                 className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed max-w-2xl lg:max-w-none"
               >
-                Experience the future of AI-powered solutions with our premium, enterprise-grade platform designed for maximum performance and security.
+                Experience the future of AI-powered solutions with our premium, enterprise-grade
+                platform designed for maximum performance and security.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -165,9 +174,7 @@ const HeroSection = () => {
                 >
                   <span className="relative z-10">Explore Features</span>
                   <ArrowRight className="h-5 w-5 relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  />
+                  <motion.div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
 
                 <motion.button
@@ -183,9 +190,7 @@ const HeroSection = () => {
                 >
                   <span className="relative z-10">Get Started</span>
                   <Zap className="h-5 w-5 relative z-10 group-hover:rotate-12 transition-transform duration-200" />
-                  <motion.div
-                    className="absolute inset-0 bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  />
+                  <motion.div className="absolute inset-0 bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.button>
               </motion.div>
 
@@ -246,19 +251,21 @@ const HeroSection = () => {
                     transition={{ duration: 0.5 }}
                     className="flex items-center justify-center space-x-3 mb-4"
                   >
-                    <div className={clsx(
-                      'w-16 h-16 rounded-2xl flex items-center justify-center',
-                      `bg-gradient-to-r ${stats[currentStatIndex].color}`
-                    )}>
-                    {React.createElement(stats[currentStatIndex].icon, { className: "h-8 w-8 text-white" })}
+                    <div
+                      className={clsx(
+                        'w-16 h-16 rounded-2xl flex items-center justify-center',
+                        `bg-gradient-to-r ${stats[currentStatIndex].color}`
+                      )}
+                    >
+                      {React.createElement(stats[currentStatIndex].icon, {
+                        className: 'h-8 w-8 text-white',
+                      })}
                     </div>
                     <div className="text-left">
                       <div className="text-3xl font-bold text-gray-900">
                         {stats[currentStatIndex].value}
                       </div>
-                      <div className="text-gray-600">
-                        {stats[currentStatIndex].label}
-                      </div>
+                      <div className="text-gray-600">{stats[currentStatIndex].label}</div>
                     </div>
                   </motion.div>
                 </div>
@@ -268,7 +275,7 @@ const HeroSection = () => {
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
                     Why Choose OptiMind AI?
                   </h3>
-                  
+
                   {highlights.map((highlight, index) => (
                     <motion.div
                       key={highlight}
@@ -307,7 +314,7 @@ const HeroSection = () => {
                 transition={{
                   duration: 6,
                   repeat: Infinity,
-                  ease: 'easeInOut'
+                  ease: 'easeInOut',
                 }}
                 className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg"
               >
@@ -321,7 +328,7 @@ const HeroSection = () => {
                 transition={{
                   duration: 8,
                   repeat: Infinity,
-                  ease: 'easeInOut'
+                  ease: 'easeInOut',
                 }}
                 className="absolute -bottom-6 -left-6 w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg"
               >

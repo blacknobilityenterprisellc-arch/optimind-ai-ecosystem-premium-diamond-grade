@@ -370,7 +370,7 @@ class AIService {
       };
     } catch (error) {
       console.error('AI Chat Error:', error);
-      throw new Error(
+      throw new EnhancedError(
         `Failed to get AI response: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -565,3 +565,28 @@ class AIService {
 
 export const aiService = new AIService();
 export default aiService;
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

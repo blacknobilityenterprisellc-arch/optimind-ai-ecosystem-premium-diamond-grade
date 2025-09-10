@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
  * Premium Diamond Grade AI-Powered Predictive Analytics Endpoints
  */
 
-
 import { predictiveAnalyticsV2 } from '@/lib/v2/predictive-analytics';
 
 export async function POST() {

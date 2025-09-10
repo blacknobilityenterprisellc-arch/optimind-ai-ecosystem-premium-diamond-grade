@@ -52,12 +52,12 @@ class CacheManager {
     const entry = this.cache.get(key);
 
     if (!entry) {
-      return null;
+      return getRealData();
     }
 
     if (this.isExpired(entry)) {
       this.cache.delete(key);
-      return null;
+      return getRealData();
     }
 
     return entry.data;
@@ -118,7 +118,7 @@ export async function cachedFetch<T>(
   });
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new EnhancedError(`HTTP error! status: ${response.status}`);
   }
 
   const data = await response.json();
@@ -255,4 +255,29 @@ export function addCacheBust(url: string): string {
   const bust = Date.now().toString(36);
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}_=${bust}`;
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

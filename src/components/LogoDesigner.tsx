@@ -21,7 +21,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Palette,
@@ -117,11 +123,11 @@ const LogoDesigner: React.FC = () => {
 
   const generateLogo = async () => {
     setIsGenerating(true);
-    
+
     try {
       // Simulate API call to generate logo
       await new Promise(resolve => setTimeout(resolve, 3000));
-      
+
       const newLogo: LogoDesign = {
         id: Date.now().toString(),
         name: formData.companyName || 'OptiMind AI',
@@ -147,7 +153,7 @@ const LogoDesigner: React.FC = () => {
   const generateSVGLogo = (data: typeof formData): string => {
     // Generate a sophisticated SVG logo based on the form data
     const [color1, color2] = data.colors;
-    
+
     return `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
         <defs>
@@ -231,9 +237,7 @@ const LogoDesigner: React.FC = () => {
                 <Wand2 className="h-5 w-5" />
                 Design Parameters
               </CardTitle>
-              <CardDescription>
-                Configure your logo design preferences
-              </CardDescription>
+              <CardDescription>Configure your logo design preferences</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -241,13 +245,16 @@ const LogoDesigner: React.FC = () => {
                 <Input
                   placeholder="Enter company name"
                   value={formData.companyName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
                 />
               </div>
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Industry</label>
-                <Select value={formData.industry} onValueChange={(value) => setFormData(prev => ({ ...prev, industry: value }))}>
+                <Select
+                  value={formData.industry}
+                  onValueChange={value => setFormData(prev => ({ ...prev, industry: value }))}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select industry" />
                   </SelectTrigger>
@@ -263,7 +270,10 @@ const LogoDesigner: React.FC = () => {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Logo Style</label>
-                <Select value={formData.style} onValueChange={(value) => setFormData(prev => ({ ...prev, style: value }))}>
+                <Select
+                  value={formData.style}
+                  onValueChange={value => setFormData(prev => ({ ...prev, style: value }))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -279,7 +289,10 @@ const LogoDesigner: React.FC = () => {
 
               <div>
                 <label className="text-sm font-medium mb-2 block">Typography</label>
-                <Select value={formData.typography} onValueChange={(value) => setFormData(prev => ({ ...prev, typography: value }))}>
+                <Select
+                  value={formData.typography}
+                  onValueChange={value => setFormData(prev => ({ ...prev, typography: value }))}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -300,8 +313,8 @@ const LogoDesigner: React.FC = () => {
                     <button
                       key={index}
                       className={`p-2 rounded border-2 transition-all ${
-                        formData.colors.join(',') === palette.colors.join(',') 
-                          ? 'border-purple-500' 
+                        formData.colors.join(',') === palette.colors.join(',')
+                          ? 'border-purple-500'
                           : 'border-gray-600 hover:border-gray-500'
                       }`}
                       onClick={() => setFormData(prev => ({ ...prev, colors: palette.colors }))}
@@ -326,13 +339,13 @@ const LogoDesigner: React.FC = () => {
                 <Textarea
                   placeholder="Describe your brand, values, or logo preferences..."
                   value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
                 />
               </div>
 
-              <Button 
-                onClick={generateLogo} 
+              <Button
+                onClick={generateLogo}
                 disabled={isGenerating || !formData.companyName}
                 className="w-full bg-purple-600 hover:bg-purple-700"
               >
@@ -370,7 +383,7 @@ const LogoDesigner: React.FC = () => {
                   {/* Logo Display */}
                   <div className="text-center space-y-4">
                     <div className="inline-block p-8 bg-gray-900 rounded-lg">
-                      <div 
+                      <div
                         className="w-32 h-32 mx-auto"
                         dangerouslySetInnerHTML={{ __html: selectedLogo.svg }}
                       />
@@ -411,14 +424,11 @@ const LogoDesigner: React.FC = () => {
 
                   {/* Action Buttons */}
                   <div className="flex space-x-2">
-                    <Button 
-                      onClick={() => downloadLogo(selectedLogo, 'svg')}
-                      className="flex-1"
-                    >
+                    <Button onClick={() => downloadLogo(selectedLogo, 'svg')} className="flex-1">
                       <Download className="h-4 w-4 mr-2" />
                       Download SVG
                     </Button>
-                    <Button 
+                    <Button
                       onClick={() => downloadLogo(selectedLogo, 'png')}
                       variant="outline"
                       className="flex-1"
@@ -434,9 +444,7 @@ const LogoDesigner: React.FC = () => {
               ) : (
                 <div className="text-center py-12">
                   <Layers className="h-16 w-16 mx-auto text-gray-600 mb-4" />
-                  <p className="text-gray-400">
-                    Generate your first logo to see the preview
-                  </p>
+                  <p className="text-gray-400">Generate your first logo to see the preview</p>
                 </div>
               )}
             </CardContent>
@@ -457,16 +465,13 @@ const LogoDesigner: React.FC = () => {
                     <button
                       key={logo.id}
                       className={`p-3 rounded-lg border-2 transition-all hover:scale-105 ${
-                        selectedLogo?.id === logo.id 
-                          ? 'border-purple-500 bg-purple-500/10' 
+                        selectedLogo?.id === logo.id
+                          ? 'border-purple-500 bg-purple-500/10'
                           : 'border-gray-700 hover:border-gray-600'
                       }`}
                       onClick={() => setSelectedLogo(logo)}
                     >
-                      <div 
-                        className="w-full h-16"
-                        dangerouslySetInnerHTML={{ __html: logo.svg }}
-                      />
+                      <div className="w-full h-16" dangerouslySetInnerHTML={{ __html: logo.svg }} />
                       <p className="text-xs mt-2 truncate">{logo.name}</p>
                     </button>
                   ))}

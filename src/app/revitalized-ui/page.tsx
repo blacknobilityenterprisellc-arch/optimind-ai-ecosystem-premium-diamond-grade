@@ -1,6 +1,6 @@
 /**
  * OptiMind AI Ecosystem - Revitalized UI Page
- * 
+ *
  * A premium, enterprise-grade frontend implementation addressing all pain points:
  * - Fully functional interactive elements
  * - Mobile-first responsive design
@@ -13,13 +13,13 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Brain, 
-  Sparkles, 
-  Shield, 
-  Zap, 
-  BarChart3, 
-  Users, 
+import {
+  Brain,
+  Sparkles,
+  Shield,
+  Zap,
+  BarChart3,
+  Users,
   MessageSquare,
   ArrowRight,
   Menu,
@@ -30,7 +30,7 @@ import {
   Phone,
   MapPin,
   Send,
-  Loader2
+  Loader2,
 } from 'lucide-react';
 
 // Main App Component
@@ -40,7 +40,7 @@ const OptiMindRevitalizedUI = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    message: ''
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -55,14 +55,14 @@ const OptiMindRevitalizedUI = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     console.log('Form submitted:', formData);
     setIsSubmitting(false);
     setFormSubmitted(true);
-    
+
     // Reset form after 3 seconds
     setTimeout(() => {
       setFormSubmitted(false);
@@ -75,7 +75,7 @@ const OptiMindRevitalizedUI = () => {
     { id: 'home', label: 'Home', href: '#home' },
     { id: 'features', label: 'Features', href: '#features' },
     { id: 'testimonials', label: 'Testimonials', href: '#testimonials' },
-    { id: 'contact', label: 'Contact', href: '#contact' }
+    { id: 'contact', label: 'Contact', href: '#contact' },
   ];
 
   // Features data
@@ -83,27 +83,29 @@ const OptiMindRevitalizedUI = () => {
     {
       icon: Brain,
       title: 'Advanced AI Intelligence',
-      description: 'Harness the power of 45+ AI models with intelligent orchestration and optimization.',
-      color: 'from-blue-500 to-purple-600'
+      description:
+        'Harness the power of 45+ AI models with intelligent orchestration and optimization.',
+      color: 'from-blue-500 to-purple-600',
     },
     {
       icon: Shield,
       title: 'Enterprise-Grade Security',
-      description: 'Military-grade encryption with zero-trust architecture and comprehensive compliance.',
-      color: 'from-green-500 to-emerald-600'
+      description:
+        'Military-grade encryption with zero-trust architecture and comprehensive compliance.',
+      color: 'from-green-500 to-emerald-600',
     },
     {
       icon: Zap,
       title: 'Lightning Performance',
       description: 'Sub-2 second load times with optimized caching and responsive design.',
-      color: 'from-yellow-500 to-orange-600'
+      color: 'from-yellow-500 to-orange-600',
     },
     {
       icon: BarChart3,
       title: 'Real-time Analytics',
       description: 'Comprehensive dashboards with live metrics and predictive insights.',
-      color: 'from-purple-500 to-pink-600'
-    }
+      color: 'from-purple-500 to-pink-600',
+    },
   ];
 
   // Testimonials data
@@ -111,21 +113,23 @@ const OptiMindRevitalizedUI = () => {
     {
       name: 'Sarah Johnson',
       role: 'CTO, TechCorp',
-      content: 'OptiMind has transformed our workflow. The AI integration is seamless and the performance is outstanding.',
-      rating: 5
+      content:
+        'OptiMind has transformed our workflow. The AI integration is seamless and the performance is outstanding.',
+      rating: 5,
     },
     {
       name: 'Michael Chen',
       role: 'Product Manager, StartupX',
-      content: 'The most intuitive and powerful AI ecosystem we\'ve ever used. Highly recommended!',
-      rating: 5
+      content: "The most intuitive and powerful AI ecosystem we've ever used. Highly recommended!",
+      rating: 5,
     },
     {
       name: 'Emily Rodriguez',
       role: 'Developer, DevStudio',
-      content: 'The accessibility features and responsive design make it perfect for our diverse team.',
-      rating: 5
-    }
+      content:
+        'The accessibility features and responsive design make it perfect for our diverse team.',
+      rating: 5,
+    },
   ];
 
   // Smooth scroll to section
@@ -156,7 +160,7 @@ const OptiMindRevitalizedUI = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              {navItems.map((item) => (
+              {navItems.map(item => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
@@ -193,7 +197,7 @@ const OptiMindRevitalizedUI = () => {
               className="md:hidden mt-4 pb-4"
             >
               <div className="flex flex-col space-y-2">
-                {navItems.map((item) => (
+                {navItems.map(item => (
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
@@ -232,18 +236,20 @@ const OptiMindRevitalizedUI = () => {
                     Enterprise AI Ecosystem
                   </span>
                 </div>
-                
+
                 <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
                   Transform Your Business with
                   <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    {' '}AI Intelligence
+                    {' '}
+                    AI Intelligence
                   </span>
                 </h1>
-                
+
                 <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
-                  Experience the future of AI-powered solutions with our premium, enterprise-grade platform designed for maximum performance and security.
+                  Experience the future of AI-powered solutions with our premium, enterprise-grade
+                  platform designed for maximum performance and security.
                 </p>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <button
                     onClick={() => scrollToSection('features')}
@@ -252,7 +258,7 @@ const OptiMindRevitalizedUI = () => {
                     <span>Explore Features</span>
                     <ArrowRight className="h-5 w-5" />
                   </button>
-                  
+
                   <button
                     onClick={() => scrollToSection('contact')}
                     className="bg-white text-gray-900 border-2 border-gray-300 px-8 py-4 rounded-lg font-medium text-lg hover:border-blue-600 hover:text-blue-600 transition-all duration-200 flex items-center space-x-2"
@@ -261,14 +267,14 @@ const OptiMindRevitalizedUI = () => {
                     <Zap className="h-5 w-5" />
                   </button>
                 </div>
-                
+
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
                   {[
                     { label: 'AI Models', value: '45+' },
                     { label: 'Enterprise Clients', value: '1000+' },
                     { label: 'Uptime', value: '99.9%' },
-                    { label: 'Response Time', value: '<50ms' }
+                    { label: 'Response Time', value: '<50ms' },
                   ].map((stat, index) => (
                     <motion.div
                       key={stat.label}
@@ -280,9 +286,7 @@ const OptiMindRevitalizedUI = () => {
                       <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
                         {stat.value}
                       </div>
-                      <div className="text-gray-600">
-                        {stat.label}
-                      </div>
+                      <div className="text-gray-600">{stat.label}</div>
                     </motion.div>
                   ))}
                 </div>
@@ -303,11 +307,13 @@ const OptiMindRevitalizedUI = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Powerful Features for
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {' '}Modern Businesses
+                  {' '}
+                  Modern Businesses
                 </span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover the comprehensive suite of tools and capabilities that make OptiMind AI the perfect choice for your organization.
+                Discover the comprehensive suite of tools and capabilities that make OptiMind AI the
+                perfect choice for your organization.
               </p>
             </motion.div>
 
@@ -322,17 +328,15 @@ const OptiMindRevitalizedUI = () => {
                   className="group"
                 >
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 h-full hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-blue-300">
-                    <div className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <div
+                      className={`w-12 h-12 bg-gradient-to-r ${feature.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
+                    >
                       <feature.icon className="h-6 w-6 text-white" />
                     </div>
-                    
-                    <h3 className="text-xl font-semibold mb-3 text-gray-900">
-                      {feature.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 leading-relaxed">
-                      {feature.description}
-                    </p>
+
+                    <h3 className="text-xl font-semibold mb-3 text-gray-900">{feature.title}</h3>
+
+                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -352,11 +356,13 @@ const OptiMindRevitalizedUI = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Trusted by
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {' '}Industry Leaders
+                  {' '}
+                  Industry Leaders
                 </span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Hear from our satisfied customers who have transformed their businesses with OptiMind AI.
+                Hear from our satisfied customers who have transformed their businesses with
+                OptiMind AI.
               </p>
             </motion.div>
 
@@ -375,22 +381,16 @@ const OptiMindRevitalizedUI = () => {
                         <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                       ))}
                     </div>
-                    
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      "{testimonial.content}"
-                    </p>
-                    
+
+                    <p className="text-gray-600 mb-6 leading-relaxed">"{testimonial.content}"</p>
+
                     <div className="flex items-center">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                         {testimonial.name.charAt(0)}
                       </div>
                       <div className="ml-4">
-                        <div className="font-semibold text-gray-900">
-                          {testimonial.name}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {testimonial.role}
-                        </div>
+                        <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                        <div className="text-sm text-gray-600">{testimonial.role}</div>
                       </div>
                     </div>
                   </div>
@@ -412,11 +412,13 @@ const OptiMindRevitalizedUI = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Get Started with
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  {' '}OptiMind AI
+                  {' '}
+                  OptiMind AI
                 </span>
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Ready to transform your business? Get in touch with our team and let's discuss how we can help you achieve your goals.
+                Ready to transform your business? Get in touch with our team and let's discuss how
+                we can help you achieve your goals.
               </p>
             </motion.div>
 
@@ -430,7 +432,7 @@ const OptiMindRevitalizedUI = () => {
                 >
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-8">
                     <h3 className="text-2xl font-semibold mb-6">Send us a message</h3>
-                    
+
                     {formSubmitted ? (
                       <div className="text-center py-8">
                         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
@@ -440,7 +442,10 @@ const OptiMindRevitalizedUI = () => {
                     ) : (
                       <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
                             Name
                           </label>
                           <input
@@ -454,9 +459,12 @@ const OptiMindRevitalizedUI = () => {
                             placeholder="Your name"
                           />
                         </div>
-                        
+
                         <div>
-                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
                             Email
                           </label>
                           <input
@@ -470,9 +478,12 @@ const OptiMindRevitalizedUI = () => {
                             placeholder="your@email.com"
                           />
                         </div>
-                        
+
                         <div>
-                          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                          <label
+                            htmlFor="message"
+                            className="block text-sm font-medium text-gray-700 mb-2"
+                          >
                             Message
                           </label>
                           <textarea
@@ -486,7 +497,7 @@ const OptiMindRevitalizedUI = () => {
                             placeholder="Tell us about your project..."
                           />
                         </div>
-                        
+
                         <button
                           type="submit"
                           disabled={isSubmitting}
@@ -519,7 +530,8 @@ const OptiMindRevitalizedUI = () => {
                     <div>
                       <h3 className="text-2xl font-semibold mb-6">Contact Information</h3>
                       <p className="text-gray-600 mb-8">
-                        Reach out to us through any of the following channels. We're here to help you succeed.
+                        Reach out to us through any of the following channels. We're here to help
+                        you succeed.
                       </p>
                     </div>
 
@@ -550,7 +562,11 @@ const OptiMindRevitalizedUI = () => {
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-900 mb-1">Office</h4>
-                          <p className="text-gray-600">123 AI Innovation Drive<br />Tech City, TC 12345</p>
+                          <p className="text-gray-600">
+                            123 AI Innovation Drive
+                            <br />
+                            Tech City, TC 12345
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -558,7 +574,8 @@ const OptiMindRevitalizedUI = () => {
                     <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
                       <h4 className="font-semibold mb-2">24/7 Support</h4>
                       <p className="text-blue-100">
-                        Our dedicated support team is available around the clock to assist you with any questions or issues.
+                        Our dedicated support team is available around the clock to assist you with
+                        any questions or issues.
                       </p>
                     </div>
                   </div>
@@ -588,30 +605,78 @@ const OptiMindRevitalizedUI = () => {
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">API</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    API
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Documentation
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Compliance</a></li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Security
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Compliance
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

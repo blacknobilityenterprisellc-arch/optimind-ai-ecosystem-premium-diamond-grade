@@ -1,16 +1,16 @@
 /**
  * OptiMind AI Ecosystem - Layout Component
- * 
+ *
  * Premium responsive layout with navigation header and footer
  * Features mobile-first design, accessibility, and smooth interactions
  */
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Brain, 
-  Menu, 
-  X, 
+import {
+  Brain,
+  Menu,
+  X,
   ArrowRight,
   Mail,
   Phone,
@@ -18,7 +18,7 @@ import {
   Facebook,
   Twitter,
   Linkedin,
-  Github
+  Github,
 } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -31,7 +31,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
     { id: 'home', label: 'Home', href: '#home' },
     { id: 'features', label: 'Features', href: '#features' },
     { id: 'testimonials', label: 'Testimonials', href: '#testimonials' },
-    { id: 'contact', label: 'Contact', href: '#contact' }
+    { id: 'contact', label: 'Contact', href: '#contact' },
   ];
 
   // Footer links
@@ -40,20 +40,20 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
       { label: 'Features', href: '#features' },
       { label: 'Pricing', href: '#' },
       { label: 'API', href: '#' },
-      { label: 'Documentation', href: '#' }
+      { label: 'Documentation', href: '#' },
     ],
     company: [
       { label: 'About', href: '#' },
       { label: 'Blog', href: '#' },
       { label: 'Careers', href: '#' },
-      { label: 'Contact', href: '#contact' }
+      { label: 'Contact', href: '#contact' },
     ],
     legal: [
       { label: 'Privacy Policy', href: '#' },
       { label: 'Terms of Service', href: '#' },
       { label: 'Security', href: '#' },
-      { label: 'Compliance', href: '#' }
-    ]
+      { label: 'Compliance', href: '#' },
+    ],
   };
 
   // Social media links
@@ -61,7 +61,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Twitter, href: '#', label: 'Twitter' },
     { icon: Linkedin, href: '#', label: 'LinkedIn' },
-    { icon: Github, href: '#', label: 'GitHub' }
+    { icon: Github, href: '#', label: 'GitHub' },
   ];
 
   // Handle scroll effect
@@ -75,7 +75,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
   }, []);
 
   // Smooth scroll to section
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = sectionId => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -85,18 +85,18 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
   };
 
   // Handle navigation click
-  const handleNavClick = (sectionId) => {
+  const handleNavClick = sectionId => {
     scrollToSection(sectionId);
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header/Navigation */}
-      <header 
+      <header
         className={clsx(
           'fixed top-0 w-full z-50 transition-all duration-300',
-          isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' 
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200'
             : 'bg-white/80 backdrop-blur-sm border-b border-gray-100'
         )}
       >
@@ -122,14 +122,14 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
-              {navItems.map((item) => (
+              {navItems.map(item => (
                 <motion.button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
                   className={clsx(
                     'relative px-1 py-2 text-sm font-medium transition-all duration-200 group',
-                    activeSection === item.id 
-                      ? 'text-blue-600' 
+                    activeSection === item.id
+                      ? 'text-blue-600'
                       : 'text-gray-600 hover:text-blue-600'
                   )}
                   whileHover={{ scale: 1.05 }}
@@ -144,7 +144,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                   />
                 </motion.button>
               ))}
-              
+
               <motion.button
                 onClick={() => scrollToSection('contact')}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-xl font-medium hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center space-x-2"
@@ -184,14 +184,14 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                 className="lg:hidden mt-4 overflow-hidden"
               >
                 <div className="flex flex-col space-y-2 pb-4">
-                  {navItems.map((item) => (
+                  {navItems.map(item => (
                     <motion.button
                       key={item.id}
                       onClick={() => handleNavClick(item.id)}
                       className={clsx(
                         'text-left px-4 py-3 rounded-xl transition-all duration-200 flex items-center justify-between',
-                        activeSection === item.id 
-                          ? 'bg-blue-50 text-blue-600 font-medium' 
+                        activeSection === item.id
+                          ? 'bg-blue-50 text-blue-600 font-medium'
                           : 'hover:bg-gray-100 text-gray-700'
                       )}
                       whileHover={{ scale: 1.02 }}
@@ -207,7 +207,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                       )}
                     </motion.button>
                   ))}
-                  
+
                   <motion.button
                     onClick={() => scrollToSection('contact')}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium mt-4"
@@ -224,9 +224,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 pt-20">
-        {children}
-      </main>
+      <main className="flex-1 pt-20">{children}</main>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white pt-16 pb-8 mt-20">
@@ -244,12 +242,13 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                 </div>
               </div>
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Transforming businesses with cutting-edge AI solutions and enterprise-grade technology.
+                Transforming businesses with cutting-edge AI solutions and enterprise-grade
+                technology.
               </p>
-              
+
               {/* Social Links */}
               <div className="flex space-x-4">
-                {socialLinks.map((social) => (
+                {socialLinks.map(social => (
                   <motion.a
                     key={social.label}
                     href={social.href}
@@ -268,7 +267,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
             <div>
               <h4 className="font-semibold mb-6 text-lg">Product</h4>
               <ul className="space-y-3">
-                {footerLinks.product.map((link) => (
+                {footerLinks.product.map(link => (
                   <li key={link.label}>
                     <motion.a
                       href={link.href}
@@ -287,7 +286,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
             <div>
               <h4 className="font-semibold mb-6 text-lg">Company</h4>
               <ul className="space-y-3">
-                {footerLinks.company.map((link) => (
+                {footerLinks.company.map(link => (
                   <li key={link.label}>
                     <motion.a
                       href={link.href}
@@ -313,7 +312,7 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                     <p className="text-white">hello@optimind-ai.com</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <Phone className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
@@ -321,12 +320,16 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
                     <p className="text-white">+1 (555) 123-4567</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start space-x-3">
                   <MapPin className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-gray-400">Office</p>
-                    <p className="text-white">123 AI Innovation Drive<br />Tech City, TC 12345</p>
+                    <p className="text-white">
+                      123 AI Innovation Drive
+                      <br />
+                      Tech City, TC 12345
+                    </p>
                   </div>
                 </div>
               </div>
@@ -336,18 +339,25 @@ const Layout = ({ children, activeSection, setActiveSection }) => {
           {/* Bottom Bar */}
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-              <p className="text-gray-400 text-sm">
-                &copy; 2025 OptiMind AI. All rights reserved.
-              </p>
-              
+              <p className="text-gray-400 text-sm">&copy; 2025 OptiMind AI. All rights reserved.</p>
+
               <div className="flex space-x-6 text-sm">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
                   Privacy Policy
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
                   Terms of Service
                 </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
                   Cookie Policy
                 </a>
               </div>

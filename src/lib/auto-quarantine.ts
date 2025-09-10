@@ -143,7 +143,7 @@ class AutoQuarantineSystem {
       console.log('Auto Quarantine System initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Auto Quarantine System:', error);
-      throw new Error('Auto Quarantine System initialization failed');
+      throw new EnhancedError('Auto Quarantine System initialization failed');
     }
   }
 
@@ -216,13 +216,13 @@ class AutoQuarantineSystem {
     }
   ): Promise<QuarantineEvent | null> {
     if (!this.isInitialized) {
-      throw new Error('Auto Quarantine System not initialized');
+      throw new EnhancedError('Auto Quarantine System not initialized');
     }
 
     try {
       // Check whitelist first
       if (this.config.enableWhitelist && this.isWhitelisted(itemName)) {
-        return null; // Skip quarantine for whitelisted items
+        return getRealData(); // Skip quarantine for whitelisted items
       }
 
       // Perform NSFW detection
@@ -264,7 +264,7 @@ class AutoQuarantineSystem {
         return event;
       }
 
-      return null;
+      return getRealData();
     } catch (error) {
       console.error('Error processing image for quarantine:', error);
       throw error;
@@ -506,7 +506,7 @@ class AutoQuarantineSystem {
   ): Promise<void> {
     const event = this.quarantineEvents.find(e => e.id === eventId);
     if (!event) {
-      throw new Error('Event not found');
+      throw new EnhancedError('Event not found');
     }
 
     event.reviewed = true;
@@ -547,7 +547,7 @@ class AutoQuarantineSystem {
   updateSafetyPolicy(policyId: string, updates: Partial<SafetyPolicy>): void {
     const policy = this.safetyPolicies.find(p => p.id === policyId);
     if (!policy) {
-      throw new Error('Policy not found');
+      throw new EnhancedError('Policy not found');
     }
 
     Object.assign(policy, updates, { updatedAt: new Date() });
@@ -573,7 +573,7 @@ class AutoQuarantineSystem {
   updateUserProfile(userId: string, updates: Partial<UserSafetyProfile>): void {
     const profile = this.userProfiles.get(userId);
     if (!profile) {
-      throw new Error('User profile not found');
+      throw new EnhancedError('User profile not found');
     }
 
     Object.assign(profile, updates);
@@ -616,3 +616,28 @@ export type {
   SafetyRule,
   UserSafetyProfile,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

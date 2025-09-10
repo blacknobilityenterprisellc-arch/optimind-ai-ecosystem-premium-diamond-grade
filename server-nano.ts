@@ -24,22 +24,34 @@ const nextApp = next({
   }
 });
 
-const server = createServer(nextApp.getRequestHandler());
+const server = createServer();
 
-// Listen immediately - don't wait for prepare
-server.listen(port, hostname, () => {
-  console.log(`⚡ Nano-server ready: http://${hostname}:${port}`);
-});
-
-// Prepare in background without blocking startup
+// Prepare Next.js first, then start listening
 nextApp.prepare().then(() => {
-  console.log('✅ Next.js prepared');
+  // Set up the request handler after preparation
+  server.on('request', nextApp.getRequestHandler());
+  
+  // Start listening
+  server.listen(port, hostname, () => {
+    console.log(`⚡ Nano-server ready: http://${hostname}:${port}`);
+  });
 }).catch(err => {
-  console.error('Prepare failed:', err);
+  console.error('❌ Next.js preparation failed:', err);
+  process.exit(1);
 });
 
 // Handle shutdown gracefully
 process.on('SIGINT', () => {
   console.log('🛑 Shutting down...');
   server.close(() => process.exit(0));
+});
+
+process.on('SIGTERM', () => {
+  console.log('🛑 Shutting down...');
+  server.close(() => process.exit(0));
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
 });
