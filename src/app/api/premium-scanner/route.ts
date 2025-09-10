@@ -6,8 +6,9 @@
  */
 
 import { premiumDiamondGradeScanner } from '@/lib/premium-diamond-grade-scanner';
+import { NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
@@ -95,7 +96,7 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action, issue } = body;

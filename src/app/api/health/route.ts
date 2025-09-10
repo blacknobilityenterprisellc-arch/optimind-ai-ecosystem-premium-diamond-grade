@@ -128,7 +128,7 @@ function handleHealthError(error: unknown): NextResponse {
   return NextResponse.json({ error: 'Failed to fetch health data' }, { status: 500 });
 }
 
-export async function GET(): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const healthData = buildHealthData();
     return NextResponse.json(healthData);
