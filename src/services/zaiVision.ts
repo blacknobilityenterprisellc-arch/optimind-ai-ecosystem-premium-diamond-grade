@@ -114,7 +114,8 @@ Return labels sorted by descending score.
 export async function zaiVisionAnalyze(
   client: ZaiClient,
   imageBuffer: Buffer,
-  opts?: VisionOptions
+  opts?: VisionOptions,
+  imageId?: string
 ): Promise<ModelResult> {
   const options: VisionOptions = {
     model: process.env.ZAI_VISION_MODEL || 'GLM-4.5V',
@@ -211,10 +212,45 @@ export async function zaiVisionAnalyze(
     saliencyUrl: undefined, // if parsed.saliency_base64 present, handle storage upload outside this function
   };
 
-  // If we have a base64 saliency map, caller can upload it to storage and set saliencyUrl
+  // If we have a base64 saliency map, upload it to storage and set saliencyUrl
   if (parsed.saliency_base64) {
-    // TODO: upload parsed.saliency_base64 to object store and set modelResult.saliencyUrl
-    modelResult.rawOutput._saliency_b64 = parsed.saliency_base64;
+    try {
+      // Import here to avoid circular dependencies
+      const { getSaliencyMapStorage } = await import('./saliencyMapStorage');
+      const saliencyStorage = getSaliencyMapStorage();
+      
+      // Convert base64 to Buffer
+      const saliencyBuffer = Buffer.from(parsed.saliency_base64, 'base64');
+      
+      // Store saliency map with metadata
+      const storageResult = await saliencyStorage.storeSaliencyMap(
+        imageId, // Use the actual image ID from the analysis context
+        saliencyBuffer,
+        {
+          originalFilename: 'saliency-map.png',
+          contentType: 'image/png',
+          analysisModel: options.model!,
+          analysisTimestamp: new Date(),
+          confidence: Math.max(...labels.map(l => l.score)),
+          labels: labels,
+          format: 'png',
+          tags: ['saliency', 'vision-analysis', 'zai-vision'],
+        }
+      );
+      
+      if (storageResult.success && storageResult.url) {
+        modelResult.saliencyUrl = storageResult.url;
+        modelResult.rawOutput._saliency_storage_id = storageResult.saliencyMapId;
+      } else {
+        console.warn('[zaiVisionAnalyze] Failed to store saliency map:', storageResult.error);
+        // Keep base64 in raw output as fallback
+        modelResult.rawOutput._saliency_b64 = parsed.saliency_base64;
+      }
+    } catch (error) {
+      console.error('[zaiVisionAnalyze] Error storing saliency map:', error);
+      // Keep base64 in raw output as fallback
+      modelResult.rawOutput._saliency_b64 = parsed.saliency_base64;
+    }
   }
 
   return modelResult;
