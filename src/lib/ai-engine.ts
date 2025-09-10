@@ -1,14 +1,11 @@
 // src/lib/ai-engine.ts - Premium Diamond-Grade AI Engine
-import { OpenAI } from 'openai';
+import ZAI from 'z-ai-web-dev-sdk';
 
-let openai: OpenAI;
+let zai: ZAI | null = null;
 
 export async function initializeAIEngine() {
-  // Initialize OpenAI with premium configuration
-  openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    organization: process.env.OPENAI_ORG_ID,
-  });
+  // Initialize ZAI with premium configuration
+  zai = await ZAI.create();
 
   // Premium AI models configuration
   console.log('🧠 Premium AI models configured');
@@ -16,8 +13,7 @@ export async function initializeAIEngine() {
 
 export async function processPremiumPrompt(prompt: string, options: any = {}) {
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview', // Premium model
+    const completion = await zai.chat.completions.create({
       messages: [
         { role: 'system', content: 'You are OptiMind AI, a premium diamond-grade AI assistant.' },
         { role: 'user', content: prompt },
