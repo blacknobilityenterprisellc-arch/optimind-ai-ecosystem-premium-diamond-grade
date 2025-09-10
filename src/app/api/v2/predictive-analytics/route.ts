@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - Predictive Analytics API v2.0
  * Premium Diamond Grade AI-Powered Predictive Analytics Endpoints

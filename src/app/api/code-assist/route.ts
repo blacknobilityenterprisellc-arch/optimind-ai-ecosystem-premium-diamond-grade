@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 
 import { aiService } from '@/lib/ai';
 

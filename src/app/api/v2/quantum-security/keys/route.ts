@@ -1,3 +1,6 @@
+import type { Request } from 'next/server';
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - Quantum Key Management API v2.0
  * Premium Diamond Grade Quantum Key Management Endpoints
@@ -9,7 +12,7 @@ import {
   type QuantumKeyManagementRequest,
 } from '@/lib/v2/quantum-security-service';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action, ...params } = body;
@@ -45,7 +48,7 @@ export async function POST() {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

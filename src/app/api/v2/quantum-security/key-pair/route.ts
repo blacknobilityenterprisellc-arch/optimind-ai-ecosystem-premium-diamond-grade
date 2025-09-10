@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - Quantum Security API v2.0
  * Premium Diamond Grade Quantum-Resistant Security Endpoints

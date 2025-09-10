@@ -101,6 +101,7 @@ class PredictiveAnalyticsV2 {
   private async loadPretrainedModels(): Promise<void> {
     try {
       const models = await db.predictiveModel.findMany({
+    // TODO: Add pagination with skip and take
         where: { status: 'DEPLOYED' },
       });
 

@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * Premium Diamond-Grade Scanner API
  *

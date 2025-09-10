@@ -3,9 +3,27 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Enterprise Performance Optimization
   experimental: {
-    // turbopack: true, // Disabled for compatibility
-    // serverComponentsExternalPackages: [], // Disabled for compatibility
-  },
+      // AI-Optimized bundle settings
+      optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
+      swcPlugins: [
+        ['@swc-plugins/transform-imports', {
+          'lucide-react': {
+            'transform': 'lucide-react/esm/{{member}}',
+            'preventFullImport': true
+          }
+        }]
+      ]
+    }}',
+            'preventFullImport': true
+          }
+        }]
+      ]
+    }}',
+            'preventFullImport': true
+          }
+        }]
+      ]
+    },
   
   // Enterprise Build Optimization
   // swcMinify: true, // Disabled for compatibility

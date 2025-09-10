@@ -51,6 +51,7 @@ export default [
         Response: 'readonly',
         NextRequest: 'readonly',
         NextResponse: 'readonly',
+        request: 'readonly',
         // Common API properties
         body: 'writable',
         params: 'writable',

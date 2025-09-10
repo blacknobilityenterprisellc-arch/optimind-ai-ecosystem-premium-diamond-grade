@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - Database Manager API v2.0
  * Premium Diamond Grade Resumable Database Management Endpoints

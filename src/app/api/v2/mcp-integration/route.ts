@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - MCP Integration API v2.0
  * Premium Diamond Grade Model Context Protocol Endpoints

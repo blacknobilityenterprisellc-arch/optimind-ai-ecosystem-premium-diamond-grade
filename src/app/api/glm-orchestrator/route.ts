@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * GLM-4.5 Orchestrator API Endpoint
  *

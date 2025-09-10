@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * OptiMind AI Ecosystem - Advanced Automation API v2.0
  * Premium Diamond Grade Workflow Automation and Self-Healing System
