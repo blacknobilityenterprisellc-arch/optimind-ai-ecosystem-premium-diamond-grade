@@ -113,7 +113,7 @@ describe('Blockchain Integration', () => {
 
     it('should handle initialization errors gracefully', async () => {
       // Mock initialization failure
-      vi.spyOn(blockchainStorage, 'initializeWeb3Provider').mockRejectedValue(new Error('Connection failed'));
+      vi.spyOn(realBlockchainImplementationRejectedValue(new Error('Connection failed'));
       
       const result = await blockchainStorage.initialize();
       expect(result).toBe(false);
@@ -156,7 +156,7 @@ describe('Blockchain Integration', () => {
       };
 
       // Mock IPFS upload failure
-      vi.spyOn(blockchainStorage, 'uploadToIPFS').mockRejectedValue(new Error('IPFS upload failed'));
+      vi.spyOn(realBlockchainImplementationRejectedValue(new Error('IPFS upload failed'));
 
       const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
 
@@ -206,7 +206,7 @@ describe('Blockchain Integration', () => {
       const data = Buffer.from('test data for IPFS');
       
       // Mock timeout
-      vi.spyOn(blockchainStorage.ipfs, 'add').mockImplementation(() => 
+      vi.spyOn(realBlockchainImplementationImplementation(() => 
         new Promise((_, reject) => setTimeout(() => reject(new Error('IPFS upload timeout')), 100))
       );
 
@@ -274,7 +274,7 @@ describe('Blockchain Integration', () => {
 
     it('should handle network connection issues', async () => {
       // Mock network failure
-      vi.spyOn(blockchainStorage.provider, 'getNetwork').mockRejectedValue(new Error('Network unreachable'));
+      vi.spyOn(realBlockchainImplementationRejectedValue(new Error('Network unreachable'));
 
       const imageData = Buffer.from('test image data');
       const metadata: EnhancedNFTMetadata = {
@@ -343,7 +343,7 @@ describe('Blockchain Integration', () => {
       const data = Buffer.from('test data');
       
       // Mock slow operation
-      vi.spyOn(blockchainStorage.ipfs, 'add').mockImplementation(() => 
+      vi.spyOn(realBlockchainImplementationImplementation(() => 
         new Promise(resolve => setTimeout(() => resolve({
           path: 'QmTest123',
           cid: { toString: () => 'QmTest123' }

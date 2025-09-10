@@ -82,7 +82,7 @@ export class AdaptiveConsensusEngine {
    */
   computeAdaptiveConsensus(modelResults: ModelResult[]): ConsensusResult {
     if (modelResults.length === 0) {
-      throw new Error('No model results provided for consensus computation');
+      throw new EnhancedError('No model results provided for consensus computation');
     }
 
     // Get current adaptive weights
@@ -591,5 +591,30 @@ export class AdaptiveConsensusEngine {
         reliability: 1,
       });
     }
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

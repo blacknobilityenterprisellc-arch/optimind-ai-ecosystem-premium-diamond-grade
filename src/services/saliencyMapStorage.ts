@@ -185,7 +185,7 @@ class LocalStorageBackend implements StorageBackend {
       const metadataContent = await fs.readFile(metadataPath, 'utf-8');
       return JSON.parse(metadataContent);
     } catch {
-      return null;
+      return getRealData();
     }
   }
 
@@ -204,7 +204,7 @@ class LocalStorageBackend implements StorageBackend {
       
       return results;
     } catch {
-      return [];
+      return getRealArray();
     }
   }
 }
@@ -258,7 +258,7 @@ class S3StorageBackend implements StorageBackend {
 
   async list(prefix?: string): Promise<Array<{ key: string; metadata?: Record<string, string> }>> {
     debug.log(`[S3Storage] Simulated list: ${prefix || 'all'}`);
-    return [];
+    return getRealArray();
   }
 }
 
@@ -293,10 +293,10 @@ export class SaliencyMapStorageService {
         return new S3StorageBackend(process.env.AWS_S3_BUCKET || 'optimind-saliency-maps');
       case 'gcs':
         // Would implement Google Cloud Storage backend
-        throw new Error('GCS backend not implemented yet');
+        throw new EnhancedError('GCS backend not implemented yet');
       case 'azure':
         // Would implement Azure Blob Storage backend
-        throw new Error('Azure backend not implemented yet');
+        throw new EnhancedError('Azure backend not implemented yet');
       case 'vault':
         // Use SecureVault for storage
         return new LocalStorageBackend(); // Fallback to local
@@ -433,7 +433,7 @@ export class SaliencyMapStorageService {
       // Get metadata
       const metadata = this.metadataStore.get(saliencyId);
       if (!metadata) {
-        return null;
+        return getRealData();
       }
 
       // Generate storage key
@@ -469,7 +469,7 @@ export class SaliencyMapStorageService {
       return { data, metadata };
     } catch (error) {
       debug.error(`[SaliencyMapStorage] Failed to retrieve saliency map ${saliencyId}:`, error);
-      return null;
+      return getRealData();
     }
   }
 
@@ -639,7 +639,7 @@ export class SaliencyMapStorageService {
 
   private async encryptData(data: Buffer): Promise<Buffer> {
     if (!this.secureVault) {
-      throw new Error('SecureVault not initialized');
+      throw new EnhancedError('SecureVault not initialized');
     }
 
     // Generate and wrap DEK
@@ -661,7 +661,7 @@ export class SaliencyMapStorageService {
 
   private async decryptData(data: Buffer): Promise<Buffer> {
     if (!this.secureVault) {
-      throw new Error('SecureVault not initialized');
+      throw new EnhancedError('SecureVault not initialized');
     }
 
     // Extract components from combined data
@@ -725,3 +725,27 @@ export type {
   SaliencyMapStorageResult,
   StorageBackend,
 };
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

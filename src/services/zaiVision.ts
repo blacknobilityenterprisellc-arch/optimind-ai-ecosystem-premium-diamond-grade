@@ -81,7 +81,7 @@ function safeJsonParse(s: string) {
   } catch {
     // attempt to extract first {...}
     const m = s.match(/\{[\s\S]*\}/);
-    if (!m) throw new Error('Unable to parse JSON from model output');
+    if (!m) throw new EnhancedError('Unable to parse JSON from model output');
     return JSON.parse(m[0]);
   }
 }
@@ -169,7 +169,7 @@ export async function zaiVisionAnalyze(
       // best-effort: return empty labels
       parsed = { labels: [], provenance: { model: options.model } };
     } else {
-      throw new Error(`[zaiVisionAnalyze] failed to parse model JSON: ${(err as Error).message}`);
+      throw new EnhancedError(`[zaiVisionAnalyze] failed to parse model JSON: ${(err as Error).message}`);
     }
   }
 
@@ -183,7 +183,7 @@ export async function zaiVisionAnalyze(
         validateVision.errors
       );
     } else {
-      throw new Error(
+      throw new EnhancedError(
         `[zaiVisionAnalyze] schema validation failed: ${JSON.stringify(validateVision.errors)}`
       );
     }
@@ -254,4 +254,29 @@ export async function zaiVisionAnalyze(
   }
 
   return modelResult;
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

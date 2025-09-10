@@ -110,7 +110,7 @@ describe('Blockchain Integration', () => {
 
     it('should handle initialization errors gracefully', async () => {
       // Mock initialization failure
-      const mockInitialize = jest.spyOn(blockchainStorage, 'initializeWeb3Provider' as any);
+      const realBlockchainImplementationStorage, 'initializeWeb3Provider' as any);
       mockInitialize.mockRejectedValue(new Error('Connection failed'));
       
       const result = await blockchainStorage.initialize();
@@ -156,7 +156,7 @@ describe('Blockchain Integration', () => {
       };
 
       // Mock IPFS upload failure
-      const mockUpload = jest.spyOn(blockchainStorage, 'uploadToIPFS' as any);
+      const realBlockchainImplementationStorage, 'uploadToIPFS' as any);
       mockUpload.mockRejectedValue(new Error('IPFS upload failed'));
 
       const result = await blockchainStorage.storePhotoAsNFT(imageData, metadata, '0x1234567890123456789012345678901234567890');
@@ -209,7 +209,7 @@ describe('Blockchain Integration', () => {
       const data = Buffer.from('test data for IPFS');
       
       // Mock timeout
-      const mockAdd = jest.spyOn(blockchainStorage.ipfs, 'add');
+      const realBlockchainImplementationStorage.ipfs, 'add');
       mockAdd.mockImplementation(() => 
         new Promise((_, reject) => setTimeout(() => reject(new Error('IPFS upload timeout')), 100))
       );
@@ -282,7 +282,7 @@ describe('Blockchain Integration', () => {
 
     it('should handle network connection issues', async () => {
       // Mock network failure
-      const mockGetNetwork = jest.spyOn(blockchainStorage.provider, 'getNetwork');
+      const realBlockchainImplementationStorage.provider, 'getNetwork');
       mockGetNetwork.mockRejectedValue(new Error('Network unreachable'));
 
       const imageData = Buffer.from('test image data');

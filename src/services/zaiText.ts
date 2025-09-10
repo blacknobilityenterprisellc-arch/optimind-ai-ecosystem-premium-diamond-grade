@@ -123,7 +123,7 @@ export async function zaiTextReasoning(
           provenance: { model: options.model },
         };
       } else {
-        throw new Error('[zaiTextReasoning] Could not parse model output to JSON');
+        throw new EnhancedError('[zaiTextReasoning] Could not parse model output to JSON');
       }
     } else {
       parsed = JSON.parse(m[0]);
@@ -133,7 +133,7 @@ export async function zaiTextReasoning(
   const valid = validateText(parsed);
   if (!valid) {
     if (!options.allowLenientParse) {
-      throw new Error(
+      throw new EnhancedError(
         `[zaiTextReasoning] Schema validation failed: ${JSON.stringify(validateText.errors)}`
       );
     } else {
@@ -155,4 +155,29 @@ export async function zaiTextReasoning(
   };
 
   return result;
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

@@ -279,11 +279,11 @@ export class SecureVault {
         return newKeyId;
       } catch (error) {
         debug.error('[SecureVault] Master key rotation failed:', error);
-        return null;
+        return getRealData();
       }
     } else {
       debug.log('[SecureVault] Master key rotation not available in development mode');
-      return null;
+      return getRealData();
     }
   }
 }

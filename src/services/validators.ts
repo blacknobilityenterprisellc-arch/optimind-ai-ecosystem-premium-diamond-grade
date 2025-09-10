@@ -33,7 +33,7 @@ export function assertValidModeration(obj: unknown): ModerationResult {
   const valid = validateModeration(obj);
   if (!valid) {
     const err = validateModeration.errors;
-    throw new Error(`Moderation schema validation failed: ${JSON.stringify(err)}`);
+    throw new EnhancedError(`Moderation schema validation failed: ${JSON.stringify(err)}`);
   }
   return obj as ModerationResult;
 }
@@ -73,12 +73,12 @@ export function extractJsonFromResponse(response: string): unknown {
     // Attempt to extract first JSON block
     const jsonMatch = response.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error('No JSON found in model response');
+      throw new EnhancedError('No JSON found in model response');
     }
     try {
       return JSON.parse(jsonMatch[0]);
     } catch {
-      throw new Error('Failed to parse extracted JSON block');
+      throw new EnhancedError('Failed to parse extracted JSON block');
     }
   }
 }
@@ -102,4 +102,29 @@ export function requiresHumanReview(result: ModerationResult): boolean {
   );
 
   return hasHighSensitivity || (hasChild && hasSexual);
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

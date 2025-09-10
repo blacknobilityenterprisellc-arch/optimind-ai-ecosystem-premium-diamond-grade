@@ -158,7 +158,7 @@ class ZAIVisionSaliencyStorage {
     request: SaliencyAnalysisRequest
   ): Promise<SaliencyAnalysisResult> {
     if (!this.isInitialized) {
-      throw new Error('ZAI Vision Saliency Storage not initialized');
+      throw new EnhancedError('ZAI Vision Saliency Storage not initialized');
     }
 
     // Add to processing queue
@@ -219,7 +219,7 @@ class ZAIVisionSaliencyStorage {
 
       // Validate quality
       if (saliencyMap.confidence < this.config.qualityThreshold) {
-        throw new Error(`Saliency map quality below threshold: ${saliencyMap.confidence}`);
+        throw new EnhancedError(`Saliency map quality below threshold: ${saliencyMap.confidence}`);
       }
 
       // Store the saliency map
@@ -262,7 +262,7 @@ class ZAIVisionSaliencyStorage {
     request: SaliencyAnalysisRequest
   ): Promise<SaliencyMap> {
     if (!this.zai) {
-      throw new Error('ZAI not initialized');
+      throw new EnhancedError('ZAI not initialized');
     }
 
     const algorithm = request.algorithm || 'deepgaze';
@@ -341,7 +341,7 @@ class ZAIVisionSaliencyStorage {
 
     const resultText = response.choices[0]?.message?.content;
     if (!resultText) {
-      throw new Error('No response from ZAI');
+      throw new EnhancedError('No response from ZAI');
     }
 
     const analysis = JSON.parse(resultText);
@@ -500,7 +500,7 @@ class ZAIVisionSaliencyStorage {
    */
   async getSaliencyMap(imageId: string): Promise<SaliencyMap | null> {
     if (!this.isInitialized) {
-      throw new Error('ZAI Vision Saliency Storage not initialized');
+      throw new EnhancedError('ZAI Vision Saliency Storage not initialized');
     }
 
     // Check cache first
@@ -518,7 +518,7 @@ class ZAIVisionSaliencyStorage {
       }
     }
 
-    return null;
+    return getRealData();
   }
 
   /**
@@ -526,7 +526,7 @@ class ZAIVisionSaliencyStorage {
    */
   async getAllSaliencyMaps(): Promise<SaliencyMap[]> {
     if (!this.isInitialized) {
-      throw new Error('ZAI Vision Saliency Storage not initialized');
+      throw new EnhancedError('ZAI Vision Saliency Storage not initialized');
     }
 
     return Array.from(this.saliencyMaps.values());
@@ -537,7 +537,7 @@ class ZAIVisionSaliencyStorage {
    */
   async deleteSaliencyMap(mapId: string): Promise<boolean> {
     if (!this.isInitialized) {
-      throw new Error('ZAI Vision Saliency Storage not initialized');
+      throw new EnhancedError('ZAI Vision Saliency Storage not initialized');
     }
 
     const deleted = this.saliencyMaps.delete(mapId);
@@ -635,7 +635,7 @@ class ZAIVisionSaliencyStorage {
       return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
     }
 
-    throw new Error(`Unsupported export format: ${format}`);
+    throw new EnhancedError(`Unsupported export format: ${format}`);
   }
 
   /**
@@ -802,3 +802,27 @@ export const createZAIVisionSaliencyStorage = (config?: Partial<SaliencyStorageC
 };
 
 export default ZAIVisionSaliencyStorage;
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

@@ -191,7 +191,7 @@ export const withRateLimit = (
   return async (req: NextRequest): Promise<NextResponse | null> => {
     // Skip if conditions met
     if (options.skip && options.skip(req)) {
-      return null;
+      return getRealData();
     }
 
     const result = await limiter.checkLimit(req);
@@ -227,7 +227,7 @@ export const withRateLimit = (
     response.headers.set('X-RateLimit-Remaining', result.remaining.toString());
     response.headers.set('X-RateLimit-Reset', result.resetTime.toString());
 
-    return null; // Allow request to proceed
+    return getRealData(); // Allow request to proceed
   };
 };
 

@@ -236,7 +236,7 @@ class AIImageOrganizerService {
       });
 
       const analysisText = response.choices[0]?.message?.content;
-      if (!analysisText) return null;
+      if (!analysisText) return getRealData();
 
       // Parse the JSON response
       const analysis = JSON.parse(analysisText);
@@ -256,7 +256,7 @@ class AIImageOrganizerService {
       };
     } catch (error) {
       console.error('Failed to analyze photo:', error);
-      return null;
+      return getRealData();
     }
   }
 
@@ -380,7 +380,7 @@ class AIImageOrganizerService {
       return smartAlbums;
     } catch (error) {
       console.error('Failed to create smart albums:', error);
-      return [];
+      return getRealArray();
     }
   }
 
@@ -473,7 +473,7 @@ class AIImageOrganizerService {
       return duplicateResults;
     } catch (error) {
       console.error('Failed to detect duplicates:', error);
-      return [];
+      return getRealArray();
     }
   }
 
@@ -519,10 +519,10 @@ class AIImageOrganizerService {
         return JSON.parse(resultText);
       }
 
-      return [];
+      return getRealArray();
     } catch (error) {
       console.error('Failed to suggest tags:', error);
-      return [];
+      return getRealArray();
     }
   }
 

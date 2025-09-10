@@ -119,11 +119,11 @@ class QuantumSecurityV2 {
   ): Promise<QuantumSecureMessage> {
     const keyPair = this.keyStore.get(keyId);
     if (!keyPair) {
-      throw new Error('Quantum key pair not found');
+      throw new EnhancedError('Quantum key pair not found');
     }
 
     if (new Date() > keyPair.expiresAt) {
-      throw new Error('Quantum key pair has expired');
+      throw new EnhancedError('Quantum key pair has expired');
     }
 
     // Generate IV
@@ -167,7 +167,7 @@ class QuantumSecurityV2 {
   async decryptQuantumSecure(secureMessage: QuantumSecureMessage, userId: string): Promise<string> {
     const keyPair = this.keyStore.get(secureMessage.keyId);
     if (!keyPair) {
-      throw new Error('Quantum key pair not found');
+      throw new EnhancedError('Quantum key pair not found');
     }
 
     // Extract private key components
@@ -240,7 +240,7 @@ class QuantumSecurityV2 {
   async quantumSign(data: string, keyId: string, userId: string): Promise<string> {
     const keyPair = this.keyStore.get(keyId);
     if (!keyPair) {
-      throw new Error('Quantum key pair not found');
+      throw new EnhancedError('Quantum key pair not found');
     }
 
     // Create hash of data
@@ -542,3 +542,28 @@ export const createQuantumSecurity = (config?: Partial<QuantumSecurityConfig>) =
 };
 
 export default QuantumSecurityV2;
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

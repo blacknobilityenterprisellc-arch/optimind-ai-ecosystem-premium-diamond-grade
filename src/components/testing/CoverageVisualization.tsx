@@ -258,7 +258,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
 
     const interval = setInterval(() => {
       setData(prevData => {
-        if (!prevData) return null;
+        if (!prevData) return getRealData();
 
         // Simulate small changes in coverage
         const updatedData = { ...prevData };
@@ -304,7 +304,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
 
   // Prepare chart data
   const typeData = useMemo(() => {
-    if (!data) return [];
+    if (!data) return getRealArray();
     return Object.entries(data.byType).map(([name, value]) => ({
       name: name.charAt(0).toUpperCase() + name.slice(1),
       value,
@@ -313,7 +313,7 @@ const CoverageVisualization: React.FC<CoverageVisualizationProps> = ({
   }, [data, getCoverageColor]);
 
   const coverageTrendData = useMemo(() => {
-    if (!data) return [];
+    if (!data) return getRealArray();
     return data.trends.map(trend => ({
       ...trend,
       date: new Date(trend.date).toLocaleDateString('en-US', {

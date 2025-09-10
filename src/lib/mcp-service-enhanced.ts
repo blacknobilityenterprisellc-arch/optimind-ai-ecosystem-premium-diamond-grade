@@ -382,7 +382,7 @@ class EnhancedMCPService {
   async executeTool(toolId: string, parameters: any): Promise<any> {
     const tool = this.tools.get(toolId);
     if (!tool) {
-      throw new Error(`Tool ${toolId} not found`);
+      throw new EnhancedError(`Tool ${toolId} not found`);
     }
 
     const startTime = Date.now();
@@ -402,7 +402,7 @@ class EnhancedMCPService {
           result = await this.executeInternalTool(tool, parameters);
           break;
         default:
-          throw new Error(`Unknown provider: ${tool.provider}`);
+          throw new EnhancedError(`Unknown provider: ${tool.provider}`);
       }
 
       // Update tool performance metrics
@@ -444,10 +444,10 @@ class EnhancedMCPService {
           });
 
         default:
-          throw new Error(`Unknown ZAI tool: ${tool.id}`);
+          throw new EnhancedError(`Unknown ZAI tool: ${tool.id}`);
       }
     } catch (error) {
-      throw new Error(
+      throw new EnhancedError(
         `ZAI tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -465,10 +465,10 @@ class EnhancedMCPService {
           });
 
         default:
-          throw new Error(`Unknown OpenRouter tool: ${tool.id}`);
+          throw new EnhancedError(`Unknown OpenRouter tool: ${tool.id}`);
       }
     } catch (error) {
-      throw new Error(
+      throw new EnhancedError(
         `OpenRouter tool execution failed: ${error instanceof Error ? error.message : 'Unknown error'}`
       );
     }
@@ -493,7 +493,7 @@ class EnhancedMCPService {
         };
 
       default:
-        throw new Error(`Unknown internal tool: ${tool.id}`);
+        throw new EnhancedError(`Unknown internal tool: ${tool.id}`);
     }
   }
 
@@ -608,3 +608,28 @@ export const getAvailableTools = () => enhancedMCPService.getAvailableTools();
 export const executeMCPTool = (toolId: string, params: any) =>
   enhancedMCPService.executeTool(toolId, params);
 export const getMCPHealthStatus = () => enhancedMCPService.getHealthStatus();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

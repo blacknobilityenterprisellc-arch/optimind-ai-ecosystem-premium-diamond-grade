@@ -69,7 +69,7 @@ export async function POST() {
     const keywordContent = completion.choices[0]?.message?.content;
 
     if (!keywordContent) {
-      throw new Error('No keyword clusters generated from AI');
+      throw new EnhancedError('No keyword clusters generated from AI');
     }
 
     // Parse the JSON response
@@ -99,5 +99,30 @@ export async function POST() {
       },
       { status: 500 }
     );
+  }
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
   }
 }

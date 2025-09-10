@@ -62,7 +62,7 @@ class EnvironmentDeployer {
     const requiredEnvVars = this.getRequiredEnvironmentVariables()
     for (const envVar of requiredEnvVars) {
       if (!process.env[envVar]) {
-        throw new Error(`Required environment variable ${envVar} is not set`)
+        throw new EnhancedError(`Required environment variable ${envVar} is not set`)
       }
     }
 
@@ -113,7 +113,7 @@ class EnvironmentDeployer {
       } catch (error) {
         console.warn(`⚠️  Test command failed: ${command}`)
         if (this.config.nodeEnv === 'production') {
-          throw new Error(`Tests failed for production deployment: ${error}`)
+          throw new EnhancedError(`Tests failed for production deployment: ${error}`)
         }
       }
     }
@@ -140,7 +140,7 @@ class EnvironmentDeployer {
         await this.deployToDocker()
         break
       default:
-        throw new Error(`Unsupported deployment provider: ${provider}`)
+        throw new EnhancedError(`Unsupported deployment provider: ${provider}`)
     }
 
     console.log(`✅ Deployed to ${provider}`)
@@ -152,7 +152,7 @@ class EnvironmentDeployer {
     const vercelProjectId = process.env.VERCEL_PROJECT_ID
 
     if (!vercelToken || !vercelOrgId || !vercelProjectId) {
-      throw new Error('Vercel credentials not configured')
+      throw new EnhancedError('Vercel credentials not configured')
     }
 
     const args = this.config.nodeEnv === 'production' ? '--prod' : '--preview'
@@ -171,7 +171,7 @@ class EnvironmentDeployer {
     const netlifySiteId = process.env.NETLIFY_SITE_ID
 
     if (!netlifyToken || !netlifySiteId) {
-      throw new Error('Netlify credentials not configured')
+      throw new EnhancedError('Netlify credentials not configured')
     }
 
     const args = this.config.nodeEnv === 'production' ? '--prod' : ''
@@ -189,7 +189,7 @@ class EnvironmentDeployer {
     const railwayToken = process.env.RAILWAY_TOKEN
 
     if (!railwayToken) {
-      throw new Error('Railway token not configured')
+      throw new EnhancedError('Railway token not configured')
     }
 
     const command = `npx railway up --service=optimind-ai`
@@ -210,7 +210,7 @@ class EnvironmentDeployer {
     const dockerPassword = process.env.DOCKER_PASSWORD
 
     if (!dockerUsername || !dockerPassword) {
-      throw new Error('Docker credentials not configured')
+      throw new EnhancedError('Docker credentials not configured')
     }
 
     const commands = [
@@ -342,3 +342,27 @@ process.on('uncaughtException', (error) => {
 
 // Run deployment
 main()
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

@@ -154,7 +154,7 @@ export class GLMOrchestrator {
    */
   async submitOperation(operation: Omit<OrchestratedOperation, 'id'>): Promise<string> {
     if (!this.isInitialized || !this.zai) {
-      throw new Error('GLM Orchestrator not initialized');
+      throw new EnhancedError('GLM Orchestrator not initialized');
     }
 
     const operationId = this.generateOperationId();
@@ -184,7 +184,7 @@ export class GLMOrchestrator {
       return await activeOperation;
     }
 
-    return null;
+    return getRealData();
   }
 
   /**
@@ -192,7 +192,7 @@ export class GLMOrchestrator {
    */
   async analyzeSystemHealth(): Promise<SystemHealthStatus> {
     if (!this.isInitialized || !this.zai) {
-      throw new Error('GLM Orchestrator not initialized');
+      throw new EnhancedError('GLM Orchestrator not initialized');
     }
 
     try {
@@ -339,7 +339,7 @@ export class GLMOrchestrator {
           result = await this.executePredictionOperation(operation);
           break;
         default:
-          throw new Error(`Unknown operation type: ${operation.type}`);
+          throw new EnhancedError(`Unknown operation type: ${operation.type}`);
       }
 
       // Use GLM-4.5 to generate insights and recommendations
@@ -436,7 +436,7 @@ export class GLMOrchestrator {
   private async executeAnalysisOperation(
     operation: OrchestratedOperation
   ): Promise<AnalysisResult> {
-    if (!this.zai) throw new Error('ZAI not initialized');
+    if (!this.zai) throw new EnhancedError('ZAI not initialized');
 
     const response = await this.zai.chat.completions.create({
       messages: [
@@ -464,7 +464,7 @@ export class GLMOrchestrator {
    * Execute optimization operation
    */
   private async executeOptimizationOperation(operation: OrchestratedOperation): Promise<any> {
-    if (!this.zai) throw new Error('ZAI not initialized');
+    if (!this.zai) throw new EnhancedError('ZAI not initialized');
 
     return await this.zai.chat.completions.create({
       messages: [
@@ -486,7 +486,7 @@ export class GLMOrchestrator {
    * Execute monitoring operation
    */
   private async executeMonitoringOperation(operation: OrchestratedOperation): Promise<any> {
-    if (!this.zai) throw new Error('ZAI not initialized');
+    if (!this.zai) throw new EnhancedError('ZAI not initialized');
 
     return await this.zai.chat.completions.create({
       messages: [
@@ -508,7 +508,7 @@ export class GLMOrchestrator {
    * Execute security operation
    */
   private async executeSecurityOperation(operation: OrchestratedOperation): Promise<any> {
-    if (!this.zai) throw new Error('ZAI not initialized');
+    if (!this.zai) throw new EnhancedError('ZAI not initialized');
 
     return await this.zai.chat.completions.create({
       messages: [
@@ -531,7 +531,7 @@ export class GLMOrchestrator {
    * Execute prediction operation
    */
   private async executePredictionOperation(operation: OrchestratedOperation): Promise<any> {
-    if (!this.zai) throw new Error('ZAI not initialized');
+    if (!this.zai) throw new EnhancedError('ZAI not initialized');
 
     return await this.zai.chat.completions.create({
       messages: [
@@ -610,3 +610,28 @@ export const glmOrchestrator = new GLMOrchestrator({
   operationTimeout: 30000,
   healthCheckInterval: 60000,
 });
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

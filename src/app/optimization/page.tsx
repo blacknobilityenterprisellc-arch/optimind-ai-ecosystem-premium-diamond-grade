@@ -467,7 +467,7 @@ export default function OptimizationPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to analyze website');
+        throw new EnhancedError('Failed to analyze website');
       }
 
       const data = await response.json();
@@ -1285,4 +1285,29 @@ export default function OptimizationPage() {
       </Tabs>
     </div>
   );
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

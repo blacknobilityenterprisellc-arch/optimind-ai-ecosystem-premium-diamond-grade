@@ -105,7 +105,7 @@ export function DeveloperAccessDashboard() {
       const metricsData = await metricsResponse.json();
 
       if (!metricsData.success) {
-        throw new Error(metricsData.error || 'Failed to load metrics');
+        throw new EnhancedError(metricsData.error || 'Failed to load metrics');
       }
 
       setMetrics(metricsData.metrics);
@@ -115,7 +115,7 @@ export function DeveloperAccessDashboard() {
       const eventsData = await eventsResponse.json();
 
       if (!eventsData.success) {
-        throw new Error(eventsData.error || 'Failed to load events');
+        throw new EnhancedError(eventsData.error || 'Failed to load events');
       }
 
       setEvents(eventsData.events || []);
@@ -442,4 +442,29 @@ export function DeveloperAccessDashboard() {
       </Tabs>
     </div>
   );
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

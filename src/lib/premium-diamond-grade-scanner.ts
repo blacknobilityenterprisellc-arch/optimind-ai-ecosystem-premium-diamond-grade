@@ -115,7 +115,7 @@ export class PremiumDiamondGradeScanner {
    */
   async triggerScan(issue: ScanIssue): Promise<ScanResult> {
     if (!this.isRunning) {
-      throw new Error('Scanner is not running');
+      throw new EnhancedError('Scanner is not running');
     }
 
     console.log(`🔍 Triggering Premium Diamond-Grade Scan for issue: ${issue.type}`);
@@ -558,3 +558,28 @@ export const premiumDiamondGradeScanner = new PremiumDiamondGradeScanner({
   checkpointTimeout: 60000, // 1 minute
   maxConcurrentScans: 3,
 });
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

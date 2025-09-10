@@ -489,7 +489,7 @@ class EnvironmentValidator {
   // Get validated environment variables
   getValidatedEnv(): Record<string, any> {
     if (!this.validated) {
-      throw new Error('Environment not yet validated. Call validate() first.');
+      throw new EnhancedError('Environment not yet validated. Call validate() first.');
     }
 
     const validated: Record<string, any> = {};
@@ -584,7 +584,7 @@ export const validateEnvironment = async (
     }
 
     if (throwOnError && !result.valid) {
-      throw new Error(`Environment validation failed with ${result.errors.length} critical errors`);
+      throw new EnhancedError(`Environment validation failed with ${result.errors.length} critical errors`);
     }
 
     return {
@@ -621,3 +621,27 @@ export const validateEnvironment = async (
 // Export for direct usage
 export { EnvironmentValidator, EnvironmentValidationError };
 export default environmentValidator;
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

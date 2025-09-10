@@ -212,7 +212,7 @@ class IntegrationValidator {
       const missingVars = requiredVars.filter(v => !process.env[v]);
       
       if (missingVars.length > 0) {
-        throw new Error(`Missing environment variables: ${missingVars.join(', ')}`);
+        throw new EnhancedError(`Missing environment variables: ${missingVars.join(', ')}`);
       }
 
       return {
@@ -239,12 +239,12 @@ class IntegrationValidator {
       
       const response = await fetch(`${vercelUrl}/api/health`);
       if (!response.ok) {
-        throw new Error(`API responded with status: ${response.status}`);
+        throw new EnhancedError(`API responded with status: ${response.status}`);
       }
 
       const data = await response.json();
       if (!data.success) {
-        throw new Error('Health check failed');
+        throw new EnhancedError('Health check failed');
       }
 
       return {
@@ -273,7 +273,7 @@ class IntegrationValidator {
       const loadTime = Date.now() - start;
       
       if (loadTime > 5000) {
-        throw new Error(`Page load time too slow: ${loadTime}ms`);
+        throw new EnhancedError(`Page load time too slow: ${loadTime}ms`);
       }
 
       return {
@@ -322,7 +322,7 @@ class IntegrationValidator {
       const missingVars = requiredVars.filter(v => !process.env[v]);
       
       if (missingVars.length > 0) {
-        throw new Error(`Missing environment variables: ${missingVars.join(', ')}`);
+        throw new EnhancedError(`Missing environment variables: ${missingVars.join(', ')}`);
       }
 
       return {
@@ -349,12 +349,12 @@ class IntegrationValidator {
       
       const response = await fetch(`${netlifyUrl}/.netlify/functions/api/health`);
       if (!response.ok) {
-        throw new Error(`Function responded with status: ${response.status}`);
+        throw new EnhancedError(`Function responded with status: ${response.status}`);
       }
 
       const data = await response.json();
       if (!data.success) {
-        throw new Error('Function health check failed');
+        throw new EnhancedError('Function health check failed');
       }
 
       return {
@@ -469,7 +469,7 @@ class IntegrationValidator {
       const queryTime = Date.now() - startTime;
       
       if (queryTime > 1000) {
-        throw new Error(`Query too slow: ${queryTime}ms`);
+        throw new EnhancedError(`Query too slow: ${queryTime}ms`);
       }
 
       return {
@@ -507,7 +507,7 @@ class IntegrationValidator {
       });
       
       if (!retrievedUser || retrievedUser.email !== testUser.email) {
-        throw new Error('Data integrity test failed');
+        throw new EnhancedError('Data integrity test failed');
       }
       
       // Clean up
@@ -595,7 +595,7 @@ class IntegrationValidator {
       });
       
       if (!retrieved) {
-        throw new Error('Database consistency test failed');
+        throw new EnhancedError('Database consistency test failed');
       }
       
       // Clean up
@@ -628,7 +628,7 @@ class IntegrationValidator {
       const missingVars = requiredVars.filter(v => !process.env[v]);
       
       if (missingVars.length > 0) {
-        throw new Error(`Missing environment variables: ${missingVars.join(', ')}`);
+        throw new EnhancedError(`Missing environment variables: ${missingVars.join(', ')}`);
       }
 
       return {
@@ -669,7 +669,7 @@ class IntegrationValidator {
       const avgTime = loadTimes.reduce((a, b) => a + b, 0) / loadTimes.length;
       
       if (maxDiff > 2000) {
-        throw new Error(`Performance variance too high: ${maxDiff}ms difference`);
+        throw new EnhancedError(`Performance variance too high: ${maxDiff}ms difference`);
       }
 
       return {
@@ -746,3 +746,27 @@ if (require.main === module) {
 }
 
 export { IntegrationValidator };
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

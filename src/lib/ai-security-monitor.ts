@@ -30,7 +30,7 @@ export class AISecurityMonitor {
 
   async quickScan(): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error('AI Security Monitor not initialized');
+      throw new EnhancedError('AI Security Monitor not initialized');
     }
     
     console.log('🔍 Performing quick security scan...');
@@ -39,7 +39,7 @@ export class AISecurityMonitor {
 
   async comprehensiveScan(): Promise<void> {
     if (!this.isInitialized) {
-      throw new Error('AI Security Monitor not initialized');
+      throw new EnhancedError('AI Security Monitor not initialized');
     }
     
     console.log('🔍 Performing comprehensive security scan...');
@@ -93,3 +93,28 @@ export class AISecurityMonitor {
 }
 
 export const aiSecurityMonitor = new AISecurityMonitor();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

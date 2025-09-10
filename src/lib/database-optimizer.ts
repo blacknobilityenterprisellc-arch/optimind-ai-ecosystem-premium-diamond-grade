@@ -267,7 +267,7 @@ export class DatabaseConnectionPool {
       const explainQuery = `EXPLAIN ANALYZE ${query}`;
       return await this.executeQuery(explainQuery, parameters);
     } catch (error) {
-      throw new Error(`Failed to explain query: ${error}`);
+      throw new EnhancedError(`Failed to explain query: ${error}`);
     }
   }
 
@@ -335,7 +335,7 @@ export class DatabaseConnectionPool {
         maxConnections: parseInt(connectionStats[0]?.max_connections || '0'),
       };
     } catch (error) {
-      throw new Error(`Failed to get database stats: ${error}`);
+      throw new EnhancedError(`Failed to get database stats: ${error}`);
     }
   }
 
@@ -545,7 +545,7 @@ export class DatabasePoolManager {
   getPool(name: string = 'default', config?: DatabaseConfig): DatabaseConnectionPool {
     if (!this.pools.has(name)) {
       if (!config) {
-        throw new Error(`Database configuration required for pool '${name}'`);
+        throw new EnhancedError(`Database configuration required for pool '${name}'`);
       }
       this.pools.set(name, new DatabaseConnectionPool(config));
     }
@@ -595,3 +595,28 @@ export {
   type DatabaseHealth,
   type QueryOptimization,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

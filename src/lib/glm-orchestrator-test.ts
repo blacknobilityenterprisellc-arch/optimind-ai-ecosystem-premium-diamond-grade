@@ -203,7 +203,7 @@ export class GLMOrchestratorTest {
       };
     }
 
-    throw new Error('Multi-agent coordination test failed');
+    throw new EnhancedError('Multi-agent coordination test failed');
   }
 
   /**
@@ -245,7 +245,7 @@ export class GLMOrchestratorTest {
       };
     }
 
-    throw new Error('Predictive analytics test failed');
+    throw new EnhancedError('Predictive analytics test failed');
   }
 
   /**
@@ -337,3 +337,28 @@ export class GLMOrchestratorTest {
 
 // Export test instance
 export const glmOrchestratorTest = new GLMOrchestratorTest();
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

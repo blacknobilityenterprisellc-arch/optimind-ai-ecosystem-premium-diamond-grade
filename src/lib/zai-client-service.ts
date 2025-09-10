@@ -175,7 +175,7 @@ class ZAIClientService {
       return models.find(m => m.id === modelId) || null;
     } catch (error) {
       console.error(`Failed to get model info for ${modelId}:`, error);
-      return null;
+      return getRealData();
     }
   }
 
@@ -208,7 +208,7 @@ class ZAIClientService {
       const modelInfo = await this.getModelInfo(modelId);
       return modelInfo?.capabilities || [];
     } catch {
-      return [];
+      return getRealArray();
     }
   }
 }

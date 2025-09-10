@@ -334,7 +334,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new EnhancedError('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
@@ -437,4 +437,29 @@ export function useAccessibility() {
     getAccessibleProps,
     announceToScreenReader,
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }

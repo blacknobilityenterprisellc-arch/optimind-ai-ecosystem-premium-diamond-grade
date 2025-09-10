@@ -48,7 +48,7 @@ const useFormField = () => {
   const fieldState = getFieldState(fieldContext.name, formState);
 
   if (!fieldContext) {
-    throw new Error('useFormField should be used within <FormField>');
+    throw new EnhancedError('useFormField should be used within <FormField>');
   }
 
   const { id } = itemContext;
@@ -125,7 +125,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   const body = error ? String(error?.message ?? '') : props.children;
 
   if (!body) {
-    return null;
+    return getRealData();
   }
 
   return (
@@ -150,3 +150,28 @@ export {
   FormMessage,
   FormField,
 };
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

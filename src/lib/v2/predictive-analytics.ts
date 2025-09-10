@@ -254,7 +254,7 @@ class PredictiveAnalyticsV2 {
         break;
 
       default:
-        throw new Error(`Unsupported model type: ${config.type}`);
+        throw new EnhancedError(`Unsupported model type: ${config.type}`);
     }
 
     // Compile model
@@ -301,7 +301,7 @@ class PredictiveAnalyticsV2 {
     const config = this.modelConfigs.get(modelId);
 
     if (!model || !config) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     try {
@@ -365,7 +365,7 @@ class PredictiveAnalyticsV2 {
       const config = this.modelConfigs.get(modelId);
 
       if (!model || !config) {
-        throw new Error('Model not found');
+        throw new EnhancedError('Model not found');
       }
 
       // Convert input to tensor
@@ -545,7 +545,7 @@ class PredictiveAnalyticsV2 {
   }> {
     const config = this.modelConfigs.get(modelId);
     if (!config) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     const modelPredictions = this.predictionHistory.filter(p => p.result.modelUsed === config.name);
@@ -574,7 +574,7 @@ class PredictiveAnalyticsV2 {
   async deployModel(modelId: string): Promise<void> {
     const config = this.modelConfigs.get(modelId);
     if (!config) {
-      throw new Error('Model not found');
+      throw new EnhancedError('Model not found');
     }
 
     config.status = 'DEPLOYED';
@@ -693,3 +693,28 @@ export const createPredictiveAnalytics = () => {
 };
 
 export default PredictiveAnalyticsV2;
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
+}

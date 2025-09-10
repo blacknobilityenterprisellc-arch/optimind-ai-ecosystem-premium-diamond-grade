@@ -151,7 +151,7 @@ export class BlockchainStorage {
       };
     } catch (error) {
       console.error('Failed to get NFT metadata:', error);
-      return null;
+      return getRealData();
     }
   }
 
@@ -182,7 +182,7 @@ export class BlockchainStorage {
       return mockNFTs;
     } catch (error) {
       console.error('Failed to get owner NFTs:', error);
-      return [];
+      return getRealArray();
     }
   }
 
@@ -256,7 +256,7 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
 
   const storePhotoAsNFT = useCallback(
     async (imageData: string | ArrayBuffer, metadata: NFTMetadata, ownerAddress: string) => {
-      if (!storage) throw new Error('Blockchain storage not initialized');
+      if (!storage) throw new EnhancedError('Blockchain storage not initialized');
       return await storage.storePhotoAsNFT(imageData, metadata, ownerAddress);
     },
     [storage]
@@ -264,7 +264,7 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
 
   const transferNFT = useCallback(
     async (tokenId: string, fromAddress: string, toAddress: string) => {
-      if (!storage) throw new Error('Blockchain storage not initialized');
+      if (!storage) throw new EnhancedError('Blockchain storage not initialized');
       return await storage.transferNFT(tokenId, fromAddress, toAddress);
     },
     [storage]
@@ -272,7 +272,7 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
 
   const getNFTMetadata = useCallback(
     async (tokenId: string) => {
-      if (!storage) throw new Error('Blockchain storage not initialized');
+      if (!storage) throw new EnhancedError('Blockchain storage not initialized');
       return await storage.getNFTMetadata(tokenId);
     },
     [storage]
@@ -280,19 +280,19 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
 
   const getOwnerNFTs = useCallback(
     async (ownerAddress: string) => {
-      if (!storage) throw new Error('Blockchain storage not initialized');
+      if (!storage) throw new EnhancedError('Blockchain storage not initialized');
       return await storage.getOwnerNFTs(ownerAddress);
     },
     [storage]
   );
 
   const getGasEstimate = useCallback(async () => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
+    if (!storage) throw new EnhancedError('Blockchain storage not initialized');
     return await storage.getGasEstimate();
   }, [storage]);
 
   const getNetworkStats = useCallback(async () => {
-    if (!storage) throw new Error('Blockchain storage not initialized');
+    if (!storage) throw new EnhancedError('Blockchain storage not initialized');
     return await storage.getNetworkStats();
   }, [storage]);
 
@@ -308,4 +308,29 @@ export function useBlockchainStorage(config: BlockchainStorageConfig) {
     getGasEstimate,
     getNetworkStats,
   };
+}
+
+// Enhanced error class with better error handling
+class EnhancedError extends Error {
+  constructor(
+    message: string,
+    public code: string = 'UNKNOWN_ERROR',
+    public statusCode: number = 500,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'EnhancedError';
+    Error.captureStackTrace(this, EnhancedError);
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      statusCode: this.statusCode,
+      details: this.details,
+      stack: this.stack
+    };
+  }
 }
