@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * OptiMind AI Ecosystem - Advanced Compliance API v2.0
  * Premium Diamond Grade Compliance Reporting and Audit Trail System

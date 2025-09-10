@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 import { getServerSession } from 'next-auth';
 
 import { contractWiseService } from '@/lib/contractwise-service';

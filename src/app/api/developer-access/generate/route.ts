@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * Developer Access Key Generation API Endpoint
  * Generates exclusive access keys for developers with monitoring and tracking

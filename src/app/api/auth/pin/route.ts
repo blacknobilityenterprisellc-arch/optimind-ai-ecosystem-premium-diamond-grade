@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 
 
+import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
 // Rate limiting in memory (in production, use Redis or similar)

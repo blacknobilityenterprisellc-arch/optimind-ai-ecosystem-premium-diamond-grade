@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * API route for content moderation
  * Demonstrates the ZaiIntegration system in action

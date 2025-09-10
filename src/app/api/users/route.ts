@@ -1,5 +1,8 @@
+import type { Request } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET() {
+
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = Number.parseInt(searchParams.get('page') || '1');
@@ -40,7 +43,7 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { email, name, role } = body;

@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 import { NextResponse } from 'next/server';
 
 // Health status constants

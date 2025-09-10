@@ -1,3 +1,6 @@
+import type { Request } from 'next/server';
+import { NextResponse } from 'next/server';
+
 /**
  * Developer Access Metrics API Endpoint
  * Provides comprehensive metrics and analytics for developer access
@@ -5,7 +8,7 @@
 
 import { exclusiveDeveloperAccessService } from '@/lib/exclusive-developer-access';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');

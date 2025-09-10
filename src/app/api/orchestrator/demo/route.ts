@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * API endpoint for demonstrating the Agent Orchestrator System
  *

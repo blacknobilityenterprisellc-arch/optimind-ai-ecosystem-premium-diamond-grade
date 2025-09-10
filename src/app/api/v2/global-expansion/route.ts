@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * OptiMind AI Ecosystem - Global Expansion API v2.0
  * Premium Diamond Grade Multi-Region Deployment and Internationalization System
