@@ -569,7 +569,7 @@ export class AdvancedAutomationV2 {
     try {
       // This is a simplified evaluation
       return true; // For demo purposes
-    } catch {
+    } catch (error) {
       return false;
     }
   }
