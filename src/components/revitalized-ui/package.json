@@ -1,0 +1,272 @@
+{
+  "name": "optimind-ai-revitalized-ui",
+  "version": "1.0.0",
+  "description": "OptiMind AI Ecosystem - Premium Enterprise-Grade Revitalized UI",
+  "type": "module",
+  "author": {
+    "name": "Jocely P. Honore",
+    "role": "Founder/Lead Visionary/CEO",
+    "company": "N.D.E. - Nobility Digital Empire"
+  },
+  "contributors": [
+    {
+      "name": "GLM 4.5 AI",
+      "role": "Full-Stack Architect & Senior UX/UI Engineer"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade.git"
+  },
+  "homepage": "https://optimind-ai.com",
+  "bugs": {
+    "url": "https://github.com/blacknobilityenterprisellc-arch/optimind-ai-ecosystem-premium-diamond-grade/issues"
+  },
+  "keywords": [
+    "ai",
+    "artificial-intelligence",
+    "enterprise",
+    "ecosystem",
+    "react",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "accessibility",
+    "responsive-design",
+    "ux",
+    "ui",
+    "premium",
+    "diamond-grade",
+    "optimind",
+    "nobility-digital-empire"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:host": "vite --host",
+    "dev:https": "vite --https",
+    "build": "vite build",
+    "build:analyze": "vite build --mode analyze",
+    "preview": "vite preview",
+    "preview:host": "vite preview --host",
+    "lint": "eslint src --ext js,jsx,ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --ext js,jsx,ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "clean": "rm -rf dist node_modules/.cache .vite",
+    "clean:all": "rm -rf dist node_modules package-lock.json .vite",
+    "reinstall": "npm run clean:all && npm install",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "test:run": "vitest run",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "prepare": "husky install",
+    "bundle-analyzer": "vite-bundle-analyzer dist/static/assets/*.js",
+    "audit": "npm audit --audit-level=moderate",
+    "audit:fix": "npm audit fix --audit-level=moderate"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
+    "framer-motion": "^10.16.4",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.294.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-toast": "^1.1.5",
+    "tailwind-merge": "^2.0.0",
+    "class-variance-authority": "^0.7.0",
+    "cmdk": "^0.2.0",
+    "react-hook-form": "^7.47.0",
+    "@hookform/resolvers": "^3.3.2",
+    "zod": "^3.22.4",
+    "react-intersection-observer": "^9.5.2",
+    "react-hot-toast": "^2.4.1",
+    "zustand": "^4.4.7",
+    "axios": "^1.6.0",
+    "date-fns": "^2.30.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/node": "^20.8.10",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.1.1",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "vite": "^4.5.0",
+    "vitest": "^0.34.6",
+    "@vitest/ui": "^0.34.6",
+    "@vitest/coverage-v8": "^0.34.6",
+    "typescript": "^5.2.2",
+    "tailwindcss": "^3.3.5",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "eslint": "^8.53.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.0.3",
+    "prettier-plugin-tailwindcss": "^0.5.6",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "rollup-plugin-visualizer": "^5.9.2",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-image-optimizer": "^1.1.7",
+    "vite-plugin-svgr": "^4.0.0",
+    "vite-tsconfig-paths": "^4.2.1",
+    "@storybook/react": "^7.5.3",
+    "@storybook/react-vite": "^7.5.3",
+    "storybook": "^7.5.3"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.6.1",
+    "@rollup/rollup-win32-x64-msvc": "^4.6.1",
+    "@rollup/rollup-darwin-x64": "^4.6.1",
+    "@rollup/rollup-darwin-arm64": "^4.6.1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "endOfLine": "lf",
+    "jsxSingleQuote": false,
+    "bracketSameLine": false,
+    "quoteProps": "as-needed"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:jsx-a11y/recommended",
+      "plugin:import/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "plugins": [
+      "react",
+      "react-hooks",
+      "jsx-a11y",
+      "import",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+      "import/order": [
+        "error",
+        {
+          "groups": [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "newlines-between": "always"
+        }
+      ],
+      "jsx-a11y/anchor-is-valid": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      },
+      "import/resolver": {
+        "typescript": {}
+      }
+    },
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    }
+  },
+  "vitest": {
+    "environment": "jsdom",
+    "setupFiles": [
+      "./src/test/setup.ts"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "**/*.{test,spec}.{js,jsx,ts,tsx}"
+    ],
+    "coverage": {
+      "provider": "v8",
+      "reporter": [
+        "text",
+        "json",
+        "html"
+      ],
+      "exclude": [
+        "node_modules/",
+        "src/test/",
+        "**/*.d.ts",
+        "**/*.config.*",
+        "**/coverage/**"
+      ]
+    },
+    "css": {
+      "modules": {
+        "localConvention": "camelCase"
+      }
+    }
+  }
+}
