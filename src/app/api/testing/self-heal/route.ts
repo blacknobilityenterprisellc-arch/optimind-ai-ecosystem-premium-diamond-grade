@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * OptiTest AI - Self-Healing Test Maintenance API
  * Diamond-Grade Testing Ecosystem

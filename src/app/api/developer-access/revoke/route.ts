@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * Developer Access Key Revocation API Endpoint
  * Revokes developer access keys with audit logging

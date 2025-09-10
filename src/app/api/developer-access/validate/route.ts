@@ -1,3 +1,5 @@
+import { NextResponse } from 'next/server';
+
 /**
  * Developer Access Key Validation API Endpoint
  * Validates developer access keys and returns access permissions

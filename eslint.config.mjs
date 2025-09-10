@@ -53,6 +53,12 @@ export default [
           BigInt: 'readonly',
           FinalizationRegistry: 'readonly',
           WeakRef: 'readonly',
+          // Next.js API globals
+          Request: 'readonly',
+          Response: 'readonly',
+          NextRequest: 'readonly',
+          NextResponse: 'readonly',
+          request: 'readonly',
         },
       },
     },

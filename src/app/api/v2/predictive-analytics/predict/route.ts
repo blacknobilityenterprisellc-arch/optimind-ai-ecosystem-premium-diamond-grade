@@ -1,3 +1,6 @@
+import type { Request } from 'next/server';
+import { NextResponse } from 'next/server';
+
 /**
  * OptiMind AI Ecosystem - Predictive Analytics API v2.0
  * Premium Diamond Grade AI-Powered Predictive Analytics Endpoints
@@ -8,7 +11,7 @@
 
 import { predictiveAnalyticsService } from '@/lib/v2/predictive-analytics-service';
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const { modelId, input, priority = 'medium' } = await request.json();
 
@@ -50,7 +53,7 @@ export async function POST() {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const jobId = searchParams.get('jobId');

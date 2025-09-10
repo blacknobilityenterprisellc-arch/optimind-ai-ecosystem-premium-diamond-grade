@@ -1,3 +1,6 @@
+import type { Request } from 'next/server';
+import { NextResponse } from 'next/server';
+
 /**
  * Self-Healing Integration API
  *
@@ -7,7 +10,7 @@
 
 import { selfHealingIntegration } from '@/lib/self-healing-integration';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'status';
@@ -76,7 +79,7 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { action, error, issue } = body;

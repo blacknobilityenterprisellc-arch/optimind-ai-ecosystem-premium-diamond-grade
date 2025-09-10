@@ -1,3 +1,4 @@
+import type { Request } from 'next/server';
 /**
  * OptiMind AI Ecosystem - Custom Model Training API v2.0
  * Premium Diamond Grade AI Model Training and Fine-Tuning System
