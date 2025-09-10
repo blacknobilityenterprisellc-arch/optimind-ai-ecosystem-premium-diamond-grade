@@ -21,7 +21,12 @@ export async function POST(request: NextRequest) {
       return validationResult.response!;
     }
 
-    const { messages, model = 'gpt-4', temperature = 0.7, maxTokens = 1000 } = validationResult.data!;
+    const {
+      messages,
+      model = 'gpt-4',
+      temperature = 0.7,
+      maxTokens = 1000,
+    } = validationResult.data!;
 
     const zai = await ZAI.create();
 

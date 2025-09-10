@@ -7,7 +7,6 @@ import { NextResponse } from 'next/server';
  * Database health monitoring and metrics
  */
 
-
 import { DatabaseManagerV2 } from '@/lib/v2/database-manager';
 
 export async function GET() {

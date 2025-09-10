@@ -7,7 +7,6 @@ import { NextResponse } from 'next/server';
  * Database backup and restore operations
  */
 
-
 import { databaseManagerV2 } from '@/lib/v2/database-manager';
 
 export async function POST() {

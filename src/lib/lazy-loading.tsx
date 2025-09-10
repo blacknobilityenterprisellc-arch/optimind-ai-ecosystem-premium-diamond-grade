@@ -15,7 +15,7 @@ export const createLazyComponent = <T extends React.ComponentType<any>>(
   );
 };
 
-export const createLazyLib = <T>(importFn: () => Promise<T>) => {
+export const createLazyLib = <T,>(importFn: () => Promise<T>) => {
   let cachedPromise: Promise<T> | null = null;
   
   return () => {

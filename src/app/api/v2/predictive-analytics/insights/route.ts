@@ -6,7 +6,6 @@ import { NextResponse } from 'next/server';
  * Premium Diamond Grade Predictive Insights Endpoints
  */
 
-
 import {
   predictiveAnalyticsServiceV2,
   type PredictiveInsightRequest,

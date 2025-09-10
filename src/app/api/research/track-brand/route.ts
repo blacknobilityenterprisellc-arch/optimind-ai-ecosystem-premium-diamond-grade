@@ -144,7 +144,7 @@ class EnhancedError extends Error {
     this.name = 'EnhancedError';
     Error.captureStackTrace(this, EnhancedError);
   }
-  
+
   toJSON() {
     return {
       name: this.name,
@@ -152,7 +152,7 @@ class EnhancedError extends Error {
       code: this.code,
       statusCode: this.statusCode,
       details: this.details,
-      stack: this.stack
+      stack: this.stack,
     };
   }
 }

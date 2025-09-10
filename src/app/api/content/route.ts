@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-
 export async function GET() {
   try {
     // Content retrieval logic here

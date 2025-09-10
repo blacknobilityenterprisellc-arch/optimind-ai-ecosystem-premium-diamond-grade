@@ -27,7 +27,9 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
   const [theme, setThemeState] = useState<Theme>(defaultTheme);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [isScreenReaderActive, setIsScreenReaderActive] = useState(false);
-  const [performanceMode, setPerformanceModeState] = useState<'standard' | 'high-performance' | 'ultra-fast'>('high-performance');
+  const [performanceMode, setPerformanceModeState] = useState<
+    'standard' | 'high-performance' | 'ultra-fast'
+  >('high-performance');
 
   // Premium mode detection
   const isPremiumMode = theme === 'premium-diamond' || theme === 'enterprise-blue';
@@ -35,16 +37,23 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
   // Initialize theme from localStorage or system preference
   useEffect(() => {
     const storedTheme = localStorage.getItem('theme') as Theme;
-    const storedPerformanceMode = localStorage.getItem('performance-mode') as 'standard' | 'high-performance' | 'ultra-fast';
+    const storedPerformanceMode = localStorage.getItem('performance-mode') as
+      | 'standard'
+      | 'high-performance'
+      | 'ultra-fast';
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const systemPrefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
 
     const initialTheme =
       storedTheme ||
-      (systemPrefersHighContrast ? 'high-contrast' : systemPrefersDark ? 'dark' : 'premium-diamond'); // Default to premium-diamond
+      (systemPrefersHighContrast
+        ? 'high-contrast'
+        : systemPrefersDark
+          ? 'dark'
+          : 'premium-diamond'); // Default to premium-diamond
 
     setThemeState(initialTheme);
-    
+
     if (storedPerformanceMode) {
       setPerformanceModeState(storedPerformanceMode);
     }
@@ -117,7 +126,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
       root.style.setProperty('--border', '#374151');
       root.style.setProperty('--input', '#262626');
       root.style.setProperty('--ring', '#8b5cf6');
-      
+
       // Add premium diamond specific styles
       const style = document.createElement('style');
       style.id = 'premium-diamond-styles';
@@ -162,7 +171,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
       root.style.setProperty('--border', '#334155');
       root.style.setProperty('--input', '#1e293b');
       root.style.setProperty('--ring', '#3b82f6');
-      
+
       // Remove premium diamond styles
       const existingStyle = document.querySelector('#premium-diamond-styles');
       if (existingStyle) {
@@ -278,7 +287,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
     // Apply performance mode settings
     let transitionDuration = '150ms';
     let animationDuration = '300ms';
-    
+
     if (performanceMode === 'high-performance') {
       transitionDuration = '100ms';
       animationDuration = '200ms';
@@ -451,7 +460,7 @@ class EnhancedError extends Error {
     this.name = 'EnhancedError';
     Error.captureStackTrace(this, EnhancedError);
   }
-  
+
   toJSON() {
     return {
       name: this.name,
@@ -459,7 +468,7 @@ class EnhancedError extends Error {
       code: this.code,
       statusCode: this.statusCode,
       details: this.details,
-      stack: this.stack
+      stack: this.stack,
     };
   }
 }

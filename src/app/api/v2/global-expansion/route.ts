@@ -28,7 +28,10 @@ export async function POST(request: Request) {
         break;
 
       case 'internationalize_content':
-        result = await globalExpansionV2.internationalizeContent(params.content, params.targetLocales);
+        result = await globalExpansionV2.internationalizeContent(
+          params.content,
+          params.targetLocales
+        );
         break;
 
       case 'setup_geo_routing':

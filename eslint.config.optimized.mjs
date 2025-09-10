@@ -2,7 +2,7 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
-import typescript from '@typescript-eslint/eslint-plugin';
+import typescriptPlugin from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,7 +24,7 @@ export default [
       }
     },
     plugins: {
-      '@typescript-eslint': typescript
+      '@typescript-eslint': typescriptPlugin
     },
     rules: {
       // Gradually enforce rules - start with warnings
@@ -50,6 +50,13 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn'
+    }
+  },
+  {
+    files: ['.next/**/*.{js,ts}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@next/next/no-assign-module-variable': 'off'
     }
   }
 ];

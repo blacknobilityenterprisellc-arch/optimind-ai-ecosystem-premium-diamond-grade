@@ -10,7 +10,8 @@ import LogoDesigner from '@/components/LogoDesigner';
 
 export const metadata: Metadata = {
   title: 'Logo Designer - OptiMind AI Ecosystem',
-  description: 'AI-powered logo design and brand identity creation tool. Generate professional logos with advanced AI technology.',
+  description:
+    'AI-powered logo design and brand identity creation tool. Generate professional logos with advanced AI technology.',
   keywords: [
     'logo design',
     'brand identity',
