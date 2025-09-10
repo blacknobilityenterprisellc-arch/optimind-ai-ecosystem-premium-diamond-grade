@@ -1,7 +1,7 @@
 // Real Web3 Provider Integration for OptiMind AI Ecosystem
 import { ethers } from 'ethers';
 import { create } from 'ipfs-http-client';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 
 // Enhanced blockchain configuration
 export interface BlockchainConfig {

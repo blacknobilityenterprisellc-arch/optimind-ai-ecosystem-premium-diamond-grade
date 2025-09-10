@@ -1,17 +1,27 @@
-import { NextResponse } from 'next/server';
-
+import { NextResponse, NextRequest } from 'next/server';
+import { withRateLimit, apiRateLimiter } from '@/lib/ai-rate-limiter';
+import { withValidation, ValidationSchemas } from '@/lib/input-validation';
 import ZAI from 'z-ai-web-dev-sdk';
 
-export async function POST() {
-  try {
-    const { messages, model = 'gpt-4' } = await request.json();
+// Apply rate limiting and validation middleware
+const rateLimitMiddleware = withRateLimit(apiRateLimiter);
+const validationMiddleware = withValidation(ValidationSchemas.AI.Chat);
 
-    if (!messages || !Array.isArray(messages)) {
-      return NextResponse.json(
-        { error: 'Messages are required and must be an array' },
-        { status: 400 }
-      );
+export async function POST(request: NextRequest) {
+  try {
+    // Apply rate limiting
+    const rateLimitResult = await rateLimitMiddleware(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
+
+    // Apply input validation
+    const validationResult = await validationMiddleware(request);
+    if (!validationResult.success) {
+      return validationResult.response!;
+    }
+
+    const { messages, model = 'gpt-4', temperature = 0.7, maxTokens = 1000 } = validationResult.data!;
 
     const zai = await ZAI.create();
 
@@ -21,8 +31,8 @@ export async function POST() {
         content: msg.content,
       })),
       model,
-      temperature: 0.7,
-      max_tokens: 1000,
+      temperature,
+      max_tokens: maxTokens,
     });
 
     const response = completion.choices[0]?.message?.content;

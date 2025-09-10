@@ -1,6 +1,6 @@
 // AI-Powered Environment Variable Validation System for OptiMind AI Ecosystem
 import { z } from 'zod';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 
 // Environment validation error with AI-powered suggestions
 export class EnvironmentValidationError extends Error {

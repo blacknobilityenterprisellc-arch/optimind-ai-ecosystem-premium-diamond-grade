@@ -1,6 +1,6 @@
 // AI-Powered Rate Limiting Middleware for OptiMind AI Ecosystem
 import { NextRequest, NextResponse } from 'next/server';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 
 interface RateLimitConfig {
   windowMs: number; // Time window in milliseconds

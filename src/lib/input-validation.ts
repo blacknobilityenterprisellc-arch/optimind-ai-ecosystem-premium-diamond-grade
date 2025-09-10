@@ -1,6 +1,6 @@
 // AI-Powered Input Validation System for OptiMind AI Ecosystem
 import { z } from 'zod';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 
 // AI-enhanced validation error with detailed feedback
 export class ValidationError extends Error {
