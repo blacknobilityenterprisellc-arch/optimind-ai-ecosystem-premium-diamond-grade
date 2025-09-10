@@ -250,7 +250,7 @@ const HeroSection = () => {
                       'w-16 h-16 rounded-2xl flex items-center justify-center',
                       `bg-gradient-to-r ${stats[currentStatIndex].color}`
                     )}>
-                      <stats[currentStatIndex].icon className="h-8 w-8 text-white" />
+                    {React.createElement(stats[currentStatIndex].icon, { className: "h-8 w-8 text-white" })}
                     </div>
                     <div className="text-left">
                       <div className="text-3xl font-bold text-gray-900">
