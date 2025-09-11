@@ -8,241 +8,89 @@ import type { Request } from 'next/server';
  */
 
 import { NextResponse } from 'next/server';
+import { aiAgentManager } from '@/lib/ai-agent-management';
 
-// Mock data store for agents, tasks, and collaborations
-let agents = [
-  {
-    id: 'glm-45-primary',
-    name: 'GLM-4.5 Primary Orchestrator',
-    type: 'primary' as const,
-    status: 'active' as const,
-    capabilities: ['natural-language-processing', 'reasoning', 'orchestration', 'analysis'],
-    performance: {
-      accuracy: 0.95,
-      efficiency: 0.92,
-      responseTime: 45,
-      successRate: 0.98,
-      cognitiveLoad: 0.65,
-    },
-    resources: {
-      cpu: 0.45,
-      memory: 0.38,
-      network: 0.22,
-      energy: 0.78,
-    },
-    intelligence: {
-      overallIQ: 145,
-      emotionalIntelligence: 0.88,
-      creativity: 0.92,
-      problemSolving: 0.95,
-      adaptability: 0.90,
-      collaboration: 0.87,
-    },
-    tasks: {
-      completed: 1247,
-      active: 3,
-      failed: 12,
-      avgProcessingTime: 1200,
-    },
-    lastActivity: new Date(),
-    uptime: 86400, // 24 hours
-  },
-  {
-    id: 'gemini-specialist',
-    name: 'Gemini Analytics Specialist',
-    type: 'specialist' as const,
-    status: 'active' as const,
-    capabilities: ['data-analysis', 'pattern-recognition', 'insight-generation', 'reporting'],
-    performance: {
-      accuracy: 0.91,
-      efficiency: 0.89,
-      responseTime: 38,
-      successRate: 0.96,
-      cognitiveLoad: 0.58,
-    },
-    resources: {
-      cpu: 0.32,
-      memory: 0.41,
-      network: 0.18,
-      energy: 0.82,
-    },
-    intelligence: {
-      overallIQ: 138,
-      emotionalIntelligence: 0.82,
-      creativity: 0.85,
-      problemSolving: 0.91,
-      adaptability: 0.88,
-      collaboration: 0.84,
-    },
-    tasks: {
-      completed: 892,
-      active: 2,
-      failed: 8,
-      avgProcessingTime: 950,
-    },
-    lastActivity: new Date(),
-    uptime: 86400,
-  },
-  {
-    id: 'deepseek-collaborative',
-    name: 'DeepSeek Collaborative Agent',
-    type: 'collaborative' as const,
-    status: 'collaborating' as const,
-    capabilities: ['collaborative-reasoning', 'knowledge-integration', 'team-coordination', 'synergy'],
-    performance: {
-      accuracy: 0.88,
-      efficiency: 0.86,
-      responseTime: 52,
-      successRate: 0.94,
-      cognitiveLoad: 0.71,
-    },
-    resources: {
-      cpu: 0.48,
-      memory: 0.44,
-      network: 0.35,
-      energy: 0.75,
-    },
-    intelligence: {
-      overallIQ: 135,
-      emotionalIntelligence: 0.91,
-      creativity: 0.87,
-      problemSolving: 0.88,
-      adaptability: 0.92,
-      collaboration: 0.95,
-    },
-    tasks: {
-      completed: 634,
-      active: 1,
-      failed: 5,
-      avgProcessingTime: 1400,
-    },
-    lastActivity: new Date(),
-    uptime: 86400,
-  },
-  {
-    id: 'quantum-enhanced',
-    name: 'Quantum Enhanced Processor',
-    type: 'quantum-enhanced' as const,
-    status: 'learning' as const,
-    capabilities: ['quantum-reasoning', 'optimization', 'parallel-processing', 'quantum-algorithms'],
-    performance: {
-      accuracy: 0.93,
-      efficiency: 0.94,
-      responseTime: 28,
-      successRate: 0.97,
-      cognitiveLoad: 0.42,
-    },
-    resources: {
-      cpu: 0.68,
-      memory: 0.55,
-      network: 0.28,
-      energy: 0.91,
-    },
-    intelligence: {
-      overallIQ: 152,
-      emotionalIntelligence: 0.79,
-      creativity: 0.96,
-      problemSolving: 0.97,
-      adaptability: 0.93,
-      collaboration: 0.81,
-    },
-    tasks: {
-      completed: 412,
-      active: 0,
-      failed: 3,
-      avgProcessingTime: 800,
-    },
-    lastActivity: new Date(),
-    uptime: 86400,
-  },
-];
+// Initialize the agent manager if not already initialized
+let isManagerInitialized = false;
 
-let tasks = [
-  {
-    id: 'task-001',
-    title: 'System Health Analysis',
-    description: 'Comprehensive analysis of system health and performance metrics',
-    type: 'analysis' as const,
-    priority: 'high' as const,
-    status: 'in-progress' as const,
-    assignedAgent: 'glm-45-primary',
-    progress: 75,
-    createdAt: new Date(Date.now() - 3600000), // 1 hour ago
-    startedAt: new Date(Date.now() - 3300000), // 55 minutes ago
-    estimatedDuration: 1800000, // 30 minutes
-    actualDuration: 1650000, // 27.5 minutes
-  },
-  {
-    id: 'task-002',
-    title: 'Data Pattern Recognition',
-    description: 'Identify patterns in user behavior data and generate insights',
-    type: 'analysis' as const,
-    priority: 'medium' as const,
-    status: 'pending' as const,
-    progress: 0,
-    createdAt: new Date(Date.now() - 1800000), // 30 minutes ago
-    estimatedDuration: 2400000, // 40 minutes
-  },
-  {
-    id: 'task-003',
-    title: 'Security Vulnerability Scan',
-    description: 'Perform comprehensive security scan and vulnerability assessment',
-    type: 'security' as const,
-    priority: 'critical' as const,
-    status: 'assigned' as const,
-    assignedAgent: 'deepseek-collaborative',
-    progress: 15,
-    createdAt: new Date(Date.now() - 900000), // 15 minutes ago
-    startedAt: new Date(Date.now() - 300000), // 5 minutes ago
-    estimatedDuration: 3600000, // 60 minutes
-    actualDuration: 300000, // 5 minutes
-  },
-];
-
-let collaborations = [
-  {
-    id: 'collab-001',
-    name: 'Collective Intelligence Network',
-    participants: ['glm-45-primary', 'gemini-specialist', 'deepseek-collaborative'],
-    type: 'collective-intelligence' as const,
-    status: 'active' as const,
-    synergy: 0.87,
-    efficiency: 0.92,
-    emergentProperties: ['enhanced-reasoning', 'cross-domain-insights', 'adaptive-learning'],
-    sharedContext: { domain: 'multi-domain-analysis', complexity: 'high' },
-    createdAt: new Date(Date.now() - 7200000), // 2 hours ago
-    lastActivity: new Date(),
-  },
-  {
-    id: 'collab-002',
-    name: 'Quantum Optimization Team',
-    participants: ['quantum-enhanced', 'glm-45-primary'],
-    type: 'quantum-entanglement' as const,
-    status: 'forming' as const,
-    synergy: 0.72,
-    efficiency: 0.85,
-    emergentProperties: ['quantum-speedup', 'parallel-processing', 'entangled-reasoning'],
-    sharedContext: { domain: 'quantum-computing', complexity: 'quantum' },
-    createdAt: new Date(Date.now() - 1800000), // 30 minutes ago
-    lastActivity: new Date(),
-  },
-];
+async function ensureManagerInitialized() {
+  if (!isManagerInitialized) {
+    await aiAgentManager.initialize();
+    isManagerInitialized = true;
+  }
+}
 
 export async function GET(request: Request) {
   try {
+    await ensureManagerInitialized();
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action') || 'system-metrics';
 
     switch (action) {
       case 'list-agents':
+        const agents = aiAgentManager.getAllAgents();
         return NextResponse.json({
           success: true,
           action: 'list-agents',
-          data: agents,
+          data: agents.map(agent => ({
+            id: agent.id,
+            name: agent.name,
+            type: agent.type,
+            status: agent.state.status,
+            capabilities: agent.capabilities.map(cap => cap.name),
+            performance: agent.performance,
+            resources: agent.resources,
+            intelligence: agent.intelligence,
+            tasks: agent.tasks,
+            lastActivity: agent.state.lastActivity,
+            uptime: agent.state.uptime,
+          })),
           timestamp: new Date().toISOString(),
         });
 
       case 'list-tasks':
+        // For now, return mock tasks data
+        const tasks = [
+          {
+            id: 'task-001',
+            title: 'System Health Analysis',
+            description: 'Comprehensive analysis of system health and performance metrics',
+            type: 'analysis' as const,
+            priority: 'high' as const,
+            status: 'in-progress' as const,
+            assignedAgent: 'glm-45-primary',
+            progress: 75,
+            createdAt: new Date(Date.now() - 3600000),
+            startedAt: new Date(Date.now() - 3300000),
+            estimatedDuration: 1800000,
+            actualDuration: 1650000,
+          },
+          {
+            id: 'task-002',
+            title: 'Data Pattern Recognition',
+            description: 'Identify patterns in user behavior data and generate insights',
+            type: 'analysis' as const,
+            priority: 'medium' as const,
+            status: 'pending' as const,
+            progress: 0,
+            createdAt: new Date(Date.now() - 1800000),
+            estimatedDuration: 2400000,
+          },
+          {
+            id: 'task-003',
+            title: 'Security Vulnerability Scan',
+            description: 'Perform comprehensive security scan and vulnerability assessment',
+            type: 'security' as const,
+            priority: 'critical' as const,
+            status: 'assigned' as const,
+            assignedAgent: 'gemini-specialist',
+            progress: 15,
+            createdAt: new Date(Date.now() - 900000),
+            startedAt: new Date(Date.now() - 300000),
+            estimatedDuration: 3600000,
+            actualDuration: 300000,
+          },
+        ];
         return NextResponse.json({
           success: true,
           action: 'list-tasks',
@@ -251,6 +99,35 @@ export async function GET(request: Request) {
         });
 
       case 'list-collaborations':
+        // For now, return mock collaborations data
+        const collaborations = [
+          {
+            id: 'collab-001',
+            name: 'Collective Intelligence Network',
+            participants: ['glm-45-primary', 'gemini-specialist'],
+            type: 'collective-intelligence' as const,
+            status: 'active' as const,
+            synergy: 0.87,
+            efficiency: 0.92,
+            emergentProperties: ['enhanced-reasoning', 'cross-domain-insights', 'adaptive-learning'],
+            sharedContext: { domain: 'multi-domain-analysis', complexity: 'high' },
+            createdAt: new Date(Date.now() - 7200000),
+            lastActivity: new Date(),
+          },
+          {
+            id: 'collab-002',
+            name: 'Quantum Optimization Team',
+            participants: ['quantum-enhanced', 'glm-45-primary'],
+            type: 'quantum-entanglement' as const,
+            status: 'forming' as const,
+            synergy: 0.72,
+            efficiency: 0.85,
+            emergentProperties: ['quantum-speedup', 'parallel-processing', 'entangled-reasoning'],
+            sharedContext: { domain: 'quantum-computing', complexity: 'quantum' },
+            createdAt: new Date(Date.now() - 1800000),
+            lastActivity: new Date(),
+          },
+        ];
         return NextResponse.json({
           success: true,
           action: 'list-collaborations',
@@ -259,32 +136,7 @@ export async function GET(request: Request) {
         });
 
       case 'system-metrics':
-        const metrics = {
-          totalAgents: agents.length,
-          activeAgents: agents.filter(a => a.status === 'active' || a.status === 'collaborating' || a.status === 'processing').length,
-          totalTasks: tasks.length,
-          completedTasks: tasks.filter(t => t.status === 'completed').length,
-          activeCollaborations: collaborations.filter(c => c.status === 'active').length,
-          systemIntelligence: {
-            overallIQ: Math.round(agents.reduce((sum, agent) => sum + agent.intelligence.overallIQ, 0) / agents.length),
-            collectiveIntelligence: Math.round(agents.reduce((sum, agent) => sum + agent.intelligence.collaboration, 0) / agents.length * 100),
-            adaptability: Math.round(agents.reduce((sum, agent) => sum + agent.intelligence.adaptability, 0) / agents.length * 100),
-            innovation: Math.round(agents.reduce((sum, agent) => sum + agent.intelligence.creativity, 0) / agents.length * 100),
-          },
-          performance: {
-            throughput: tasks.filter(t => t.status === 'completed').length / 24, // tasks per hour
-            latency: Math.round(agents.reduce((sum, agent) => sum + agent.performance.responseTime, 0) / agents.length),
-            efficiency: Math.round(agents.reduce((sum, agent) => sum + agent.performance.efficiency, 0) / agents.length * 100),
-            reliability: Math.round(agents.reduce((sum, agent) => sum + agent.performance.successRate, 0) / agents.length * 100),
-          },
-          resourceUtilization: {
-            cpu: Math.round(agents.reduce((sum, agent) => sum + agent.resources.cpu, 0) / agents.length * 100),
-            memory: Math.round(agents.reduce((sum, agent) => sum + agent.resources.memory, 0) / agents.length * 100),
-            network: Math.round(agents.reduce((sum, agent) => sum + agent.resources.network, 0) / agents.length * 100),
-            energy: Math.round(agents.reduce((sum, agent) => sum + agent.resources.energy, 0) / agents.length * 100),
-          },
-        };
-
+        const metrics = aiAgentManager.getSystemMetrics();
         return NextResponse.json({
           success: true,
           action: 'system-metrics',
@@ -301,7 +153,7 @@ export async function GET(request: Request) {
           );
         }
 
-        const agent = agents.find(a => a.id === agentId);
+        const agent = aiAgentManager.getAgentById(agentId);
         if (!agent) {
           return NextResponse.json(
             { success: false, error: 'Agent not found' },
@@ -348,11 +200,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    await ensureManagerInitialized();
     const body = await request.json();
     const { action, payload } = body;
 
     switch (action) {
       case 'create-task':
+        // For now, create a mock task and assign it to an available agent
         const newTask = {
           id: `task-${Date.now()}`,
           title: payload.title,
@@ -365,22 +219,17 @@ export async function POST(request: Request) {
           estimatedDuration: payload.estimatedDuration || 1800000, // Default 30 minutes
         };
 
-        tasks.push(newTask);
-
-        // Auto-assign task to best available agent
-        const availableAgents = agents.filter(a => 
-          a.status === 'active' && a.tasks.active < 3
-        );
-        
+        // Try to assign task to an available agent
+        const availableAgents = aiAgentManager.getAvailableAgents();
         if (availableAgents.length > 0) {
-          // Simple assignment strategy - choose agent with lowest cognitive load
           const bestAgent = availableAgents.reduce((best, current) => 
-            current.performance.cognitiveLoad < best.performance.cognitiveLoad ? current : best
+            current.state.cognitiveLoad < best.state.cognitiveLoad ? current : best
           );
           
-          newTask.assignedAgent = bestAgent.id;
-          newTask.status = 'assigned';
-          bestAgent.tasks.active += 1;
+          if (await aiAgentManager.assignTaskToAgent(bestAgent.id, 0.5)) {
+            newTask.assignedAgent = bestAgent.id;
+            newTask.status = 'assigned';
+          }
         }
 
         return NextResponse.json({
@@ -393,36 +242,16 @@ export async function POST(request: Request) {
 
       case 'control-agent':
         const { agentId, controlAction } = payload;
-        const agent = agents.find(a => a.id === agentId);
+        const success = await aiAgentManager.controlAgent(agentId, controlAction);
         
-        if (!agent) {
+        if (!success) {
           return NextResponse.json(
-            { success: false, error: 'Agent not found' },
-            { status: 404 }
+            { success: false, error: 'Failed to control agent' },
+            { status: 400 }
           );
         }
 
-        switch (controlAction) {
-          case 'start':
-            agent.status = 'active';
-            break;
-          case 'pause':
-            agent.status = 'idle';
-            break;
-          case 'restart':
-            agent.status = 'active';
-            agent.tasks.active = 0;
-            agent.performance.cognitiveLoad = 0;
-            break;
-          default:
-            return NextResponse.json(
-              { success: false, error: 'Invalid control action' },
-              { status: 400 }
-            );
-        }
-
-        agent.lastActivity = new Date();
-
+        const agent = aiAgentManager.getAgentById(agentId);
         return NextResponse.json({
           success: true,
           action: 'control-agent',
@@ -435,7 +264,7 @@ export async function POST(request: Request) {
         const collabId = `collab-${Date.now()}`;
         const newCollaboration = {
           id: collabId,
-          name: payload.name || `Collaboration ${collaborations.length + 1}`,
+          name: payload.name || `Collaboration ${Date.now()}`,
           participants: payload.participants || [],
           type: payload.type || 'collective-intelligence',
           status: 'forming' as const,
@@ -447,13 +276,11 @@ export async function POST(request: Request) {
           lastActivity: new Date(),
         };
 
-        collaborations.push(newCollaboration);
-
         // Update participant agents status
         newCollaboration.participants.forEach(participantId => {
-          const participant = agents.find(a => a.id === participantId);
+          const participant = aiAgentManager.getAgentById(participantId);
           if (participant) {
-            participant.status = 'collaborating';
+            participant.state.status = 'collaborating';
           }
         });
 
@@ -467,70 +294,64 @@ export async function POST(request: Request) {
 
       case 'update-task-progress':
         const { taskId, progress } = payload;
-        const taskToUpdate = tasks.find(t => t.id === taskId);
         
-        if (!taskToUpdate) {
-          return NextResponse.json(
-            { success: false, error: 'Task not found' },
-            { status: 404 }
-          );
-        }
+        // For now, this is a mock implementation
+        // In a real system, you would update the actual task progress
+        const mockTaskUpdate = {
+          id: taskId,
+          progress: Math.min(100, Math.max(0, progress)),
+          status: progress === 100 ? 'completed' : progress > 0 ? 'in-progress' : 'pending',
+          completedAt: progress === 100 ? new Date() : undefined,
+        };
 
-        taskToUpdate.progress = Math.min(100, Math.max(0, progress));
-        
-        if (taskToUpdate.progress === 100) {
-          taskToUpdate.status = 'completed';
-          taskToUpdate.completedAt = new Date();
-          
-          // Update agent task count
-          if (taskToUpdate.assignedAgent) {
-            const agent = agents.find(a => a.id === taskToUpdate.assignedAgent);
-            if (agent) {
-              agent.tasks.active -= 1;
-              agent.tasks.completed += 1;
+        // If task is completed, update agent stats
+        if (progress === 100) {
+          // This would normally find the assigned agent and update its stats
+          const agents = aiAgentManager.getAllAgents();
+          agents.forEach(agent => {
+            if (agent.tasks.active > 0) {
+              aiAgentManager.completeTaskForAgent(agent.id, true, 1200);
             }
-          }
-        } else if (taskToUpdate.progress > 0 && taskToUpdate.status === 'pending') {
-          taskToUpdate.status = 'in-progress';
-          taskToUpdate.startedAt = new Date();
+          });
         }
 
         return NextResponse.json({
           success: true,
           action: 'update-task-progress',
-          data: taskToUpdate,
+          data: mockTaskUpdate,
           message: 'Task progress updated successfully',
           timestamp: new Date().toISOString(),
         });
 
       case 'assign-task':
         const { taskId: assignTaskId, agentId: assignAgentId } = payload;
-        const taskToAssign = tasks.find(t => t.id === assignTaskId);
-        const agentToAssign = agents.find(a => a.id === assignAgentId);
+        const agentToAssign = aiAgentManager.getAgentById(assignAgentId);
         
-        if (!taskToAssign || !agentToAssign) {
+        if (!agentToAssign) {
           return NextResponse.json(
-            { success: false, error: 'Task or agent not found' },
+            { success: false, error: 'Agent not found' },
             { status: 404 }
           );
         }
 
-        // Remove from previous agent if assigned
-        if (taskToAssign.assignedAgent) {
-          const prevAgent = agents.find(a => a.id === taskToAssign.assignedAgent);
-          if (prevAgent) {
-            prevAgent.tasks.active -= 1;
-          }
+        const assignSuccess = await aiAgentManager.assignTaskToAgent(assignAgentId, 0.5);
+        
+        if (!assignSuccess) {
+          return NextResponse.json(
+            { success: false, error: 'Failed to assign task to agent' },
+            { status: 400 }
+          );
         }
-
-        taskToAssign.assignedAgent = assignAgentId;
-        taskToAssign.status = 'assigned';
-        agentToAssign.tasks.active += 1;
 
         return NextResponse.json({
           success: true,
           action: 'assign-task',
-          data: taskToAssign,
+          data: {
+            taskId: assignTaskId,
+            agentId: assignAgentId,
+            agentName: agentToAssign.name,
+            status: 'assigned'
+          },
           message: `Task assigned to ${agentToAssign.name}`,
           timestamp: new Date().toISOString(),
         });
