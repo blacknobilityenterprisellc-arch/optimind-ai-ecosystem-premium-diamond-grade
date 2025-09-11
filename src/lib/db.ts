@@ -311,8 +311,16 @@ class EnhancedDatabase {
     return this.client.$queryRaw(query, ...params);
   }
 
+  async $queryRawUnsafe(query: string, ...params: any[]) {
+    return this.client.$queryRawUnsafe(query, ...params);
+  }
+
   async $executeRaw(query: string, ...params: any[]) {
     return this.client.$executeRaw(query, ...params);
+  }
+
+  async $executeRawUnsafe(query: string, ...params: any[]) {
+    return this.client.$executeRawUnsafe(query, ...params);
   }
 
   async $transaction(callback: (tx: any) => Promise<any>) {
