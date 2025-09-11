@@ -1,6 +1,7 @@
 
 // AI-Generated Input Validation
 import { z } from 'zod';
+import { EnhancedError } from '@/lib/error-handler';
 
 export const commonSchemas = {
   email: z.string().email('Invalid email address'),
@@ -9,6 +10,20 @@ export const commonSchemas = {
   id: z.string().cuid(),
   url: z.string().url('Invalid URL'),
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
+};
+
+export const ValidationSchemas = {
+  AI: {
+    Chat: z.object({
+      messages: z.array(z.object({
+        role: z.string(),
+        content: z.string()
+      })),
+      model: z.string().optional(),
+      temperature: z.number().min(0).max(2).optional(),
+      maxTokens: z.number().min(1).max(8000).optional()
+    })
+  }
 };
 
 export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
