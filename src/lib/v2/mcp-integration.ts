@@ -7,7 +7,6 @@
  */
 
 import { quantumSecurityV2 } from './quantum-security';
-import { predictiveAnalyticsV2 } from './predictive-analytics';
 
 export interface MCPContext {
   id: string;
@@ -215,7 +214,7 @@ class MCPIntegrationV2 {
     }
 
     this.stats.contextMisses++;
-    return getRealData();
+    return null;
   }
 
   /**
