@@ -1,36 +1,78 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
+import { ValidationSchemas, validateInput, EnhancedError } from '@/lib/input-validation';
+import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';
 
-import { aiService } from '@/lib/ai';
-
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { topic, contentType, tone, length, keywords, targetAudience } = body;
 
-    // Validate required fields
-    if (!topic || !contentType) {
-      return NextResponse.json({ error: 'Topic and content type are required' }, { status: 400 });
-    }
+    // Validate required fields using proper schema
+    const validatedData = validateInput(ValidationSchemas.Content.Generate, body);
 
-    // Generate content using AI service
-    const result = await aiService.generateContent({
-      topic,
-      contentType,
-      tone: tone || 'professional',
-      length: length || 'medium',
-      keywords: keywords || [],
-      targetAudience: targetAudience || 'general audience',
+    // Generate content using ZAI wrapper with fallback
+    const prompt = `Generate ${validatedData.contentType} content about "${validatedData.topic}" with a ${validatedData.tone} tone for ${validatedData.targetAudience}. 
+    Length should be ${validatedData.length}. 
+    ${validatedData.keywords.length > 0 ? `Include these keywords: ${validatedData.keywords.join(', ')}.` : ''}
+    
+    Please provide well-structured, engaging content that is appropriate for the specified audience and tone.`;
+
+    const completion = await premiumZAIWrapper.createChatCompletion({
+      messages: [
+        {
+          role: 'system',
+          content: 'You are an expert content writer who creates high-quality, engaging content tailored to specific audiences and tones.'
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      model: 'gpt-4',
+      temperature: 0.7,
+      max_tokens: 2000,
     });
+
+    const response = completion.choices[0]?.message?.content;
+
+    if (!response) {
+      throw new EnhancedError('Failed to generate content', 'CONTENT_GENERATION_FAILED');
+    }
 
     return NextResponse.json({
       success: true,
-      content: result.content,
-      model: result.model,
-      usage: result.usage,
-      cost: result.cost,
+      content: response,
+      model: completion.model,
+      usage: completion.usage,
+      metadata: {
+        topic: validatedData.topic,
+        contentType: validatedData.contentType,
+        tone: validatedData.tone,
+        length: validatedData.length,
+        targetAudience: validatedData.targetAudience,
+        keywords: validatedData.keywords
+      }
     });
   } catch (error) {
     console.error('Content generation error:', error);
-    return NextResponse.json({ error: 'Failed to generate content' }, { status: 500 });
+    
+    if (error instanceof EnhancedError) {
+      return NextResponse.json(
+        { 
+          error: error.message,
+          code: error.code,
+          details: error.details 
+        },
+        { status: error.statusCode }
+      );
+    }
+    
+    return NextResponse.json(
+      { 
+        error: 'Failed to generate content',
+        code: 'CONTENT_GENERATION_ERROR' 
+      },
+      { status: 500 }
+    );
   }
 }
