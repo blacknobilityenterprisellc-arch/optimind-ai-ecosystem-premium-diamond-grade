@@ -5,14 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
       // AI-Optimized bundle settings
       optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
-      swcPlugins: [
-        ['@swc-plugins/transform-imports', {
-          'lucide-react': {
-            'transform': 'lucide-react/esm/{{member}}',
-            'preventFullImport': true
-          }
-        }]
-      ]
     },
   
   // Enterprise Build Optimization

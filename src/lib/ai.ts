@@ -186,6 +186,16 @@ export const AI_MODELS = {
     operational: true,
     responseTime: 750,
   },
+  'deepseek/deepseek-v2.5': {
+    name: 'DeepSeek V2.5',
+    provider: 'DeepSeek',
+    capabilities: ['Text Generation', 'Code Generation', 'Analysis', 'Mathematics', 'Reasoning'],
+    maxTokens: 32768,
+    cost: 0.0008,
+    category: 'balanced',
+    operational: true,
+    responseTime: 920,
+  },
 };
 
 // Enhanced AI Service with operational status monitoring
