@@ -140,21 +140,21 @@ const aiModels: AIModelStatus[] = [
     id: 'deepseek-v2.5',
     name: 'DeepSeek V2.5',
     provider: 'DeepSeek',
-    status: 'maintenance',
+    status: 'online',
     performance: {
-      responseTime: 0,
-      accuracy: 0,
-      throughput: 0,
-      uptime: 95.50
+      responseTime: 920,
+      accuracy: 96.2,
+      throughput: 1180,
+      uptime: 99.40
     },
     usage: {
-      requests: 0,
-      tokens: 0,
-      cost: 0
+      requests: 5420,
+      tokens: 815000,
+      cost: 815.00
     },
     capabilities: ['Text Generation', 'Code Generation', 'Analysis', 'Mathematics', 'Reasoning'],
-    lastUpdated: new Date(Date.now() - 600000).toISOString(), // 10 minutes ago
-    healthScore: 0
+    lastUpdated: new Date().toISOString(),
+    healthScore: 96
   }
 ];
 
