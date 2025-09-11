@@ -448,6 +448,4 @@ export interface AppConfig {
 }
 
 // Export all types for easy importing
-export * from './utils';
-export * from './hooks';
-export * from './services';
+export * from './ai-enhanced';

@@ -15,7 +15,7 @@ config({ path: '.env' });
 
 const fetch = require('node-fetch');
 
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = `http://localhost:${process.env.PORT || 3007}`;
 
 interface ValidationResult {
   component: string;

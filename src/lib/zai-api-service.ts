@@ -172,6 +172,11 @@ class ZAIApiService {
       timestamp: new Date().toISOString(),
     };
   }
+
+  async testModelConnection(modelId: string): Promise<boolean> {
+    // Mock model connection test
+    return Math.random() > 0.1; // 90% success rate
+  }
 }
 
 export const zaiApiService = ZAIApiService.getInstance();

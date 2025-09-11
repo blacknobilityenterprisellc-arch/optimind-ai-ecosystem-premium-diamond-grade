@@ -8,6 +8,9 @@
  * MCP (Model Control Protocol), and Open Router for deep system analysis.
  */
 
+// Load environment variables first
+import 'dotenv/config';
+
 import { ZAI } from 'z-ai-web-dev-sdk';
 import { mcpService } from '../src/lib/mcp-service';
 import { mcpServiceOrchestrator } from '../src/lib/mcp-service-orchestrator';

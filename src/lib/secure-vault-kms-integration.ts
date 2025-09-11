@@ -13,6 +13,10 @@ export interface SecureStorageResult {
   dekWrapped: string;
   dekId?: string;
   createdAt: string;
+  location?: string;
+  versionId?: string;
+  checksum?: string;
+  size?: number;
 }
 
 export interface DeletionCertificate {

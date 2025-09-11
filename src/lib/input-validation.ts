@@ -11,12 +11,26 @@ export const commonSchemas = {
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
 };
 
+export const ValidationSchemas = {
+  AI: {
+    Chat: z.object({
+      messages: z.array(z.object({
+        role: z.string(),
+        content: z.string()
+      })),
+      model: z.string().optional(),
+      temperature: z.number().min(0).max(2).optional(),
+      maxTokens: z.number().min(1).max(8000).optional()
+    })
+  }
+};
+
 export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
   try {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new EnhancedError(`Validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+      throw new Error(`Validation failed: ${error.errors.map(e => e.message).join(', ')}`);
     }
     throw error;
   }
