@@ -4,7 +4,7 @@ import { zaiApiService } from '@/lib/zai-api-service';
 
 export async function GET() {
   try {
-    const models = zaiApiService.getAvailableModels();
+    const models = await zaiApiService.getAvailableModels();
     const testResults: any[] = [];
 
     for (const model of models) {

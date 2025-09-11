@@ -1,7 +1,6 @@
 
 // AI-Generated Input Validation
 import { z } from 'zod';
-import { EnhancedError } from '@/lib/error-handler';
 
 export const commonSchemas = {
   email: z.string().email('Invalid email address'),
@@ -31,7 +30,7 @@ export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
     return schema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new EnhancedError(`Validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+      throw new Error(`Validation failed: ${error.errors.map(e => e.message).join(', ')}`);
     }
     throw error;
   }
