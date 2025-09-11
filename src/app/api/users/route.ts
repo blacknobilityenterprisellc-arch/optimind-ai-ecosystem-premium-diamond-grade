@@ -1,3 +1,4 @@
+import { EnhancedError } from '@/lib/error-handler';
 import type { Request } from 'next/server';
 import { NextResponse } from 'next/server';
 import { withRateLimit, standardRateLimit } from '@/lib/api-rate-limit-middleware';

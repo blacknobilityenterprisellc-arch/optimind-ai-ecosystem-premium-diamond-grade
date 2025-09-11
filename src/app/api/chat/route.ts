@@ -1,3 +1,4 @@
+import { EnhancedError } from '@/lib/error-handler';
 import { NextResponse, NextRequest } from 'next/server';
 import { withRateLimit, apiRateLimiter } from '@/lib/ai-rate-limiter';
 import { withValidation, ValidationSchemas } from '@/lib/input-validation';
