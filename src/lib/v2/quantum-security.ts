@@ -497,14 +497,19 @@ class QuantumSecurityV2 {
       checks.hashing = hashResult.hash.length > 0;
 
       // Test signature
-      const signature = await this.quantumSign('test data', keyPair.keyId, 'test-user');
-      const verification = await this.quantumVerifySignature(
-        'test data',
-        signature,
-        keyPair.keyId,
-        'test-user'
-      );
-      checks.signature = verification;
+      try {
+        const signature = await this.quantumSign('test data', keyPair.keyId, 'test-user');
+        const verification = await this.quantumVerifySignature(
+          'test data',
+          signature,
+          keyPair.keyId,
+          'test-user'
+        );
+        checks.signature = verification;
+      } catch (signatureError) {
+        console.warn('Signature verification failed during health check:', signatureError);
+        checks.signature = false;
+      }
 
       // Test audit
       this.logAudit('health_check', 'test-user', 'quantum_security', true, {});

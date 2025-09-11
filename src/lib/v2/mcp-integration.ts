@@ -7,7 +7,6 @@
  */
 
 import { quantumSecurityV2 } from './quantum-security';
-import { predictiveAnalyticsV2 } from './predictive-analytics';
 
 export interface MCPContext {
   id: string;
@@ -215,7 +214,7 @@ class MCPIntegrationV2 {
     }
 
     this.stats.contextMisses++;
-    return getRealData();
+    return null;
   }
 
   /**
@@ -868,6 +867,80 @@ class MCPIntegrationV2 {
       }
       throw error;
     }
+  }
+
+  /**
+   * MCP integration health check
+   */
+  async healthCheck(): Promise<{
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    checks: {
+      contextManagement: boolean;
+      messageProcessing: boolean;
+      modelConnections: boolean;
+      encryption: boolean;
+      protocol: boolean;
+    };
+    stats: MCPStats;
+  }> {
+    const checks = {
+      contextManagement: false,
+      messageProcessing: false,
+      modelConnections: false,
+      encryption: false,
+      protocol: false,
+    };
+
+    try {
+      // Test context management
+      const testContextId = await this.createContext('health-check', 'system', { test: true });
+      const retrievedContext = await this.getContext(testContextId);
+      checks.contextManagement = retrievedContext !== null;
+      await this.deleteContext(testContextId);
+
+      // Test message processing
+      const messageId = await this.sendMessage({
+        type: 'NOTIFICATION',
+        payload: { test: 'health-check' },
+        source: 'health-check',
+        destination: 'system',
+        priority: 'medium',
+        requiresAck: false,
+      });
+      checks.messageProcessing = messageId.length > 0;
+
+      // Test model connections
+      const testConnectionId = await this.connectModel('health-check-model');
+      const connection = this.connections.get(testConnectionId);
+      checks.modelConnections = connection !== undefined && connection.status === 'CONNECTED';
+      await this.disconnectModel(testConnectionId);
+
+      // Test encryption
+      const testData = { sensitive: 'health-check-data' };
+      const encrypted = await this.encryptData(testData);
+      const decrypted = await this.decryptData(encrypted);
+      checks.encryption = JSON.stringify(decrypted) === JSON.stringify(testData);
+
+      // Test protocol
+      checks.protocol = this.protocol.version === '2.0.0' && this.protocol.capabilities.length > 0;
+    } catch (error) {
+      console.error('MCP integration health check failed:', error);
+    }
+
+    const passedChecks = Object.values(checks).filter(Boolean).length;
+    const totalChecks = Object.keys(checks).length;
+    const status =
+      passedChecks === totalChecks
+        ? 'healthy'
+        : passedChecks > totalChecks / 2
+          ? 'degraded'
+          : 'unhealthy';
+
+    return {
+      status,
+      checks,
+      stats: this.getStats(),
+    };
   }
 }
 

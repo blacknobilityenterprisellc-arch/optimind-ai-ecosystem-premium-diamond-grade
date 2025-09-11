@@ -1,1 +1,110 @@
-import { NextRequest, NextResponse } from 'next/server';\n\n// Simplified OpenAPI Specification for OptiMind AI Ecosystem\nconst openApiSpec = {\n  openapi: '3.0.0',\n  info: {\n    title: 'OptiMind AI Ecosystem API',\n    version: '1.0.0',\n    description: 'Enterprise-grade AI ecosystem with 45+ AI models and comprehensive services',\n    contact: {\n      name: 'OptiMind AI Ecosystem Team',\n      email: 'support@optimind.ai',\n    },\n  },\n  servers: [\n    {\n      url: 'http://localhost:3000',\n      description: 'Development server',\n    },\n  ],\n  paths: {\n    '/api/health': {\n      get: {\n        summary: 'System Health Check',\n        description: 'Get comprehensive system health status and metrics',\n        tags: ['System'],\n        responses: {\n          '200': {\n            description: 'System health status',\n            content: {\n              'application/json': {\n                schema: {\n                  type: 'object',\n                  properties: {\n                    status: { type: 'string', example: 'healthy' },\n                    timestamp: { type: 'string' },\n                    uptime: { type: 'string', example: '99.9%' },\n                    responseTime: { type: 'number', example: 98 },\n                  },\n                },\n              },\n            },\n          },\n        },\n      },\n    },\n    '/api/users': {\n      get: {\n        summary: 'Get Users',\n        description: 'Retrieve a list of all users with pagination',\n        tags: ['Users'],\n        responses: {\n          '200': {\n            description: 'List of users',\n          },\n        },\n      },\n    },\n    '/api/glm-orchestrator': {\n      get: {\n        summary: 'GLM Orchestrator Status',\n        description: 'Get GLM-4.5 orchestrator status and configuration',\n        tags: ['AI Orchestrator'],\n        responses: {\n          '200': {\n            description: 'GLM orchestrator status',\n          },\n        },\n      },\n    },\n  },\n  tags: [\n    {\n      name: 'System',\n      description: 'System health and monitoring endpoints',\n    },\n    {\n      name: 'Users',\n      description: 'User management endpoints',\n    },\n    {\n      name: 'AI Orchestrator',\n      description: 'AI model orchestration and management',\n    },\n  ],\n};\n\nexport async function GET(request: NextRequest) {\n  try {\n    // Add CORS headers\n    const corsHeaders = {\n      'Access-Control-Allow-Origin': '*',\n      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',\n      'Access-Control-Allow-Headers': 'Content-Type, Authorization',\n    };\n\n    // Handle preflight requests\n    if (request.method === 'OPTIONS') {\n      return new NextResponse(null, { status: 200, headers: corsHeaders });\n    }\n\n    return NextResponse.json(openApiSpec, { headers: corsHeaders });\n  } catch (error) {\n    console.error('Error generating OpenAPI spec:', error);\n    return NextResponse.json(\n      { error: 'Failed to generate OpenAPI specification' },\n      { status: 500 }\n    );\n  }\n}
+import { NextRequest, NextResponse } from 'next/server';
+
+// Simplified OpenAPI Specification for OptiMind AI Ecosystem
+const openApiSpec = {
+  openapi: '3.0.0',
+  info: {
+    title: 'OptiMind AI Ecosystem API',
+    version: '1.0.0',
+    description: 'Enterprise-grade AI ecosystem with 45+ AI models and comprehensive services',
+    contact: {
+      name: 'OptiMind AI Ecosystem Team',
+      email: 'support@optimind.ai',
+    },
+  },
+  servers: [
+    {
+      url: 'http://localhost:3000',
+      description: 'Development server',
+    },
+  ],
+  paths: {
+    '/api/health': {
+      get: {
+        summary: 'System Health Check',
+        description: 'Get comprehensive system health status and metrics',
+        tags: ['System'],
+        responses: {
+          '200': {
+            description: 'System health status',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    status: { type: 'string', example: 'healthy' },
+                    timestamp: { type: 'string' },
+                    uptime: { type: 'string', example: '99.9%' },
+                    responseTime: { type: 'number', example: 98 },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/users': {
+      get: {
+        summary: 'Get Users',
+        description: 'Retrieve a list of all users with pagination',
+        tags: ['Users'],
+        responses: {
+          '200': {
+            description: 'List of users',
+          },
+        },
+      },
+    },
+    '/api/glm-orchestrator': {
+      get: {
+        summary: 'GLM Orchestrator Status',
+        description: 'Get GLM-4.5 orchestrator status and configuration',
+        tags: ['AI Orchestrator'],
+        responses: {
+          '200': {
+            description: 'GLM orchestrator status',
+          },
+        },
+      },
+    },
+  },
+  tags: [
+    {
+      name: 'System',
+      description: 'System health and monitoring endpoints',
+    },
+    {
+      name: 'Users',
+      description: 'User management endpoints',
+    },
+    {
+      name: 'AI Orchestrator',
+      description: 'AI model orchestration and management',
+    },
+  ],
+};
+
+export async function GET(request: NextRequest) {
+  try {
+    // Add CORS headers
+    const corsHeaders = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+
+    // Handle preflight requests
+    if (request.method === 'OPTIONS') {
+      return new NextResponse(null, { status: 200, headers: corsHeaders });
+    }
+
+    return NextResponse.json(openApiSpec, { headers: corsHeaders });
+  } catch (error) {
+    console.error('Error generating OpenAPI spec:', error);
+    return NextResponse.json(
+      { error: 'Failed to generate OpenAPI specification' },
+      { status: 500 }
+    );
+  }
+}

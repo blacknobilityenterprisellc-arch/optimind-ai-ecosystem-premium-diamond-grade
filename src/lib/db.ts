@@ -239,7 +239,9 @@ class EnhancedDatabase {
       timeout?: number;
     } = {}
   ): Promise<T> {
-    const { retries = this.config.retryAttempts, timeout = this.config.queryTimeout } = Promise.race([
+    const { retries = this.config.retryAttempts, timeout = this.config.queryTimeout } = options;
+    
+    return Promise.race([
       query(),
       new Promise<never>((_, reject) => 
         setTimeout(() => reject(new Error('Query timeout')), timeout)
@@ -289,6 +291,45 @@ class EnhancedDatabase {
   // Get Prisma client for direct usage
   getClient(): PrismaClient {
     return this.client;
+  }
+
+  // Add missing Prisma methods for compatibility
+  get user() {
+    return this.client.user;
+  }
+
+  get apiKey() {
+    return this.client.apiKey;
+  }
+
+  get developerAccessKey() {
+    return this.client.developerAccessKey;
+  }
+
+  // Add raw query methods
+  async $queryRaw(query: string, ...params: any[]) {
+    return this.client.$queryRaw(query, ...params);
+  }
+
+  async $queryRawUnsafe(query: string, ...params: any[]) {
+    return this.client.$queryRawUnsafe(query, ...params);
+  }
+
+  async $executeRaw(query: string, ...params: any[]) {
+    return this.client.$executeRaw(query, ...params);
+  }
+
+  async $executeRawUnsafe(query: string, ...params: any[]) {
+    return this.client.$executeRawUnsafe(query, ...params);
+  }
+
+  async $transaction(callback: (tx: any) => Promise<any>) {
+    return this.client.$transaction(callback);
+  }
+
+  // Add disconnect method
+  async $disconnect() {
+    return this.client.$disconnect();
   }
 
   // Check if initialized

@@ -414,12 +414,4 @@ export const isApplicationError = (error: any): error is ApplicationError => {
   return error instanceof ApplicationError;
 };
 
-// Export all error handling utilities
-export {
-  ErrorHandler,
-  ConsoleErrorLogger,
-  MockErrorMonitor,
-  globalErrorHandler,
-  withErrorHandling,
-  withRetry,
-};
+// Note: All classes and functions are already exported individually above
