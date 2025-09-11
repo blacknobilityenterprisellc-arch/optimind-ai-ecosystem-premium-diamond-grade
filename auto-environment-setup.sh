@@ -59,7 +59,7 @@ PORT="3000"
 ZAI_API_KEY="1dc8da695f1846c5a76483eb2252023d.pYnbmJbwCWPpNHvY"
 
 # Security Configuration
-JWT_SECRET="optimind-ai-ecosystem-premium-diamond-grade-$(date +%s)"
+JWT_SECRET="optimind-ai-ecosystem-$(date +%s)"
 
 # Optional: OpenRouter Configuration
 OPENROUTER_API_KEY=""
