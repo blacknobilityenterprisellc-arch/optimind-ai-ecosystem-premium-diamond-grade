@@ -2317,6 +2317,232 @@ enum DeveloperEventType {
   QUOTA_EXCEEDED
 }
 
+// Enhanced AI Service Management Models
+model AIServiceConfig {
+  id              String              @id @default(cuid())
+  tenantId        String
+  serviceName     String              @unique
+  serviceType     AIServiceType
+  configuration   Json                // Service-specific configuration
+  apiKeys         Json?               // API keys and credentials
+  endpoints       Json                // Available endpoints
+  rateLimits      Json?               // Rate limiting configuration
+  costStructure   Json?               // Cost per usage structure
+  isActive        Boolean             @default(true)
+  healthStatus    ServiceHealth       @default(HEALTHY)
+  lastHealthCheck DateTime?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  requestLogs     AIRequestLog[]
+  
+  @@unique([tenantId, serviceName])
+  @@index([serviceType])
+  @@index([isActive])
+  @@index([healthStatus])
+  @@map("ai_service_configs")
+}
+
+model AIRequestLog {
+  id              String              @id @default(cuid())
+  tenantId        String
+  serviceConfigId String
+  userId          String?
+  requestId       String              @unique
+  endpoint        String
+  method          String
+  input           Json?
+  output          Json?
+  tokensUsed      Int?
+  processingTime  Int?
+  cost            Float?
+  status          RequestStatus       @default(COMPLETED)
+  errorMessage    String?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  
+  // Relations
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  serviceConfig   AIServiceConfig     @relation(fields: [serviceConfigId], references: [id], onDelete: Cascade)
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([tenantId])
+  @@index([serviceConfigId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("ai_request_logs")
+}
+
+model FileStorage {
+  id              String              @id @default(cuid())
+  tenantId        String
+  userId          String?
+  filename        String
+  originalName    String
+  filePath        String
+  fileSize        Int
+  mimeType        String
+  storageType     StorageType         @default(LOCAL)
+  bucketName      String?
+  region          String?
+  checksum        String?
+  encryptionKey   String?
+  accessLevel     AccessLevel         @default(PRIVATE)
+  downloadCount   Int                 @default(0)
+  isDeleted       Boolean             @default(false)
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  // Relations
+  tenant          Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([tenantId])
+  @@index([userId])
+  @@index([storageType])
+  @@index([isDeleted])
+  @@index([createdAt])
+  @@map("file_storage")
+}
+
+// Enhanced Analytics Models
+model SystemMetrics {
+  id              String              @id @default(cuid())
+  metricName      String
+  metricValue     Float
+  metricType      MetricType          @default(GAUGE)
+  category        MetricCategory      @default(SYSTEM)
+  tags            Json?               // Key-value tags for filtering
+  timestamp       DateTime            @default(now())
+  
+  @@index([metricName])
+  @@index([metricType])
+  @@index([category])
+  @@index([timestamp])
+  @@map("system_metrics")
+}
+
+model PerformanceLog {
+  id              String              @id @default(cuid())
+  endpoint        String
+  method          String
+  responseTime    Int                 // Response time in milliseconds
+  statusCode      Int
+  userId          String?
+  ipAddress       String?
+  userAgent       String?
+  errorDetails    Json?
+  metadata        Json?
+  timestamp       DateTime            @default(now())
+  
+  @@index([endpoint])
+  @@index([method])
+  @@index([statusCode])
+  @@index([responseTime])
+  @@index([timestamp])
+  @@map("performance_logs")
+}
+
+// Enhanced Security Models
+model SecurityAlert {
+  id              String              @id @default(cuid())
+  alertType       AlertType           @default(SUSPICIOUS_ACTIVITY)
+  severity        AlertSeverity       @default(MEDIUM)
+  title           String
+  description     String
+  affectedUsers   Json?               // Array of affected user IDs
+  affectedSystems Json?               // Array of affected system components
+  mitigationSteps Json?               // Recommended mitigation steps
+  status          AlertStatus         @default(OPEN)
+  assignedTo      String?             // User ID assigned to handle
+  resolvedAt      DateTime?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@index([alertType])
+  @@index([severity])
+  @@index([status])
+  @@index([createdAt])
+  @@map("security_alerts")
+}
+
+model AuditTrail {
+  id              String              @id @default(cuid())
+  userId          String?
+  action          String
+  resourceType    String
+  resourceId      String?
+  oldValues       Json?
+  newValues       Json?
+  ipAddress       String?
+  userAgent       String?
+  sessionId       String?
+  riskLevel       RiskLevel           @default(LOW)
+  metadata        Json?
+  timestamp       DateTime            @default(now())
+  
+  @@index([userId])
+  @@index([action])
+  @@index([resourceType])
+  @@index([riskLevel])
+  @@index([timestamp])
+  @@map("audit_trail")
+}
+
+// Enhanced Integration Models
+model ThirdPartyIntegration {
+  id              String              @id @default(cuid())
+  tenantId        String
+  name            String
+  type            IntegrationType
+  version         String?
+  configuration   Json                // Integration configuration
+  credentials     Json?               // Encrypted credentials
+  status          IntegrationStatus   @default(DISCONNECTED)
+  lastSyncAt      DateTime?
+  syncFrequency   String?             // Cron expression for sync frequency
+  webhooks        Json?               // Webhook configurations
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@unique([tenantId, name])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+  @@map("third_party_integrations")
+}
+
+model IntegrationLog {
+  id              String              @id @default(cuid())
+  integrationId   String
+  action          String
+  direction       LogDirection        @default(OUTBOUND)
+  request         Json?
+  response        Json?
+  status          LogStatus           @default(SUCCESS)
+  errorMessage    String?
+  processingTime  Int?
+  metadata        Json?
+  createdAt       DateTime            @default(now())
+  
+  // Relations
+  integration     ThirdPartyIntegration @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  
+  @@index([integrationId])
+  @@index([action])
+  @@index([direction])
+  @@index([status])
+  @@index([createdAt])
+  @@map("integration_logs")
+}
+
 // Credit Transaction Enums
 enum CreditTransactionType {
   CREDIT_PURCHASE
@@ -2348,4 +2574,132 @@ enum ContentGenerationStatus {
   FAILED
   CANCELLED
   TIMEOUT
+}
+
+// Enhanced AI Service Enums
+enum AIServiceType {
+  CHAT_COMPLETION
+  IMAGE_GENERATION
+  TEXT_GENERATION
+  CODE_GENERATION
+  DATA_ANALYSIS
+  TRANSLATION
+  SPEECH_TO_TEXT
+  TEXT_TO_SPEECH
+  DOCUMENT_PROCESSING
+  MULTIMODAL_ANALYSIS
+}
+
+enum ServiceHealth {
+  HEALTHY
+  DEGRADED
+  UNHEALTHY
+  MAINTENANCE
+}
+
+enum RequestStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  TIMEOUT
+  RATE_LIMITED
+}
+
+enum StorageType {
+  LOCAL
+  S3
+  AZURE_BLOB
+  GOOGLE_CLOUD
+  MINIO
+}
+
+enum AccessLevel {
+  PUBLIC
+  PRIVATE
+  RESTRICTED
+  CONFIDENTIAL
+}
+
+// Enhanced Analytics Enums
+enum MetricType {
+  GAUGE
+  COUNTER
+  HISTOGRAM
+  SUMMARY
+}
+
+enum MetricCategory {
+  SYSTEM
+  APPLICATION
+  DATABASE
+  NETWORK
+  SECURITY
+  BUSINESS
+}
+
+// Enhanced Security Enums
+enum AlertType {
+  SUSPICIOUS_ACTIVITY
+  BRUTE_FORCE
+  DATA_BREACH
+  MALWARE_DETECTED
+  PHISHING_ATTEMPT
+  UNAUTHORIZED_ACCESS
+  SYSTEM_ANOMALY
+  COMPLIANCE_VIOLATION
+}
+
+enum AlertSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AlertStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  DISMISSED
+  ESCALATED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Enhanced Integration Enums
+enum IntegrationType {
+  WEBHOOK
+  API
+  DATABASE
+  FILE_TRANSFER
+  MESSAGE_QUEUE
+  CLOUD_SERVICE
+  SAAS_APPLICATION
+}
+
+enum IntegrationStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+  MAINTENANCE
+}
+
+enum LogDirection {
+  INBOUND
+  OUTBOUND
+  BIDIRECTIONAL
+}
+
+enum LogStatus {
+  SUCCESS
+  FAILURE
+  TIMEOUT
+  RETRY
 }
