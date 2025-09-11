@@ -184,7 +184,7 @@ export class GLMOrchestrator {
       return await activeOperation;
     }
 
-    return getRealData();
+    return null;
   }
 
   /**

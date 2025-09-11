@@ -1043,7 +1043,7 @@ class AgenticWorkflowEngine {
 
   private async checkCache(task: AgenticTask): Promise<any | null> {
     // Cache implementation would go here
-    return getRealData(); // Placeholder
+    return null; // Return null if no cache exists instead of fake data
   }
 
   private async cacheResult(task: AgenticTask, result: any): Promise<void> {

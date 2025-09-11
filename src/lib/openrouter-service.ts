@@ -407,7 +407,17 @@ class OpenRouterService {
       return data.data || [];
     } catch (error) {
       console.error('Failed to fetch models from Open Router API:', error);
-      return getRealArray();
+      // Return cached models as fallback instead of fake data
+      return OPENROUTER_MODELS.map(model => ({
+        id: model.id,
+        name: model.name,
+        created: Date.now(),
+        owned_by: model.provider.toLowerCase(),
+        permission: [],
+        root: model.id,
+        parent: null,
+        context_window: model.maxTokens
+      }));
     }
   }
 
@@ -430,40 +440,6 @@ class OpenRouterService {
 
 // Export singleton instance
 export const openRouterService = new OpenRouterService();
-
-// Real data retrieval function
-function getRealData() {
-  return {
-    id: generateId(),
-    timestamp: new Date().toISOString(),
-    status: 'active',
-    data: processRealData()
-  };
-}
-
-// Real array retrieval function
-function getRealArray() {
-  return [
-    getRealData(),
-    getRealData(),
-    getRealData()
-  ];
-}
-
-// ID generation function
-function generateId() {
-  return Math.random().toString(36).substring(2, 15);
-}
-
-// Real data processing function
-function processRealData() {
-  return {
-    value: Math.floor(Math.random() * 1000),
-    quality: 'high',
-    processed: true,
-    timestamp: Date.now()
-  };
-}
 
 // Enhanced error class with better error handling
 class EnhancedError extends Error {
