@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-09-11T02:16:37.489Z",
+  "timestamp": "2025-09-11T07:03:33.365Z",
   "current": {
-    "timestamp": "2025-09-11T02:16:18.526Z",
+    "timestamp": "2025-09-11T07:03:10.563Z",
     "score": 0,
     "errors": 999,
     "warnings": 999,
@@ -10,7 +10,7 @@
     "coverage": 0
   },
   "previous": {
-    "timestamp": "2025-09-10T07:56:54.264Z",
+    "timestamp": "2025-09-11T02:16:18.526Z",
     "score": 0,
     "errors": 999,
     "warnings": 999,
@@ -151,11 +151,35 @@
       "message": "999 security vulnerabilities detected",
       "timestamp": "2025-09-11T02:16:18.526Z",
       "resolved": false
+    },
+    {
+      "id": "low_score_1757574213365",
+      "type": "threshold",
+      "severity": "medium",
+      "message": "Quality score 0.0 below minimum threshold 80",
+      "timestamp": "2025-09-11T07:03:10.563Z",
+      "resolved": false
+    },
+    {
+      "id": "high_errors_1757574213365",
+      "type": "threshold",
+      "severity": "high",
+      "message": "Error count 999 exceeds maximum threshold 50",
+      "timestamp": "2025-09-11T07:03:10.563Z",
+      "resolved": false
+    },
+    {
+      "id": "security_issues_1757574213365",
+      "type": "security",
+      "severity": "critical",
+      "message": "999 security vulnerabilities detected",
+      "timestamp": "2025-09-11T07:03:10.563Z",
+      "resolved": false
     }
   ],
   "summary": {
-    "totalMeasurements": 7,
-    "alertsThisWeek": 15,
+    "totalMeasurements": 8,
+    "alertsThisWeek": 18,
     "averageScore": 0,
     "trendDirection": "declining"
   }
