@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ValidationSchemas, validateInput } from '@/lib/input-validation';
-import ZAI from 'z-ai-web-dev-sdk';
+import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,9 +15,8 @@ export async function POST(request: NextRequest) {
       maxTokens = 1000,
     } = validatedData;
 
-    const zai = await ZAI.create();
-
-    const completion = await zai.chat.completions.create({
+    // Use the premium ZAI wrapper for better error handling and fallback
+    const completion = await premiumZAIWrapper.createChatCompletion({
       messages: messages.map((msg: { role: string; content: string }) => ({
         role: msg.role,
         content: msg.content,
@@ -40,9 +39,21 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Chat API error:', error);
+    
+    if (error instanceof Error) {
+      return NextResponse.json(
+        {
+          error: error.message,
+          code: 'CHAT_ERROR',
+        },
+        { status: 500 }
+      );
+    }
+    
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Internal server error',
+        error: 'Internal server error',
+        code: 'UNKNOWN_ERROR',
       },
       { status: 500 }
     );
