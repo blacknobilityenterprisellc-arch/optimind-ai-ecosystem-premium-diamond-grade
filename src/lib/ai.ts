@@ -301,4 +301,4 @@ export class AIService {
 }
 
 // Export enhanced AI service instance
-export const aiService = new AIService();,
+export const aiService = new AIService();
