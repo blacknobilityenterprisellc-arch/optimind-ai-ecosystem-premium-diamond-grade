@@ -1,7 +1,7 @@
 'use client';
 
-import DiamondGradeInterface from '@/components/premium-ui/DiamondGradeInterface';
+import UniversalMCPEcosystemDashboard from '@/components/enhanced-mcp-dashboard/UniversalMCPEcosystemDashboard';
 
 export default function Home(): JSX.Element {
-  return <DiamondGradeInterface />;
+  return <UniversalMCPEcosystemDashboard />;
 }
