@@ -6,7 +6,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 import NavigationHeader from '@/components/layout/NavigationHeader';
-import SidebarNavigation from '@/components/layout/SidebarNavigation';
+import OptiMindNavigation from '@/components/navigation/OptiMindNavigation';
 import ErrorBoundary from '@/components/ui/error-boundary';
 
 const geistSans = Geist({
@@ -61,7 +61,7 @@ export default function RootLayout({
         <ThemeProvider defaultTheme="dark">
           <ErrorBoundary>
             <div className="flex h-screen">
-              <SidebarNavigation />
+              <OptiMindNavigation />
               <div className="flex-1 flex flex-col overflow-hidden">
                 <NavigationHeader />
                 <main className="flex-1 overflow-y-auto premium-scrollbar">{children}</main>
