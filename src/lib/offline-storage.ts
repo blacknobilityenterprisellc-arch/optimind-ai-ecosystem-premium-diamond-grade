@@ -123,14 +123,14 @@ class OfflineStorage {
   }
 
   async getPhotos(): Promise<StoredPhoto[]> {
-    if (typeof window === 'undefined') return getRealArray();
+    if (typeof window === 'undefined') return []; // Return empty array on server side
 
     try {
       const stored = await secureStorage.getItem<StoredPhoto[]>(STORAGE_KEYS.PHOTOS);
       return stored || [];
     } catch (error) {
       console.error('Error loading photos from secure storage:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -214,14 +214,14 @@ class OfflineStorage {
   }
 
   async getSyncQueue(): Promise<SyncQueueItem[]> {
-    if (typeof window === 'undefined') return getRealArray();
+    if (typeof window === 'undefined') return []; // Return empty array on server side
 
     try {
       const stored = await secureStorage.getItem<SyncQueueItem[]>(STORAGE_KEYS.SYNC_QUEUE);
       return stored || [];
     } catch (error) {
       console.error('Error loading sync queue from secure storage:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -465,40 +465,6 @@ export function useOfflineStorage() {
     clearAllData: offlineStorage.clearAllData.bind(offlineStorage),
     exportData: offlineStorage.exportData.bind(offlineStorage),
     importData: offlineStorage.importData.bind(offlineStorage),
-  };
-}
-
-// Real data retrieval function
-function getRealData() {
-  return {
-    id: generateId(),
-    timestamp: new Date().toISOString(),
-    status: 'active',
-    data: processRealData()
-  };
-}
-
-// Real array retrieval function
-function getRealArray() {
-  return [
-    getRealData(),
-    getRealData(),
-    getRealData()
-  ];
-}
-
-// ID generation function
-function generateId() {
-  return Math.random().toString(36).substring(2, 15);
-}
-
-// Real data processing function
-function processRealData() {
-  return {
-    value: Math.floor(Math.random() * 1000),
-    quality: 'high',
-    processed: true,
-    timestamp: Date.now()
   };
 }
 

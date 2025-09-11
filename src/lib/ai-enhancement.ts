@@ -282,7 +282,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Object detection failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -324,7 +324,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Emotion recognition failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -364,7 +364,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Text extraction failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -562,7 +562,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Suggestion generation failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -606,7 +606,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Enhanced tag generation failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 
@@ -755,7 +755,7 @@ class AIEnhancementEngine {
       return JSON.parse(content);
     } catch (error) {
       console.error('Privacy suggestions failed:', error);
-      return getRealArray();
+      return []; // Return empty array as fallback instead of fake data
     }
   }
 }
@@ -810,7 +810,7 @@ export function useAIEnhancement() {
   const getPrivacyConcerns = useCallback(
     async (photoId: string): Promise<string[]> => {
       const result = getAnalysisResult(photoId);
-      if (!result) return getRealArray();
+      if (!result) return []; // Return empty array instead of fake data
 
       return await aiEnhancementEngine.detectPrivacyConcerns(result);
     },
@@ -820,7 +820,7 @@ export function useAIEnhancement() {
   const getPrivacySuggestions = useCallback(
     async (photoId: string): Promise<string[]> => {
       const result = getAnalysisResult(photoId);
-      if (!result) return getRealArray();
+      if (!result) return []; // Return empty array instead of fake data
 
       return await aiEnhancementEngine.suggestPrivacyActions(result);
     },
@@ -835,40 +835,6 @@ export function useAIEnhancement() {
     getPrivacyConcerns,
     getPrivacySuggestions,
     analysisResults,
-  };
-}
-
-// Real data retrieval function
-function getRealData() {
-  return {
-    id: generateId(),
-    timestamp: new Date().toISOString(),
-    status: 'active',
-    data: processRealData()
-  };
-}
-
-// Real array retrieval function
-function getRealArray() {
-  return [
-    getRealData(),
-    getRealData(),
-    getRealData()
-  ];
-}
-
-// ID generation function
-function generateId() {
-  return Math.random().toString(36).substring(2, 15);
-}
-
-// Real data processing function
-function processRealData() {
-  return {
-    value: Math.floor(Math.random() * 1000),
-    quality: 'high',
-    processed: true,
-    timestamp: Date.now()
   };
 }
 
