@@ -21,7 +21,7 @@ sleep 2
 
 # Start the nano server on port 3007
 echo "🚀 Starting OptiMind AI Ecosystem on port 3007..."
-cd /home/z/my-project
+cd /home/z/my-project/optimind-ai-ecosystem-premium-diamond-grade
 npx tsx server-nano.ts &
 
 # Wait a moment for server to start
