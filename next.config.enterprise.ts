@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Ultra-minimal configuration for fastest startup
   experimental: {
-    // Disable all experimental features for speed
+    // Disable experimental features for speed
     optimizePackageImports: false,
     serverComponentsExternalPackages: [],
   },
@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  
+  // Remove complex configurations
+  // env: {},
+  // headers: async () => [],
+  // async redirects() { return []; },
 };
 
 export default nextConfig;
