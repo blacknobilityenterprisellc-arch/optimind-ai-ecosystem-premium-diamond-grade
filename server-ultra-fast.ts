@@ -1,113 +1,139 @@
-// server-ultra-fast.ts - Ultra-Fast Enterprise Server Startup
+// server-ultra-fast.ts - Lightning-Fast Next.js Server with OptiMind AI Optimization
 import { createServer } from 'http';
-import { Server } from 'socket.io';
 import next from 'next';
+import { performance } from 'perf_hooks';
 
 const dev = process.env.NODE_ENV !== 'production';
-const port = parseInt(process.env.PORT || '3002', 10);
+const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || '0.0.0.0';
 
-// Ultra-fast server configuration - minimal overhead
+// Ultra-optimized configuration for lightning-fast startup
 const serverConfig = {
   dev,
   dir: process.cwd(),
   hostname,
   port,
-  // Critical speed optimizations
   quiet: true,
-  turbopack: true, // Always enabled for speed
-  // Disable heavy features during startup
+  turbopack: true,
   experimental: {
-    // No incremental cache in dev for speed
-    incrementalCacheHandlerPath: undefined,
+    serverComponentsExternalPackages: [],
   },
-  // Reduce memory usage
-  maxMemoryCacheSize: 5, // 5MB instead of default 50MB
-  // Faster compilation
-  swcMinify: true,
-  // Disable unused features
-  distDir: '.next',
-  // Optimize for development speed
-  compress: false, // Disable compression in dev for speed
-  poweredByHeader: false,
+  webpack: (config: any) => {
+    config.optimization = {
+      ...config.optimization,
+      minimize: false,
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+          },
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 5,
+          },
+        },
+      },
+    };
+    return config;
+  },
 };
 
-// Ultra-fast server setup
-async function createUltraFastServer() {
-  const startTime = Date.now();
+// Lightning-fast server setup with AI optimization
+async function startServer() {
+  const startTime = performance.now();
+  console.log('🚀 Starting OptiMind AI Ecosystem Ultra-Fast Server...');
   
   try {
-    console.log('🚀 Starting OptiMind AI Ecosystem...');
+    // Initialize Next.js with optimized settings
+    const app = next(serverConfig);
     
-    // Create Next.js app with ultra-optimized config
-    const nextApp = next(serverConfig);
-    const handler = nextApp.getRequestHandler();
-
-    // Prepare app with timeout protection
-    const preparePromise = Promise.race([
-      nextApp.prepare(),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Preparation timeout')), 10000)
-      )
-    ]);
-    
-    // Create HTTP server immediately
-    const httpServer = createServer(handler);
-    
-    // Initialize Socket.IO with minimal settings
-    const io = new Server(httpServer, {
-      cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-      },
-      transports: ['websocket'], // WebSocket only for speed
-      pingTimeout: 60000,
-      pingInterval: 30000,
+    // Prepare with timeout to prevent hanging
+    const preparePromise = app.prepare();
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Server preparation timeout')), 30000);
     });
-
-    // Wait for app preparation
-    await preparePromise;
     
-    // Ultra-lightweight socket setup
-    io.on('connection', (socket) => {
-      socket.emit('connected', { status: 'ready', timestamp: Date.now() });
+    await Promise.race([preparePromise, timeoutPromise]);
+    
+    const handler = app.getRequestHandler();
+    
+    // Create optimized HTTP server
+    const server = createServer(async (req, res) => {
+      const requestStart = performance.now();
       
-      socket.on('disconnect', () => {
-        // Minimal cleanup
+      // Add performance headers
+      res.setHeader('X-Powered-By', 'OptiMind AI Ecosystem');
+      res.setHeader('X-Response-Time', `${performance.now() - requestStart}ms`);
+      
+      // Handle request with error boundary
+      try {
+        await handler(req, res);
+      } catch (error) {
+        console.error('Request error:', error);
+        if (!res.headersSent) {
+          res.statusCode = 500;
+          res.end('Internal Server Error');
+        }
+      }
+    });
+    
+    // Optimize server settings
+    server.timeout = 120000;
+    server.keepAliveTimeout = 65000;
+    server.headersTimeout = 66000;
+    
+    // Start server with performance monitoring
+    server.listen(port, hostname, () => {
+      const totalTime = performance.now() - startTime;
+      console.log(`✅ OptiMind AI Ecosystem Ready in ${totalTime.toFixed(2)}ms`);
+      console.log(`📍 Server: http://${hostname}:${port}`);
+      console.log(`🔧 Mode: ${dev ? 'Development' : 'Production'}`);
+      console.log(`⚡ Turbopack: ${serverConfig.turbopack ? 'Enabled' : 'Disabled'}`);
+      console.log(`🎯 Performance: Ultra-Fast Mode Active`);
+    });
+    
+    // Handle server errors
+    server.on('error', (error: any) => {
+      if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Port ${port} is already in use`);
+        process.exit(1);
+      } else {
+        console.error('❌ Server error:', error);
+        process.exit(1);
+      }
+    });
+    
+    // Graceful shutdown
+    process.on('SIGTERM', () => {
+      console.log('🔄 Graceful shutdown initiated...');
+      server.close(() => {
+        console.log('✅ Server stopped gracefully');
+        process.exit(0);
       });
     });
-
-    // Start server immediately
-    httpServer.listen(port, hostname, () => {
-      const totalTime = Date.now() - startTime;
-      console.log(`✅ OptiMind AI Ecosystem Ready!`);
-      console.log(`🌐 Server: http://${hostname}:${port}`);
-      console.log(`⚡ Startup: ${totalTime}ms`);
-      console.log(`🔌 Socket.IO: Active`);
-      console.log(`💎 Premium Mode: Enabled`);
+    
+    process.on('SIGINT', () => {
+      console.log('🔄 Graceful shutdown initiated...');
+      server.close(() => {
+        console.log('✅ Server stopped gracefully');
+        process.exit(0);
+      });
     });
-
-    // Minimal error handling
-    const gracefulShutdown = (signal: string) => {
-      console.log(`🛑 Received ${signal}, shutting down...`);
-      httpServer.close(() => process.exit(0));
-    };
-
-    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
-    process.on('uncaughtException', (error) => {
-      console.error('💥 Uncaught Exception:', error.message);
-    });
-
+    
   } catch (error) {
     console.error('❌ Server startup failed:', error);
     process.exit(1);
   }
 }
 
-// Start server immediately without any delays
-createUltraFastServer().catch((error) => {
-  console.error('💥 Critical startup failure:', error);
+// Start immediately with error handling
+startServer().catch((error) => {
+  console.error('❌ Fatal server error:', error);
   process.exit(1);
 });

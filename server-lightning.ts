@@ -1,4 +1,4 @@
-// server-instant.ts - Instant Startup Server with Radical Optimization
+// server-lightning.ts - Lightning-Fast Server with Radical Optimization
 import { createServer } from 'http';
 import next from 'next';
 
@@ -6,49 +6,51 @@ const dev = process.env.NODE_ENV !== 'production';
 const port = parseInt(process.env.PORT || '3000', 10);
 const hostname = process.env.HOSTNAME || '0.0.0.0';
 
-// Ultra-minimal configuration for instant startup
+console.log('⚡ Starting Lightning Server...');
+
+// Ultra-minimal configuration
 const serverConfig = {
   dev,
   dir: process.cwd(),
   hostname,
   port,
   quiet: true,
-  turbopack: false, // Disable turbopack for faster startup
 };
 
-console.log('🚀 Starting Instant Server...');
-
-// Create Next.js app with minimal setup
+// Create Next.js app
 const app = next(serverConfig);
 
-// Start server immediately without waiting for prepare
-const handler = app.getRequestHandler();
-
+// Create HTTP server immediately
 const server = createServer(async (req, res) => {
   try {
+    const handler = app.getRequestHandler();
     await handler(req, res);
   } catch (error) {
     console.error('Request error:', error);
-    res.statusCode = 500;
-    res.end('Internal Server Error');
+    if (!res.headersSent) {
+      res.statusCode = 500;
+      res.end('Internal Server Error');
+    }
   }
 });
 
+// Start server immediately
 server.listen(port, hostname, () => {
-  console.log(`✅ Server ready at http://${hostname}:${port}`);
+  console.log(`✅ Lightning Server Ready: http://${hostname}:${port}`);
 });
 
+// Prepare app in background without blocking
+app.prepare().catch((error) => {
+  console.error('❌ App preparation failed:', error);
+  process.exit(1);
+});
+
+// Handle server errors
 server.on('error', (error: any) => {
   if (error.code === 'EADDRINUSE') {
     console.error(`❌ Port ${port} is already in use`);
   } else {
     console.error('❌ Server error:', error);
   }
-  process.exit(1);
-});
-
-// Prepare app in background
-app.prepare().catch((error) => {
-  console.error('❌ App preparation failed:', error);
   process.exit(1);
 });
