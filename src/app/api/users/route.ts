@@ -2,6 +2,7 @@ import { EnhancedError } from '@/lib/error-handler';
 import type { Request } from 'next/server';
 import { NextResponse } from 'next/server';
 import { withRateLimit, standardRateLimit } from '@/lib/api-rate-limit-middleware';
+import { db } from '@/lib/db';
 
 // Apply rate limiting to GET endpoint
 export const GET = withRateLimit(async (request: Request) => {
@@ -10,33 +11,22 @@ export const GET = withRateLimit(async (request: Request) => {
     const page = Number.parseInt(searchParams.get('page') || '1');
     const limit = Number.parseInt(searchParams.get('limit') || '10');
 
-    // Mock users data
-    const users = [
-      {
-        id: '1',
-        email: 'admin@optimind.ai',
-        name: 'Admin User',
-        role: 'ADMIN',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-      },
-      {
-        id: '2',
-        email: 'user@example.com',
-        name: 'Test User',
-        role: 'USER',
-        isActive: true,
-        createdAt: new Date().toISOString(),
-      },
-    ];
+    // Get real users from database
+    const users = await db.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const total = await db.user.count();
 
     return NextResponse.json({
       users,
       pagination: {
         page,
         limit,
-        total: users.length,
-        totalPages: Math.ceil(users.length / limit),
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     });
   } catch (error: unknown) {
@@ -51,14 +41,22 @@ export const POST = withRateLimit(async (request: Request) => {
     const body = await request.json();
     const { email, name, role } = body;
 
-    const newUser = {
-      id: Math.random().toString(36).slice(2, 11),
-      email,
-      name,
-      role: role || 'USER',
-      isActive: true,
-      createdAt: new Date().toISOString(),
-    };
+    // Check if user already exists
+    const existingUser = await db.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
+    }
+
+    const newUser = await db.user.create({
+      data: {
+        email,
+        name,
+        role: role || 'USER',
+      },
+    });
 
     return NextResponse.json(newUser);
   } catch (error: unknown) {
