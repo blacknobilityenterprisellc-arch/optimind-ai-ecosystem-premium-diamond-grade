@@ -20,6 +20,10 @@ export interface CollaborationMessage {
   responseTo?: string;
 }
 
+export interface QueuedMessage extends CollaborationMessage {
+  collaborationId: string;
+}
+
 export interface SharedKnowledge {
   id: string;
   agentId: string;
@@ -127,7 +131,7 @@ export interface CollaborationFrameworkConfig {
 export class AIAgentCollaborationFramework {
   private collaborations: Map<string, MultiAgentCollaboration> = new Map();
   private config: CollaborationFrameworkConfig;
-  private messageQueue: CollaborationMessage[] = [];
+  private messageQueue: QueuedMessage[] = [];
   private isInitialized = false;
   private processingInterval?: NodeJS.Timeout;
   private optimizationInterval?: NodeJS.Timeout;
@@ -209,7 +213,6 @@ export class AIAgentCollaborationFramework {
 
     // Send initial coordination message
     await this.sendMessage({
-      id: `msg-${Date.now()}`,
       fromAgentId: 'system',
       type: 'coordination',
       content: {
@@ -220,7 +223,6 @@ export class AIAgentCollaborationFramework {
         sharedContext: options.sharedContext,
       },
       priority: 'high',
-      timestamp: new Date(),
     }, collaborationId);
 
     return collaborationId;
@@ -523,7 +525,7 @@ export class AIAgentCollaborationFramework {
       const knowledge: SharedKnowledge = {
         id: `knowledge-${Date.now()}`,
         agentId: message.fromAgentId,
-        type: 'information',
+        type: 'insight',
         content: message.content,
         confidence: 0.8,
         relevance: 0.7,
@@ -562,7 +564,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Update collaboration metrics
    */
-  private updateCollaborationMetrics(collaboration: MultiAgentCollaboration): void> {
+  private updateCollaborationMetrics(collaboration: MultiAgentCollaboration): void {
     const { messages, participants, profiles } = collaboration;
     
     // Calculate communication quality
@@ -609,7 +611,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Detect emergent properties in collaboration
    */
-  private detectEmergentProperties(collaboration: MultiAgentCollaboration): void> {
+  private detectEmergentProperties(collaboration: MultiAgentCollaboration): void {
     const { metrics, participants, type } = collaboration;
     
     const emergentProperties: string[] = [];
@@ -642,7 +644,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Start performance optimization
    */
-  private startPerformanceOptimization(): void> {
+  private startPerformanceOptimization(): void {
     this.optimizationInterval = setInterval(() => {
       this.optimizeCollaborationPerformance();
     }, 30000); // Every 30 seconds
@@ -651,7 +653,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Optimize collaboration performance
    */
-  private optimizeCollaborationPerformance(): void> {
+  private optimizeCollaborationPerformance(): void {
     this.collaborations.forEach((collaboration, id) => {
       if (collaboration.status === 'active') {
         // Optimize based on metrics
@@ -671,7 +673,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Suggest communication optimization
    */
-  private suggestCommunicationOptimization(collaboration: MultiAgentCollaboration): void> {
+  private suggestCommunicationOptimization(collaboration: MultiAgentCollaboration): void {
     // Analyze communication patterns and suggest improvements
     const suggestions = [
       'Increase frequency of status updates',
@@ -686,7 +688,7 @@ export class AIAgentCollaborationFramework {
   /**
    * Suggest role optimization
    */
-  private suggestRoleOptimization(collaboration: MultiAgentCollaboration): void> {
+  private suggestRoleOptimization(collaboration: MultiAgentCollaboration): void {
     // Analyze current roles and suggest improvements
     const suggestions = [
       'Reassign leadership roles',
