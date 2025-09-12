@@ -3,12 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Enterprise Performance Optimization
   experimental: {
-    turbopack: true,
-    serverComponentsExternalPackages: [],
-  },
+      // AI-Optimized bundle settings
+      optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
+    },
   
   // Enterprise Build Optimization
-  swcMinify: true,
+  // swcMinify: true, // Disabled for compatibility
   compress: true,
   poweredByHeader: false,
   
