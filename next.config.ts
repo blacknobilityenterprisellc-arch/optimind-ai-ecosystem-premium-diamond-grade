@@ -2,14 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Ultra-minimal configuration for fastest startup
-  experimental: {
-    // Disable all experimental features for speed
-    optimizePackageImports: false,
-    serverComponentsExternalPackages: [],
-  },
   
   // Minimal build settings
-  swcMinify: false,
   compress: false,
   poweredByHeader: false,
   
