@@ -1,94 +1,28 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import {
-  History,
-  Sparkles,
-  Wand2,
-  Image as ImageIcon,
-  Download,
-  Share2,
-  RefreshCw,
-  Settings,
-  Crown,
-  CreditCard,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  Eye,
-  Layers,
-  Grid,
-  List,
-  Filter,
-  Sliders,
-  Brush,
-  Artwork,
-  Camera,
-  Palette,
-  FileText,
-  Users,
-  Upload,
-  Zap,
-  Star,
-  Heart,
-  RotateCcw,
-  Crop,
-  Adjustments,
-  Contrast,
-  Sun,
-  Moon,
-  Droplets,
-  Wind,
-  Shield,
-  Scissors,
-  Maximize,
-  Minimize,
-  Sun,
-  Contrast,
-  Palette,
-  Waves,
-  PencilSketch,
-  Noir,
-  PopArt,
-  ArtNouveau,
-  Baroque,
-  Renaissance,
-  Split,
-  Merge,
-  Clone,
-  Patch,
-  RedEye,
-  Blemish,
-  Wrinkle,
-  Scratch,
-  Dust,
-  Fade,
-  Crack,
-  Tear,
-  Stain,
-  Discoloration,
-  ColorCast,
-  Exposure,
-  WhiteBalance,
-  Focus,
-  MotionBlur,
-  Noisy,
-  Pixelated,
-  Compressed,
-  LowRes,
-  Damaged,
-  Aged,
-  Faded,
-  Yellowed,
-  Torn,
-  Creased,
-  Stained,
-  WaterDamaged,
-  FireDamaged,
-  InsectDamage,
-  LightDamage,
-  ChemicalDamage,
-} from 'lucide-react';
+import { Heart } from 'lucide-react';
+import { History } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
+import { Image as ImageIcon } from 'lucide-react';
+import { Download } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { Eye } from 'lucide-react';
+import { Grid } from 'lucide-react';
+import { List } from 'lucide-react';
+import { Palette } from 'lucide-react';
+import { FileText } from 'lucide-react';
+import { Users } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import { Brightness } from 'lucide-react';
+import { Grainy } from 'lucide-react';
+import { Moldy } from 'lucide-react';
+import { Vintage } from 'lucide-react';
+import { Sharpen } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
