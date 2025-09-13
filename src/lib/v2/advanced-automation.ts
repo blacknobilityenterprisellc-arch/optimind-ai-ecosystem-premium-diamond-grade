@@ -254,7 +254,7 @@ export class AdvancedAutomationV2 {
     if (applicableRules.length === 0) {
       return {
         status: 'no_rules_found',
-        issue: issue,
+        issue,
         applicableRules: 0,
       };
     }

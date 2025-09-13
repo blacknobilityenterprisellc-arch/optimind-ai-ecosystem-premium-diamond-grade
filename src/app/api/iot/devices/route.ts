@@ -101,7 +101,7 @@ export async function POST() {
       metadata: metadata || {
         manufacturer: 'Unknown',
         model: 'Unknown',
-        serialNumber: 'AUTO-' + Date.now(),
+        serialNumber: `AUTO-${  Date.now()}`,
         firmwareVersion: '1.0.0',
         hardwareVersion: '1.0.0',
         purchaseDate: new Date(),

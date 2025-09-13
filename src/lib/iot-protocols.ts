@@ -795,12 +795,12 @@ export class HTTPProtocolHandler extends EventEmitter implements ProtocolHandler
 
   async sendData(deviceId: string, data: any): Promise<boolean> {
     const clientInfo = this.clients.get(deviceId);
-    if (!clientInfo || !clientInfo.connected) {
+    if (!clientInfo?.connected) {
       throw new Error('HTTP client not connected');
     }
 
     try {
-      const response = await this.sendHTTPRequest(clientInfo.endpoint + '/data', 'POST', data);
+      const response = await this.sendHTTPRequest(`${clientInfo.endpoint  }/data`, 'POST', data);
       
       console.log(`📤 HTTP data sent: ${deviceId}`);
       return response.ok;
@@ -812,12 +812,12 @@ export class HTTPProtocolHandler extends EventEmitter implements ProtocolHandler
 
   async receiveData(deviceId: string): Promise<any> {
     const clientInfo = this.clients.get(deviceId);
-    if (!clientInfo || !clientInfo.connected) {
+    if (!clientInfo?.connected) {
       throw new Error('HTTP client not connected');
     }
 
     try {
-      const response = await this.sendHTTPRequest(clientInfo.endpoint + '/data', 'GET');
+      const response = await this.sendHTTPRequest(`${clientInfo.endpoint  }/data`, 'GET');
       return response.data;
     } catch (error) {
       console.error(`❌ Failed to receive HTTP data from ${deviceId}:`, error);

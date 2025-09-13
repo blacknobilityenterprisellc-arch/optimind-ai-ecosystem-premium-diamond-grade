@@ -894,7 +894,7 @@ class OptiMindDeviceManagementSystem {
       errors.push('Device category is required');
     }
     
-    if (!device.connectivity || !device.connectivity.protocol) {
+    if (!device.connectivity?.protocol) {
       errors.push('Connectivity protocol is required');
     }
     
@@ -911,7 +911,7 @@ class OptiMindDeviceManagementSystem {
     }
     
     // Validate metadata
-    if (!device.metadata || !device.metadata.manufacturer) {
+    if (!device.metadata?.manufacturer) {
       warnings.push('Device manufacturer not specified');
       recommendations.push('Add manufacturer information for better support');
     }

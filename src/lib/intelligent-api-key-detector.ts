@@ -181,7 +181,7 @@ export class IntelligentAPIKeyDetector {
             if (key.length >= keyConfig.minLength && !key.includes('your_')) {
               this.detectedKeys.set(keyConfig.provider, {
                 provider: keyConfig.provider,
-                key: key,
+                key,
                 source: 'file',
                 confidence: 0.8,
                 lastSeen: new Date()

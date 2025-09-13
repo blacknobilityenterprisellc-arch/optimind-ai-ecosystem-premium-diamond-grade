@@ -350,7 +350,7 @@ export class AIAgentCollaborationFramework {
     }
 
     const message = this.messageQueue.shift();
-    if (!message || !message.collaborationId) {
+    if (!message?.collaborationId) {
       return;
     }
 

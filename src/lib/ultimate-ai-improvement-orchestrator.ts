@@ -534,7 +534,7 @@ export class UltimateAIImprovementOrchestrator {
       // Generate results
       action.results = {
         improvement: Math.round(action.expectedImpact * 100),
-        executionTime: executionTime,
+        executionTime,
         success: true
       };
 

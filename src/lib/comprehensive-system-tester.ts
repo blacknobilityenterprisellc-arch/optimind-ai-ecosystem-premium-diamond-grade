@@ -597,7 +597,7 @@ export class ComprehensiveSystemTester {
         });
         
         const retrieved = await secureVault.getItem(itemId);
-        if (retrieved && retrieved.equals(testData)) {
+        if (retrieved?.equals(testData)) {
           details.push('✅ SecureVault operations successful');
           score += 33;
         } else {

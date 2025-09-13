@@ -228,7 +228,7 @@ export class AuthService {
       const session = await prisma.session.findFirst({
         where: {
           userId: user.id,
-          refreshToken: refreshToken,
+          refreshToken,
           status: 'active',
           expiresAt: { gt: new Date() }
         }
@@ -290,7 +290,7 @@ export class AuthService {
         await prisma.session.updateMany({
           where: {
             userId: decoded.userId,
-            refreshToken: refreshToken,
+            refreshToken,
             status: 'active'
           },
           data: {
@@ -361,7 +361,7 @@ export class AuthService {
         where: { id: userId }
       });
 
-      if (!user || !user.mfaSecret) {
+      if (!user?.mfaSecret) {
         return { success: false, error: 'MFA not set up' };
       }
 
@@ -492,7 +492,7 @@ export class AuthService {
         metadata: {
           apiKeyId: apiKeyRecord.id,
           name: apiKeyRecord.name,
-          permissions: permissions
+          permissions
         }
       });
 
@@ -522,7 +522,7 @@ export class AuthService {
       const session = await prisma.session.findFirst({
         where: {
           userId: user.id,
-          token: token,
+          token,
           status: 'active',
           expiresAt: { gt: new Date() }
         }

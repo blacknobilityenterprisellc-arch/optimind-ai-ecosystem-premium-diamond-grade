@@ -2,23 +2,23 @@
 // AI-Generated Security Monitor
 export class AISecurityMonitor {
   private suspiciousPatterns = [
-    /eval\(/i,
+    /eval(/i,
     /innerHTML/i,
-    /document\.write/i,
-    /setInterval\s*\(/i,
-    /setTimeout\s*\(/i
+    /document.write/i,
+    /setIntervals*(/i,
+    /setTimeouts*(/i
   ];
 
   private sqlInjectionPatterns = [
-    /(\s|^)(DROP|DELETE|UPDATE|INSERT)\s+/i,
-    /(\s|^)(UNION\s+SELECT)/i,
-    /(\s|^)(OR\s+1\s*=\s*1)/i
+    /(s|^)(DROP|DELETE|UPDATE|INSERT)s+/i,
+    /(s|^)(UNIONs+SELECT)/i,
+    /(s|^)(ORs+1s*=s*1)/i
   ];
 
   private xssPatterns = [
-    /<script[^>]*>.*?<\/script>/i,
+    /<script[^>]*>.*?</script>/i,
     /javascript:/i,
-    /on\w+\s*=/i
+    /onw+s*=/i
   ];
 
   scanForVulnerabilities(code: string): string[] {

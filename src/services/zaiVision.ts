@@ -232,7 +232,7 @@ export async function zaiVisionAnalyze(
           analysisModel: options.model!,
           analysisTimestamp: new Date(),
           confidence: Math.max(...labels.map(l => l.score)),
-          labels: labels,
+          labels,
           format: 'png',
           tags: ['saliency', 'vision-analysis', 'zai-vision'],
         }

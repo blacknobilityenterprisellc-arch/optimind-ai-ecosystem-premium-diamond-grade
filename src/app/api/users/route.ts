@@ -60,7 +60,7 @@ export async function GET() {
 
     // Extract user info from security result
     const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
@@ -104,7 +104,7 @@ export async function PUT() {
     const { name, theme, language, timezone, notifications } = body;
 
     const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 

@@ -46,7 +46,7 @@ export async function DELETE() {
     const authHeader = request.headers.get('authorization');
     const refreshToken = request.headers.get('x-refresh-token');
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 

@@ -1036,7 +1036,7 @@ class IoTSecurityFramework extends EventEmitter {
       validTo: new Date(Date.now() + policy.validityPeriod * 24 * 60 * 60 * 1000),
       publicKey: this.generatePublicKey(),
       signature: '',
-      signatureAlgorithm: policy.hashAlgorithm + 'with' + policy.keyAlgorithm,
+      signatureAlgorithm: `${policy.hashAlgorithm  }with${  policy.keyAlgorithm}`,
       fingerprint: '',
       version: 3,
       extensions: policy.extendedKeyUsage.map(usage => ({
@@ -1289,7 +1289,7 @@ class IoTSecurityFramework extends EventEmitter {
 
   private async getEncryptionKey(deviceId: string): Promise<Buffer> {
     // Generate or retrieve encryption key for device
-    return crypto.createHash('sha256').update(deviceId + 'optimind-iot-key').digest();
+    return crypto.createHash('sha256').update(`${deviceId  }optimind-iot-key`).digest();
   }
 
   private sanitizeCredentials(credentials: any): any {
@@ -1298,10 +1298,10 @@ class IoTSecurityFramework extends EventEmitter {
       sanitized.privateKey = '***REDACTED***';
     }
     if (sanitized.token) {
-      sanitized.token = sanitized.token.substring(0, 8) + '...';
+      sanitized.token = `${sanitized.token.substring(0, 8)  }...`;
     }
     if (sanitized.apiKey) {
-      sanitized.apiKey = sanitized.apiKey.substring(0, 8) + '...';
+      sanitized.apiKey = `${sanitized.apiKey.substring(0, 8)  }...`;
     }
     return sanitized;
   }

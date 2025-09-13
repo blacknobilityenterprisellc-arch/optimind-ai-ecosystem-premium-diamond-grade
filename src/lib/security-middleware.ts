@@ -161,7 +161,7 @@ async function authenticateRequest(request: NextRequest): Promise<{ authenticate
       const session = await prisma.session.findFirst({
         where: {
           userId: user.id,
-          token: token,
+          token,
           status: 'active',
           expiresAt: { gt: new Date() }
         }
@@ -262,7 +262,7 @@ async function authorizeRequest(user: any, request: NextRequest): Promise<{ auth
         where: { id: user.tenantId }
       });
 
-      if (!tenant || !tenant.isActive) {
+      if (!tenant?.isActive) {
         return { authorized: false, message: 'Tenant not active' };
       }
     }

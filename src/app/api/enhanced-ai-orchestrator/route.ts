@@ -609,7 +609,7 @@ async function runEnhancedDemonstration() {
     if (learningResult) results.capabilities.adaptiveLearning = learningResult.success;
 
     // Calculate performance metrics
-    const successfulOps = results.operations.filter(op => op.result && op.result.success);
+    const successfulOps = results.operations.filter(op => op.result?.success);
     results.performance.totalOperations = results.operations.length;
     results.performance.successfulOperations = successfulOps.length;
     results.performance.averageProcessingTime =

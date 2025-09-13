@@ -478,11 +478,11 @@ export class BlockchainIntegrationTester {
         // Simulate NFT minting (would require actual blockchain transaction in production)
         const mintResult: EnhancedTransactionResult = {
           success: true,
-          transactionHash: '0x' + Math.random().toString(16).substring(2, 66),
+          transactionHash: `0x${  Math.random().toString(16).substring(2, 66)}`,
           blockNumber: Math.floor(Math.random() * 1000000),
           gasUsed: 21000,
-          from: '0x' + Math.random().toString(16).substring(2, 42),
-          to: '0x' + Math.random().toString(16).substring(2, 42),
+          from: `0x${  Math.random().toString(16).substring(2, 42)}`,
+          to: `0x${  Math.random().toString(16).substring(2, 42)}`,
           metadata,
           network: `${network} mainnet`,
           timestamp: new Date(),
@@ -502,7 +502,7 @@ export class BlockchainIntegrationTester {
 
       // Test NFT retrieval simulation
       try {
-        const tokenId = 'test-token-' + Date.now();
+        const tokenId = `test-token-${  Date.now()}`;
         
         // Simulate NFT retrieval
         const retrievedMetadata: EnhancedNFTMetadata = {
@@ -530,11 +530,11 @@ export class BlockchainIntegrationTester {
       try {
         const transferResult: EnhancedTransactionResult = {
           success: true,
-          transactionHash: '0x' + Math.random().toString(16).substring(2, 66),
+          transactionHash: `0x${  Math.random().toString(16).substring(2, 66)}`,
           blockNumber: Math.floor(Math.random() * 1000000),
           gasUsed: 25000,
-          from: '0x' + Math.random().toString(16).substring(2, 42),
-          to: '0x' + Math.random().toString(16).substring(2, 42),
+          from: `0x${  Math.random().toString(16).substring(2, 42)}`,
+          to: `0x${  Math.random().toString(16).substring(2, 42)}`,
           network: `${network} mainnet`,
           timestamp: new Date(),
         };
@@ -596,7 +596,7 @@ export class BlockchainIntegrationTester {
         const testData = Buffer.from('IPFS test data');
         const uploadResult = await blockchain.uploadToIPFS(testData);
         
-        if (uploadResult.hash && uploadResult.hash.startsWith('Qm')) {
+        if (uploadResult.hash?.startsWith('Qm')) {
           details.push(`✅ IPFS upload successful (hash: ${uploadResult.hash.substring(0, 16)}...)`);
           score += 33;
         } else {
@@ -611,7 +611,7 @@ export class BlockchainIntegrationTester {
       // Test IPFS data retrieval simulation
       try {
         // Simulate IPFS data retrieval
-        const mockHash = 'QmTest' + Math.random().toString(36).substring(2, 20);
+        const mockHash = `QmTest${  Math.random().toString(36).substring(2, 20)}`;
         const retrievedData = Buffer.from('Retrieved IPFS data');
         
         if (retrievedData.length > 0) {
@@ -689,7 +689,7 @@ export class BlockchainIntegrationTester {
       // Test smart contract interface
       try {
         // Simulate smart contract interaction
-        const contractAddress = '0x' + Math.random().toString(16).substring(2, 42);
+        const contractAddress = `0x${  Math.random().toString(16).substring(2, 42)}`;
         
         // Mock contract interaction
         const contractResult = {
@@ -802,8 +802,8 @@ export class BlockchainIntegrationTester {
       // Test transaction validation
       try {
         const transaction = {
-          from: '0x' + Math.random().toString(16).substring(2, 42),
-          to: '0x' + Math.random().toString(16).substring(2, 42),
+          from: `0x${  Math.random().toString(16).substring(2, 42)}`,
+          to: `0x${  Math.random().toString(16).substring(2, 42)}`,
           value: '1000000000000000000', // 1 ETH in wei
           gasLimit: 21000,
           gasPrice: '20000000000', // 20 Gwei
@@ -842,8 +842,8 @@ export class BlockchainIntegrationTester {
       // Test transaction security checks
       try {
         const securityChecks = this.performTransactionSecurityChecks({
-          from: '0x' + Math.random().toString(16).substring(2, 42),
-          to: '0x' + Math.random().toString(16).substring(2, 42),
+          from: `0x${  Math.random().toString(16).substring(2, 42)}`,
+          to: `0x${  Math.random().toString(16).substring(2, 42)}`,
           value: '1000000000000000000',
         });
         
@@ -1253,11 +1253,11 @@ export class BlockchainIntegrationTester {
   private performTransactionSecurityChecks(transaction: any): { passed: boolean; issues: string[] } {
     const issues: string[] = [];
     
-    if (!transaction.from || !transaction.from.startsWith('0x')) {
+    if (!transaction.from?.startsWith('0x')) {
       issues.push('Invalid from address');
     }
     
-    if (!transaction.to || !transaction.to.startsWith('0x')) {
+    if (!transaction.to?.startsWith('0x')) {
       issues.push('Invalid to address');
     }
     
@@ -1341,5 +1341,5 @@ function generateRealIPFSHash(): string {
   const random = Math.random().toString();
   const data = timestamp + random + process.pid;
   const hash = crypto.createHash('sha256').update(data).digest('hex');
-  return 'Qm' + hash.substring(0, 44);
+  return `Qm${  hash.substring(0, 44)}`;
 }

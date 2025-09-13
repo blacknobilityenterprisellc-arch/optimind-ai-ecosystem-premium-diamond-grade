@@ -438,7 +438,7 @@ class RealTimeCollaboration {
     if (!session) return false;
 
     const participant = session.participants.find(p => p.userId === userId);
-    if (!participant || !participant.permissions.canEdit) {
+    if (!participant?.permissions.canEdit) {
       throw new Error('User does not have permission to edit');
     }
 
@@ -498,7 +498,7 @@ class RealTimeCollaboration {
     }
 
     const participant = session.participants.find(p => p.userId === userId);
-    if (!participant || !participant.permissions.canComment) {
+    if (!participant?.permissions.canComment) {
       throw new Error('User does not have permission to comment');
     }
 

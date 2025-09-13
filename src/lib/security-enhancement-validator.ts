@@ -419,7 +419,7 @@ export class SecurityEnhancementValidator {
         });
 
         const retrieved = await secureVault.getItem(itemId);
-        if (retrieved && retrieved.equals(testData)) {
+        if (retrieved?.equals(testData)) {
           details.push('✅ Data retrieval successful');
           score += 20;
         } else {
@@ -795,7 +795,7 @@ export class SecurityEnhancementValidator {
 
       // Test API rate limiting
       try {
-        const clientId = 'test-client-' + Date.now();
+        const clientId = `test-client-${  Date.now()}`;
         
         // Simulate rapid requests
         let blocked = false;
@@ -821,7 +821,7 @@ export class SecurityEnhancementValidator {
 
       // Test authentication rate limiting
       try {
-        const clientId = 'auth-test-' + Date.now();
+        const clientId = `auth-test-${  Date.now()}`;
         
         // Simulate authentication attempts
         let blocked = false;
@@ -847,7 +847,7 @@ export class SecurityEnhancementValidator {
 
       // Test IP-based rate limiting
       try {
-        const testIP = '192.168.1.' + Math.floor(Math.random() * 255);
+        const testIP = `192.168.1.${  Math.floor(Math.random() * 255)}`;
         
         // Simulate requests from same IP
         let blocked = false;
