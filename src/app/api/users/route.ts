@@ -1,66 +1,173 @@
-import { EnhancedError } from '@/lib/error-handler';
-import type { Request } from 'next/server';
-import { NextResponse } from 'next/server';
-import { withRateLimit, standardRateLimit } from '@/lib/api-rate-limit-middleware';
-import { db } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
+import { authService } from '@/lib/auth-service';
+import { securityMiddleware } from '@/lib/security-middleware';
 
-// Apply rate limiting to GET endpoint
-export const GET = withRateLimit(async (request: Request) => {
+// Apply security middleware to all requests
+async function applySecurity(request: NextRequest) {
+  return await securityMiddleware(request);
+}
+
+// Register new user
+export async function POST(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = Number.parseInt(searchParams.get('page') || '1');
-    const limit = Number.parseInt(searchParams.get('limit') || '10');
-
-    // Get real users from database
-    const users = await db.user.findMany({
-      orderBy: { createdAt: 'desc' },
-      take: limit,
-      skip: (page - 1) * limit,
-    });
-
-    const total = await db.user.count();
-
-    return NextResponse.json({
-      users,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
-  } catch (error: unknown) {
-    console.error('Users API error:', error);
-    return NextResponse.json({ error: (error as Error).message || 'Internal server error' }, { status: 500 });
-  }
-}, standardRateLimit);
-
-// Apply stricter rate limiting to POST endpoint (user creation)
-export const POST = withRateLimit(async (request: Request) => {
-  try {
-    const body = await request.json();
-    const { email, name, role } = body;
-
-    // Check if user already exists
-    const existingUser = await db.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
-      return NextResponse.json({ error: 'User with this email already exists' }, { status: 400 });
+    // Apply security checks
+    const securityResult = await applySecurity(request);
+    if (securityResult.status !== 200) {
+      return securityResult;
     }
 
-    const newUser = await db.user.create({
-      data: {
-        email,
-        name,
-        role: role || 'USER',
-      },
+    const body = await request.json();
+    const { email, password, name, role, tenantId, securityLevel } = body;
+
+    // Validate required fields
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
+
+    // Register user
+    const result = await authService.registerUser({
+      email,
+      password,
+      name,
+      role,
+      tenantId,
+      securityLevel
     });
 
-    return NextResponse.json(newUser);
-  } catch (error: unknown) {
-    console.error('User creation error:', error);
-    return NextResponse.json({ error: (error as Error).message || 'Failed to create user' }, { status: 500 });
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'User registered successfully',
+      user: result.user
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    return NextResponse.json(
+      { error: 'Registration failed' },
+      { status: 500 }
+    );
   }
-}, standardRateLimit);
+}
+
+// Get user profile (authenticated)
+export async function GET(request: NextRequest) {
+  try {
+    // Apply security checks
+    const securityResult = await applySecurity(request);
+    if (securityResult.status !== 200) {
+      return securityResult;
+    }
+
+    // Extract user info from security result
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const user = await authService.getUserFromToken(token);
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        securityLevel: user.securityLevel,
+        emailVerified: user.emailVerified,
+        isPremium: user.isPremium,
+        createdAt: user.createdAt,
+        lastLoginAt: user.lastLoginAt
+      }
+    });
+
+  } catch (error) {
+    console.error('Get user error:', error);
+    return NextResponse.json(
+      { error: 'Failed to get user' },
+      { status: 500 }
+    );
+  }
+}
+
+// Update user profile
+export async function PUT(request: NextRequest) {
+  try {
+    // Apply security checks
+    const securityResult = await applySecurity(request);
+    if (securityResult.status !== 200) {
+      return securityResult;
+    }
+
+    const body = await request.json();
+    const { name, theme, language, timezone, notifications } = body;
+
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const user = await authService.getUserFromToken(token);
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'Invalid token' },
+        { status: 401 }
+      );
+    }
+
+    // Update user profile
+    const result = await authService.updateUserProfile(user.id, {
+      name,
+      theme,
+      language,
+      timezone,
+      notifications
+    });
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: result.user
+    });
+
+  } catch (error) {
+    console.error('Update user error:', error);
+    return NextResponse.json(
+      { error: 'Failed to update user' },
+      { status: 500 }
+    );
+  }
+}
