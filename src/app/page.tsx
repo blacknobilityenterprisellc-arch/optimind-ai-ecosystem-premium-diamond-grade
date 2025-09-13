@@ -297,6 +297,63 @@ export default function Home() {
             </CardContent>
           </Card>
 
+          {/* Super Agents Card */}
+          <Card className="hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-200 bg-white/80 backdrop-blur-sm transform hover:scale-105">
+            <CardHeader className="text-center">
+              <div className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
+                <Brain className="h-8 w-8 text-white" />
+              </div>
+              <CardTitle className="flex items-center justify-center gap-2 text-lg">
+                Super Agents
+                <Crown className="h-5 w-5 text-yellow-500" />
+              </CardTitle>
+              <CardDescription className="text-sm">
+                8 AI agents with transparent workflow and auto-git integration
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    AI Agents
+                  </span>
+                  <span className="font-bold text-purple-600">8</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Tasks Completed
+                  </span>
+                  <span className="font-bold text-blue-600">1,247</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Success Rate
+                  </span>
+                  <span className="font-bold text-green-600">99.2%</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                    Auto-Commit
+                  </span>
+                  <span className="font-bold text-orange-600">Every 3 tasks</span>
+                </div>
+                <Link href="/optimind-super-agents">
+                  <Button
+                    className="w-full mt-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
+                    size="sm"
+                  >
+                    Manage Super Agents
+                    <ArrowRight className="h-3 w-3 ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Analytics Card */}
           <Card className="hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-orange-200 bg-white/80 backdrop-blur-sm transform hover:scale-105">
             <CardHeader className="text-center">

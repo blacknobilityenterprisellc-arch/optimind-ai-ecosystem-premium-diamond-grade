@@ -3,164 +3,193 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  BarChart3,
-  FileText,
-  Target,
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Home,
+  Users,
   Brain,
-  Image as ImageIcon,
+  Network,
+  BarChart3,
   Settings,
   Shield,
-  Users,
+  Database,
+  Globe,
+  Cpu,
+  Activity,
   Zap,
+  Crown,
+  Diamond,
   Sparkles,
   ChevronDown,
   ChevronRight,
-  Crown,
-  Activity,
-  Database,
-  Globe,
   Search,
+  Bell,
+  User,
+  LogOut,
+  Grid3X3,
+  Layers,
+  Binary,
+  CircuitBoard,
+  Fingerprint,
+  Key,
+  Lock,
+  Eye,
+  Cloud,
+  Server,
+  Wifi,
+  Gauge,
+  TrendingUp,
+  Target,
+  Award,
+  Star,
+  Rocket,
+  TestTube,
+  FileText,
+  Image as ImageIcon,
+  FileCheck,
+  AlertTriangle
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-
-interface SidebarItem {
-  title: string;
-  href: string;
-  icon: any;
-  description?: string;
-  badge?: string;
-  children?: SidebarItem[];
-}
-
-const sidebarItems: SidebarItem[] = [
+const navigationGroups = [
   {
-    title: 'Dashboard',
-    href: '/',
-    icon: BarChart3,
-    description: 'System overview and analytics',
-  },
-  {
-    title: 'AI Content & Creation',
-    href: '/content-creation',
-    icon: FileText,
-    badge: 'New',
-    children: [
+    title: 'Main',
+    items: [
       {
-        title: 'Content Generator',
-        href: '/content-creation/generator',
-        icon: FileText,
-        description: 'AI-powered content creation',
+        label: 'Dashboard',
+        href: '/',
+        icon: Home,
+        description: 'Main dashboard overview',
+        badge: 'Active'
       },
       {
-        title: 'Art Generator',
-        href: '/content-creation/art',
-        icon: ImageIcon,
-        description: 'Create AI images and media',
-      },
-      {
-        title: 'Premium Editor',
-        href: '/content-creation/editor',
-        icon: FileText,
-        description: 'Advanced AI editing tools',
-      },
-    ],
-  },
-  {
-    title: 'AI Optimization',
-    href: '/optimization',
-    icon: Target,
-    badge: 'Pro',
-    children: [
-      {
-        title: 'SEO Analysis',
-        href: '/optimization/seo',
-        icon: Search,
-        description: 'Search engine optimization',
-      },
-      {
-        title: 'AEO Enhancement',
-        href: '/optimization/aeo',
-        icon: Target,
-        description: 'Answer engine optimization',
-      },
-      {
-        title: 'GEO Targeting',
-        href: '/optimization/geo',
-        icon: Globe,
-        description: 'Global engine optimization',
-      },
-      {
-        title: 'Performance',
-        href: '/optimization/performance',
-        icon: Activity,
-        description: 'System performance analysis',
-      },
-    ],
-  },
-  {
-    title: 'AI Research & Analysis',
-    href: '/research-analysis',
-    icon: Brain,
-    badge: 'Beta',
-    children: [
-      {
-        title: 'Multi-Model Analysis',
-        href: '/research-analysis/multi-model',
-        icon: Brain,
-        description: 'Compare AI models',
-      },
-      {
-        title: 'Data Insights',
-        href: '/research-analysis/insights',
-        icon: Database,
-        description: 'Data-driven insights',
-      },
-      {
-        title: 'Brand Tracking',
-        href: '/research-analysis/brand',
-        icon: Target,
-        description: 'Brand mention analysis',
-      },
-    ],
-  },
-  {
-    title: 'Security & Admin',
-    href: '/admin',
-    icon: Shield,
-    children: [
-      {
-        title: 'Security Dashboard',
-        href: '/admin/security',
-        icon: Shield,
-        description: 'System security monitoring',
-      },
-      {
-        title: 'User Management',
-        href: '/admin/users',
+        label: 'AI Agents',
+        href: '/ai-agents',
         icon: Users,
-        description: 'Manage user access',
+        description: 'Manage AI agents and tasks',
+        badge: '8 Active'
       },
       {
-        title: 'API Settings',
-        href: '/admin/api',
-        icon: Settings,
-        description: 'API configuration',
+        label: 'Enhanced AI',
+        href: '/enhanced-ai-orchestrator',
+        icon: Brain,
+        description: 'Quantum-enhanced AI processing',
+        badge: '35+ Models'
       },
-    ],
+      {
+        label: 'Super Agents',
+        href: '/optimind-super-agents',
+        icon: Brain,
+        description: '8 AI agents with transparent workflow',
+        badge: 'Auto-Git'
+      },
+      {
+        label: 'GLM Orchestrator',
+        href: '/glm-orchestrator-demo',
+        icon: Network,
+        description: 'Enterprise orchestration control',
+        badge: '1.2K Ops'
+      },
+    ]
+  },
+  {
+    title: 'Analytics & Testing',
+    items: [
+      {
+        label: 'Analytics',
+        href: '/analytics',
+        icon: BarChart3,
+        description: 'Real-time analytics and insights',
+        badge: '5.2M Data'
+      },
+      {
+        label: 'Testing',
+        href: '/testing',
+        icon: TestTube,
+        description: 'Autonomous testing framework',
+        badge: '100%'
+      },
+      {
+        label: 'Optimization',
+        href: '/optimization',
+        icon: Target,
+        description: 'SEO, AEO, GEO, and performance',
+        badge: 'Optimized'
+      },
+    ]
+  },
+  {
+    title: 'Content & Creation',
+    items: [
+      {
+        label: 'Content Creation',
+        href: '/content-creation',
+        icon: FileText,
+        description: 'Generate content, art, and media',
+        badge: 'AI-Powered'
+      },
+      {
+        label: 'Research & Analysis',
+        href: '/research-analysis',
+        icon: Brain,
+        description: 'Multi-model analysis and insights',
+        badge: 'Deep'
+      },
+    ]
+  },
+  {
+    title: 'Enterprise',
+    items: [
+      {
+        label: 'Security Center',
+        href: '/security',
+        icon: Shield,
+        description: 'Military-grade security management',
+        badge: 'Military'
+      },
+      {
+        label: 'Database Manager',
+        href: '/database',
+        icon: Database,
+        description: 'Database administration and backup',
+        badge: 'Secure'
+      },
+      {
+        label: 'System Settings',
+        href: '/settings',
+        icon: Settings,
+        description: 'System configuration and preferences',
+        badge: 'Admin'
+      },
+    ]
+  }
+];
+
+const bottomNavItems = [
+  {
+    label: 'API Documentation',
+    href: '/api-docs',
+    icon: CircuitBoard,
+    description: 'Developer API documentation'
+  },
+  {
+    label: 'Network Monitor',
+    href: '/network',
+    icon: Wifi,
+    description: 'Network performance and status'
   },
 ];
 
 export default function SidebarNavigation() {
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>(['Main']);
   const pathname = usePathname();
 
-  const toggleExpanded = (href: string) => {
-    setExpandedItems(prev =>
-      prev.includes(href) ? prev.filter(item => item !== href) : [...prev, href]
+  const toggleGroup = (groupTitle: string) => {
+    setExpandedGroups(prev => 
+      prev.includes(groupTitle) 
+        ? prev.filter(title => title !== groupTitle)
+        : [...prev, groupTitle]
     );
   };
 
@@ -171,112 +200,139 @@ export default function SidebarNavigation() {
     return pathname.startsWith(href);
   };
 
-  const isChildActive = (children?: SidebarItem[]) => {
-    return children?.some(child => isActive(child.href));
-  };
-
   return (
-    <aside className="w-48 sm:w-56 md:w-64 bg-background border-r border-border/40 h-screen sticky top-0 hidden lg:block">
-      <div className="flex flex-col h-full">
-        {/* Logo Section */}
-        <div className="p-3 sm:p-4 md:p-6 border-b border-border/40">
-          <Link href="/" className="flex items-center space-x-2 sm:space-x-3">
-            <div className="relative">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
-                <img src="/logo.svg" alt="OptiMind AI Logo" className="w-full h-full" />
-              </div>
-              <div className="absolute -top-1 -right-1">
-                <Sparkles className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-500" />
-              </div>
+    <div className="w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-gray-700 h-full flex flex-col">
+      {/* Logo and Brand */}
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <Link href="/" className="flex items-center space-x-3">
+          <div className="relative">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <Brain className="h-6 w-6 text-white" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-sm sm:text-lg">OptiMind AI</span>
-              <div className="flex items-center space-x-1">
-                <Badge variant="secondary" className="text-xs px-1 py-0.5">
-                  Diamond
-                </Badge>
-                <Crown className="h-2 w-2 sm:h-3 sm:w-3 text-yellow-500" />
-              </div>
+            <div className="absolute -top-1 -right-1">
+              <Diamond className="h-4 w-4 text-purple-600 fill-purple-600" />
             </div>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 p-2 sm:p-3 md:p-4 space-y-1 sm:space-y-2 overflow-y-auto">
-          {sidebarItems.map(item => (
-            <div key={item.href}>
-              <Link
-                href={item.children ? '#' : item.href}
-                onClick={
-                  item.children
-                    ? e => {
-                        e.preventDefault();
-                        toggleExpanded(item.href);
-                      }
-                    : undefined
-                }
-                className={cn(
-                  'flex items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-                  isActive(item.href) && 'bg-accent text-accent-foreground',
-                  isChildActive(item.children) && 'bg-accent/50 text-accent-foreground'
-                )}
-              >
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <item.icon className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="text-xs sm:text-sm">{item.title}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  {item.badge && (
-                    <Badge variant="outline" className="text-xs">
-                      {item.badge}
-                    </Badge>
-                  )}
-                  {item.children &&
-                    (expandedItems.includes(item.href) ? (
-                      <ChevronDown className="h-2 w-2 sm:h-3 sm:w-3" />
-                    ) : (
-                      <ChevronRight className="h-2 w-2 sm:h-3 sm:w-3" />
-                    ))}
-                </div>
-              </Link>
-
-              {/* Sub-items */}
-              {item.children && expandedItems.includes(item.href) && (
-                <div className="ml-2 sm:ml-4 mt-1 space-y-1">
-                  {item.children.map(child => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      className={cn(
-                        'flex items-center space-x-2 sm:space-x-3 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm transition-colors hover:bg-accent hover:text-accent-foreground',
-                        isActive(child.href) && 'bg-accent text-accent-foreground'
-                      )}
-                    >
-                      <child.icon className="h-2 w-2 sm:h-3 sm:w-3" />
-                      <span>{child.title}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
+          </div>
+          <div className="flex-1">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              OptiMind AI
+            </h1>
+            <div className="flex items-center gap-1 mt-1">
+              <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold text-xs px-2 py-0.5">
+                <Crown className="h-3 w-3 mr-1" />
+                Premium
+              </Badge>
             </div>
-          ))}
-        </nav>
+          </div>
+        </Link>
+      </div>
 
-        {/* Bottom Section */}
-        <div className="p-2 sm:p-3 md:p-4 border-t border-border/40">
-          <div className="space-y-2 sm:space-y-3">
-            <Button variant="outline" size="sm" className="w-full justify-start text-xs">
-              <Settings className="h-3 w-3 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">Settings</span>
-              <span className="sm:hidden">Set</span>
-            </Button>
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span>OptiMind AI</span>
-              <span>v2.0</span>
+      {/* System Status */}
+      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              System Status
+            </span>
+            <Badge className="bg-green-100 text-green-800 text-xs">
+              <Activity className="h-3 w-3 mr-1" />
+              Operational
+            </Badge>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-gray-600 dark:text-gray-400">100% Health</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span className="text-gray-600 dark:text-gray-400">0.8ms Latency</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span className="text-gray-600 dark:text-gray-400">8 AI Agents</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+              <span className="text-gray-600 dark:text-gray-400">2.1M Req/s</span>
             </div>
           </div>
         </div>
       </div>
-    </aside>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto p-4 space-y-4">
+        {navigationGroups.map((group) => (
+          <div key={group.title} className="space-y-2">
+            <Button
+              variant="ghost"
+              className="w-full justify-between h-8 px-3 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
+              onClick={() => toggleGroup(group.title)}
+            >
+              <span>{group.title}</span>
+              {expandedGroups.includes(group.title) ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </Button>
+            
+            {expandedGroups.includes(group.title) && (
+              <div className="space-y-1 pl-2">
+                {group.items.map((item) => (
+                  <Link key={item.href} href={item.href}>
+                    <Button
+                      variant={isActive(item.href) ? 'default' : 'ghost'}
+                      className={cn(
+                        'w-full justify-start h-9 px-3 text-sm transition-all duration-200',
+                        isActive(item.href)
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                          : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 mr-3" />
+                      <div className="flex-1 text-left">
+                        <div className="font-medium">{item.label}</div>
+                        <div className="text-xs opacity-75">{item.description}</div>
+                      </div>
+                      {item.badge && (
+                        <Badge className={cn(
+                          "ml-2 text-xs",
+                          isActive(item.href) 
+                            ? "bg-white/20 text-white" 
+                            : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                        )}>
+                          {item.badge}
+                        </Badge>
+                      )}
+                    </Button>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      {/* Bottom Navigation */}
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="space-y-1">
+          {bottomNavItems.map((item) => (
+            <Link key={item.href} href={item.href}>
+              <Button
+                variant="ghost"
+                className="w-full justify-start h-8 px-3 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <item.icon className="h-4 w-4 mr-3" />
+                <div className="text-left">
+                  <div className="font-medium">{item.label}</div>
+                  <div className="text-xs opacity-75">{item.description}</div>
+                </div>
+              </Button>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
