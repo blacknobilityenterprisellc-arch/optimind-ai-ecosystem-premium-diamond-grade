@@ -1,24 +1,68 @@
-import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  // Ultra-minimal configuration for fastest startup
-  
-  // Minimal build settings
-  compress: false,
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Performance optimizations
+  compress: true,
   poweredByHeader: false,
+  generateEtags: false,
+  httpAgentOptions: {
+    keepAlive: true,
+  },
   
-  // Basic image configuration
+  // Experimental features for better performance
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
+  },
+  
+  // Images optimization
   images: {
-    domains: ['localhost'],
-    formats: ['image/webp'],
+    formats: ['image/webp', 'image/avif'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
-  // Disable strict checks for speed
-  typescript: {
-    ignoreBuildErrors: true,
+  // Bundle analyzer for optimization
+  bundleAnalyzer: {
+    enabled: process.env.ANALYZE === 'true',
   },
-  eslint: {
-    ignoreDuringBuilds: true,
+  
+  // Compiler optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  
+  // Headers optimization
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+        ],
+      },
+    ];
+  },
+  
+  // Redirects for better SEO
+  async redirects() {
+    return [];
+  },
+  
+  // Rewrites for API optimization
+  async rewrites() {
+    return [];
   },
 };
 
