@@ -1,3 +1,4 @@
+import { EnhancedError } from '@/lib/error-handler';
 import { NextRequest, NextResponse } from 'next/server';
 import { authService } from '@/lib/auth-service';
 import { securityMiddleware } from '@/lib/security-middleware';

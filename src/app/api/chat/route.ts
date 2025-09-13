@@ -1,3 +1,4 @@
+import { EnhancedError } from '@/lib/error-handler';
 import { NextResponse, NextRequest } from 'next/server';
 import { ValidationSchemas, validateInput } from '@/lib/input-validation';
 import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';

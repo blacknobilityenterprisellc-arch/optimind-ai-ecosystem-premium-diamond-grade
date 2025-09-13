@@ -1,3 +1,4 @@
+import { EnhancedError } from '@/lib/error-handler';
 
 // AI-Generated Input Validation
 import { z } from 'zod';

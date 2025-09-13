@@ -1,13 +1,13 @@
 {
   "ai_analysis": {
-    "timestamp": "2025-09-10T21:41:52Z",
-    "analysis_duration_ms": 2013,
+    "timestamp": "2025-09-13T10:57:00Z",
+    "analysis_duration_ms": 2403,
     "files_analyzed": {
-      "typescript": 25058,
-      "javascript": 41891,
-      "json": 2981,
-      "markdown": 2506,
-      "total": 66949
+      "typescript": 25264,
+      "javascript": 42336,
+      "json": 3147,
+      "markdown": 2590,
+      "total": 67600
     },
     "quality_metrics": {
       "complexity_score": 65,
