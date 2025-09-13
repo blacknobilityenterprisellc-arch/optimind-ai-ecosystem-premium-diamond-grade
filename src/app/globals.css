@@ -2,186 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "tailwindcss";
-
-/* Premium diamond-grade variables */
 :root {
-  --color-gold: #FFD700;
-  --color-bronze: #CD7F32;
-  --color-silver: #C0C0C0;
-  --color-platinum: #E5E4E2;
-  --color-diamond: #B9F2FF;
-  --shadow-premium: 0 10px 30px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 20px rgba(185, 242, 255, 0.3);
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-  --gradient-diamond: linear-gradient(135deg, #B9F2FF 0%, #667eea 100%);
+  --foreground: 222.2 84% 4.9%;
+  --background: 0 0% 100%;
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+  --radius: 0.5rem;
 }
 
-/* Premium diamond-grade styles */
-.premium-bg {
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-  background-attachment: fixed;
+.dark {
+  --foreground: 210 40% 98%;
+  --background: 222.2 84% 4.9%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
 }
 
-.premium-scrollbar::-webkit-scrollbar {
-  width: 8px;
+* {
+  border-color: hsl(var(--border));
 }
 
-.premium-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-.premium-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 4px;
-}
-
-.premium-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-/* Diamond glow effect */
-.diamond-glow {
-  box-shadow: 0 0 20px rgba(185, 242, 255, 0.3);
-}
-
-/* Premium card styles */
-.premium-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Animation classes */
-@keyframes diamond-sparkle {
-  0%, 100% { opacity: 0; transform: scale(0); }
-  50% { opacity: 1; transform: scale(1); }
-}
-
-.diamond-sparkle {
-  animation: diamond-sparkle 2s ease-in-out infinite;
-}
-
-/* Mobile-first responsive enhancements */
-@media (max-width: 640px) {
-  /* Mobile-specific optimizations */
-  .mobile-optimized {
-    padding: 0.5rem;
-  }
-  
-  .mobile-text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-  
-  .mobile-text-xs {
-    font-size: 0.75rem;
-    line-height: 1rem;
-  }
-  
-  .mobile-spacing-tight {
-    gap: 0.5rem;
-  }
-  
-  /* Touch-friendly targets */
-  .touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-  
-  /* Mobile card adjustments */
-  .mobile-card {
-    border-radius: 0.5rem;
-    padding: 0.75rem;
-  }
-  
-  /* Mobile button adjustments */
-  .mobile-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-  }
-}
-
-/* Tablet enhancements */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .tablet-optimized {
-    padding: 1rem;
-  }
-  
-  .tablet-spacing {
-    gap: 1rem;
-  }
-}
-
-/* Desktop enhancements */
-@media (min-width: 1025px) {
-  .desktop-optimized {
-    padding: 1.5rem;
-  }
-  
-  .desktop-spacing {
-    gap: 1.5rem;
-  }
-}
-
-/* Mobile-first navigation */
-.mobile-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.95);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 50;
-  padding: 0.5rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.mobile-nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s;
-}
-
-.mobile-nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.mobile-nav-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.mobile-nav-label {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Mobile-first grid system */
-.mobile-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .mobile-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .mobile-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
