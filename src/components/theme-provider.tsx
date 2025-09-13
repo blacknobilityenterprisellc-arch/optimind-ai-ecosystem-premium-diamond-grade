@@ -343,7 +343,7 @@ export function ThemeProvider({ children, defaultTheme = 'light' }: ThemeProvide
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new EnhancedError('useTheme must be used within a ThemeProvider');
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
 }
