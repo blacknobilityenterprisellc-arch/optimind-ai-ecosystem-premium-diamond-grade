@@ -11,28 +11,15 @@ const nextConfig = {
   
   // Experimental features for better performance
   experimental: {
-      // AI-Optimized bundle settings
-      optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
-      swcPlugins: [
-        ['@swc-plugins/transform-imports', {
-          'lucide-react': {
-            'transform': 'lucide-react/esm/{{member}}',
-            'preventFullImport': true
-          }
-        }]
-      ]
-    },
+    // AI-Optimized bundle settings
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-*'],
+  },
   
   // Images optimization
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-  },
-  
-  // Bundle analyzer for optimization
-  bundleAnalyzer: {
-    enabled: process.env.ANALYZE === 'true',
   },
   
   // Compiler optimizations

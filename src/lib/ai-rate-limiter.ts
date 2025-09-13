@@ -43,3 +43,20 @@ export class AIRateLimiter {
 }
 
 export const aiRateLimiter = new AIRateLimiter();
+
+// Export the missing functions that are being imported
+export const authRateLimiter = new AIRateLimiter(10, 60000); // 10 requests per minute for auth
+
+export const withRateLimit = (handler: any, options: { maxRequests?: number; windowMs?: number } = {}) => {
+  const limiter = new AIRateLimiter(options.maxRequests || 100, options.windowMs || 60000);
+  
+  return async (req: any, res: any, ...args: any[]) => {
+    const identifier = req.ip || req.connection.remoteAddress || 'unknown';
+    
+    if (!limiter.isAllowed(identifier)) {
+      return res.status(429).json({ error: 'Too many requests' });
+    }
+    
+    return handler(req, res, ...args);
+  };
+};

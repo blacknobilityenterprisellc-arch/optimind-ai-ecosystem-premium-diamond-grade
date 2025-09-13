@@ -11,6 +11,14 @@ export const commonSchemas = {
   phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number')
 };
 
+// Export the ValidationSchemas that are being imported
+export const ValidationSchemas = {
+  ...commonSchemas,
+  pin: z.string().length(4, 'PIN must be 4 digits'),
+  message: z.string().min(1, 'Message cannot be empty'),
+  content: z.string().min(1, 'Content cannot be empty')
+};
+
 export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
   try {
     return schema.parse(data);
@@ -24,4 +32,30 @@ export const validateInput = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
 
 export const sanitizeInput = (input: string): string => {
   return input.trim().replace(/[<>"']/g, '');
+};
+
+// Export the missing EnhancedError class
+export class EnhancedError extends Error {
+  constructor(message: string, public code?: string, public details?: any) {
+    super(message);
+    this.name = 'EnhancedError';
+  }
+}
+
+// Export the missing withValidation function
+export const withValidation = (schema: z.ZodSchema<any>) => {
+  return (handler: any) => {
+    return async (req: any, res: any, ...args: any[]) => {
+      try {
+        const validatedData = validateInput(schema, req.body || req.query || req.params);
+        req.validatedData = validatedData;
+        return handler(req, res, ...args);
+      } catch (error) {
+        if (error instanceof EnhancedError) {
+          return res.status(400).json({ error: error.message, code: error.code });
+        }
+        return res.status(400).json({ error: 'Validation failed' });
+      }
+    };
+  };
 };

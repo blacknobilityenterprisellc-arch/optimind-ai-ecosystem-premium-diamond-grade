@@ -22,8 +22,8 @@
  */
 
 import { EventEmitter } from 'events';
-import { EnterpriseEnvironmentConfig } from '../environment/EnterpriseEnvironmentConfig';
-import { EnterpriseHealthMonitor } from '../monitoring/EnterpriseHealthMonitor';
+import { EnterpriseEnvironmentConfig } from './EnterpriseEnvironmentConfig';
+import { EnterpriseHealthMonitor } from './EnterpriseHealthMonitor';
 
 // API key types
 export enum APIKeyType {

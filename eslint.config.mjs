@@ -118,7 +118,6 @@ export default [
       'no-warning-comments': 'off',
       'capitalized-comments': 'off',
       'require-jsdoc': 'off',
-      'valid-jsdoc': 'warn',
     },
   },
   {
