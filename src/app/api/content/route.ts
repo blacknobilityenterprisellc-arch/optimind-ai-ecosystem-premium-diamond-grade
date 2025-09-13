@@ -22,7 +22,7 @@ export async function GET() {
 export async function POST() {
   try {
     const body = await request.json();
-    const { content, type } = body;
+    const { content } = body;
 
     // Content creation logic here
     const createdContent = {

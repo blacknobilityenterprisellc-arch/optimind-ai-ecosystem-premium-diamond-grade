@@ -1,4 +1,3 @@
-import { EnhancedError } from '@/lib/error-handler';
 import { ValidationSchemas, validateInput } from '@/lib/input-validation';
 import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';
 

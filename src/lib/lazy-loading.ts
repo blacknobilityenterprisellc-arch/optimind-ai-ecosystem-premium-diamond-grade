@@ -1,22 +1,18 @@
-
 // AI-Generated Lazy Loading Utility
 import { lazy, Suspense } from 'react';
 
-export const createLazyComponent = <T extends React.ComponentType<any>>(
-  importFn: () => Promise<{ default: T }>,
-  fallback?: React.ReactNode
-) => {
+export const createLazyComponent = (importFn: any, fallback?: any) => {
   const LazyComponent = lazy(importFn);
   
-  return (props: React.ComponentProps<T>) => (
+  return (props: any) => (
     <Suspense fallback={fallback || <div>Loading...</div>}>
       <LazyComponent {...props} />
     </Suspense>
   );
 };
 
-export const createLazyLib = <T>(importFn: () => Promise<T>) => {
-  let cachedPromise: Promise<T> | null = null;
+export const createLazyLib = (importFn: any) => {
+  let cachedPromise: any = null;
   
   return () => {
     if (!cachedPromise) {

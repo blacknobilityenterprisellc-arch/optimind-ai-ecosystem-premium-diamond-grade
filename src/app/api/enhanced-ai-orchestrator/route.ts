@@ -9,7 +9,6 @@ import type { Request } from 'next/server';
 
 import {
   enhancedAIOrchestrator,
-  EnhancedOrchestratorConfig,
   QuantumEnhancedOperation,
 } from '@/lib/orchestration/enhanced-ai-orchestrator';
 import { NextResponse } from 'next/server';

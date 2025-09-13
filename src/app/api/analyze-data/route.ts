@@ -243,7 +243,7 @@ function parseAnalysisResult(analysis: string, model: string, analysisType: stri
       summary: analysis,
       confidence: 85,
       accuracy: 80,
-      insights: [`${analysis.substring(0, 200)  }...`],
+      insights: [`${analysis.substring(0, 200)}...`],
       riskAssessment: {
         level: 'medium',
         factors: ['Limited parsing'],
@@ -344,7 +344,7 @@ function calculateEfficiency(results: any[]): number {
 }
 
 function generateRequestId(): string {
-  return `req_${  Date.now()  }_${  Math.random().toString(36).substr(2, 9)}`;
+  return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
 
 // Enhanced GET endpoint for service status

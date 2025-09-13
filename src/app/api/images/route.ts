@@ -25,7 +25,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { imageUrl, analysisType } = body;
+    const { analysisType } = body;
 
     // Mock image analysis
     const analysisResult = {

@@ -1,4 +1,3 @@
-import { EnhancedError } from '@/lib/error-handler';
 import type { Request } from 'next/server';
 import { NextResponse } from 'next/server';
 import { withRateLimit, relaxedRateLimit } from '@/lib/api-rate-limit-middleware';
@@ -132,7 +131,7 @@ function handleHealthError(error: unknown): NextResponse {
 }
 
 // Apply rate limiting with relaxed limits for health endpoint
-export const GET = withRateLimit(async (request: Request) => {
+export const GET = withRateLimit(async () => {
   try {
     const healthData = buildHealthData();
     return NextResponse.json(healthData);
