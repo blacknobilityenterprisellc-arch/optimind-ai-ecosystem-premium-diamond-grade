@@ -1,0 +1,33 @@
+[build]
+  command = "npm run build"
+
+[deploy]
+  startCommand = "npm start"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Production environment variables (configure in Railway dashboard)
+[env.production]
+  NODE_ENV = "production"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Staging environment variables
+[env.staging]
+  NODE_ENV = "staging"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+# Health check
+[healthcheck]
+  path = "/api/health"
+  interval = "30s"
+  timeout = "10s"
+  retries = 3
+
+# Service configuration
+[service]
+  name = "optimind-ai-ecosystem"
+  memory = "512MB"
+  cpu = "0.25"
