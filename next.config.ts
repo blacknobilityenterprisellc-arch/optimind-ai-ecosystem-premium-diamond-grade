@@ -22,10 +22,10 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
-  // Bundle analyzer for optimization
-  bundleAnalyzer: {
-    enabled: process.env.ANALYZE === 'true',
-  },
+  // Bundle analyzer for optimization (handled by separate plugin)
+  // bundleAnalyzer: {
+  //   enabled: process.env.ANALYZE === 'true',
+  // },
   
   // Compiler optimizations
   compiler: {

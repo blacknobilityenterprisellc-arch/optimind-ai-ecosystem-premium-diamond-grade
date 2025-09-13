@@ -121,7 +121,8 @@ class EnhancedDatabase {
     
     const connectionPromises = Array(initialConnections).fill(0).map(async () => {
       try {
-        await this.client.$executeRaw`SELECT 1`;
+        // Use $queryRaw instead of $executeRaw for SQLite compatibility
+        await this.client.$queryRaw`SELECT 1 as connection_test`;
         this.metrics.totalConnections++;
         this.metrics.idleConnections++;
       } catch (error) {
@@ -150,8 +151,8 @@ class EnhancedDatabase {
     try {
       const startTime = Date.now();
       
-      // Execute simple health check query
-      await this.client.$executeRaw`SELECT 1`;
+      // Execute simple health check query - use $queryRaw for SQLite compatibility
+      await this.client.$queryRaw`SELECT 1 as health_check`;
       
       const queryTime = Date.now() - startTime;
       this.updateQueryMetrics(queryTime);
@@ -212,8 +213,8 @@ class EnhancedDatabase {
     config: DatabaseConfig;
   }> {
     try {
-      // Quick connection test
-      await this.client.$executeRaw`SELECT 1`;
+      // Quick connection test - use $queryRaw for SQLite compatibility
+      await this.client.$queryRaw`SELECT 1 as status_test`;
       
       return {
         healthy: true,

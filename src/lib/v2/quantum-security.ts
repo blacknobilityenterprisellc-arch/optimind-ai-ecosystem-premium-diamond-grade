@@ -546,6 +546,22 @@ export const createQuantumSecurity = (config?: Partial<QuantumSecurityConfig>) =
   return new QuantumSecurityV2(config);
 };
 
+// Export the instance with the expected method name for compatibility
+export const quantumSecurity = {
+  encrypt: async (data: string, keyId: string, userId: string) => {
+    return await quantumSecurityV2.encryptQuantumSecure(data, keyId, userId);
+  },
+  decrypt: async (secureMessage: any, userId: string) => {
+    return await quantumSecurityV2.decryptQuantumSecure(secureMessage, userId);
+  },
+  generateKeyPair: async (userId: string, expiresInSeconds?: number) => {
+    return await quantumSecurityV2.generateQuantumKeyPair(userId, expiresInSeconds);
+  },
+  healthCheck: async () => {
+    return await quantumSecurityV2.healthCheck();
+  }
+};
+
 export default QuantumSecurityV2;
 
 // Enhanced error class with better error handling
