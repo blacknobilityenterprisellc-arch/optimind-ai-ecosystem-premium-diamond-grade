@@ -899,6 +899,8 @@ class EcosystemIntelligenceCore {
 
 // Export the ecosystem intelligence core
 export const ecosystemIntelligenceCore = EcosystemIntelligenceCore.getInstance();
+// Export the class reference for external imports
+export { EcosystemIntelligenceCore };
 
 // Convenience functions for ecosystem interaction
 export const getEcosystemIntelligence = () => ecosystemIntelligenceCore.getIntelligence();

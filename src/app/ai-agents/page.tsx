@@ -8,21 +8,6 @@
  */
 
 import OptiMindAgentsDashboard from '@/components/ai-agents/OptiMindAgentsDashboard';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'OptiMind AI Agents - Enterprise-Grade Agent Management',
-  description: 'Advanced AI agent management system with real-time monitoring, task orchestration, and collaborative intelligence capabilities.',
-  keywords: [
-    'OptiMind AI',
-    'AI Agents',
-    'Agent Management',
-    'Task Orchestration',
-    'Collaborative Intelligence',
-    'Enterprise AI',
-    'Multi-Agent Systems',
-  ],
-};
 
 export default function AIAgentsPage() {
   return (

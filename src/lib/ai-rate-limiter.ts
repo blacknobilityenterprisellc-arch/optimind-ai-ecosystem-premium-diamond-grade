@@ -43,3 +43,19 @@ export class AIRateLimiter {
 }
 
 export const aiRateLimiter = new AIRateLimiter();
+
+// Export the missing functions that were referenced in the auth pin route
+export const withRateLimit = (handler: any, options?: any) => {
+  return async (...args: any[]) => {
+    const limiter = new AIRateLimiter(options?.maxRequests || 100, options?.windowMs || 60000);
+    const identifier = args[0]?.headers?.['x-forwarded-for'] || 'anonymous';
+    
+    if (!limiter.isAllowed(identifier)) {
+      throw new Error('Rate limit exceeded');
+    }
+    
+    return handler(...args);
+  };
+};
+
+export const authRateLimiter = new AIRateLimiter(5, 60000); // 5 requests per minute for auth

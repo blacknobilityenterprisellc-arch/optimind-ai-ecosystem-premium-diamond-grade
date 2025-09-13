@@ -726,6 +726,9 @@ export const kmsIntegration = new KMSIntegration({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'mock-secret-key',
 });
 
+// Export the getKMSIntegration function that was referenced
+export const getKMSIntegration = () => kmsIntegration;
+
 // Export types and utilities
 export type { KMSConfig, KMSKey, KMSEncryptionResult, KMSDecryptionResult, KMSAuditLog };
 export type { SecureStorageResult, DeletionCertificate, SecureVaultKMSIntegration } from './secure-vault-kms-integration';
