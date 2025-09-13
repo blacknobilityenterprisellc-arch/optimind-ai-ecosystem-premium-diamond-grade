@@ -17,7 +17,16 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Brain, Network, Zap, Users, TrendingUp, MessageSquare, Activity, BarChart3 } from 'lucide-react';
+import {
+  Brain,
+  Network,
+  Zap,
+  Users,
+  TrendingUp,
+  MessageSquare,
+  Activity,
+  BarChart3,
+} from 'lucide-react';
 
 interface SystemStatus {
   isInitialized: boolean;
@@ -144,15 +153,15 @@ export default function EnhancedAIDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'natural-language-query',
-          payload: { query: naturalLanguageQuery }
-        })
+          payload: { query: naturalLanguageQuery },
+        }),
       });
 
       const data = await response.json();
       if (data.success) {
         setCurrentOperation(data.operationId);
         setNaturalLanguageQuery('');
-        
+
         // Poll for result
         pollForOperationResult(data.operationId);
       }
@@ -173,9 +182,9 @@ export default function EnhancedAIDashboard() {
           payload: {
             domain: 'multi-domain-analysis',
             data: { analysisType: 'comprehensive-collaborative' },
-            maxAgents: 3
-          }
-        })
+            maxAgents: 3,
+          },
+        }),
       });
 
       const data = await response.json();
@@ -200,9 +209,9 @@ export default function EnhancedAIDashboard() {
           payload: {
             domain: 'quantum-computing',
             data: { operation: 'quantum-optimization' },
-            maxAgents: 2
-          }
-        })
+            maxAgents: 2,
+          },
+        }),
       });
 
       const data = await response.json();
@@ -227,8 +236,8 @@ export default function EnhancedAIDashboard() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'get-result',
-            payload: { operationId }
-          })
+            payload: { operationId },
+          }),
         });
 
         const data = await response.json();
@@ -260,21 +269,31 @@ export default function EnhancedAIDashboard() {
 
   const getAgentTypeColor = (type: string) => {
     switch (type) {
-      case 'primary': return 'bg-blue-500';
-      case 'specialist': return 'bg-purple-500';
-      case 'collaborative': return 'bg-green-500';
-      case 'quantum-enhanced': return 'bg-indigo-500';
-      default: return 'bg-gray-500';
+      case 'primary':
+        return 'bg-blue-500';
+      case 'specialist':
+        return 'bg-purple-500';
+      case 'collaborative':
+        return 'bg-green-500';
+      case 'quantum-enhanced':
+        return 'bg-indigo-500';
+      default:
+        return 'bg-gray-500';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'text-green-600';
-      case 'learning': return 'text-blue-600';
-      case 'collaborating': return 'text-purple-600';
-      case 'resting': return 'text-yellow-600';
-      default: return 'text-gray-600';
+      case 'active':
+        return 'text-green-600';
+      case 'learning':
+        return 'text-blue-600';
+      case 'collaborating':
+        return 'text-purple-600';
+      case 'resting':
+        return 'text-yellow-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -295,9 +314,7 @@ export default function EnhancedAIDashboard() {
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Enhanced AI Orchestrator
         </h1>
-        <p className="text-xl text-gray-600">
-          Advanced • Intelligent • Intuitive • Powerful
-        </p>
+        <p className="text-xl text-gray-600">Advanced • Intelligent • Intuitive • Powerful</p>
       </div>
 
       {/* System Overview */}
@@ -321,9 +338,7 @@ export default function EnhancedAIDashboard() {
                 <div className="text-sm text-gray-600">Overall IQ</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {systemStatus.agentsCount}
-                </div>
+                <div className="text-2xl font-bold text-green-600">{systemStatus.agentsCount}</div>
                 <div className="text-sm text-gray-600">Active Agents</div>
               </div>
               <div className="text-center">
@@ -344,9 +359,14 @@ export default function EnhancedAIDashboard() {
               <div>
                 <div className="flex justify-between mb-1">
                   <span className="text-sm">Emotional Intelligence</span>
-                  <span className="text-sm">{systemStatus.systemIntelligence.emotionalIntelligence}%</span>
+                  <span className="text-sm">
+                    {systemStatus.systemIntelligence.emotionalIntelligence}%
+                  </span>
                 </div>
-                <Progress value={systemStatus.systemIntelligence.emotionalIntelligence} className="h-2" />
+                <Progress
+                  value={systemStatus.systemIntelligence.emotionalIntelligence}
+                  className="h-2"
+                />
               </div>
               <div>
                 <div className="flex justify-between mb-1">
@@ -398,11 +418,11 @@ export default function EnhancedAIDashboard() {
                 <Textarea
                   placeholder="Ask the AI orchestrator to perform complex tasks, analyze data, or solve problems..."
                   value={naturalLanguageQuery}
-                  onChange={(e) => setNaturalLanguageQuery(e.target.value)}
+                  onChange={e => setNaturalLanguageQuery(e.target.value)}
                   className="flex-1"
                   rows={3}
                 />
-                <Button 
+                <Button
                   onClick={submitNaturalLanguageQuery}
                   disabled={isLoading || !naturalLanguageQuery.trim()}
                   className="self-start"
@@ -468,14 +488,16 @@ export default function EnhancedAIDashboard() {
               {agents.length === 0 ? (
                 <div className="text-center py-8">
                   <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <p className="text-gray-600 mb-4">No agents loaded. Click "View Agents" to load the agent network.</p>
+                  <p className="text-gray-600 mb-4">
+                    No agents loaded. Click "View Agents" to load the agent network.
+                  </p>
                   <Button onClick={loadAgents} disabled={isLoading}>
                     Load Agents
                   </Button>
                 </div>
               ) : (
                 <div className="grid gap-4">
-                  {agents.map((agent) => (
+                  {agents.map(agent => (
                     <Card key={agent.id} className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div>
@@ -552,12 +574,17 @@ export default function EnhancedAIDashboard() {
               {operationResults.length === 0 ? (
                 <div className="text-center py-8">
                   <BarChart3 className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                  <p className="text-gray-600">No operations completed yet. Submit a query to see results.</p>
+                  <p className="text-gray-600">
+                    No operations completed yet. Submit a query to see results.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
                   {operationResults.map((result, index) => (
-                    <Card key={index} className={`p-4 ${result.success ? 'border-green-200' : 'border-red-200'}`}>
+                    <Card
+                      key={index}
+                      className={`p-4 ${result.success ? 'border-green-200' : 'border-red-200'}`}
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div>
                           <h3 className="font-semibold flex items-center gap-2">
@@ -583,19 +610,27 @@ export default function EnhancedAIDashboard() {
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
                             <div>
                               <div className="text-xs text-gray-600">Accuracy</div>
-                              <div className="text-sm font-semibold">{(result.performance.accuracy * 100).toFixed(1)}%</div>
+                              <div className="text-sm font-semibold">
+                                {(result.performance.accuracy * 100).toFixed(1)}%
+                              </div>
                             </div>
                             <div>
                               <div className="text-xs text-gray-600">Efficiency</div>
-                              <div className="text-sm font-semibold">{(result.performance.efficiency * 100).toFixed(1)}%</div>
+                              <div className="text-sm font-semibold">
+                                {(result.performance.efficiency * 100).toFixed(1)}%
+                              </div>
                             </div>
                             <div>
                               <div className="text-xs text-gray-600">Innovation</div>
-                              <div className="text-sm font-semibold">{(result.performance.innovation * 100).toFixed(1)}%</div>
+                              <div className="text-sm font-semibold">
+                                {(result.performance.innovation * 100).toFixed(1)}%
+                              </div>
                             </div>
                             <div>
                               <div className="text-xs text-gray-600">Collaboration</div>
-                              <div className="text-sm font-semibold">{(result.performance.collaborationScore * 100).toFixed(1)}%</div>
+                              <div className="text-sm font-semibold">
+                                {(result.performance.collaborationScore * 100).toFixed(1)}%
+                              </div>
                             </div>
                           </div>
 
@@ -605,7 +640,8 @@ export default function EnhancedAIDashboard() {
                               <div className="space-y-1">
                                 {result.insights.slice(0, 3).map((insight, idx) => (
                                   <div key={idx} className="text-sm bg-blue-50 p-2 rounded">
-                                    {insight.key} ({(insight.confidence * 100).toFixed(1)}% confidence)
+                                    {insight.key} ({(insight.confidence * 100).toFixed(1)}%
+                                    confidence)
                                   </div>
                                 ))}
                               </div>
@@ -655,7 +691,8 @@ export default function EnhancedAIDashboard() {
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                       <div className="text-2xl font-bold text-blue-600">
-                        {demonstrationResults.performance.successfulOperations}/{demonstrationResults.performance.totalOperations}
+                        {demonstrationResults.performance.successfulOperations}/
+                        {demonstrationResults.performance.totalOperations}
                       </div>
                       <div className="text-sm text-gray-600">Operations</div>
                     </div>
@@ -683,39 +720,53 @@ export default function EnhancedAIDashboard() {
                     <h4 className="font-semibold mb-2">Capabilities Demonstrated:</h4>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.naturalLanguageProcessing ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div
+                          className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.naturalLanguageProcessing ? 'bg-green-500' : 'bg-red-500'}`}
+                        />
                         <span className="text-sm">Natural Language</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.collaborativeIntelligence ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div
+                          className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.collaborativeIntelligence ? 'bg-green-500' : 'bg-red-500'}`}
+                        />
                         <span className="text-sm">Collaborative AI</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.quantumProcessing ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div
+                          className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.quantumProcessing ? 'bg-green-500' : 'bg-red-500'}`}
+                        />
                         <span className="text-sm">Quantum Processing</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.adaptiveLearning ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div
+                          className={`w-3 h-3 rounded-full ${demonstrationResults.capabilities.adaptiveLearning ? 'bg-green-500' : 'bg-red-500'}`}
+                        />
                         <span className="text-sm">Adaptive Learning</span>
                       </div>
                     </div>
                   </div>
 
-                  {demonstrationResults.operations && demonstrationResults.operations.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold mb-2">Operation Results:</h4>
-                      <div className="space-y-2">
-                        {demonstrationResults.operations.map((op: any, index: number) => (
-                          <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span className="text-sm font-medium capitalize">{op.type.replace('-', ' ')}</span>
-                            <Badge className={op.result?.success ? 'bg-green-500' : 'bg-red-500'}>
-                              {op.result?.success ? 'Success' : 'Failed'}
-                            </Badge>
-                          </div>
-                        ))}
+                  {demonstrationResults.operations &&
+                    demonstrationResults.operations.length > 0 && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Operation Results:</h4>
+                        <div className="space-y-2">
+                          {demonstrationResults.operations.map((op: any, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                            >
+                              <span className="text-sm font-medium capitalize">
+                                {op.type.replace('-', ' ')}
+                              </span>
+                              <Badge className={op.result?.success ? 'bg-green-500' : 'bg-red-500'}>
+                                {op.result?.success ? 'Success' : 'Failed'}
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               )}
             </CardContent>

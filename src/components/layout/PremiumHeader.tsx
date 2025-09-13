@@ -4,15 +4,15 @@ import { useState, useEffect } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { 
-  Brain, 
-  Crown, 
-  Diamond, 
-  Sparkles, 
-  Activity, 
-  Zap, 
-  Shield, 
-  CheckCircle, 
+import {
+  Brain,
+  Crown,
+  Diamond,
+  Sparkles,
+  Activity,
+  Zap,
+  Shield,
+  CheckCircle,
   Star,
   Users,
   Cpu,
@@ -28,7 +28,7 @@ import {
   Bell,
   Search,
   User,
-  LogOut
+  LogOut,
 } from 'lucide-react';
 
 export default function PremiumHeader() {
@@ -40,7 +40,7 @@ export default function PremiumHeader() {
     health: 100,
     activeAgents: 12,
     tasksRunning: 48,
-    successRate: 99.8
+    successRate: 99.8,
   });
 
   useEffect(() => {
@@ -52,7 +52,10 @@ export default function PremiumHeader() {
         cpu: Math.max(20, Math.min(95, prev.cpu + (Math.random() - 0.5) * 2)),
         memory: Math.max(30, Math.min(85, prev.memory + (Math.random() - 0.5) * 2)),
         network: Math.max(90, Math.min(100, prev.network + (Math.random() - 0.5) * 1)),
-        tasksRunning: Math.max(20, Math.min(80, prev.tasksRunning + Math.floor((Math.random() - 0.5) * 4)))
+        tasksRunning: Math.max(
+          20,
+          Math.min(80, prev.tasksRunning + Math.floor((Math.random() - 0.5) * 4))
+        ),
       }));
     }, 3000);
 
@@ -120,7 +123,9 @@ export default function PremiumHeader() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Memory</p>
-                  <p className="text-lg font-bold text-green-600">{systemStats.memory.toFixed(1)}%</p>
+                  <p className="text-lg font-bold text-green-600">
+                    {systemStats.memory.toFixed(1)}%
+                  </p>
                 </div>
                 <Database className="h-8 w-8 text-green-500" />
               </div>
@@ -132,7 +137,9 @@ export default function PremiumHeader() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-gray-600 dark:text-gray-400">Network</p>
-                  <p className="text-lg font-bold text-purple-600">{systemStats.network.toFixed(1)}%</p>
+                  <p className="text-lg font-bold text-purple-600">
+                    {systemStats.network.toFixed(1)}%
+                  </p>
                 </div>
                 <Wifi className="h-8 w-8 text-purple-500" />
               </div>
@@ -179,15 +186,26 @@ export default function PremiumHeader() {
         {/* Quick Actions */}
         <div className="flex flex-wrap items-center justify-between gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-4">
-            <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+            <Button
+              size="sm"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+            >
               <Rocket className="h-4 w-4 mr-2" />
               Quick Launch
             </Button>
-            <Button size="sm" variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-blue-200 text-blue-600 hover:bg-blue-50"
+            >
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
-            <Button size="sm" variant="outline" className="border-green-200 text-green-600 hover:bg-green-50">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-green-200 text-green-600 hover:bg-green-50"
+            >
               <TrendingUp className="h-4 w-4 mr-2" />
               Analytics
             </Button>

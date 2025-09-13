@@ -64,7 +64,7 @@ export const useSystemMetrics = () => {
     cpuUsage: 42,
     memoryUsage: 68,
     diskUsage: 65,
-    networkLoad: 78
+    networkLoad: 78,
   });
 
   useEffect(() => {
@@ -73,11 +73,14 @@ export const useSystemMetrics = () => {
         ...prev,
         health: Math.min(100, Math.max(95, prev.health + (Math.random() - 0.5) * 2)),
         latency: Math.max(0.5, Math.min(2.0, prev.latency + (Math.random() - 0.5) * 0.2)),
-        requestsPerSecond: Math.max(1800000, Math.min(2500000, prev.requestsPerSecond + (Math.random() - 0.5) * 100000)),
+        requestsPerSecond: Math.max(
+          1800000,
+          Math.min(2500000, prev.requestsPerSecond + (Math.random() - 0.5) * 100000)
+        ),
         cpuUsage: Math.max(30, Math.min(70, prev.cpuUsage + (Math.random() - 0.5) * 5)),
         memoryUsage: Math.max(60, Math.min(80, prev.memoryUsage + (Math.random() - 0.5) * 3)),
         diskUsage: Math.max(60, Math.min(75, prev.diskUsage + (Math.random() - 0.5) * 2)),
-        networkLoad: Math.max(70, Math.min(85, prev.networkLoad + (Math.random() - 0.5) * 4))
+        networkLoad: Math.max(70, Math.min(85, prev.networkLoad + (Math.random() - 0.5) * 4)),
       }));
     }, 3000);
 
@@ -95,7 +98,7 @@ export const useSecurityMetrics = () => {
     threatDetection: 'AI-Powered',
     vulnerabilities: 0,
     blockedAttacks: 1247,
-    securityScore: 100
+    securityScore: 100,
   });
 
   useEffect(() => {
@@ -103,7 +106,7 @@ export const useSecurityMetrics = () => {
       setMetrics(prev => ({
         ...prev,
         blockedAttacks: prev.blockedAttacks + Math.floor(Math.random() * 3),
-        securityScore: Math.min(100, Math.max(95, prev.securityScore + (Math.random() - 0.5) * 1))
+        securityScore: Math.min(100, Math.max(95, prev.securityScore + (Math.random() - 0.5) * 1)),
       }));
     }, 5000);
 
@@ -121,7 +124,7 @@ export const useNetworkMetrics = () => {
     bandwidth: 10,
     packetLoss: 0.01,
     jitter: 0.5,
-    connectionCount: 12450
+    connectionCount: 12450,
   });
 
   useEffect(() => {
@@ -131,7 +134,10 @@ export const useNetworkMetrics = () => {
         serverLoad: Math.max(35, Math.min(55, prev.serverLoad + (Math.random() - 0.5) * 3)),
         bandwidth: Math.max(8, Math.min(12, prev.bandwidth + (Math.random() - 0.5) * 0.5)),
         packetLoss: Math.max(0, Math.min(0.05, prev.packetLoss + (Math.random() - 0.5) * 0.01)),
-        connectionCount: Math.max(12000, Math.min(13000, prev.connectionCount + (Math.random() - 0.5) * 100))
+        connectionCount: Math.max(
+          12000,
+          Math.min(13000, prev.connectionCount + (Math.random() - 0.5) * 100)
+        ),
       }));
     }, 4000);
 
@@ -149,7 +155,7 @@ export const useStorageMetrics = () => {
     compressionRatio: 92,
     readSpeed: 850,
     writeSpeed: 720,
-    availableSpace: 32
+    availableSpace: 32,
   });
 
   useEffect(() => {
@@ -157,10 +163,13 @@ export const useStorageMetrics = () => {
       setMetrics(prev => ({
         ...prev,
         storageUsed: Math.max(65, Math.min(75, prev.storageUsed + (Math.random() - 0.5) * 1)),
-        compressionRatio: Math.max(88, Math.min(95, prev.compressionRatio + (Math.random() - 0.5) * 2)),
+        compressionRatio: Math.max(
+          88,
+          Math.min(95, prev.compressionRatio + (Math.random() - 0.5) * 2)
+        ),
         readSpeed: Math.max(800, Math.min(900, prev.readSpeed + (Math.random() - 0.5) * 20)),
         writeSpeed: Math.max(680, Math.min(760, prev.writeSpeed + (Math.random() - 0.5) * 20)),
-        availableSpace: 100 - prev.storageUsed
+        availableSpace: 100 - prev.storageUsed,
       }));
     }, 6000);
 
@@ -181,7 +190,7 @@ export const useAgentMetrics = () => {
       successRate: 99.2,
       responseTime: 12,
       lastActivity: new Date(),
-      capabilities: ['Task Management', 'Resource Allocation', 'System Monitoring']
+      capabilities: ['Task Management', 'Resource Allocation', 'System Monitoring'],
     },
     {
       id: '2',
@@ -192,7 +201,7 @@ export const useAgentMetrics = () => {
       successRate: 99.8,
       responseTime: 8,
       lastActivity: new Date(),
-      capabilities: ['Threat Detection', 'Security Monitoring', 'Incident Response']
+      capabilities: ['Threat Detection', 'Security Monitoring', 'Incident Response'],
     },
     {
       id: '3',
@@ -203,7 +212,7 @@ export const useAgentMetrics = () => {
       successRate: 97.5,
       responseTime: 15,
       lastActivity: new Date(),
-      capabilities: ['Data Analysis', 'Pattern Recognition', 'Predictive Modeling']
+      capabilities: ['Data Analysis', 'Pattern Recognition', 'Predictive Modeling'],
     },
     {
       id: '4',
@@ -214,7 +223,7 @@ export const useAgentMetrics = () => {
       successRate: 99.1,
       responseTime: 10,
       lastActivity: new Date(),
-      capabilities: ['Network Monitoring', 'Traffic Analysis', 'Anomaly Detection']
+      capabilities: ['Network Monitoring', 'Traffic Analysis', 'Anomaly Detection'],
     },
     {
       id: '5',
@@ -225,7 +234,7 @@ export const useAgentMetrics = () => {
       successRate: 98.7,
       responseTime: 18,
       lastActivity: new Date(Date.now() - 300000),
-      capabilities: ['Model Training', 'Performance Tuning', 'Resource Optimization']
+      capabilities: ['Model Training', 'Performance Tuning', 'Resource Optimization'],
     },
     {
       id: '6',
@@ -236,7 +245,7 @@ export const useAgentMetrics = () => {
       successRate: 100,
       responseTime: 6,
       lastActivity: new Date(),
-      capabilities: ['Compliance Monitoring', 'Audit Trail', 'Reporting']
+      capabilities: ['Compliance Monitoring', 'Audit Trail', 'Reporting'],
     },
     {
       id: '7',
@@ -247,7 +256,7 @@ export const useAgentMetrics = () => {
       successRate: 99.9,
       responseTime: 25,
       lastActivity: new Date(Date.now() - 600000),
-      capabilities: ['Data Backup', 'Recovery Management', 'Integrity Verification']
+      capabilities: ['Data Backup', 'Recovery Management', 'Integrity Verification'],
     },
     {
       id: '8',
@@ -258,29 +267,37 @@ export const useAgentMetrics = () => {
       successRate: 96.8,
       responseTime: 20,
       lastActivity: new Date(),
-      capabilities: ['User Support', 'Query Processing', 'Task Automation']
-    }
+      capabilities: ['User Support', 'Query Processing', 'Task Automation'],
+    },
   ]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setAgents(prev => prev.map(agent => {
-        const shouldUpdate = Math.random() > 0.7;
-        if (!shouldUpdate) return agent;
+      setAgents(prev =>
+        prev.map(agent => {
+          const shouldUpdate = Math.random() > 0.7;
+          if (!shouldUpdate) return agent;
 
-        const statusOptions: AgentMetrics['status'][] = ['active', 'idle', 'busy', 'offline'];
-        const newStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
-        
-        return {
-          ...agent,
-          status: newStatus,
-          tasksCompleted: agent.tasksCompleted + Math.floor(Math.random() * 3),
-          tasksRunning: Math.max(0, Math.min(20, agent.tasksRunning + (Math.random() > 0.5 ? 1 : -1))),
-          successRate: Math.max(90, Math.min(100, agent.successRate + (Math.random() - 0.5) * 0.5)),
-          responseTime: Math.max(5, Math.min(30, agent.responseTime + (Math.random() - 0.5) * 2)),
-          lastActivity: Math.random() > 0.3 ? new Date() : agent.lastActivity
-        };
-      }));
+          const statusOptions: AgentMetrics['status'][] = ['active', 'idle', 'busy', 'offline'];
+          const newStatus = statusOptions[Math.floor(Math.random() * statusOptions.length)];
+
+          return {
+            ...agent,
+            status: newStatus,
+            tasksCompleted: agent.tasksCompleted + Math.floor(Math.random() * 3),
+            tasksRunning: Math.max(
+              0,
+              Math.min(20, agent.tasksRunning + (Math.random() > 0.5 ? 1 : -1))
+            ),
+            successRate: Math.max(
+              90,
+              Math.min(100, agent.successRate + (Math.random() - 0.5) * 0.5)
+            ),
+            responseTime: Math.max(5, Math.min(30, agent.responseTime + (Math.random() - 0.5) * 2)),
+            lastActivity: Math.random() > 0.3 ? new Date() : agent.lastActivity,
+          };
+        })
+      );
     }, 4000);
 
     return () => clearInterval(interval);

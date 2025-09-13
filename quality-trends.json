@@ -70,5 +70,14 @@
     "security": 999,
     "performance": 0,
     "coverage": 0
+  },
+  {
+    "timestamp": "2025-09-13T13:28:02.746Z",
+    "score": 0,
+    "errors": 999,
+    "warnings": 999,
+    "security": 999,
+    "performance": 0,
+    "coverage": 0
   }
 ]

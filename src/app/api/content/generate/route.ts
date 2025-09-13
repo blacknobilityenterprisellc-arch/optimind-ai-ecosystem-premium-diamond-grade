@@ -1,8 +1,7 @@
-import { NextResponse, NextRequest } from 'next/server';
 import { ValidationSchemas, validateInput, EnhancedError } from '@/lib/input-validation';
 import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
 
@@ -20,12 +19,13 @@ export async function POST(request: NextRequest) {
       messages: [
         {
           role: 'system',
-          content: 'You are an expert content writer who creates high-quality, engaging content tailored to specific audiences and tones.'
+          content:
+            'You are an expert content writer who creates high-quality, engaging content tailored to specific audiences and tones.',
         },
         {
           role: 'user',
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       model: 'gpt-4',
       temperature: 0.7,
@@ -49,27 +49,27 @@ export async function POST(request: NextRequest) {
         tone: validatedData.tone,
         length: validatedData.length,
         targetAudience: validatedData.targetAudience,
-        keywords: validatedData.keywords
-      }
+        keywords: validatedData.keywords,
+      },
     });
   } catch (error) {
     console.error('Content generation error:', error);
-    
+
     if (error instanceof EnhancedError) {
       return NextResponse.json(
-        { 
+        {
           error: error.message,
           code: error.code,
-          details: error.details 
+          details: error.details,
         },
         { status: error.statusCode }
       );
     }
-    
+
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate content',
-        code: 'CONTENT_GENERATION_ERROR' 
+        code: 'CONTENT_GENERATION_ERROR',
       },
       { status: 500 }
     );

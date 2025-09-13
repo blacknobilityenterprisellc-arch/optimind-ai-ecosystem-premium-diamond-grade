@@ -4,7 +4,7 @@ import { universalMCPEnhancementSystem } from '@/lib/universal-mcp-enhancement-s
 /**
  * OptiMind AI Ecosystem - Universal MCP Enhancement API v3.0
  * Premium Diamond Grade Multi-Sector AI Services Platform
- * 
+ *
  * This API provides comprehensive access to enhanced MCP features for all user segments.
  */
 
@@ -95,10 +95,7 @@ export async function POST(request: Request) {
         break;
 
       default:
-        return NextResponse.json(
-          { error: 'Unsupported operation', operation },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: 'Unsupported operation', operation }, { status: 400 });
     }
 
     return NextResponse.json({
@@ -141,18 +138,18 @@ export async function GET() {
         'model_optimization',
         'pricing_calculator',
         'compliance_management',
-        'system_health_monitoring'
+        'system_health_monitoring',
       ],
       summary: {
         userSegments: userSegments.length,
         serviceCategories: serviceCategories.length,
         supportedRegions: regionConfigs.filter(r => r.supported).length,
         integrationPartners: integrationPartners.length,
-        systemHealth
+        systemHealth,
       },
       endpoints: [
         'POST /api/universal-mcp/enhancement - All enhancement operations',
-        'GET /api/universal-mcp/enhancement - System overview and health'
+        'GET /api/universal-mcp/enhancement - System overview and health',
       ],
       timestamp: new Date().toISOString(),
     });

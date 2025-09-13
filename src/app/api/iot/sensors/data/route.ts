@@ -1,14 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { optimindIoTArchitecture } from '@/lib/iot-architecture';
 
 /**
  * IoT Sensor Data API Endpoint
- * 
+ *
  * Provides API for ingesting and retrieving sensor data readings.
  * Supports real-time data collection, batch processing, and data queries.
  */
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const { searchParams } = new URL(request.url);
     const sensorId = searchParams.get('sensorId');
@@ -30,8 +29,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Collect data points from all target sensors
-    let allDataPoints: any[] = [];
-    
+    const allDataPoints: any[] = [];
+
     targetSensors.forEach(sensor => {
       sensor.data.forEach(dataPoint => {
         // Apply time filters if specified
@@ -41,12 +40,12 @@ export async function GET(request: NextRequest) {
         if (endTime && new Date(dataPoint.timestamp) > new Date(endTime)) {
           return;
         }
-        
+
         allDataPoints.push({
           ...dataPoint,
           sensorId: sensor.id,
           sensorName: sensor.name,
-          deviceName: sensors.find(s => s.id === sensor.deviceId)?.name || 'Unknown'
+          deviceName: sensors.find(s => s.id === sensor.deviceId)?.name || 'Unknown',
         });
       });
     });
@@ -68,7 +67,7 @@ export async function GET(request: NextRequest) {
         totalItems: allDataPoints.length,
         itemsPerPage: limit,
         hasNext: endIndex < allDataPoints.length,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       },
       metadata: {
         timestamp: new Date().toISOString(),
@@ -76,24 +75,24 @@ export async function GET(request: NextRequest) {
         sensorsQueried: targetSensors.length,
         timeRange: {
           startTime: startTime || 'unlimited',
-          endTime: endTime || 'unlimited'
-        }
-      }
+          endTime: endTime || 'unlimited',
+        },
+      },
     });
   } catch (error) {
     console.error('Error fetching sensor data:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to fetch sensor data',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     const body = await request.json();
     const { sensorId, value, unit, quality, metadata, batchData } = body;
@@ -110,7 +109,7 @@ export async function POST(request: NextRequest) {
         } catch (error) {
           errors.push({
             dataPoint,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
           });
         }
       }
@@ -121,20 +120,20 @@ export async function POST(request: NextRequest) {
           processed: results.length,
           failed: errors.length,
           results,
-          errors
+          errors,
         },
         message: `Batch processing completed: ${results.length} successful, ${errors.length} failed`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
 
     // Handle single data point ingestion
     if (!sensorId || value === undefined) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Missing required fields',
-          required: ['sensorId', 'value']
+          required: ['sensorId', 'value'],
         },
         { status: 400 }
       );
@@ -146,22 +145,25 @@ export async function POST(request: NextRequest) {
       unit,
       quality,
       metadata,
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
-    return NextResponse.json({
-      success: true,
-      data: result,
-      message: 'Sensor data ingested successfully',
-      timestamp: new Date().toISOString()
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        data: result,
+        message: 'Sensor data ingested successfully',
+        timestamp: new Date().toISOString(),
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Error ingesting sensor data:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to ingest sensor data',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -184,7 +186,7 @@ async function processSingleDataPoint(dataPoint: any) {
     consistency: 95,
     timeliness: 100,
     validity: true,
-    confidence: 90
+    confidence: 90,
   };
 
   // Create data point
@@ -193,7 +195,7 @@ async function processSingleDataPoint(dataPoint: any) {
     value,
     unit: unit || sensor.specifications.range ? 'units' : 'unknown',
     quality: dataQuality,
-    metadata: metadata || {}
+    metadata: metadata || {},
   };
 
   // Add data point to sensor
@@ -210,7 +212,7 @@ async function processSingleDataPoint(dataPoint: any) {
   return {
     sensorId,
     dataPoint: newDataPoint,
-    status: 'ingested'
+    status: 'ingested',
   };
 }
 
@@ -222,8 +224,9 @@ function updateSensorHealth(sensor: any, dataPoint: any) {
   const now = new Date();
   const timeSinceLastReading = now.getTime() - new Date(dataPoint.timestamp).getTime();
   const expectedInterval = 1000 / sensor.specifications.samplingRate; // in ms
-  
-  if (timeSinceLastReading > expectedInterval * 5) { // 5x expected interval
+
+  if (timeSinceLastReading > expectedInterval * 5) {
+    // 5x expected interval
     sensor.health.uptime = Math.max(0, sensor.health.uptime - 5);
   } else {
     sensor.health.uptime = Math.min(100, sensor.health.uptime + 1);

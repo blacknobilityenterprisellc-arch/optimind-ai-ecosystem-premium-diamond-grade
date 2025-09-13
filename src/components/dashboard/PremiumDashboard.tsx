@@ -6,10 +6,34 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Brain, Users, Network, Activity, BarChart3, Cpu, Database, Wifi, Shield,
-  TrendingUp, Target, CheckCircle, AlertTriangle, Crown, Diamond, Zap, Globe,
-  Server, Cloud, Atom, RefreshCw, Play, Pause, Settings, Eye, Lock, Key
+import {
+  Brain,
+  Users,
+  Network,
+  Activity,
+  BarChart3,
+  Cpu,
+  Database,
+  Wifi,
+  Shield,
+  TrendingUp,
+  Target,
+  CheckCircle,
+  AlertTriangle,
+  Crown,
+  Diamond,
+  Zap,
+  Globe,
+  Server,
+  Cloud,
+  Atom,
+  RefreshCw,
+  Play,
+  Pause,
+  Settings,
+  Eye,
+  Lock,
+  Key,
 } from 'lucide-react';
 
 interface SystemMetrics {
@@ -41,14 +65,42 @@ export default function PremiumDashboard() {
     activeAgents: 12,
     tasksRunning: 48,
     successRate: 99.8,
-    uptime: '99.99%'
+    uptime: '99.99%',
   });
 
   const [agents, setAgents] = useState<AgentStatus[]>([
-    { id: '1', name: 'GLM-4.5 Agent', status: 'active', tasks: 8, performance: 98, lastActivity: '2s ago' },
-    { id: '2', name: 'Analytics Agent', status: 'processing', tasks: 12, performance: 95, lastActivity: '1s ago' },
-    { id: '3', name: 'Security Agent', status: 'active', tasks: 3, performance: 100, lastActivity: '5s ago' },
-    { id: '4', name: 'Data Processing', status: 'idle', tasks: 0, performance: 85, lastActivity: '1m ago' },
+    {
+      id: '1',
+      name: 'GLM-4.5 Agent',
+      status: 'active',
+      tasks: 8,
+      performance: 98,
+      lastActivity: '2s ago',
+    },
+    {
+      id: '2',
+      name: 'Analytics Agent',
+      status: 'processing',
+      tasks: 12,
+      performance: 95,
+      lastActivity: '1s ago',
+    },
+    {
+      id: '3',
+      name: 'Security Agent',
+      status: 'active',
+      tasks: 3,
+      performance: 100,
+      lastActivity: '5s ago',
+    },
+    {
+      id: '4',
+      name: 'Data Processing',
+      status: 'idle',
+      tasks: 0,
+      performance: 85,
+      lastActivity: '1m ago',
+    },
   ]);
 
   useEffect(() => {
@@ -58,15 +110,23 @@ export default function PremiumDashboard() {
         cpu: Math.max(20, Math.min(95, prev.cpu + (Math.random() - 0.5) * 2)),
         memory: Math.max(30, Math.min(85, prev.memory + (Math.random() - 0.5) * 2)),
         network: Math.max(90, Math.min(100, prev.network + (Math.random() - 0.5) * 1)),
-        tasksRunning: Math.max(20, Math.min(80, prev.tasksRunning + Math.floor((Math.random() - 0.5) * 4))),
-        successRate: Math.max(95, Math.min(100, prev.successRate + (Math.random() - 0.5) * 0.2))
+        tasksRunning: Math.max(
+          20,
+          Math.min(80, prev.tasksRunning + Math.floor((Math.random() - 0.5) * 4))
+        ),
+        successRate: Math.max(95, Math.min(100, prev.successRate + (Math.random() - 0.5) * 0.2)),
       }));
 
-      setAgents(prev => prev.map(agent => ({
-        ...agent,
-        performance: Math.max(70, Math.min(100, agent.performance + (Math.random() - 0.5) * 2)),
-        tasks: agent.status === 'processing' ? agent.tasks + Math.floor(Math.random() * 2) : agent.tasks
-      })));
+      setAgents(prev =>
+        prev.map(agent => ({
+          ...agent,
+          performance: Math.max(70, Math.min(100, agent.performance + (Math.random() - 0.5) * 2)),
+          tasks:
+            agent.status === 'processing'
+              ? agent.tasks + Math.floor(Math.random() * 2)
+              : agent.tasks,
+        }))
+      );
     }, 3000);
 
     return () => clearInterval(interval);
@@ -74,11 +134,16 @@ export default function PremiumDashboard() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'text-green-600 bg-green-100';
-      case 'processing': return 'text-blue-600 bg-blue-100';
-      case 'idle': return 'text-yellow-600 bg-yellow-100';
-      case 'error': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'active':
+        return 'text-green-600 bg-green-100';
+      case 'processing':
+        return 'text-blue-600 bg-blue-100';
+      case 'idle':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'error':
+        return 'text-red-600 bg-red-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
     }
   };
 
@@ -90,8 +155,12 @@ export default function PremiumDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">System Health</p>
-                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">{metrics.health}%</p>
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                  System Health
+                </p>
+                <p className="text-2xl font-bold text-blue-800 dark:text-blue-200">
+                  {metrics.health}%
+                </p>
               </div>
               <div className="p-3 bg-blue-500 rounded-full">
                 <Activity className="h-6 w-6 text-white" />
@@ -105,8 +174,12 @@ export default function PremiumDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-600 dark:text-green-400">Active Agents</p>
-                <p className="text-2xl font-bold text-green-800 dark:text-green-200">{metrics.activeAgents}</p>
+                <p className="text-sm font-medium text-green-600 dark:text-green-400">
+                  Active Agents
+                </p>
+                <p className="text-2xl font-bold text-green-800 dark:text-green-200">
+                  {metrics.activeAgents}
+                </p>
               </div>
               <div className="p-3 bg-green-500 rounded-full">
                 <Users className="h-6 w-6 text-white" />
@@ -123,7 +196,9 @@ export default function PremiumDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Processing Speed</p>
+                <p className="text-sm font-medium text-purple-600 dark:text-purple-400">
+                  Processing Speed
+                </p>
                 <p className="text-2xl font-bold text-purple-800 dark:text-purple-200">4.2x</p>
               </div>
               <div className="p-3 bg-purple-500 rounded-full">
@@ -141,8 +216,12 @@ export default function PremiumDashboard() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-orange-600 dark:text-orange-400">Success Rate</p>
-                <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">{metrics.successRate}%</p>
+                <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                  Success Rate
+                </p>
+                <p className="text-2xl font-bold text-orange-800 dark:text-orange-200">
+                  {metrics.successRate}%
+                </p>
               </div>
               <div className="p-3 bg-orange-500 rounded-full">
                 <Target className="h-6 w-6 text-white" />
@@ -176,7 +255,7 @@ export default function PremiumDashboard() {
               <TabsTrigger value="performance">Performance</TabsTrigger>
               <TabsTrigger value="security">Security</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="overview" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -187,19 +266,25 @@ export default function PremiumDashboard() {
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">CPU Usage</span>
-                      <span className="text-sm font-bold text-blue-600">{metrics.cpu.toFixed(1)}%</span>
+                      <span className="text-sm font-bold text-blue-600">
+                        {metrics.cpu.toFixed(1)}%
+                      </span>
                     </div>
                     <Progress value={metrics.cpu} className="h-2" />
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">Memory Usage</span>
-                      <span className="text-sm font-bold text-green-600">{metrics.memory.toFixed(1)}%</span>
+                      <span className="text-sm font-bold text-green-600">
+                        {metrics.memory.toFixed(1)}%
+                      </span>
                     </div>
                     <Progress value={metrics.memory} className="h-2" />
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium">Network</span>
-                      <span className="text-sm font-bold text-purple-600">{metrics.network.toFixed(1)}%</span>
+                      <span className="text-sm font-bold text-purple-600">
+                        {metrics.network.toFixed(1)}%
+                      </span>
                     </div>
                     <Progress value={metrics.network} className="h-2" />
                   </div>
@@ -236,10 +321,10 @@ export default function PremiumDashboard() {
                 </div>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="agents" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {agents.map((agent) => (
+                {agents.map(agent => (
                   <Card key={agent.id} className="border-gray-200 dark:border-gray-700">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-4">
@@ -272,7 +357,7 @@ export default function PremiumDashboard() {
                 ))}
               </div>
             </TabsContent>
-            
+
             <TabsContent value="performance" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card>
@@ -299,7 +384,7 @@ export default function PremiumDashboard() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-4">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -324,7 +409,7 @@ export default function PremiumDashboard() {
                     </div>
                   </CardContent>
                 </Card>
-                
+
                 <Card>
                   <CardHeader className="pb-4">
                     <CardTitle className="text-lg flex items-center gap-2">
@@ -351,7 +436,7 @@ export default function PremiumDashboard() {
                 </Card>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="security" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">

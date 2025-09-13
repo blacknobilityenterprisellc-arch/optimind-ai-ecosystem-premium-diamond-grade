@@ -366,13 +366,13 @@ class EnhancedSecureVault extends EventEmitter {
       const checksum = await this.calculateChecksum(optimizedData.data);
 
       // Start replication if enabled
-      let replicationStatus: 'pending' | 'completed' | 'failed' = 'pending';
+      const replicationStatus: 'pending' | 'completed' | 'failed' = 'pending';
       if (this.config.security.replication) {
         this.startReplication(params.objectKey, primaryRegion.id);
       }
 
       // Start backup if enabled
-      let backupStatus: 'pending' | 'completed' | 'failed' = 'pending';
+      const backupStatus: 'pending' | 'completed' | 'failed' = 'pending';
       if (this.config.backup.enabled) {
         this.startBackup(params.objectKey, primaryRegion.id);
       }
@@ -458,7 +458,7 @@ class EnhancedSecureVault extends EventEmitter {
     compressionRatio?: number;
     deduplicationSaved?: number;
   }> {
-    let optimizedData = { ...storageData };
+    const optimizedData = { ...storageData };
     let compressionRatio: number | undefined;
     let deduplicationSaved: number | undefined;
 

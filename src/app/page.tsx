@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Brain, 
-  Users, 
-  Network, 
-  Zap, 
-  Activity, 
+import {
+  Brain,
+  Users,
+  Network,
+  Zap,
+  Activity,
   BarChart3,
   TrendingUp,
   Target,
@@ -45,7 +45,7 @@ import {
   Layers,
   Grid3X3,
   Binary,
-  CircuitBoard
+  CircuitBoard,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -54,7 +54,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-900 dark:to-purple-900">
       {/* Premium Diamond-Grade Header */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
-      
+
       <div className="container mx-auto p-4 md:p-6 space-y-8 md:space-y-12">
         {/* Hero Section - Premium Diamond-Grade */}
         <div className="text-center space-y-6 md:space-y-8 py-8 md:py-16 relative">
@@ -84,13 +84,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            
+
             <p className="text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed px-4">
-              Enterprise-Grade AI Platform with <span className="font-bold text-blue-600">45+ AI Tools</span>, 
-              <span className="font-bold text-purple-600">35+ Advanced AI Models</span>, and 
+              Enterprise-Grade AI Platform with{' '}
+              <span className="font-bold text-blue-600">45+ AI Tools</span>,
+              <span className="font-bold text-purple-600">35+ Advanced AI Models</span>, and
               <span className="font-bold text-pink-600">Military-Grade Security</span>
             </p>
-            
+
             <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mt-6 md:mt-8">
               <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">
                 <Star className="h-3 w-3 md:h-4 md:w-4 mr-1" />
@@ -101,8 +102,7 @@ export default function Home() {
                 Real-time Processing
               </Badge>
               <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">
-                <Cpu className="h-3 w-3 md:h-4 md:w-4 mr-1" />
-                8 AI Agents Active
+                <Cpu className="h-3 w-3 md:h-4 md:w-4 mr-1" />8 AI Agents Active
               </Badge>
               <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">
                 <Shield className="h-3 w-3 md:h-4 md:w-4 mr-1" />
@@ -112,7 +112,10 @@ export default function Home() {
 
             {/* Premium CTA */}
             <div className="mt-8 md:mt-12">
-              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold px-6 md:px-8 py-3 md:py-4 text-lg shadow-xl transform hover:scale-105 transition-all duration-300">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold px-6 md:px-8 py-3 md:py-4 text-lg shadow-xl transform hover:scale-105 transition-all duration-300"
+              >
                 <Rocket className="h-5 w-5 mr-2" />
                 Launch Premium Experience
                 <ArrowRight className="h-5 w-5 ml-2" />
@@ -168,7 +171,10 @@ export default function Home() {
                   <span className="font-bold text-blue-600">12ms</span>
                 </div>
                 <Link href="/ai-agents">
-                  <Button className="w-full mt-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white" size="sm">
+                  <Button
+                    className="w-full mt-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                    size="sm"
+                  >
                     Manage Premium Agents
                     <ArrowRight className="h-3 w-3 ml-2" />
                   </Button>
@@ -222,7 +228,10 @@ export default function Home() {
                   <span className="font-bold text-purple-600">35+</span>
                 </div>
                 <Link href="/enhanced-ai-orchestrator">
-                  <Button className="w-full mt-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white" size="sm">
+                  <Button
+                    className="w-full mt-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
+                    size="sm"
+                  >
                     Access Enhanced AI
                     <ArrowRight className="h-3 w-3 ml-2" />
                   </Button>
@@ -276,7 +285,10 @@ export default function Home() {
                   <span className="font-bold text-red-600">Military</span>
                 </div>
                 <Link href="/glm-orchestrator-demo">
-                  <Button className="w-full mt-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white" size="sm">
+                  <Button
+                    className="w-full mt-6 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white"
+                    size="sm"
+                  >
                     View Orchestrator
                     <ArrowRight className="h-3 w-3 ml-2" />
                   </Button>
@@ -330,7 +342,10 @@ export default function Home() {
                   <span className="font-bold text-blue-600">Real-time</span>
                 </div>
                 <Link href="/analytics">
-                  <Button className="w-full mt-6 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white" size="sm">
+                  <Button
+                    className="w-full mt-6 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white"
+                    size="sm"
+                  >
                     View Analytics
                     <ArrowRight className="h-3 w-3 ml-2" />
                   </Button>
@@ -357,12 +372,20 @@ export default function Home() {
           <CardContent>
             <Tabs defaultValue="performance" className="w-full">
               <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="performance" className="text-xs md:text-sm">Performance</TabsTrigger>
-                <TabsTrigger value="security" className="text-xs md:text-sm">Security</TabsTrigger>
-                <TabsTrigger value="network" className="text-xs md:text-sm">Network</TabsTrigger>
-                <TabsTrigger value="storage" className="text-xs md:text-sm">Storage</TabsTrigger>
+                <TabsTrigger value="performance" className="text-xs md:text-sm">
+                  Performance
+                </TabsTrigger>
+                <TabsTrigger value="security" className="text-xs md:text-sm">
+                  Security
+                </TabsTrigger>
+                <TabsTrigger value="network" className="text-xs md:text-sm">
+                  Network
+                </TabsTrigger>
+                <TabsTrigger value="storage" className="text-xs md:text-sm">
+                  Storage
+                </TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="performance" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="text-center space-y-2">
@@ -387,7 +410,7 @@ export default function Home() {
                   </div>
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="security" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -432,7 +455,7 @@ export default function Home() {
                   </div>
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="network" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -477,7 +500,7 @@ export default function Home() {
                   </div>
                 </div>
               </TabsContent>
-              
+
               <TabsContent value="storage" className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -543,28 +566,40 @@ export default function Home() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <Link href="/ai-agents">
-                <Button className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300" variant="default">
+                <Button
+                  className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300"
+                  variant="default"
+                >
                   <Users className="h-8 w-8" />
                   <span className="font-semibold">AI Agents</span>
                   <span className="text-xs opacity-90">Manage Premium Agents</span>
                 </Button>
               </Link>
               <Link href="/enhanced-ai-orchestrator">
-                <Button className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300" variant="default">
+                <Button
+                  className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300"
+                  variant="default"
+                >
                   <Brain className="h-8 w-8" />
                   <span className="font-semibold">Enhanced AI</span>
                   <span className="text-xs opacity-90">Quantum Processing</span>
                 </Button>
               </Link>
               <Link href="/glm-orchestrator-demo">
-                <Button className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300" variant="default">
+                <Button
+                  className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300"
+                  variant="default"
+                >
                   <Network className="h-8 w-8" />
                   <span className="font-semibold">GLM Orchestrator</span>
                   <span className="text-xs opacity-90">Enterprise Control</span>
                 </Button>
               </Link>
               <Link href="/analytics">
-                <Button className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300" variant="default">
+                <Button
+                  className="w-full h-auto p-6 flex flex-col items-center gap-3 bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 shadow-lg transform hover:scale-105 transition-all duration-300"
+                  variant="default"
+                >
                   <BarChart3 className="h-8 w-8" />
                   <span className="font-semibold">Analytics</span>
                   <span className="text-xs opacity-90">Real-time Insights</span>
@@ -603,7 +638,7 @@ export default function Home() {
                   <Badge className="bg-green-100 text-green-800">Android</Badge>
                 </div>
               </div>
-              
+
               <div className="text-center space-y-4">
                 <div className="mx-auto w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
                   <Tablet className="h-10 w-10 text-white" />
@@ -617,7 +652,7 @@ export default function Home() {
                   <Badge className="bg-pink-100 text-pink-800">Surface</Badge>
                 </div>
               </div>
-              
+
               <div className="text-center space-y-4">
                 <div className="mx-auto w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
                   <Monitor className="h-10 w-10 text-white" />

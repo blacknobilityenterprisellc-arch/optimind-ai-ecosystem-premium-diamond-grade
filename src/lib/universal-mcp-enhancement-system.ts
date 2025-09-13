@@ -837,9 +837,9 @@ class UniversalMCPEnhancementSystem {
 
     const { basePrice, perUser, perTransaction, enterpriseDiscount, tieredDiscounts } = segment.pricingModel;
 
-    let baseCost = basePrice;
-    let userCost = users * perUser;
-    let transactionCost = transactions * perTransaction;
+    const baseCost = basePrice;
+    const userCost = users * perUser;
+    const transactionCost = transactions * perTransaction;
     let discount = 0;
 
     // Apply tiered discounts

@@ -1,32 +1,6 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { FolderOpen } from 'lucide-react';
-import { Sparkles } from 'lucide-react';
-import { Grid } from 'lucide-react';
-import { List } from 'lucide-react';
-import { Calendar } from 'lucide-react';
-import { MapPin } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { Tag } from 'lucide-react';
-import { Search } from 'lucide-react';
-import { SortAsc } from 'lucide-react';
-import { SortDesc } from 'lucide-react';
-import { Clock } from 'lucide-react';
-import { Star } from 'lucide-react';
-import { Heart } from 'lucide-react';
-import { Image as ImageIcon } from 'lucide-react';
-import { Camera } from 'lucide-react';
-import { Plus } from 'lucide-react';
-import { Settings } from 'lucide-react';
-import { RefreshCw } from 'lucide-react';
-import { CheckCircle } from 'lucide-react';
-import { Crown } from 'lucide-react';
-import { Zap } from 'lucide-react';
-import { BarChart3 } from 'lucide-react';
-import { TrendingUp } from 'lucide-react';
-import { Target } from 'lucide-react';
-import { Lightbulb } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

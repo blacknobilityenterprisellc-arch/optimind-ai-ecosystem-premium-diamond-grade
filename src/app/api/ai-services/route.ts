@@ -62,16 +62,22 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.001,
       perToken: 0.0001,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 4000,
       maxRequests: 100,
-      timeout: 30000
+      timeout: 30000,
     },
-    capabilities: ['Blog posts', 'Articles', 'Marketing copy', 'Technical writing', 'Creative writing'],
+    capabilities: [
+      'Blog posts',
+      'Articles',
+      'Marketing copy',
+      'Technical writing',
+      'Creative writing',
+    ],
     lastUpdated: new Date().toISOString(),
-    healthScore: 98
+    healthScore: 98,
   },
   {
     id: 'image-generation',
@@ -83,16 +89,22 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.02,
       perToken: 0,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 0,
       maxRequests: 50,
-      timeout: 60000
+      timeout: 60000,
     },
-    capabilities: ['Photorealistic images', 'Art generation', 'Logo design', 'Concept art', 'Illustrations'],
+    capabilities: [
+      'Photorealistic images',
+      'Art generation',
+      'Logo design',
+      'Concept art',
+      'Illustrations',
+    ],
     lastUpdated: new Date().toISOString(),
-    healthScore: 95
+    healthScore: 95,
   },
   {
     id: 'code-generation',
@@ -104,16 +116,16 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.005,
       perToken: 0.0002,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 2000,
       maxRequests: 200,
-      timeout: 45000
+      timeout: 45000,
     },
     capabilities: ['Python', 'JavaScript', 'TypeScript', 'Java', 'C++', 'Go', 'Rust'],
     lastUpdated: new Date().toISOString(),
-    healthScore: 97
+    healthScore: 97,
   },
   {
     id: 'data-analysis',
@@ -125,16 +137,21 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.01,
       perToken: 0.0005,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 8000,
       maxRequests: 30,
-      timeout: 120000
+      timeout: 120000,
     },
-    capabilities: ['Statistical analysis', 'Data visualization', 'Pattern recognition', 'Predictive modeling'],
+    capabilities: [
+      'Statistical analysis',
+      'Data visualization',
+      'Pattern recognition',
+      'Predictive modeling',
+    ],
     lastUpdated: new Date(Date.now() - 300000).toISOString(),
-    healthScore: 82
+    healthScore: 82,
   },
   {
     id: 'language-translation',
@@ -146,16 +163,21 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.002,
       perToken: 0.0001,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 5000,
       maxRequests: 150,
-      timeout: 30000
+      timeout: 30000,
     },
-    capabilities: ['100+ languages', 'Document translation', 'Real-time translation', 'Context-aware translation'],
+    capabilities: [
+      '100+ languages',
+      'Document translation',
+      'Real-time translation',
+      'Context-aware translation',
+    ],
     lastUpdated: new Date().toISOString(),
-    healthScore: 96
+    healthScore: 96,
   },
   {
     id: 'sentiment-analysis',
@@ -167,17 +189,22 @@ const aiServices: AIService[] = [
     pricing: {
       perRequest: 0.001,
       perToken: 0.00005,
-      currency: 'USD'
+      currency: 'USD',
     },
     limits: {
       maxTokens: 2000,
       maxRequests: 500,
-      timeout: 15000
+      timeout: 15000,
     },
-    capabilities: ['Emotion detection', 'Opinion mining', 'Brand sentiment', 'Customer feedback analysis'],
+    capabilities: [
+      'Emotion detection',
+      'Opinion mining',
+      'Brand sentiment',
+      'Customer feedback analysis',
+    ],
     lastUpdated: new Date().toISOString(),
-    healthScore: 99
-  }
+    healthScore: 99,
+  },
 ];
 
 // Simulated usage data
@@ -186,64 +213,66 @@ const serviceUsage: ServiceUsage[] = [
     serviceId: 'text-generation',
     requests: 15420,
     tokens: 2450000,
-    cost: 2450.00,
+    cost: 2450.0,
     averageResponseTime: 850,
     successRate: 98.5,
-    lastUsed: new Date().toISOString()
+    lastUsed: new Date().toISOString(),
   },
   {
     serviceId: 'image-generation',
     requests: 8760,
     tokens: 0,
-    cost: 1752.00,
+    cost: 1752.0,
     averageResponseTime: 3200,
     successRate: 96.2,
-    lastUsed: new Date().toISOString()
+    lastUsed: new Date().toISOString(),
   },
   {
     serviceId: 'code-generation',
     requests: 12350,
     tokens: 1850000,
-    cost: 4325.00,
+    cost: 4325.0,
     averageResponseTime: 1200,
     successRate: 97.8,
-    lastUsed: new Date().toISOString()
+    lastUsed: new Date().toISOString(),
   },
   {
     serviceId: 'data-analysis',
     requests: 3200,
     tokens: 2560000,
-    cost: 1600.00,
+    cost: 1600.0,
     averageResponseTime: 8500,
     successRate: 94.1,
-    lastUsed: new Date(Date.now() - 300000).toISOString()
+    lastUsed: new Date(Date.now() - 300000).toISOString(),
   },
   {
     serviceId: 'language-translation',
     requests: 9870,
     tokens: 4935000,
-    cost: 5182.50,
+    cost: 5182.5,
     averageResponseTime: 950,
     successRate: 99.1,
-    lastUsed: new Date().toISOString()
+    lastUsed: new Date().toISOString(),
   },
   {
     serviceId: 'sentiment-analysis',
     requests: 21500,
     tokens: 1075000,
-    cost: 1290.00,
+    cost: 1290.0,
     averageResponseTime: 450,
     successRate: 99.5,
-    lastUsed: new Date().toISOString()
-  }
+    lastUsed: new Date().toISOString(),
+  },
 ];
 
 function calculateServiceAnalytics(): ServiceAnalytics {
   const totalRequests = serviceUsage.reduce((sum, usage) => sum + usage.requests, 0);
   const totalTokens = serviceUsage.reduce((sum, usage) => sum + usage.tokens, 0);
   const totalCost = serviceUsage.reduce((sum, usage) => sum + usage.cost, 0);
-  const averageResponseTime = serviceUsage.reduce((sum, usage) => sum + usage.averageResponseTime, 0) / serviceUsage.length;
-  const overallSuccessRate = serviceUsage.reduce((sum, usage) => sum + usage.successRate, 0) / serviceUsage.length;
+  const averageResponseTime =
+    serviceUsage.reduce((sum, usage) => sum + usage.averageResponseTime, 0) / serviceUsage.length;
+  const overallSuccessRate =
+    serviceUsage.reduce((sum, usage) => sum + usage.successRate, 0) / serviceUsage.length;
 
   // Sort services by usage for top services
   const topServices = [...serviceUsage].sort((a, b) => b.requests - a.requests).slice(0, 5);
@@ -253,8 +282,8 @@ function calculateServiceAnalytics(): ServiceAnalytics {
     { period: '1h ago', requests: Math.floor(totalRequests * 0.15), cost: totalCost * 0.15 },
     { period: '2h ago', requests: Math.floor(totalRequests * 0.12), cost: totalCost * 0.12 },
     { period: '3h ago', requests: Math.floor(totalRequests * 0.18), cost: totalCost * 0.18 },
-    { period: '4h ago', requests: Math.floor(totalRequests * 0.10), cost: totalCost * 0.10 },
-    { period: '5h ago', requests: Math.floor(totalRequests * 0.08), cost: totalCost * 0.08 }
+    { period: '4h ago', requests: Math.floor(totalRequests * 0.1), cost: totalCost * 0.1 },
+    { period: '5h ago', requests: Math.floor(totalRequests * 0.08), cost: totalCost * 0.08 },
   ];
 
   return {
@@ -264,28 +293,32 @@ function calculateServiceAnalytics(): ServiceAnalytics {
     averageResponseTime,
     overallSuccessRate,
     topServices,
-    usageTrends
+    usageTrends,
   };
 }
 
 function getServiceInsights(services: AIService[], usage: ServiceUsage[]): string[] {
   const insights: string[] = [];
-  
+
   const availableServices = services.filter(s => s.status === 'available').length;
   const degradedServices = services.filter(s => s.status === 'degraded').length;
-  
+
   if (availableServices === services.length) {
     insights.push('All AI services are fully operational');
   } else if (degradedServices > 0) {
     insights.push(`${degradedServices} service(s) showing degraded performance`);
   }
-  
+
   const totalCost = usage.reduce((sum, u) => sum + u.cost, 0);
-  const mostUsedService = usage.reduce((max, current) => current.requests > max.requests ? current : max);
-  
+  const mostUsedService = usage.reduce((max, current) =>
+    current.requests > max.requests ? current : max
+  );
+
   insights.push(`Total usage cost: $${totalCost.toFixed(2)}`);
-  insights.push(`Most used service: ${services.find(s => s.id === mostUsedService.serviceId)?.name}`);
-  
+  insights.push(
+    `Most used service: ${services.find(s => s.id === mostUsedService.serviceId)?.name}`
+  );
+
   const avgSuccessRate = usage.reduce((sum, u) => sum + u.successRate, 0) / usage.length;
   if (avgSuccessRate > 98) {
     insights.push('Excellent service reliability maintained');
@@ -294,7 +327,7 @@ function getServiceInsights(services: AIService[], usage: ServiceUsage[]): strin
   } else {
     insights.push('Service reliability needs improvement');
   }
-  
+
   return insights;
 }
 
@@ -302,13 +335,13 @@ export const GET = withRateLimit(async () => {
   try {
     const analytics = calculateServiceAnalytics();
     const insights = getServiceInsights(aiServices, serviceUsage);
-    
+
     // Simulate real-time updates
     serviceUsage.forEach(usage => {
       usage.requests += Math.floor(Math.random() * 5);
       usage.lastUsed = new Date().toISOString();
     });
-    
+
     const response = {
       status: 'success',
       timestamp: new Date().toISOString(),
@@ -322,17 +355,21 @@ export const GET = withRateLimit(async () => {
           availableServices: aiServices.filter(s => s.status === 'available').length,
           totalUsage: analytics.totalRequests,
           totalCost: analytics.totalCost,
-          averageHealthScore: aiServices.reduce((sum, s) => sum + s.healthScore, 0) / aiServices.length,
-          lastUpdate: new Date().toISOString()
-        }
-      }
+          averageHealthScore:
+            aiServices.reduce((sum, s) => sum + s.healthScore, 0) / aiServices.length,
+          lastUpdate: new Date().toISOString(),
+        },
+      },
     };
-    
+
     return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching AI services data:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch AI services data', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        error: 'Failed to fetch AI services data',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     );
   }

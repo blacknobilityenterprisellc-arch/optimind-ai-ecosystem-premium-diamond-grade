@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Sparkles, Brain, Zap, Shield, TrendingUp, Users, Settings, Activity, BarChart3, Target, FileText, Image as ImageIcon, Search, Filter, RefreshCw, Play, Pause, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 // Enhanced interface for premium features
 interface PremiumFeature {

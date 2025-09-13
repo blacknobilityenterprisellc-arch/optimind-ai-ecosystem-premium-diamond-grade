@@ -6,15 +6,15 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Menu, 
-  X, 
-  Brain, 
-  Users, 
-  Network, 
-  BarChart3, 
-  Settings, 
-  Crown, 
+import {
+  Menu,
+  X,
+  Brain,
+  Users,
+  Network,
+  BarChart3,
+  Settings,
+  Crown,
   Diamond,
   Shield,
   Zap,
@@ -49,7 +49,7 @@ import {
   Sparkles,
   Rocket,
   ArrowRight,
-  LogOut
+  LogOut,
 } from 'lucide-react';
 
 const navigationItems = [
@@ -57,35 +57,35 @@ const navigationItems = [
     label: 'Dashboard',
     href: '/',
     icon: Home,
-    description: 'Main dashboard overview'
+    description: 'Main dashboard overview',
   },
   {
     label: 'AI Agents',
     href: '/ai-agents',
     icon: Users,
     description: 'Manage AI agents and tasks',
-    badge: '8 Active'
+    badge: '8 Active',
   },
   {
     label: 'Enhanced AI',
     href: '/enhanced-ai-orchestrator',
     icon: Brain,
     description: 'Quantum-enhanced AI processing',
-    badge: '35+ Models'
+    badge: '35+ Models',
   },
   {
     label: 'GLM Orchestrator',
     href: '/glm-orchestrator-demo',
     icon: Network,
     description: 'Enterprise orchestration control',
-    badge: '1.2K Ops'
+    badge: '1.2K Ops',
   },
   {
     label: 'Analytics',
     href: '/analytics',
     icon: BarChart3,
     description: 'Real-time analytics and insights',
-    badge: '5.2M Data'
+    badge: '5.2M Data',
   },
 ];
 
@@ -94,25 +94,25 @@ const enterpriseFeatures = [
     label: 'Security Center',
     href: '/security',
     icon: Shield,
-    description: 'Military-grade security management'
+    description: 'Military-grade security management',
   },
   {
     label: 'Network Monitor',
     href: '/network',
     icon: Wifi,
-    description: 'Network performance and status'
+    description: 'Network performance and status',
   },
   {
     label: 'Database Manager',
     href: '/database',
     icon: Database,
-    description: 'Database administration and backup'
+    description: 'Database administration and backup',
   },
   {
     label: 'System Settings',
     href: '/settings',
     icon: Settings,
-    description: 'System configuration and preferences'
+    description: 'System configuration and preferences',
   },
 ];
 
@@ -123,13 +123,13 @@ const mobileMenuItems = [
     label: 'Device Compatibility',
     href: '/compatibility',
     icon: Smartphone,
-    description: 'Cross-platform compatibility info'
+    description: 'Cross-platform compatibility info',
   },
   {
     label: 'API Documentation',
     href: '/api-docs',
     icon: CircuitBoard,
-    description: 'Developer API documentation'
+    description: 'Developer API documentation',
   },
 ];
 
@@ -172,15 +172,15 @@ export default function OptiMindNavigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-1">
-            {navigationItems.map((item) => (
+            {navigationItems.map(item => (
               <Link key={item.href} href={item.href}>
                 <Button
-                  variant={pathname === item.href ? "default" : "ghost"}
+                  variant={pathname === item.href ? 'default' : 'ghost'}
                   className={cn(
-                    "h-9 md:h-10 px-3 md:px-4 text-sm font-medium transition-all duration-200",
-                    pathname === item.href 
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
-                      : "text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    'h-9 md:h-10 px-3 md:px-4 text-sm font-medium transition-all duration-200',
+                    pathname === item.href
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20'
                   )}
                 >
                   <item.icon className="h-4 w-4 mr-2" />
@@ -205,11 +205,11 @@ export default function OptiMindNavigation() {
                 Enterprise
                 <ChevronDown className="h-3 w-3 ml-1" />
               </Button>
-              
+
               {isEnterpriseMenuOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50">
                   <div className="p-2">
-                    {enterpriseFeatures.map((item) => (
+                    {enterpriseFeatures.map(item => (
                       <Link key={item.href} href={item.href}>
                         <Button
                           variant="ghost"
@@ -219,7 +219,9 @@ export default function OptiMindNavigation() {
                           <item.icon className="h-4 w-4 mr-3" />
                           <div className="text-left">
                             <div className="font-medium">{item.label}</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">{item.description}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {item.description}
+                            </div>
                           </div>
                         </Button>
                       </Link>
@@ -233,12 +235,20 @@ export default function OptiMindNavigation() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-2 md:space-x-3">
             {/* Search */}
-            <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 md:h-10 md:w-10 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            >
               <Search className="h-4 w-4 md:h-5 md:w-5" />
             </Button>
 
             {/* Notifications */}
-            <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 md:h-10 md:w-10 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 relative"
+            >
               <Bell className="h-4 w-4 md:h-5 md:w-5" />
               <div className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </Button>
@@ -252,7 +262,7 @@ export default function OptiMindNavigation() {
               >
                 <User className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
-              
+
               {isUserMenuOpen && (
                 <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50">
                   <div className="p-2">
@@ -311,15 +321,15 @@ export default function OptiMindNavigation() {
         <div className="lg:hidden bg-white dark:bg-slate-900 border-t border-gray-200 dark:border-gray-700">
           <div className="container mx-auto px-4 py-4">
             <div className="space-y-2">
-              {mobileMenuItems.map((item) => (
+              {mobileMenuItems.map(item => (
                 <Link key={item.href} href={item.href}>
                   <Button
-                    variant={pathname === item.href ? "default" : "ghost"}
+                    variant={pathname === item.href ? 'default' : 'ghost'}
                     className={cn(
-                      "w-full justify-start h-12 px-4 text-left transition-all duration-200",
-                      pathname === item.href 
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg" 
-                        : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"
+                      'w-full justify-start h-12 px-4 text-left transition-all duration-200',
+                      pathname === item.href
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400'
                     )}
                     onClick={() => setIsOpen(false)}
                   >
@@ -337,11 +347,13 @@ export default function OptiMindNavigation() {
                 </Link>
               ))}
             </div>
-            
+
             {/* Mobile Status Bar */}
             <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">System Status</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  System Status
+                </span>
                 <Badge className="bg-green-100 text-green-800 text-xs">
                   <Activity className="h-3 w-3 mr-1" />
                   Operational

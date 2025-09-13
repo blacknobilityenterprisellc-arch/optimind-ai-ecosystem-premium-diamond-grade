@@ -31,10 +31,10 @@ export default function ApiDocsPage() {
 
   useEffect(() => {
     fetch('/api/docs')
-      .then((res) => res.json())
+      .then(res => res.json())
       .then((data: OpenApiSpec) => {
         setSpec(data);
-        
+
         // Extract endpoints
         const extractedEndpoints: ApiEndpoint[] = [];
         Object.entries(data.paths).forEach(([path, methods]) => {
@@ -48,11 +48,11 @@ export default function ApiDocsPage() {
             });
           });
         });
-        
+
         setEndpoints(extractedEndpoints);
         setLoading(false);
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error fetching API spec:', error);
         setLoading(false);
       });
@@ -81,8 +81,12 @@ export default function ApiDocsPage() {
       <div className="min-h-screen bg-gray-900 text-white p-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-red-400 mb-4">Error Loading API Documentation</h1>
-            <p className="text-gray-400">Unable to fetch API specification. Please try again later.</p>
+            <h1 className="text-2xl font-bold text-red-400 mb-4">
+              Error Loading API Documentation
+            </h1>
+            <p className="text-gray-400">
+              Unable to fetch API specification. Please try again later.
+            </p>
           </div>
         </div>
       </div>
@@ -111,7 +115,7 @@ export default function ApiDocsPage() {
         <div className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">API Categories</h2>
           <div className="flex flex-wrap gap-2">
-            {spec.tags.map((tag) => (
+            {spec.tags.map(tag => (
               <span
                 key={tag.name}
                 className="px-3 py-1 bg-purple-600 text-white rounded-full text-sm"
@@ -125,7 +129,7 @@ export default function ApiDocsPage() {
         {/* Endpoints */}
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold">API Endpoints</h2>
-          
+
           {endpoints.map((endpoint, index) => (
             <div
               key={index}
@@ -134,13 +138,19 @@ export default function ApiDocsPage() {
               <div className="flex items-start justify-between mb-4">
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      endpoint.method === 'GET' ? 'bg-green-600 text-white' :
-                      endpoint.method === 'POST' ? 'bg-blue-600 text-white' :
-                      endpoint.method === 'PUT' ? 'bg-yellow-600 text-white' :
-                      endpoint.method === 'DELETE' ? 'bg-red-600 text-white' :
-                      'bg-gray-600 text-white'
-                    }`}>
+                    <span
+                      className={`px-2 py-1 rounded text-xs font-medium ${
+                        endpoint.method === 'GET'
+                          ? 'bg-green-600 text-white'
+                          : endpoint.method === 'POST'
+                            ? 'bg-blue-600 text-white'
+                            : endpoint.method === 'PUT'
+                              ? 'bg-yellow-600 text-white'
+                              : endpoint.method === 'DELETE'
+                                ? 'bg-red-600 text-white'
+                                : 'bg-gray-600 text-white'
+                      }`}
+                    >
                       {endpoint.method}
                     </span>
                     <code className="bg-gray-900 px-2 py-1 rounded text-sm">{endpoint.path}</code>
@@ -148,7 +158,7 @@ export default function ApiDocsPage() {
                   <h3 className="text-lg font-semibold text-white mb-2">{endpoint.summary}</h3>
                   <p className="text-gray-400 mb-3">{endpoint.description}</p>
                   <div className="flex flex-wrap gap-2">
-                    {endpoint.tags.map((tag) => (
+                    {endpoint.tags.map(tag => (
                       <span
                         key={tag}
                         className="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs"
@@ -159,18 +169,18 @@ export default function ApiDocsPage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mt-4 pt-4 border-t border-gray-700">
                 <button
                   onClick={() => {
                     // Test the endpoint
                     fetch(endpoint.path)
-                      .then((res) => res.json())
-                      .then((data) => {
+                      .then(res => res.json())
+                      .then(data => {
                         console.log('Endpoint response:', data);
                         alert(`Endpoint tested successfully! Check console for response.`);
                       })
-                      .catch((error) => {
+                      .catch(error => {
                         console.error('Endpoint test failed:', error);
                         alert('Endpoint test failed. Check console for details.');
                       });

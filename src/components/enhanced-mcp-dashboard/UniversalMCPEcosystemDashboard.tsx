@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Brain, 
-  Globe, 
-  Users, 
-  Building2, 
-  Smartphone, 
-  Zap, 
-  Shield, 
+import {
+  Brain,
+  Globe,
+  Users,
+  Building2,
+  Smartphone,
+  Zap,
+  Shield,
   TrendingUp,
   Settings,
   Activity,
@@ -19,7 +19,7 @@ import {
   DollarSign,
   CheckCircle,
   AlertTriangle,
-  Clock
+  Clock,
 } from 'lucide-react';
 
 // Import the enhancement system
@@ -43,7 +43,9 @@ interface DashboardMetrics {
 }
 
 export default function UniversalMCPEcosystemDashboard() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'segments' | 'services' | 'regions' | 'integrations' | 'mobile' | 'optimization'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'segments' | 'services' | 'regions' | 'integrations' | 'mobile' | 'optimization'
+  >('overview');
   const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,7 +63,7 @@ export default function UniversalMCPEcosystemDashboard() {
       const response = await fetch('/api/universal-mcp/enhancement', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ operation: 'get_system_health' })
+        body: JSON.stringify({ operation: 'get_system_health' }),
       });
       const data = await response.json();
       if (data.success) {
@@ -83,7 +85,7 @@ export default function UniversalMCPEcosystemDashboard() {
           supportedRegions: data.summary.supportedRegions,
           integrationPartners: data.summary.integrationPartners,
           systemUptime: 99.9,
-          averageLatency: 45
+          averageLatency: 45,
         });
       }
     } catch (error) {
@@ -101,8 +103,8 @@ export default function UniversalMCPEcosystemDashboard() {
           operation: 'calculate_pricing',
           segmentId: selectedSegment,
           users: 100,
-          transactions: 10000
-        })
+          transactions: 10000,
+        }),
       });
       const data = await response.json();
       if (data.success) {
@@ -171,11 +173,13 @@ export default function UniversalMCPEcosystemDashboard() {
                 <p className="text-gray-400">Multi-Sector AI Services Platform v3.0</p>
               </div>
             </div>
-            
+
             {systemHealth && (
               <div className="flex items-center space-x-2 bg-gray-800/50 rounded-lg px-4 py-2">
                 {getStatusIcon(systemHealth.mcpIntegration?.status || 'operational')}
-                <span className={`text-sm font-medium ${getStatusColor(systemHealth.mcpIntegration?.status || 'operational')}`}>
+                <span
+                  className={`text-sm font-medium ${getStatusColor(systemHealth.mcpIntegration?.status || 'operational')}`}
+                >
                   System Operational
                 </span>
               </div>
@@ -191,8 +195,12 @@ export default function UniversalMCPEcosystemDashboard() {
               { key: 'regions', label: 'Regions', icon: <Globe className="w-4 h-4" /> },
               { key: 'integrations', label: 'Integrations', icon: <Network className="w-4 h-4" /> },
               { key: 'mobile', label: 'Mobile', icon: <Smartphone className="w-4 h-4" /> },
-              { key: 'optimization', label: 'AI Optimization', icon: <Brain className="w-4 h-4" /> }
-            ].map((tab) => (
+              {
+                key: 'optimization',
+                label: 'AI Optimization',
+                icon: <Brain className="w-4 h-4" />,
+              },
+            ].map(tab => (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key as any)}
@@ -265,8 +273,8 @@ export default function UniversalMCPEcosystemDashboard() {
                     { id: 'individual', name: 'Individual Users', color: 'blue' },
                     { id: 'smb', name: 'Small & Medium Business', color: 'green' },
                     { id: 'enterprise', name: 'Large Enterprises', color: 'purple' },
-                    { id: 'niche', name: 'Niche Industries', color: 'yellow' }
-                  ].map((segment) => (
+                    { id: 'niche', name: 'Niche Industries', color: 'yellow' },
+                  ].map(segment => (
                     <div
                       key={segment.id}
                       className={`p-4 rounded-lg border cursor-pointer transition-colors ${
@@ -345,20 +353,28 @@ export default function UniversalMCPEcosystemDashboard() {
                     name: 'Content Creation Studio',
                     description: 'AI-powered content generation for all formats',
                     features: ['Text Generation', 'Multimedia Creation', 'Content Strategy'],
-                    price: '$29-$299/month'
+                    price: '$29-$299/month',
                   },
                   {
                     name: 'Business Intelligence',
                     description: 'Advanced analytics and business intelligence',
-                    features: ['Data Visualization', 'Predictive Analytics', 'Real-time Monitoring'],
-                    price: '$49-$599/month'
+                    features: [
+                      'Data Visualization',
+                      'Predictive Analytics',
+                      'Real-time Monitoring',
+                    ],
+                    price: '$49-$599/month',
                   },
                   {
                     name: 'Customer Experience',
                     description: 'Comprehensive customer experience management',
-                    features: ['Personalization Engine', 'Sentiment Analysis', 'Journey Orchestration'],
-                    price: '$79-$799/month'
-                  }
+                    features: [
+                      'Personalization Engine',
+                      'Sentiment Analysis',
+                      'Journey Orchestration',
+                    ],
+                    price: '$79-$799/month',
+                  },
                 ].map((service, index) => (
                   <div key={index} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
                     <h4 className="font-semibold mb-2">{service.name}</h4>
@@ -386,8 +402,11 @@ export default function UniversalMCPEcosystemDashboard() {
                 Global Regions
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {systemHealth.regions.map((region) => (
-                  <div key={region.id} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
+                {systemHealth.regions.map(region => (
+                  <div
+                    key={region.id}
+                    className="bg-gray-900 rounded-lg p-4 border border-gray-700"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-medium">{region.id.toUpperCase()}</span>
                       <div className="flex items-center space-x-1">
@@ -397,9 +416,7 @@ export default function UniversalMCPEcosystemDashboard() {
                         </span>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-400">
-                      Latency: {region.latency}ms
-                    </div>
+                    <div className="text-sm text-gray-400">Latency: {region.latency}ms</div>
                   </div>
                 ))}
               </div>
@@ -419,7 +436,7 @@ export default function UniversalMCPEcosystemDashboard() {
                   { name: 'Salesforce', category: 'CRM', status: 'connected' },
                   { name: 'Slack', category: 'Communication', status: 'connected' },
                   { name: 'QuickBooks', category: 'ERP', status: 'connected' },
-                  { name: 'Google Analytics', category: 'Analytics', status: 'connected' }
+                  { name: 'Google Analytics', category: 'Analytics', status: 'connected' },
                 ].map((partner, index) => (
                   <div key={index} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
                     <div className="flex items-center justify-between mb-2">
@@ -449,19 +466,34 @@ export default function UniversalMCPEcosystemDashboard() {
                 {[
                   {
                     platform: 'iOS',
-                    features: ['Push Notifications', 'Biometric Auth', 'Offline Mode', 'AR Integration'],
-                    status: 'available'
+                    features: [
+                      'Push Notifications',
+                      'Biometric Auth',
+                      'Offline Mode',
+                      'AR Integration',
+                    ],
+                    status: 'available',
                   },
                   {
                     platform: 'Android',
-                    features: ['Push Notifications', 'Biometric Auth', 'Offline Mode', 'Widget Support'],
-                    status: 'available'
+                    features: [
+                      'Push Notifications',
+                      'Biometric Auth',
+                      'Offline Mode',
+                      'Widget Support',
+                    ],
+                    status: 'available',
                   },
                   {
                     platform: 'Cross-Platform',
-                    features: ['Push Notifications', 'Biometric Auth', 'Offline Mode', 'PWA Support'],
-                    status: 'available'
-                  }
+                    features: [
+                      'Push Notifications',
+                      'Biometric Auth',
+                      'Offline Mode',
+                      'PWA Support',
+                    ],
+                    status: 'available',
+                  },
                 ].map((app, index) => (
                   <div key={index} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
                     <div className="flex items-center justify-between mb-3">
@@ -495,7 +527,7 @@ export default function UniversalMCPEcosystemDashboard() {
                 AI Model Optimization
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {systemHealth.models.map((model) => (
+                {systemHealth.models.map(model => (
                   <div key={model.id} className="bg-gray-900 rounded-lg p-4 border border-gray-700">
                     <div className="flex items-center justify-between mb-3">
                       <span className="font-medium">{model.id.toUpperCase()}</span>
@@ -514,8 +546,8 @@ export default function UniversalMCPEcosystemDashboard() {
                         </span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div 
-                          className="bg-green-400 h-2 rounded-full" 
+                        <div
+                          className="bg-green-400 h-2 rounded-full"
                           style={{ width: `${model.performance * 100}%` }}
                         />
                       </div>

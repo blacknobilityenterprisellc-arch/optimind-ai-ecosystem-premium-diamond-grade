@@ -2,8 +2,6 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,19 +11,6 @@ export default [
   ...compat.extends('next/core-web-vitals'),
   {
     files: ['**/*.{ts,tsx}'],
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        ecmaVersion: 2022,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true
-        }
-      }
-    },
-    plugins: {
-      '@typescript-eslint': typescriptPlugin
-    },
     rules: {
       // Gradually enforce rules - start with warnings
       'no-unused-vars': 'warn',
@@ -50,13 +35,6 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn'
-    }
-  },
-  {
-    files: ['.next/**/*.{js,ts}'],
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@next/next/no-assign-module-variable': 'off'
     }
   }
 ];

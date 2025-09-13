@@ -17,15 +17,21 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Brain, 
-  Network, 
-  Zap, 
-  Users, 
-  TrendingUp, 
-  MessageSquare, 
-  Activity, 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Brain,
+  Network,
+  Zap,
+  Users,
+  TrendingUp,
+  MessageSquare,
+  Activity,
   BarChart3,
   Settings,
   Play,
@@ -38,7 +44,7 @@ import {
   Cpu,
   Database,
   Globe,
-  Clock
+  Clock,
 } from 'lucide-react';
 
 interface AgentStatus {
@@ -163,14 +169,14 @@ export default function OptiMindAgentsDashboard() {
         fetch('/api/ai-agents?action=list-agents'),
         fetch('/api/ai-agents?action=list-tasks'),
         fetch('/api/ai-agents?action=list-collaborations'),
-        fetch('/api/ai-agents?action=system-metrics')
+        fetch('/api/ai-agents?action=system-metrics'),
       ]);
 
       const [agentsData, tasksData, collabsData, metricsData] = await Promise.all([
         agentsRes.json(),
         tasksRes.json(),
         collabsRes.json(),
-        metricsRes.json()
+        metricsRes.json(),
       ]);
 
       if (agentsData.success) setAgents(agentsData.data);
@@ -193,8 +199,8 @@ export default function OptiMindAgentsDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'create-task',
-          payload: newTask
-        })
+          payload: newTask,
+        }),
       });
 
       const data = await response.json();
@@ -214,8 +220,8 @@ export default function OptiMindAgentsDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'control-agent',
-          payload: { agentId, action }
-        })
+          payload: { agentId, action },
+        }),
       });
 
       if (response.ok) {
@@ -235,9 +241,12 @@ export default function OptiMindAgentsDashboard() {
           action: 'create-collaboration',
           payload: {
             type: 'collective-intelligence',
-            participants: agents.filter(a => a.status === 'active').slice(0, 3).map(a => a.id)
-          }
-        })
+            participants: agents
+              .filter(a => a.status === 'active')
+              .slice(0, 3)
+              .map(a => a.id),
+          },
+        }),
       });
 
       if (response.ok) {
@@ -250,34 +259,52 @@ export default function OptiMindAgentsDashboard() {
 
   const getAgentTypeColor = (type: string) => {
     switch (type) {
-      case 'primary': return 'bg-blue-500';
-      case 'specialist': return 'bg-purple-500';
-      case 'collaborative': return 'bg-green-500';
-      case 'quantum-enhanced': return 'bg-indigo-500';
-      case 'learning': return 'bg-orange-500';
-      default: return 'bg-gray-500';
+      case 'primary':
+        return 'bg-blue-500';
+      case 'specialist':
+        return 'bg-purple-500';
+      case 'collaborative':
+        return 'bg-green-500';
+      case 'quantum-enhanced':
+        return 'bg-indigo-500';
+      case 'learning':
+        return 'bg-orange-500';
+      default:
+        return 'bg-gray-500';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'text-green-600 bg-green-50';
-      case 'idle': return 'text-gray-600 bg-gray-50';
-      case 'learning': return 'text-blue-600 bg-blue-50';
-      case 'collaborating': return 'text-purple-600 bg-purple-50';
-      case 'processing': return 'text-orange-600 bg-orange-50';
-      case 'error': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case 'active':
+        return 'text-green-600 bg-green-50';
+      case 'idle':
+        return 'text-gray-600 bg-gray-50';
+      case 'learning':
+        return 'text-blue-600 bg-blue-50';
+      case 'collaborating':
+        return 'text-purple-600 bg-purple-50';
+      case 'processing':
+        return 'text-orange-600 bg-orange-50';
+      case 'error':
+        return 'text-red-600 bg-red-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'critical': return 'text-red-600 bg-red-50';
-      case 'high': return 'text-orange-600 bg-orange-50';
-      case 'medium': return 'text-yellow-600 bg-yellow-50';
-      case 'low': return 'text-green-600 bg-green-50';
-      default: return 'text-gray-600 bg-gray-50';
+      case 'critical':
+        return 'text-red-600 bg-red-50';
+      case 'high':
+        return 'text-orange-600 bg-orange-50';
+      case 'medium':
+        return 'text-yellow-600 bg-yellow-50';
+      case 'low':
+        return 'text-green-600 bg-green-50';
+      default:
+        return 'text-gray-600 bg-gray-50';
     }
   };
 
@@ -318,9 +345,7 @@ export default function OptiMindAgentsDashboard() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {systemMetrics.totalAgents}
-                </div>
+                <div className="text-2xl font-bold text-blue-600">{systemMetrics.totalAgents}</div>
                 <div className="text-sm text-gray-600">Total Agents</div>
               </div>
               <div className="text-center">
@@ -350,21 +375,33 @@ export default function OptiMindAgentsDashboard() {
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Collective Intelligence</span>
-                      <span className="text-sm">{Math.round(systemMetrics.systemIntelligence.collectiveIntelligence)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.systemIntelligence.collectiveIntelligence)}%
+                      </span>
                     </div>
-                    <Progress value={systemMetrics.systemIntelligence.collectiveIntelligence} className="h-2" />
+                    <Progress
+                      value={systemMetrics.systemIntelligence.collectiveIntelligence}
+                      className="h-2"
+                    />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Adaptability</span>
-                      <span className="text-sm">{Math.round(systemMetrics.systemIntelligence.adaptability)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.systemIntelligence.adaptability)}%
+                      </span>
                     </div>
-                    <Progress value={systemMetrics.systemIntelligence.adaptability} className="h-2" />
+                    <Progress
+                      value={systemMetrics.systemIntelligence.adaptability}
+                      className="h-2"
+                    />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Innovation</span>
-                      <span className="text-sm">{Math.round(systemMetrics.systemIntelligence.innovation)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.systemIntelligence.innovation)}%
+                      </span>
                     </div>
                     <Progress value={systemMetrics.systemIntelligence.innovation} className="h-2" />
                   </div>
@@ -377,21 +414,27 @@ export default function OptiMindAgentsDashboard() {
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">CPU</span>
-                      <span className="text-sm">{Math.round(systemMetrics.resourceUtilization.cpu)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.resourceUtilization.cpu)}%
+                      </span>
                     </div>
                     <Progress value={systemMetrics.resourceUtilization.cpu} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Memory</span>
-                      <span className="text-sm">{Math.round(systemMetrics.resourceUtilization.memory)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.resourceUtilization.memory)}%
+                      </span>
                     </div>
                     <Progress value={systemMetrics.resourceUtilization.memory} className="h-2" />
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
                       <span className="text-sm">Network</span>
-                      <span className="text-sm">{Math.round(systemMetrics.resourceUtilization.network)}%</span>
+                      <span className="text-sm">
+                        {Math.round(systemMetrics.resourceUtilization.network)}%
+                      </span>
                     </div>
                     <Progress value={systemMetrics.resourceUtilization.network} className="h-2" />
                   </div>
@@ -423,7 +466,7 @@ export default function OptiMindAgentsDashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-4">
-                {agents.map((agent) => (
+                {agents.map(agent => (
                   <Card key={agent.id} className="p-4">
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-3">
@@ -431,9 +474,7 @@ export default function OptiMindAgentsDashboard() {
                         <div>
                           <h3 className="font-semibold">{agent.name}</h3>
                           <div className="flex items-center gap-2 mt-1">
-                            <Badge className={getStatusColor(agent.status)}>
-                              {agent.status}
-                            </Badge>
+                            <Badge className={getStatusColor(agent.status)}>{agent.status}</Badge>
                             <Badge variant="outline">{agent.type}</Badge>
                           </div>
                         </div>
@@ -551,7 +592,7 @@ export default function OptiMindAgentsDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {tasks.map((task) => (
+                {tasks.map(task => (
                   <Card key={task.id} className="p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div>
@@ -559,20 +600,18 @@ export default function OptiMindAgentsDashboard() {
                         <p className="text-sm text-gray-600 mt-1">{task.description}</p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className={getPriorityColor(task.priority)}>
-                          {task.priority}
-                        </Badge>
+                        <Badge className={getPriorityColor(task.priority)}>{task.priority}</Badge>
                         <Badge variant="outline">{task.type}</Badge>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-4 text-sm">
-                        <span className={getStatusColor(task.status)}>
-                          {task.status}
-                        </span>
+                        <span className={getStatusColor(task.status)}>{task.status}</span>
                         {task.assignedAgent && (
-                          <span>Assigned to: {agents.find(a => a.id === task.assignedAgent)?.name}</span>
+                          <span>
+                            Assigned to: {agents.find(a => a.id === task.assignedAgent)?.name}
+                          </span>
                         )}
                         <span>Created: {new Date(task.createdAt).toLocaleString()}</span>
                       </div>
@@ -628,21 +667,23 @@ export default function OptiMindAgentsDashboard() {
                   </Button>
                 </div>
 
-                {collaborations.map((collab) => (
+                {collaborations.map(collab => (
                   <Card key={collab.id} className="p-4">
                     <div className="flex items-start justify-between mb-4">
                       <div>
                         <h3 className="font-semibold">{collab.name}</h3>
                         <div className="flex items-center gap-2 mt-1">
-                          <Badge className={getStatusColor(collab.status)}>
-                            {collab.status}
-                          </Badge>
+                          <Badge className={getStatusColor(collab.status)}>{collab.status}</Badge>
                           <Badge variant="outline">{collab.type}</Badge>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm font-medium">Synergy: {Math.round(collab.synergy)}%</div>
-                        <div className="text-sm text-gray-600">Efficiency: {Math.round(collab.efficiency)}%</div>
+                        <div className="text-sm font-medium">
+                          Synergy: {Math.round(collab.synergy)}%
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Efficiency: {Math.round(collab.efficiency)}%
+                        </div>
                       </div>
                     </div>
 
@@ -654,7 +695,9 @@ export default function OptiMindAgentsDashboard() {
                             const agent = agents.find(a => a.id === participantId);
                             return (
                               <div key={index} className="flex items-center gap-2 text-sm">
-                                <div className={`w-2 h-2 rounded-full ${getAgentTypeColor(agent?.type || '')}`} />
+                                <div
+                                  className={`w-2 h-2 rounded-full ${getAgentTypeColor(agent?.type || '')}`}
+                                />
                                 {agent?.name || participantId}
                               </div>
                             );
@@ -675,8 +718,8 @@ export default function OptiMindAgentsDashboard() {
                     </div>
 
                     <div className="mt-4 text-xs text-gray-500">
-                      Created: {new Date(collab.createdAt).toLocaleString()} | 
-                      Last Activity: {new Date(collab.lastActivity).toLocaleString()}
+                      Created: {new Date(collab.createdAt).toLocaleString()} | Last Activity:{' '}
+                      {new Date(collab.lastActivity).toLocaleString()}
                     </div>
                   </Card>
                 ))}
@@ -702,7 +745,7 @@ export default function OptiMindAgentsDashboard() {
                 <Input
                   placeholder="Enter task title..."
                   value={newTask.title}
-                  onChange={(e) => setNewTask(prev => ({ ...prev, title: e.target.value }))}
+                  onChange={e => setNewTask(prev => ({ ...prev, title: e.target.value }))}
                 />
               </div>
 
@@ -711,7 +754,7 @@ export default function OptiMindAgentsDashboard() {
                 <Textarea
                   placeholder="Describe the task in detail..."
                   value={newTask.description}
-                  onChange={(e) => setNewTask(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={e => setNewTask(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
                 />
               </div>
@@ -719,7 +762,12 @@ export default function OptiMindAgentsDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Task Type</label>
-                  <Select value={newTask.type} onValueChange={(value: AgentTask['type']) => setNewTask(prev => ({ ...prev, type: value }))}>
+                  <Select
+                    value={newTask.type}
+                    onValueChange={(value: AgentTask['type']) =>
+                      setNewTask(prev => ({ ...prev, type: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -736,7 +784,12 @@ export default function OptiMindAgentsDashboard() {
 
                 <div>
                   <label className="text-sm font-medium mb-2 block">Priority</label>
-                  <Select value={newTask.priority} onValueChange={(value: AgentTask['priority']) => setNewTask(prev => ({ ...prev, priority: value }))}>
+                  <Select
+                    value={newTask.priority}
+                    onValueChange={(value: AgentTask['priority']) =>
+                      setNewTask(prev => ({ ...prev, priority: value }))
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>

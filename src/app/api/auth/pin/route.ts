@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { NextResponse, NextRequest } from 'next/server';
 import { db } from '@/lib/db';
 import { withRateLimit, authRateLimiter } from '@/lib/ai-rate-limiter';
 import { withValidation, ValidationSchemas } from '@/lib/input-validation';
@@ -8,7 +7,7 @@ import { withValidation, ValidationSchemas } from '@/lib/input-validation';
 const rateLimitMiddleware = withRateLimit(authRateLimiter);
 const validationMiddleware = withValidation(ValidationSchemas.Auth.PIN);
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     // Apply rate limiting first
     const rateLimitResult = await rateLimitMiddleware(request);

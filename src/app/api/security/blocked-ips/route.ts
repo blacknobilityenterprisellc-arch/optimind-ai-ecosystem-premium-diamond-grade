@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const monitor = getSecurityMonitor();
     const blockedIPs = monitor.getBlockedIPs();
-    
+
     return NextResponse.json({
       blocked_ips: blockedIPs,
       total_blocked: blockedIPs.length,
@@ -13,9 +13,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Failed to get blocked IPs:', error);
-    return NextResponse.json(
-      { error: 'Failed to retrieve blocked IPs' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to retrieve blocked IPs' }, { status: 500 });
   }
 }

@@ -88,9 +88,14 @@ export async function GET(request: Request) {
       case 'health':
         const healthMetrics = await ultimateAIImprovementOrchestrator.getStatus();
         const overallHealth = healthMetrics.metrics.overallScore;
-        const healthStatus = overallHealth >= 95 ? 'excellent' : 
-                           overallHealth >= 85 ? 'good' : 
-                           overallHealth >= 70 ? 'fair' : 'needs-improvement';
+        const healthStatus =
+          overallHealth >= 95
+            ? 'excellent'
+            : overallHealth >= 85
+              ? 'good'
+              : overallHealth >= 70
+                ? 'fair'
+                : 'needs-improvement';
 
         return NextResponse.json({
           success: true,
@@ -104,11 +109,13 @@ export async function GET(request: Request) {
               security: healthMetrics.metrics.securityPosture,
               efficiency: healthMetrics.metrics.resourceEfficiency,
               userExperience: healthMetrics.metrics.userExperience,
-              innovation: healthMetrics.metrics.innovationIndex
+              innovation: healthMetrics.metrics.innovationIndex,
             },
-            activeImprovements: healthMetrics.actions.filter(a => a.status === 'in-progress').length,
-            completedImprovements: healthMetrics.actions.filter(a => a.status === 'completed').length,
-            pendingInsights: healthMetrics.insights.filter(i => !i.mitigated).length
+            activeImprovements: healthMetrics.actions.filter(a => a.status === 'in-progress')
+              .length,
+            completedImprovements: healthMetrics.actions.filter(a => a.status === 'completed')
+              .length,
+            pendingInsights: healthMetrics.insights.filter(i => !i.mitigated).length,
           },
           timestamp: new Date().toISOString(),
         });
@@ -117,7 +124,7 @@ export async function GET(request: Request) {
         // Force re-initialization
         orchestratorInitialized = false;
         await ensureOrchestratorInitialized();
-        
+
         return NextResponse.json({
           success: true,
           action: 'activate',
@@ -138,7 +145,7 @@ export async function GET(request: Request) {
               'insights',
               'optimizations',
               'health',
-              'activate'
+              'activate',
             ],
             timestamp: new Date().toISOString(),
           },
@@ -166,8 +173,9 @@ export async function POST(request: Request) {
 
     switch (action) {
       case 'create-improvement':
-        const improvementAction = await ultimateAIImprovementOrchestrator['createCustomImprovementAction'](payload);
-        
+        const improvementAction =
+          await ultimateAIImprovementOrchestrator['createCustomImprovementAction'](payload);
+
         return NextResponse.json({
           success: true,
           action: 'create-improvement',
@@ -178,8 +186,9 @@ export async function POST(request: Request) {
 
       case 'optimize-now':
         // Trigger immediate optimization cycle
-        const optimizationResults = await ultimateAIImprovementOrchestrator['optimizeSystemResources']();
-        
+        const optimizationResults =
+          await ultimateAIImprovementOrchestrator['optimizeSystemResources']();
+
         return NextResponse.json({
           success: true,
           action: 'optimize-now',
@@ -192,7 +201,7 @@ export async function POST(request: Request) {
         // Generate predictive insights on demand
         await ultimateAIImprovementOrchestrator['generatePredictiveInsights']();
         const insightsData = await ultimateAIImprovementOrchestrator.getStatus();
-        
+
         return NextResponse.json({
           success: true,
           action: 'predict-insights',
@@ -205,13 +214,13 @@ export async function POST(request: Request) {
         const { targetId, improvement } = payload;
         const target = await ultimateAIImprovementOrchestrator.getStatus();
         const currentTarget = target.targets.find((t: any) => t.id === targetId);
-        
+
         if (currentTarget) {
           currentTarget.currentValue = Math.min(
-            currentTarget.targetValue, 
+            currentTarget.targetValue,
             currentTarget.currentValue + (improvement || 5)
           );
-          
+
           return NextResponse.json({
             success: true,
             action: 'improve-target',
@@ -220,20 +229,17 @@ export async function POST(request: Request) {
             timestamp: new Date().toISOString(),
           });
         } else {
-          return NextResponse.json(
-            { success: false, error: 'Target not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ success: false, error: 'Target not found' }, { status: 404 });
         }
 
       case 'mitigate-insight':
         const { insightId } = payload;
         const insightsStatus = await ultimateAIImprovementOrchestrator.getStatus();
         const insight = insightsStatus.insights.find((i: any) => i.id === insightId);
-        
+
         if (insight) {
           insight.mitigated = true;
-          
+
           return NextResponse.json({
             success: true,
             action: 'mitigate-insight',
@@ -242,16 +248,13 @@ export async function POST(request: Request) {
             timestamp: new Date().toISOString(),
           });
         } else {
-          return NextResponse.json(
-            { success: false, error: 'Insight not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ success: false, error: 'Insight not found' }, { status: 404 });
         }
 
       case 'emergency-optimization':
         // Emergency optimization for critical situations
         const emergencyResults = await performEmergencyOptimization(payload);
-        
+
         return NextResponse.json({
           success: true,
           action: 'emergency-optimization',
@@ -265,7 +268,7 @@ export async function POST(request: Request) {
         ultimateAIImprovementOrchestrator.destroy();
         orchestratorInitialized = false;
         await ensureOrchestratorInitialized();
-        
+
         return NextResponse.json({
           success: true,
           action: 'reset-orchestrator',
@@ -285,7 +288,7 @@ export async function POST(request: Request) {
               'improve-target',
               'mitigate-insight',
               'emergency-optimization',
-              'reset-orchestrator'
+              'reset-orchestrator',
             ],
             timestamp: new Date().toISOString(),
           },
@@ -308,7 +311,7 @@ export async function POST(request: Request) {
 // Emergency optimization function
 async function performEmergencyOptimization(payload: any) {
   const { priority = 'high', scope = 'full' } = payload;
-  
+
   // Simulate emergency optimization
   const optimizations = [
     {
@@ -316,22 +319,22 @@ async function performEmergencyOptimization(payload: any) {
       name: 'Emergency CPU Optimization',
       type: 'resource',
       improvement: 25,
-      status: 'completed'
+      status: 'completed',
     },
     {
       id: 'emergency-memory',
       name: 'Emergency Memory Optimization',
       type: 'resource',
       improvement: 20,
-      status: 'completed'
+      status: 'completed',
     },
     {
       id: 'emergency-security',
       name: 'Emergency Security Hardening',
       type: 'security',
       improvement: 15,
-      status: 'completed'
-    }
+      status: 'completed',
+    },
   ];
 
   // Add additional optimizations based on scope
@@ -342,14 +345,14 @@ async function performEmergencyOptimization(payload: any) {
         name: 'Emergency Performance Boost',
         type: 'performance',
         improvement: 30,
-        status: 'completed'
+        status: 'completed',
       },
       {
         id: 'emergency-quality',
         name: 'Emergency Quality Assurance',
         type: 'quality',
         improvement: 18,
-        status: 'completed'
+        status: 'completed',
       }
     );
   }
@@ -360,6 +363,6 @@ async function performEmergencyOptimization(payload: any) {
     scope,
     executionTime: 15000, // 15 seconds
     success: true,
-    message: 'Emergency optimization completed successfully'
+    message: 'Emergency optimization completed successfully',
   };
 }

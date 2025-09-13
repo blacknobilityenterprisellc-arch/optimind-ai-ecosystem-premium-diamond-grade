@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import ZAI from 'z-ai-web-dev-sdk';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   const startTime = Date.now();
   try {
     const body = await request.json();
@@ -9,23 +8,29 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields with enhanced validation
     if (!data || !analysisType) {
-      return NextResponse.json({ 
-        error: 'Data and analysis type are required',
-        details: {
-          missing: {
-            data: !data,
-            analysisType: !analysisType
-          }
-        }
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Data and analysis type are required',
+          details: {
+            missing: {
+              data: !data,
+              analysisType: !analysisType,
+            },
+          },
+        },
+        { status: 400 }
+      );
     }
 
     // Enhanced data validation
     if (!Array.isArray(data) && typeof data !== 'object') {
-      return NextResponse.json({ 
-        error: 'Data must be an array or object',
-        receivedType: typeof data
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Data must be an array or object',
+          receivedType: typeof data,
+        },
+        { status: 400 }
+      );
     }
 
     // Premium diamond-grade analysis types
@@ -45,15 +50,18 @@ export async function POST(request: NextRequest) {
       'machine_learning',
       'deep_learning',
       'neural_network',
-      'ensemble'
+      'ensemble',
     ];
 
     if (!validAnalysisTypes.includes(analysisType)) {
-      return NextResponse.json({ 
-        error: 'Invalid analysis type',
-        validTypes: validAnalysisTypes,
-        receivedType: analysisType
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: 'Invalid analysis type',
+          validTypes: validAnalysisTypes,
+          receivedType: analysisType,
+        },
+        { status: 400 }
+      );
     }
 
     // Initialize Z-AI SDK for enhanced analysis
@@ -82,30 +90,27 @@ export async function POST(request: NextRequest) {
         performance: {
           throughput: analysisResults.throughput,
           latency: processingTime,
-          efficiency: analysisResults.efficiency
-        }
-      }
+          efficiency: analysisResults.efficiency,
+        },
+      },
     });
-
   } catch (error) {
     console.error('Premium data analysis error:', error);
-    
-    return NextResponse.json({ 
-      error: 'Failed to perform premium data analysis',
-      details: error.message,
-      timestamp: new Date().toISOString(),
-      requestId: generateRequestId()
-    }, { status: 500 });
+
+    return NextResponse.json(
+      {
+        error: 'Failed to perform premium data analysis',
+        details: error.message,
+        timestamp: new Date().toISOString(),
+        requestId: generateRequestId(),
+      },
+      { status: 500 }
+    );
   }
 }
 
 async function performPremiumAnalysis(data: any, analysisType: string, options: any, zai: any) {
-  const models = [
-    'glm-4',
-    'gpt-4-turbo',
-    'claude-3-opus',
-    'deepseek-v2.5'
-  ];
+  const models = ['glm-4', 'gpt-4-turbo', 'claude-3-opus', 'deepseek-v2.5'];
 
   const results = [];
   let totalConfidence = 0;
@@ -127,7 +132,7 @@ async function performPremiumAnalysis(data: any, analysisType: string, options: 
 
   // Aggregate results with premium diamond-grade algorithms
   const aggregatedResults = aggregateResults(results, analysisType);
-  
+
   return {
     ...aggregatedResults,
     modelsUsed: results.length,
@@ -135,43 +140,48 @@ async function performPremiumAnalysis(data: any, analysisType: string, options: 
     accuracy: totalAccuracy / results.length,
     cost: totalCost,
     throughput: calculateThroughput(data, results.length),
-    efficiency: calculateEfficiency(results)
+    efficiency: calculateEfficiency(results),
   };
 }
 
-async function analyzeWithModel(data: any, analysisType: string, options: any, model: string, zai: any) {
+async function analyzeWithModel(
+  data: any,
+  analysisType: string,
+  options: any,
+  model: string,
+  zai: any
+) {
   const prompt = constructAnalysisPrompt(data, analysisType, options);
-  
+
   try {
     const completion = await zai.chat.completions.create({
       messages: [
         {
           role: 'system',
-          content: `You are a premium diamond-grade data analysis AI expert. Provide comprehensive, accurate, and insightful analysis with confidence scores and detailed explanations.`
+          content: `You are a premium diamond-grade data analysis AI expert. Provide comprehensive, accurate, and insightful analysis with confidence scores and detailed explanations.`,
         },
         {
           role: 'user',
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
       // Use Z-AI's built-in models instead of external ones
       temperature: 0.1,
-      max_tokens: 4000
+      max_tokens: 4000,
     });
 
     const analysis = completion.choices[0]?.message?.content;
-    
+
     // Parse and structure the analysis
     return parseAnalysisResult(analysis, model, analysisType);
-    
   } catch (error) {
     throw new Error(`Model ${model} analysis failed: ${error.message}`);
   }
 }
 
 function constructAnalysisPrompt(data: any, analysisType: string, options: any): string {
-  const dataSummary = Array.isArray(data) 
-    ? `Array with ${data.length} elements` 
+  const dataSummary = Array.isArray(data)
+    ? `Array with ${data.length} elements`
     : `Object with ${Object.keys(data).length} properties`;
 
   return `
@@ -222,10 +232,10 @@ function parseAnalysisResult(analysis: string, model: string, analysisType: stri
         analysisType,
         ...parsed,
         cost: calculateModelCost(model),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     }
-    
+
     // Fallback to structured parsing
     return {
       model,
@@ -236,13 +246,12 @@ function parseAnalysisResult(analysis: string, model: string, analysisType: stri
       insights: [analysis.substring(0, 200) + '...'],
       riskAssessment: {
         level: 'medium',
-        factors: ['Limited parsing']
+        factors: ['Limited parsing'],
       },
       recommendations: ['Manual review recommended'],
       cost: calculateModelCost(model),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-    
   } catch (error) {
     console.error('Analysis error:', error);
     return {
@@ -254,11 +263,11 @@ function parseAnalysisResult(analysis: string, model: string, analysisType: stri
       insights: ['Analysis completed with parsing limitations'],
       riskAssessment: {
         level: 'medium',
-        factors: ['Parsing error']
+        factors: ['Parsing error'],
       },
       recommendations: ['Review raw analysis output'],
       cost: calculateModelCost(model),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 }
@@ -270,16 +279,16 @@ function aggregateResults(results: any[], analysisType: string): any {
 
   const insights = [...new Set(results.flatMap(r => r.insights || []))];
   const recommendations = [...new Set(results.flatMap(r => r.recommendations || []))];
-  
+
   // Advanced aggregation algorithms
   const avgConfidence = results.reduce((sum, r) => sum + r.confidence, 0) / results.length;
   const avgAccuracy = results.reduce((sum, r) => sum + r.accuracy, 0) / results.length;
-  
+
   // Use aggregated values in the response
   // Determine overall risk level
   const riskLevels = results.map(r => r.riskAssessment?.level || 'medium');
   const overallRisk = determineOverallRisk(riskLevels);
-  
+
   return {
     summary: `Ensemble analysis using ${results.length} models for ${analysisType}`,
     confidence: avgConfidence,
@@ -288,15 +297,15 @@ function aggregateResults(results: any[], analysisType: string): any {
     recommendations: recommendations.slice(0, 5), // Top 5 recommendations
     riskAssessment: {
       level: overallRisk,
-      factors: results.flatMap(r => r.riskAssessment?.factors || [])
+      factors: results.flatMap(r => r.riskAssessment?.factors || []),
     },
     modelPerformance: results.map(r => ({
       model: r.model,
       confidence: r.confidence,
-      accuracy: r.accuracy
+      accuracy: r.accuracy,
     })),
     analysisType,
-    resultCount: results.length
+    resultCount: results.length,
   };
 }
 
@@ -305,7 +314,7 @@ function determineOverallRisk(riskLevels: string[]): string {
     acc[risk] = (acc[risk] || 0) + 1;
     return acc;
   }, {});
-  
+
   if (riskCounts.high > 0) return 'high';
   if (riskCounts.medium > riskLevels.length / 2) return 'medium';
   return 'low';
@@ -316,7 +325,7 @@ function calculateModelCost(model: string): number {
     'glm-4': 0.001,
     'gpt-4-turbo': 0.01,
     'claude-3-opus': 0.015,
-    'deepseek-v2.5': 0.0008
+    'deepseek-v2.5': 0.0008,
   };
   return costs[model] || 0.001;
 }
@@ -330,8 +339,8 @@ function calculateEfficiency(results: any[]): number {
   const avgConfidence = results.reduce((sum, r) => sum + r.confidence, 0) / results.length;
   const avgAccuracy = results.reduce((sum, r) => sum + r.accuracy, 0) / results.length;
   const successRate = results.length / 4; // 4 models attempted
-  
-  return (avgConfidence + avgAccuracy + (successRate * 100)) / 3;
+
+  return (avgConfidence + avgAccuracy + successRate * 100) / 3;
 }
 
 function generateRequestId(): string {
@@ -362,27 +371,25 @@ export async function GET() {
         'machine_learning',
         'deep_learning',
         'neural_network',
-        'ensemble'
+        'ensemble',
       ],
-      models: [
-        'glm-4',
-        'gpt-4-turbo',
-        'claude-3-opus',
-        'deepseek-v2.5'
-      ],
+      models: ['glm-4', 'gpt-4-turbo', 'claude-3-opus', 'deepseek-v2.5'],
       performance: {
         averageResponseTime: 8500,
         successRate: 98.5,
-        throughput: 1000
+        throughput: 1000,
       },
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     });
   } catch (error) {
-    return NextResponse.json({
-      service: 'data-analysis',
-      status: 'degraded',
-      health: 82,
-      error: error.message
-    }, { status: 500 });
+    return NextResponse.json(
+      {
+        service: 'data-analysis',
+        status: 'degraded',
+        health: 82,
+        error: error.message,
+      },
+      { status: 500 }
+    );
   }
 }

@@ -1,28 +1,6 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Heart } from 'lucide-react';
-import { History } from 'lucide-react';
-import { Sparkles } from 'lucide-react';
-import { Wand2 } from 'lucide-react';
-import { Image as ImageIcon } from 'lucide-react';
-import { Download } from 'lucide-react';
-import { Settings } from 'lucide-react';
-import { Crown } from 'lucide-react';
-import { CheckCircle } from 'lucide-react';
-import { AlertTriangle } from 'lucide-react';
-import { Eye } from 'lucide-react';
-import { Grid } from 'lucide-react';
-import { List } from 'lucide-react';
-import { Palette } from 'lucide-react';
-import { FileText } from 'lucide-react';
-import { Users } from 'lucide-react';
-import { Upload } from 'lucide-react';
-import { Brightness } from 'lucide-react';
-import { Grainy } from 'lucide-react';
-import { Moldy } from 'lucide-react';
-import { Vintage } from 'lucide-react';
-import { Sharpen } from 'lucide-react';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

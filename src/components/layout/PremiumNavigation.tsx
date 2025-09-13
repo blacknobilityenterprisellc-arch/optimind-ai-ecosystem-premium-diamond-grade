@@ -6,12 +6,12 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Brain, 
-  Users, 
-  Network, 
-  Zap, 
-  Activity, 
+import {
+  Brain,
+  Users,
+  Network,
+  Zap,
+  Activity,
   BarChart3,
   Settings,
   Shield,
@@ -48,7 +48,7 @@ import {
   CheckCircle,
   AlertTriangle,
   Clock,
-  Eye
+  Eye,
 } from 'lucide-react';
 
 const navigationItems = [
@@ -56,47 +56,47 @@ const navigationItems = [
     name: 'Dashboard',
     href: '/',
     icon: Home,
-    description: 'Main dashboard overview'
+    description: 'Main dashboard overview',
   },
   {
     name: 'AI Agents',
     href: '/ai-agents',
     icon: Users,
     description: 'Manage AI agents',
-    badge: '12 Active'
+    badge: '12 Active',
   },
   {
     name: 'Enhanced AI',
     href: '/enhanced-ai-orchestrator',
     icon: Brain,
     description: 'Enhanced AI orchestration',
-    badge: '35 Models'
+    badge: '35 Models',
   },
   {
     name: 'GLM Orchestrator',
     href: '/glm-orchestrator-demo',
     icon: Network,
     description: 'GLM-4.5 orchestration',
-    badge: 'Active'
+    badge: 'Active',
   },
   {
     name: 'Analytics',
     href: '/analytics',
     icon: BarChart3,
-    description: 'Real-time analytics'
+    description: 'Real-time analytics',
   },
   {
     name: 'Security',
     href: '/security',
     icon: Shield,
-    description: 'Security & compliance'
+    description: 'Security & compliance',
   },
   {
     name: 'Settings',
     href: '/settings',
     icon: Settings,
-    description: 'System settings'
-  }
+    description: 'System settings',
+  },
 ];
 
 export default function PremiumNavigation() {
@@ -117,7 +117,7 @@ export default function PremiumNavigation() {
               OptiMind
             </span>
           </Link>
-          
+
           <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold px-2 py-1 text-xs">
             <Crown className="h-3 w-3 mr-1" />
             Diamond Grade
@@ -125,15 +125,15 @@ export default function PremiumNavigation() {
         </div>
 
         <div className="flex items-center space-x-1">
-          {navigationItems.map((item) => (
+          {navigationItems.map(item => (
             <Link key={item.name} href={item.href}>
               <Button
-                variant={pathname === item.href ? "default" : "ghost"}
+                variant={pathname === item.href ? 'default' : 'ghost'}
                 className={cn(
-                  "relative h-9 px-3 text-sm font-medium transition-all duration-200",
-                  pathname === item.href 
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" 
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800"
+                  'relative h-9 px-3 text-sm font-medium transition-all duration-200',
+                  pathname === item.href
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800'
                 )}
               >
                 <item.icon className="h-4 w-4 mr-2" />
@@ -158,7 +158,7 @@ export default function PremiumNavigation() {
               System Healthy
             </Badge>
           </div>
-          
+
           <Button variant="outline" size="sm" className="border-gray-300">
             <Settings className="h-4 w-4 mr-2" />
             Settings
@@ -179,7 +179,7 @@ export default function PremiumNavigation() {
                 OptiMind
               </span>
             </Link>
-            
+
             <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold px-2 py-1 text-xs">
               <Crown className="h-3 w-3 mr-1" />
               Diamond
@@ -205,15 +205,15 @@ export default function PremiumNavigation() {
         {isOpen && (
           <div className="border-t border-gray-200 dark:border-gray-700">
             <div className="px-4 py-2 space-y-1">
-              {navigationItems.map((item) => (
+              {navigationItems.map(item => (
                 <Link key={item.name} href={item.href} onClick={() => setIsOpen(false)}>
                   <Button
-                    variant={pathname === item.href ? "default" : "ghost"}
+                    variant={pathname === item.href ? 'default' : 'ghost'}
                     className={cn(
-                      "w-full justify-start h-10 px-3 text-sm font-medium transition-all duration-200",
-                      pathname === item.href 
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white" 
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800"
+                      'w-full justify-start h-10 px-3 text-sm font-medium transition-all duration-200',
+                      pathname === item.href
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-100 dark:hover:bg-gray-800'
                     )}
                   >
                     <item.icon className="h-4 w-4 mr-3" />

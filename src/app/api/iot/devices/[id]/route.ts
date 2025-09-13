@@ -1,76 +1,70 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { optimindIoTArchitecture } from '@/lib/iot-architecture';
 
 /**
  * Individual IoT Device API Endpoint
- * 
+ *
  * Provides CRUD operations for individual IoT devices including
  * retrieval, update, deletion, and status management.
  */
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const device = optimindIoTArchitecture.getDevices().get(id);
 
     if (!device) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Device not found',
-          deviceId: id
+          deviceId: id,
         },
         { status: 404 }
       );
     }
 
     // Get device sensors
-    const deviceSensors = Array.from(optimindIoTArchitecture.getSensors().values())
-      .filter(sensor => sensor.deviceId === id);
+    const deviceSensors = Array.from(optimindIoTArchitecture.getSensors().values()).filter(
+      sensor => sensor.deviceId === id
+    );
 
     return NextResponse.json({
       success: true,
       data: {
         device,
         sensors: deviceSensors,
-        sensorCount: deviceSensors.length
+        sensorCount: deviceSensors.length,
       },
       metadata: {
         timestamp: new Date().toISOString(),
-        deviceId: id
-      }
+        deviceId: id,
+      },
     });
   } catch (error) {
     console.error('Error fetching IoT device:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to fetch device',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await request.json();
-    
+
     const device = optimindIoTArchitecture.getDevices().get(id);
     if (!device) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Device not found',
-          deviceId: id
+          deviceId: id,
         },
         { status: 404 }
       );
@@ -81,7 +75,7 @@ export async function PUT(
       ...device,
       ...body,
       id: device.id, // Prevent ID changes
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     // Update device in architecture (this would need a method in the architecture class)
@@ -92,15 +86,15 @@ export async function PUT(
       success: true,
       data: updatedDevice,
       message: 'Device updated successfully',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('Error updating IoT device:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to update device',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );
@@ -113,14 +107,14 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    
+
     const device = optimindIoTArchitecture.getDevices().get(id);
     if (!device) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Device not found',
-          deviceId: id
+          deviceId: id,
         },
         { status: 404 }
       );
@@ -128,11 +122,12 @@ export async function DELETE(
 
     // Remove device and its sensors
     optimindIoTArchitecture.getDevices().delete(id);
-    
+
     // Remove associated sensors
-    const sensorsToDelete = Array.from(optimindIoTArchitecture.getSensors().values())
-      .filter(sensor => sensor.deviceId === id);
-    
+    const sensorsToDelete = Array.from(optimindIoTArchitecture.getSensors().values()).filter(
+      sensor => sensor.deviceId === id
+    );
+
     sensorsToDelete.forEach(sensor => {
       optimindIoTArchitecture.getSensors().delete(sensor.id);
     });
@@ -143,17 +138,17 @@ export async function DELETE(
       deletedDevice: {
         id,
         name: device.name,
-        sensorsDeleted: sensorsToDelete.length
+        sensorsDeleted: sensorsToDelete.length,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     console.error('Error deleting IoT device:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to delete device',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        message: error instanceof Error ? error.message : 'Unknown error',
       },
       { status: 500 }
     );

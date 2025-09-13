@@ -1,4 +1,3 @@
-import { NextRequest, NextResponse } from 'next/server';
 
 // Simplified OpenAPI Specification for OptiMind AI Ecosystem
 const openApiSpec = {
@@ -85,7 +84,7 @@ const openApiSpec = {
   ],
 };
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Add CORS headers
     const corsHeaders = {

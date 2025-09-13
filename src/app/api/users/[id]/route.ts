@@ -17,7 +17,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json(user);
   } catch (error: unknown) {
     console.error('User API error:', error);
-    return NextResponse.json({ error: (error as Error).message || 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message || 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -39,6 +42,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json(updatedUser);
   } catch (error: unknown) {
     console.error('User update error:', error);
-    return NextResponse.json({ error: (error as Error).message || 'Failed to update user' }, { status: 500 });
+    return NextResponse.json(
+      { error: (error as Error).message || 'Failed to update user' },
+      { status: 500 }
+    );
   }
 }

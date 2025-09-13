@@ -109,7 +109,11 @@ export async function GET(request: Request) {
             status: 'active' as const,
             synergy: 0.87,
             efficiency: 0.92,
-            emergentProperties: ['enhanced-reasoning', 'cross-domain-insights', 'adaptive-learning'],
+            emergentProperties: [
+              'enhanced-reasoning',
+              'cross-domain-insights',
+              'adaptive-learning',
+            ],
             sharedContext: { domain: 'multi-domain-analysis', complexity: 'high' },
             createdAt: new Date(Date.now() - 7200000),
             lastActivity: new Date(),
@@ -155,10 +159,7 @@ export async function GET(request: Request) {
 
         const agent = aiAgentManager.getAgentById(agentId);
         if (!agent) {
-          return NextResponse.json(
-            { success: false, error: 'Agent not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ success: false, error: 'Agent not found' }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -222,10 +223,10 @@ export async function POST(request: Request) {
         // Try to assign task to an available agent
         const availableAgents = aiAgentManager.getAvailableAgents();
         if (availableAgents.length > 0) {
-          const bestAgent = availableAgents.reduce((best, current) => 
+          const bestAgent = availableAgents.reduce((best, current) =>
             current.state.cognitiveLoad < best.state.cognitiveLoad ? current : best
           );
-          
+
           if (await aiAgentManager.assignTaskToAgent(bestAgent.id, 0.5)) {
             newTask.assignedAgent = bestAgent.id;
             newTask.status = 'assigned';
@@ -243,7 +244,7 @@ export async function POST(request: Request) {
       case 'control-agent':
         const { agentId, controlAction } = payload;
         const success = await aiAgentManager.controlAgent(agentId, controlAction);
-        
+
         if (!success) {
           return NextResponse.json(
             { success: false, error: 'Failed to control agent' },
@@ -294,7 +295,7 @@ export async function POST(request: Request) {
 
       case 'update-task-progress':
         const { taskId, progress } = payload;
-        
+
         // For now, this is a mock implementation
         // In a real system, you would update the actual task progress
         const mockTaskUpdate = {
@@ -326,16 +327,13 @@ export async function POST(request: Request) {
       case 'assign-task':
         const { taskId: assignTaskId, agentId: assignAgentId } = payload;
         const agentToAssign = aiAgentManager.getAgentById(assignAgentId);
-        
+
         if (!agentToAssign) {
-          return NextResponse.json(
-            { success: false, error: 'Agent not found' },
-            { status: 404 }
-          );
+          return NextResponse.json({ success: false, error: 'Agent not found' }, { status: 404 });
         }
 
         const assignSuccess = await aiAgentManager.assignTaskToAgent(assignAgentId, 0.5);
-        
+
         if (!assignSuccess) {
           return NextResponse.json(
             { success: false, error: 'Failed to assign task to agent' },
@@ -350,7 +348,7 @@ export async function POST(request: Request) {
             taskId: assignTaskId,
             agentId: assignAgentId,
             agentName: agentToAssign.name,
-            status: 'assigned'
+            status: 'assigned',
           },
           message: `Task assigned to ${agentToAssign.name}`,
           timestamp: new Date().toISOString(),

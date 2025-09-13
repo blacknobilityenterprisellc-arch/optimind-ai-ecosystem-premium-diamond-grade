@@ -7,7 +7,11 @@ import type { Request } from 'next/server';
  * and natural language understanding capabilities.
  */
 
-import { enhancedAIOrchestrator, EnhancedOrchestratorConfig, QuantumEnhancedOperation } from '@/lib/orchestration/enhanced-ai-orchestrator';
+import {
+  enhancedAIOrchestrator,
+  EnhancedOrchestratorConfig,
+  QuantumEnhancedOperation,
+} from '@/lib/orchestration/enhanced-ai-orchestrator';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -69,14 +73,16 @@ export async function GET(request: Request) {
       case 'collaborative-networks':
         const networksStatus = {
           count: enhancedAIOrchestrator.getStatus().collaborativeNetworks,
-          networks: Array.from(enhancedAIOrchestrator['collaborativeNetworks'].entries()).map(([id, network]) => ({
-            id,
-            agents: network.agents,
-            synergy: network.synergy,
-            collaborationEfficiency: network.collaborationEfficiency,
-            emergentProperties: network.emergentProperties,
-            insightsCount: network.collectiveInsights.length,
-          })),
+          networks: Array.from(enhancedAIOrchestrator['collaborativeNetworks'].entries()).map(
+            ([id, network]) => ({
+              id,
+              agents: network.agents,
+              synergy: network.synergy,
+              collaborationEfficiency: network.collaborationEfficiency,
+              emergentProperties: network.emergentProperties,
+              insightsCount: network.collectiveInsights.length,
+            })
+          ),
         };
         return NextResponse.json({
           success: true,
@@ -272,7 +278,10 @@ export async function POST(request: Request) {
           },
           payload: payload.data || {},
           requirements: {
-            capabilities: payload.capabilities || ['collaborative-reasoning', 'knowledge-integration'],
+            capabilities: payload.capabilities || [
+              'collaborative-reasoning',
+              'knowledge-integration',
+            ],
             minExpertise: 0.85,
             collaborationNeeded: true,
             quantumProcessing: payload.quantumProcessing || false,
@@ -448,7 +457,8 @@ async function runEnhancedDemonstration() {
       type: 'analysis',
       complexity: 'moderate',
       priority: 'medium',
-      naturalLanguageQuery: 'Analyze the system performance and provide optimization recommendations',
+      naturalLanguageQuery:
+        'Analyze the system performance and provide optimization recommendations',
       context: {
         userIntent: 'performance-analysis',
         domain: 'system-optimization',
@@ -602,9 +612,9 @@ async function runEnhancedDemonstration() {
     const successfulOps = results.operations.filter(op => op.result && op.result.success);
     results.performance.totalOperations = results.operations.length;
     results.performance.successfulOperations = successfulOps.length;
-    results.performance.averageProcessingTime = successfulOps.reduce(
-      (sum, op) => sum + (op.result?.processingTime || 0), 0
-    ) / successfulOps.length || 0;
+    results.performance.averageProcessingTime =
+      successfulOps.reduce((sum, op) => sum + (op.result?.processingTime || 0), 0) /
+        successfulOps.length || 0;
 
     // Get updated system intelligence
     results.systemIntelligence = enhancedAIOrchestrator.getSystemIntelligence();
