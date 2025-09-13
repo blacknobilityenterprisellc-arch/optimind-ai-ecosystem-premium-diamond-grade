@@ -126,6 +126,131 @@ export default function Home() {
   );
 }
   return (
+    <div className="min-h-screen bg-background font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">OptiMind AI Ecosystem</h1>
+        <p className="text-lg text-center text-muted-foreground mb-8">
+          Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Agents</h2>
+            <p className="text-muted-foreground">Advanced AI agents with full capabilities</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">UI/UX Design</h2>
+            <p className="text-muted-foreground">Modern, responsive interface with shadcn/ui</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Features</h2>
+            <p className="text-muted-foreground">Complete enterprise-grade functionality</p>
+          </components.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">OptiMind AI Ecosystem</h1>
+        <p className="text-lg text-center text-muted-foreground mb-8">
+          Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Agents</h2>
+            <p className="text-muted-foreground">Advanced AI agents with full capabilities</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">UI/UX Design</h2>
+            <p className="text-muted-foreground">Modern, responsive interface with shadcn/ui</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Features</h2>
+            <p className="text-muted-foreground">Complete enterprise-grade functionality</p>
+          </components.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">OptiMind AI Ecosystem</h1>
+        <p className="text-lg text-center text-muted-foreground mb-8">
+          Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Agents</h2>
+            <p className="text-muted-foreground">Advanced AI agents with full capabilities</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">UI/UX Design</h2>
+            <p className="text-muted-foreground">Modern, responsive interface with shadcn/ui</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Features</h2>
+            <p className="text-muted-foreground">Complete enterprise-grade functionality</p>
+          </components.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">OptiMind AI Ecosystem</h1>
+        <p className="text-lg text-center text-muted-foreground mb-8">
+          Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Agents</h2>
+            <p className="text-muted-foreground">Advanced AI agents with full capabilities</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">UI/UX Design</h2>
+            <p className="text-muted-foreground">Modern, responsive interface with shadcn/ui</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Features</h2>
+            <p className="text-muted-foreground">Complete enterprise-grade functionality</p>
+          </components.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+  return (
+    <div className="min-h-screen bg-background font-sans">
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">OptiMind AI Ecosystem</h1>
+        <p className="text-lg text-center text-muted-foreground mb-8">
+          Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">AI Agents</h2>
+            <p className="text-muted-foreground">Advanced AI agents with full capabilities</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">UI/UX Design</h2>
+            <p className="text-muted-foreground">Modern, responsive interface with shadcn/ui</p>
+          </components.Card>
+          <components.Card className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Enterprise Features</h2>
+            <p className="text-muted-foreground">Complete enterprise-grade functionality</p>
+          </components.Card>
+        </div>
+      </div>
+    </div>
+  );
+}
+  return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-900 dark:to-purple-900">
       {/* Premium Diamond-Grade Header */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600"></div>
