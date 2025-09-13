@@ -121,7 +121,7 @@ export default function NavigationHeader() {
               Diamond
             </Badge>
           </Link>
-          <nav className="flex items-center space-x-4 sm:space-x-6 text-sm font-medium">
+          <nav className="flex items-center justify-between" className="flex items-center space-x-4 sm:space-x-6 text-sm font-medium">
             {navigationItems.map(item =>
               item.title === 'OptiTest AI' ? (
                 <DropdownMenu key={item.href}>
@@ -199,7 +199,7 @@ export default function NavigationHeader() {
             </Link>
           </div>
 
-          <nav className="flex items-center">
+          <nav className="flex items-center justify-between" className="flex items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
@@ -245,7 +245,7 @@ export default function NavigationHeader() {
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <div className="md:hidden">
-          <nav className="flex flex-col space-y-1 border-t p-4">
+          <nav className="flex items-center justify-between" className="flex flex-col space-y-1 border-t p-4">
             {navigationItems.map(item =>
               item.title === 'OptiTest AI' ? (
                 <div key={item.href} className="space-y-1">

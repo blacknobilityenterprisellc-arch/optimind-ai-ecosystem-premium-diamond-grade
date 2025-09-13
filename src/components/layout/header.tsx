@@ -47,7 +47,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="flex items-center justify-between" className="hidden md:flex items-center gap-8">
             <div className="relative group">
               <button
                 className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-colors"
@@ -137,7 +137,7 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden border-t bg-background">
-            <nav className="p-4 space-y-4">
+            <nav className="flex items-center justify-between" className="p-4 space-y-4">
               <div className="space-y-2">
                 <div className="font-medium text-sm text-muted-foreground">Products</div>
                 {products.map((product, index) => (

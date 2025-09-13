@@ -261,7 +261,7 @@ export default function SidebarNavigation() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-4 space-y-4">
+      <nav className="flex items-center justify-between" className="flex-1 overflow-y-auto p-4 space-y-4">
         {navigationGroups.map((group) => (
           <div key={group.title} className="space-y-2">
             <Button

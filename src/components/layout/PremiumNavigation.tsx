@@ -106,7 +106,7 @@ export default function PremiumNavigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center justify-between p-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+      <nav className="flex items-center justify-between" className="hidden md:flex items-center justify-between p-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-4">
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative">
@@ -167,7 +167,7 @@ export default function PremiumNavigation() {
       </nav>
 
       {/* Mobile Navigation */}
-      <nav className="md:hidden bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
+      <nav className="flex items-center justify-between" className="md:hidden bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center space-x-2">
             <Link href="/" className="flex items-center space-x-2">
