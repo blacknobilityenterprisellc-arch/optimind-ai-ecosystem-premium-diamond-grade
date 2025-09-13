@@ -7,7 +7,7 @@
  */
 
 import { AIAgentManager } from './ai-agent-management';
-import { ZAI } from 'z-ai-web-dev-sdk';
+import ZAI from 'z-ai-web-dev-sdk';
 import { Server } from 'socket.io';
 
 interface ImprovementMetrics {
