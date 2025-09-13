@@ -82,3 +82,21 @@ export class EnhancedError extends Error {
     };
   }
 }
+
+// Export the missing withValidation function
+export const withValidation = (schema: z.ZodSchema<any>) => {
+  return (handler: any) => {
+    return async (...args: any[]) => {
+      try {
+        const data = args[0]?.body || args[0];
+        const validated = validateInput(schema, data);
+        return handler({ ...args[0], validatedBody: validated }, ...args.slice(1));
+      } catch (error) {
+        if (error instanceof EnhancedError) {
+          throw error;
+        }
+        throw new EnhancedError('Validation failed', 'VALIDATION_ERROR', 400, error);
+      }
+    };
+  };
+};
