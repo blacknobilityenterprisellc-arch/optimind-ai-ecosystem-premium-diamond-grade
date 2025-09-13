@@ -1,5 +1,6 @@
 import React from 'react';
-import * as components from '@/components/ui';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export default function Home() {
   return (
@@ -14,55 +15,55 @@ export default function Home() {
             Enterprise-grade AI platform with 45+ AI tools and 35+ advanced AI models
           </p>
           <div className="flex justify-center gap-4">
-            <components.Button size="lg" className="px-8">
+            <Button size="lg" className="px-8">
               Get Started
-            </components.Button>
-            <components.Button variant="outline" size="lg" className="px-8">
+            </Button>
+            <Button variant="outline" size="lg" className="px-8">
               Learn More
-            </components.Button>
+            </Button>
           </div>
         </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          <components.Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
-            <components.CardHeader>
-              <components.CardTitle className="flex items-center gap-2">
+          <Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 🤖 AI Agents
-              </components.CardTitle>
-            </components.CardHeader>
-            <components.CardContent>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <p className="text-muted-foreground">
                 Advanced AI agents with full capabilities, intelligence, and power
               </p>
-            </components.CardContent>
-          </components.Card>
+            </CardContent>
+          </Card>
 
-          <components.Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
-            <components.CardHeader>
-              <components.CardTitle className="flex items-center gap-2">
+          <Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 🎨 UI/UX Design
-              </components.CardTitle>
-            </components.CardHeader>
-            <components.CardContent>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <p className="text-muted-foreground">
                 Modern, responsive interface with beautiful shadcn/ui components
               </p>
-            </components.CardContent>
-          </components.Card>
+            </CardContent>
+          </Card>
 
-          <components.Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
-            <components.CardHeader>
-              <components.CardTitle className="flex items-center gap-2">
+          <Card className="p-6 border-border/50 hover:border-primary/50 transition-all duration-300">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
                 🏢 Enterprise Features
-              </components.CardTitle>
-            </components.CardHeader>
-            <components.CardContent>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <p className="text-muted-foreground">
                 Complete enterprise-grade functionality and security
               </p>
-            </components.CardContent>
-          </components.Card>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Dashboard Preview */}
