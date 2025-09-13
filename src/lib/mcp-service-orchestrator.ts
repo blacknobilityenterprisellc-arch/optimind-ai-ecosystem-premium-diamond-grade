@@ -762,6 +762,8 @@ class MCPServiceOrchestrator {
 
 // Export singleton instance
 export const mcpServiceOrchestrator = new MCPServiceOrchestrator();
+// Export the class reference for external imports
+export { MCPServiceOrchestrator };
 
 // Enhanced error class with better error handling
 class EnhancedError extends Error {

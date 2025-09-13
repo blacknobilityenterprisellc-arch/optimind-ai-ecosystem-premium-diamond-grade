@@ -1101,8 +1101,8 @@ import { Progress } from '@/components/ui/progress';
 
 // Import specialized components
 import { MultiModelAIAnalyzer } from '@/components/MultiModelAIAnalyzer';
-import { BrandMentionTracker } from '@/components/BrandMentionTracker';
-import { AIPoweredResearchStrategy } from '@/components/AIPoweredResearchStrategy';
+import BrandMentionTracker from '@/components/BrandMentionTracker';
+import AIPoweredResearchStrategy from '@/components/AIPoweredResearchStrategy';
 
 interface ResearchQuery {
   query: string;

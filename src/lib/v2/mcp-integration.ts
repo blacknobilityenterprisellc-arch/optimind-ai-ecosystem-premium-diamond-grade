@@ -946,6 +946,8 @@ class MCPIntegrationV2 {
 
 // Export singleton instance
 export const mcpIntegrationV2 = new MCPIntegrationV2();
+// Export the class reference for external imports
+export { MCPIntegrationV2 };
 
 // Export types and utilities
 export type { MCPContext, MCPMessage, MCPProtocol, MCPConnection, MCPStats };
