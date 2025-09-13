@@ -7,6 +7,7 @@
 
 import { getAccessControlManager } from './access-control';
 import { getSecretsManager } from './secrets-manager';
+import { randomUUID } from 'crypto';
 
 export interface SecurityEvent {
   id: string;
@@ -121,7 +122,7 @@ export class SecurityMonitor {
   async recordEvent(event: Omit<SecurityEvent, 'id' | 'timestamp'>): Promise<void> {
     const securityEvent: SecurityEvent = {
       ...event,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       timestamp: new Date(),
     };
 
@@ -258,7 +259,7 @@ export class SecurityMonitor {
     for (const [ip, count] of ipCounts.entries()) {
       if (count >= this.config.alertThresholds.suspiciousIPThreshold) {
         await this.createAlert({
-          eventId: crypto.randomUUID(),
+          eventId: randomUUID(),
           type: 'email',
           recipient: this.config.alertChannels.email?.recipients[0] || 'admin@example.com',
           message: `Suspicious activity detected from IP ${ip}: ${count} events in the last hour`,
@@ -291,7 +292,7 @@ export class SecurityMonitor {
   private async createAlert(alert: Omit<SecurityAlert, 'id'>): Promise<void> {
     const fullAlert: SecurityAlert = {
       ...alert,
-      id: crypto.randomUUID(),
+      id: randomUUID(),
     };
 
     this.alertQueue.push(fullAlert);

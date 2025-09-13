@@ -338,9 +338,14 @@ class OptiMindAIAgentsDemo {
         const metrics = metricsData.data;
         
         console.log('📊 System Performance Analysis:');
-        console.log(`   Overall System Health: ${((metrics.systemIntelligence.collectiveIntelligence + metrics.systemIntelligence.adaptability + metrics.systemIntelligence.innovation) / 3).toFixed(1)}%`);
-        console.log(`   Agent Efficiency: ${((100 - metrics.resourceUtilization.cpu) + (100 - metrics.resourceUtilization.memory) + (100 - metrics.resourceUtilization.energy)) / 3).toFixed(1)}%`);
-        console.log(`   Task Completion Rate: ${((metrics.completedTasks / metrics.totalTasks) * 100).toFixed(1)}%`);
+        const overallHealth = ((metrics.systemIntelligence.collectiveIntelligence + metrics.systemIntelligence.adaptability + metrics.systemIntelligence.innovation) / 3).toFixed(1);
+        console.log(`   Overall System Health: ${overallHealth}%`);
+        
+        const agentEfficiency = ((100 - metrics.resourceUtilization.cpu) + (100 - metrics.resourceUtilization.memory) + (100 - metrics.resourceUtilization.energy)) / 3;
+        console.log(`   Agent Efficiency: ${agentEfficiency.toFixed(1)}%`);
+        
+        const completionRate = ((metrics.completedTasks / metrics.totalTasks) * 100).toFixed(1);
+        console.log(`   Task Completion Rate: ${completionRate}%`);
         
         // Performance recommendations
         console.log('\n💡 Performance Recommendations:');
@@ -384,7 +389,7 @@ class OptiMindAIAgentsDemo {
    */
   async runCompleteDemo() {
     console.log('🚀 Starting OptiMind AI Agents Complete Demonstration');
-    console.log('=' * 60);
+    console.log('='.repeat(60));
     
     await this.demonstrateSystemOverview();
     await this.demonstrateAgentListing();

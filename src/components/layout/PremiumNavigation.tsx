@@ -18,7 +18,7 @@ import {
   Crown,
   Diamond,
   Menu,
-n  X,
+  X,
   Home,
   Database,
   Cloud,

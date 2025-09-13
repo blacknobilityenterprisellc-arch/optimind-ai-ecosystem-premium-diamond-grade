@@ -244,6 +244,7 @@ function parseAnalysisResult(analysis: string, model: string, analysisType: stri
     };
     
   } catch (error) {
+    console.error('Analysis error:', error);
     return {
       model,
       analysisType,
@@ -274,12 +275,15 @@ function aggregateResults(results: any[], analysisType: string): any {
   const avgConfidence = results.reduce((sum, r) => sum + r.confidence, 0) / results.length;
   const avgAccuracy = results.reduce((sum, r) => sum + r.accuracy, 0) / results.length;
   
+  // Use aggregated values in the response
   // Determine overall risk level
   const riskLevels = results.map(r => r.riskAssessment?.level || 'medium');
   const overallRisk = determineOverallRisk(riskLevels);
   
   return {
     summary: `Ensemble analysis using ${results.length} models for ${analysisType}`,
+    confidence: avgConfidence,
+    accuracy: avgAccuracy,
     insights: insights.slice(0, 10), // Top 10 insights
     recommendations: recommendations.slice(0, 5), // Top 5 recommendations
     riskAssessment: {
@@ -290,7 +294,9 @@ function aggregateResults(results: any[], analysisType: string): any {
       model: r.model,
       confidence: r.confidence,
       accuracy: r.accuracy
-    }))
+    })),
+    analysisType,
+    resultCount: results.length
   };
 }
 

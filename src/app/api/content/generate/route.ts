@@ -5,7 +5,6 @@ import { premiumZAIWrapper } from '@/lib/zai-sdk-wrapper';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { topic, contentType, tone, length, keywords, targetAudience } = body;
 
     // Validate required fields using proper schema
     const validatedData = validateInput(ValidationSchemas.Content.Generate, body);
