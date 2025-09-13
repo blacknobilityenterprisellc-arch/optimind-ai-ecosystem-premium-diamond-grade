@@ -10,50 +10,601 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Core User Management
+// Core Enterprise User Management with Enhanced Security
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  role      String   @default("USER")
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  email           String   @unique
+  name            String?
+  role            String   @default("USER")
+  isActive        Boolean  @default(true)
+  emailVerified   Boolean  @default(false)
+  isPremium       Boolean  @default(false)
+  securityLevel   String   @default("standard") // standard, enhanced, premium, diamond, military
+  lastLoginAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Security fields
+  password        String?
+  apiKey          String?  @unique
+  mfaEnabled      Boolean  @default(false)
+  mfaSecret       String?
+  sessionToken    String?
+  refreshToken    String?
+  
+  // Enterprise fields
+  tenantId        String?
+  department      String?
+  title           String?
+  phone           String?
+  avatar          String?
+  bio             String?
+  
+  // Preferences
+  theme           String   @default("light")
+  language        String   @default("en")
+  timezone        String   @default("UTC")
+  notifications   Boolean  @default(true)
+  
+  // Metadata
+  metadata        Json?
 
   // Relations
-  posts     Post[]
-  projects  Project[]
+  posts           Post[]
+  projects        Project[]
+  analyses        Analysis[]
+  conversations   Conversation[]
+  messages        Message[]
+  subscriptions   Subscription[]
+  securityLogs    SecurityLog[]
+  auditLogs       AuditLog[]
+  apiKeys         ApiKey[]
+  sessions        Session[]
+  comments        Comment[]
+  
+  // Many-to-many relationships
+  teams           TeamMember[]
+  permissions     UserPermission[]
+  tenant          Tenant?     @relation(fields: [tenantId], references: [id], onDelete: SetNull)
   
   @@map("users")
 }
 
-// Project Management
+// Enhanced Tenant Management for Enterprise Architecture
+model Tenant {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  plan            String   @default("BASIC") // BASIC, PRO, ENTERPRISE, DIAMOND
+  status          String   @default("ACTIVE") // ACTIVE, SUSPENDED, CANCELLED
+  isActive        Boolean  @default(true)
+  domain          String?  @unique
+  logo            String?
+  settings        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Enterprise configuration
+  maxUsers        Int      @default(10)
+  maxProjects     Int      @default(5)
+  maxStorage      Int      @default(1024) // MB
+  maxApiCalls     Int      @default(10000)
+  
+  // Security settings
+  securityLevel   String   @default("standard")
+  mfaRequired     Boolean  @default(false)
+  sessionTimeout  Int      @default(3600) // seconds
+  
+  // Billing
+  billingEmail    String?
+  billingAddress  Json?
+  trialEndsAt     DateTime?
+  subscriptionEnds DateTime?
+
+  // Relations
+  users           User[]
+  projects        Project[]
+  subscriptions   Subscription[]
+  securitySettings SecuritySettings[]
+  auditLogs       AuditLog[]
+  securityLogs    SecurityLog[]
+  teams           Team[]
+  
+  @@map("tenants")
+}
+
+// Enhanced Project Management with Enterprise Features
 model Project {
-  id          String      @id @default(cuid())
-  name        String
-  description String?
-  userId      String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  status          String      @default("ACTIVE") // ACTIVE, COMPLETED, CANCELLED, ON_HOLD
+  priority        String      @default("medium") // low, medium, high, critical
+  userId          String
+  tenantId        String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  startedAt       DateTime?
+  completedAt     DateTime?
+  dueDate         DateTime?
+
+  // Enterprise fields
+  budget          Float?
+  currency        String      @default("USD")
+  teamSize        Int         @default(1)
+  category        String?
+  tags            String?     // JSON array of tags
+  visibility      String      @default("private") // private, team, public
+  
+  // Advanced features
+  metadata        Json?
+  configuration   Json?
+  requirements    Json?
+  deliverables    Json?
+  
+  // Progress tracking
+  progress        Int         @default(0) // 0-100
+  estimatedHours  Int?
+  actualHours     Int?
   
   // Relations
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant?     @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  analyses        Analysis[]
+  tasks           Task[]
+  documents       Document[]
+  comments        Comment[]
   
   @@map("projects")
 }
 
-// Enhanced Blog/Content Management
+// Enhanced Blog/Content Management with SEO and Analytics
 model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  title           String
+  slug            String   @unique
+  content         String?
+  excerpt         String?
+  featuredImage   String?
+  published       Boolean  @default(false)
+  featured        Boolean  @default(false)
+  authorId        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  publishedAt     DateTime?
+  
+  // SEO fields
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?     // JSON array of keywords
+  canonicalUrl    String?
+  
+  // Analytics
+  views           Int      @default(0)
+  likes           Int      @default(0)
+  shares          Int      @default(0)
+  commentsCount   Int      @default(0)
+  
+  // Content management
+  status          String   @default("draft") // draft, review, published, archived
+  contentType     String   @default("article") // article, tutorial, news, review
+  readingTime     Int?     // minutes
   
   // Relations
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author          User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments        Comment[]
+  tags            PostTag[]
   
   @@map("posts")
+}
+
+// Premium AI Analysis and Insights
+model Analysis {
+  id              String   @id @default(cuid())
+  type            String   // MULTIMODAL_ANALYSIS, DATA_ANALYSIS, SENTIMENT_ANALYSIS, etc.
+  input           String
+  result          Json?
+  confidence      Float?
+  status          String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, FAILED
+  userId          String?
+  projectId       String?
+  model           String?
+  processingTime  Int?     // milliseconds
+  cost            Float?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  completedAt     DateTime?
+
+  // Enhanced analysis fields
+  accuracy        Float?
+  insights        String?
+  recommendations  String?
+  riskAssessment  Json?
+  metadata        Json?
+  
+  // Quality metrics
+  qualityScore    Float?
+  relevanceScore  Float?
+  completeness    Float?
+  
+  // Relations
+  user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project         Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("analyses")
+}
+
+// Enhanced Conversation Management for AI Chat
+model Conversation {
+  id          String   @id @default(cuid())
+  title       String
+  userId      String
+  model       String?
+  status      String   @default("active") // active, archived, deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Conversation metadata
+  metadata    Json?
+  settings    Json?
+  
+  // Analytics
+  messageCount Int      @default(0)
+  lastMessageAt DateTime?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages    Message[]
+  
+  @@map("conversations")
+}
+
+// Enhanced Message System with AI Context
+model Message {
+  id              String   @id @default(cuid())
+  conversationId  String
+  role            String   // USER, ASSISTANT, SYSTEM
+  content         String
+  userId          String?
+  model           String?
+  tokens          Int?
+  cost            Float?
+  createdAt       DateTime @default(now())
+  
+  // Enhanced message fields
+  metadata        Json?
+  attachments     Json?   // File attachments
+  reactions       Json?   // User reactions
+  editedAt        DateTime?
+  editedReason    String?
+  
+  // AI-specific fields
+  temperature     Float?
+  maxTokens       Int?
+  stopSequences   String?
+  
+  // Relations
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user            User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@map("messages")
+}
+
+// Enterprise Subscription Management
+model Subscription {
+  id              String   @id @default(cuid())
+  userId          String
+  tenantId        String
+  plan            String   // BASIC, PRO, ENTERPRISE, DIAMOND
+  status          String   @default("ACTIVE") // ACTIVE, CANCELLED, EXPIRED, SUSPENDED
+  currentPeriodStart DateTime @default(now())
+  currentPeriodEnd DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  cancelledAt     DateTime?
+  
+  // Billing information
+  billingCycle    String   @default("monthly") // monthly, yearly
+  amount          Float?
+  currency        String   @default("USD")
+  paymentMethod   String?
+  lastPaymentAt   DateTime?
+  nextPaymentAt   DateTime?
+  
+  // Subscription features
+  features        Json?
+  limits          Json?
+  metadata        Json?
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, tenantId])
+  @@map("subscriptions")
+}
+
+// Enhanced Security Settings
+model SecuritySettings {
+  id              String   @id @default(cuid())
+  tenantId        String   @unique
+  mfaRequired     Boolean  @default(false)
+  sessionTimeout  Int      @default(3600) // seconds
+  passwordPolicy  Json?
+  ipWhitelist     String?
+  ipBlacklist     String?
+  rateLimit       Int      @default(100) // requests per minute
+  encryptionLevel String   @default("standard") // standard, enhanced, premium, military
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Advanced security features
+  auditLogEnabled Boolean  @default(true)
+  dataRetention   Int?     // days
+  backupEnabled   Boolean  @default(true)
+  monitoringEnabled Boolean @default(true)
+  
+  // Compliance
+  compliance      Json?
+  certifications  String?
+  
+  // Relations
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  @@map("security_settings")
+}
+
+// Security Audit Logs
+model SecurityLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  tenantId    String?
+  action      String   // LOGIN, LOGOUT, FAILED_LOGIN, PASSWORD_CHANGE, etc.
+  resource    String?  // What was accessed
+  ipAddress   String?
+  userAgent   String?
+  location    Json?    // GeoIP data
+  status      String   // SUCCESS, FAILED, BLOCKED
+  severity    String   @default("info") // info, warning, error, critical
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  @@map("security_logs")
+}
+
+// Comprehensive Audit Trail
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  tenantId    String?
+  action      String   // CREATE, READ, UPDATE, DELETE
+  resource    String   // Table name
+  resourceId  String?  // Record ID
+  changes     Json?    // Before/after values
+  ipAddress   String?
+  userAgent   String?
+  status      String   @default("success") // success, failed, blocked
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+  
+  @@map("audit_logs")
+}
+
+// API Key Management
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  key         String   @unique
+  secret      String
+  permissions String?  // JSON array of permissions
+  status      String   @default("active") // active, revoked, expired
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Usage tracking
+  usageCount  Int      @default(0)
+  rateLimit   Int      @default(1000)
+  ipWhitelist String?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("api_keys")
+}
+
+// Session Management
+model Session {
+  id          String   @id @default(cuid())
+  userId      String
+  token       String   @unique
+  refreshToken String?
+  ipAddress   String?
+  userAgent   String?
+  status      String   @default("active") // active, expired, revoked
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  lastUsedAt  DateTime?
+  
+  // Session metadata
+  metadata    Json?
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("sessions")
+}
+
+// Team Management
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  tenantId    String
+  status      String   @default("active") // active, inactive
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Team settings
+  permissions Json?
+  settings    Json?
+  
+  // Relations
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  members     TeamMember[]
+  
+  @@map("teams")
+}
+
+// Team Membership
+model TeamMember {
+  id          String   @id @default(cuid())
+  teamId      String
+  userId      String
+  role        String   @default("member") // member, admin, owner
+  joinedAt    DateTime @default(now())
+  
+  // Membership settings
+  permissions Json?
+  
+  // Relations
+  team        Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([teamId, userId])
+  @@map("team_members")
+}
+
+// User Permissions
+model UserPermission {
+  id          String   @id @default(cuid())
+  userId      String
+  resource    String   // Resource name
+  action      String   // Action (create, read, update, delete)
+  granted     Boolean  @default(true)
+  grantedAt   DateTime @default(now())
+  expiresAt   DateTime?
+  grantedBy   String?  // User ID who granted permission
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, resource, action])
+  @@map("user_permissions")
+}
+
+// Task Management
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  projectId   String
+  status      String   @default("todo") // todo, in_progress, review, done
+  priority    String   @default("medium") // low, medium, high, critical
+  assignedTo  String?  // User ID
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  completedAt DateTime?
+  
+  // Task details
+  estimatedHours Int?
+  actualHours    Int?
+  tags          String?     // JSON array of tags
+  dependencies  String?     // JSON array of task IDs
+  
+  // Relations
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@map("tasks")
+}
+
+// Document Management
+model Document {
+  id          String   @id @default(cuid())
+  name        String
+  filename    String
+  path        String
+  size        Int      // bytes
+  mimeType    String
+  projectId   String?
+  uploadedBy  String   // User ID
+  status      String   @default("active") // active, archived, deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Document metadata
+  description String?
+  tags        String?     // JSON array of tags
+  version     Int      @default(1)
+  checksum    String?
+  metadata    Json?
+  
+  // Relations
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  
+  @@map("documents")
+}
+
+// Comment System
+model Comment {
+  id          String   @id @default(cuid())
+  content     String
+  postId      String?
+  projectId   String?
+  userId      String
+  status      String   @default("active") // active, hidden, deleted
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Comment metadata
+  parentCommentId String?
+  likes       Int      @default(0)
+  metadata    Json?
+  
+  // Relations
+  post        Post?    @relation(fields: [postId], references: [id], onDelete: SetNull)
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("comments")
+}
+
+// Tag System for Posts
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  posts       PostTag[]
+  
+  @@map("tags")
+}
+
+// Many-to-many relationship between Posts and Tags
+model PostTag {
+  postId      String
+  tagId       String
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([postId, tagId])
+  @@map("post_tags")
 }
