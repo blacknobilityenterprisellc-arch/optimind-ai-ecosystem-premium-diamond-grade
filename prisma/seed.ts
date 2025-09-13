@@ -6,61 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Seeding Premium Diamond-Grade Database with Security Updates...');
 
-  // Create security settings
-  const securitySettings = await prisma.securitySettings.upsert({
-    where: { id: 'main' },
-    update: {},
-    create: {
-      id: 'main',
-      pin_hash: 'dummy_hash',
-      salt: 'dummy_salt',
-    },
-  });
-
-  // Create enterprise users with enhanced security
-  const adminPassword = await hash('admin123', 10);
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@optimind.ai' },
-    update: {},
-    create: {
-      email: 'admin@optimind.ai',
-      password: adminPassword,
-      name: 'Jocely P. Honore - CEO',
-      role: 'ADMIN',
-      apiKey: 'admin-api-key-123',
-      lastLoginAt: new Date(),
-    },
-  });
-
-  const enterprisePassword = await hash('enterprise123', 10);
-  const enterpriseUser = await prisma.user.upsert({
-    where: { email: 'enterprise@optimind.ai' },
-    update: {},
-    create: {
-      email: 'enterprise@optimind.ai',
-      password: enterprisePassword,
-      name: 'Enterprise Manager',
-      role: 'DEVELOPER',
-      apiKey: 'enterprise-api-key-456',
-      lastLoginAt: new Date(),
-    },
-  });
-
-  const testPassword = await hash('test123', 10);
-  const testUser = await prisma.user.upsert({
-    where: { email: 'test@optimind.ai' },
-    update: {},
-    create: {
-      email: 'test@optimind.ai',
-      password: testPassword,
-      name: 'Test User',
-      role: 'USER',
-      apiKey: 'test-api-key-789',
-      lastLoginAt: new Date(),
-    },
-  });
-
-  // Create default tenant with enhanced configuration
+  // Create default tenant first
   const defaultTenant = await prisma.tenant.upsert({
     where: { slug: 'default' },
     update: {},
@@ -68,10 +14,16 @@ async function main() {
       name: 'Default Organization',
       slug: 'default',
       plan: 'ENTERPRISE',
+      status: 'ACTIVE',
+      isActive: true,
       maxUsers: 100,
       maxProjects: 50,
       maxStorage: 10240,
-      configuration: {
+      maxApiCalls: 10000,
+      securityLevel: 'military-grade',
+      mfaRequired: true,
+      sessionTimeout: 3600,
+      settings: {
         security: {
           enableMFA: true,
           sessionTimeout: 3600,
@@ -89,6 +41,80 @@ async function main() {
           compliance: ['SOC2', 'GDPR', 'ISO27001', 'HIPAA'],
         },
       },
+    },
+  });
+
+  // Create security settings linked to tenant
+  const securitySettings = await prisma.securitySettings.upsert({
+    where: { tenantId: defaultTenant.id },
+    update: {},
+    create: {
+      tenantId: defaultTenant.id,
+      mfaRequired: true,
+      sessionTimeout: 3600,
+      passwordPolicy: {
+        minLength: 12,
+        requireSpecialChars: true,
+        requireNumbers: true,
+        requireUppercase: true,
+        expirationDays: 90,
+      },
+      encryptionLevel: 'military',
+      auditLogEnabled: true,
+      dataRetention: 365,
+      backupEnabled: true,
+      monitoringEnabled: true,
+      compliance: ['SOC2', 'GDPR', 'ISO27001', 'HIPAA'],
+      certifications: 'SOC2,GDPR,ISO27001,HIPAA',
+    },
+  });
+
+  // Create enterprise users with enhanced security
+  const adminPassword = await hash('admin123', 10);
+  const adminUser = await prisma.user.upsert({
+    where: { email: 'admin@optimind.ai' },
+    update: {},
+    create: {
+      email: 'admin@optimind.ai',
+      password: adminPassword,
+      name: 'Jocely P. Honore - CEO',
+      role: 'ADMIN',
+      apiKey: 'admin-api-key-123',
+      tenantId: defaultTenant.id,
+      securityLevel: 'military',
+      lastLoginAt: new Date(),
+    },
+  });
+
+  const enterprisePassword = await hash('enterprise123', 10);
+  const enterpriseUser = await prisma.user.upsert({
+    where: { email: 'enterprise@optimind.ai' },
+    update: {},
+    create: {
+      email: 'enterprise@optimind.ai',
+      password: enterprisePassword,
+      name: 'Enterprise Manager',
+      role: 'DEVELOPER',
+      apiKey: 'enterprise-api-key-456',
+      tenantId: defaultTenant.id,
+      securityLevel: 'premium',
+      lastLoginAt: new Date(),
+    },
+  });
+
+  const testPassword = await hash('test123', 10);
+  const testUser = await prisma.user.upsert({
+    where: { email: 'test@optimind.ai' },
+    update: {},
+    create: {
+      email: 'test@optimind.ai',
+      password: testPassword,
+      name: 'Test User',
+      role: 'USER',
+      apiKey: 'test-api-key-789',
+      tenantId: defaultTenant.id,
+      securityLevel: 'enhanced',
+      lastLoginAt: new Date(),
     },
   });
 
